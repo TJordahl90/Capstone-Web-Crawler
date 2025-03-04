@@ -1,6 +1,6 @@
 import React from "react";
 import "./LandingPage.css";
-import knobLogo from "./assets/knob.png";
+import knobLogo from "../assets/knob.png";
 
 const LandingPage = () => {
   return (
