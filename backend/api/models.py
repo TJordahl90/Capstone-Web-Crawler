@@ -41,3 +41,14 @@ class JobTrends(models.Model):
 
     def __str__(self):
         return self.industry
+    
+class Education(models.Model):
+    educationLevel = models.CharField(max_length=50)
+    institution = models.CharField(max_length=100)
+    major = models.CharField(max_length=50)
+    minor = models.CharField(max_length=50, blank=True, null=True)
+    graduationDate = models.DateField()
+    user = models.ForeignKey(Account, on_delete=models.CASCADE)
+
+    def __str__(self):
+        return self.institution
