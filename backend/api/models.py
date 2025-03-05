@@ -27,7 +27,7 @@ class JobPosting(models.Model):
 class SavedJob(models.Model):
     applied = models.BooleanField(default=False)
     jobPosting = models.ForeignKey(JobPosting, on_delete=models.CASCADE)
-    user = models.ForeignKey(Account, on_delete=models.CASCADE)
+    account = models.ForeignKey(Account, on_delete=models.CASCADE)
 
     def __str__(self):
         return self.jobPosting.title
@@ -48,7 +48,7 @@ class Education(models.Model):
     major = models.CharField(max_length=50)
     minor = models.CharField(max_length=50, blank=True, null=True)
     graduationDate = models.DateField()
-    user = models.ForeignKey(Account, on_delete=models.CASCADE)
+    account = models.ForeignKey(Account, on_delete=models.CASCADE)
 
     def __str__(self):
         return self.institution
