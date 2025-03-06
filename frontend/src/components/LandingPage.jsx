@@ -6,15 +6,15 @@ const LandingPage = () => {
   return (
     <div className="landing-container">
       {/* Navigation Bar */}
-      <nav className="navbar">
+      {/* <nav className="navbar">
         <button className="btn signup">Sign up</button>
         <button className="btn login">Log in</button>
-      </nav>
+      </nav> */}
 
       {/* Logo */}
-      <div className="logo-container">
+      {/* <div className="logo-container">
         <img src={knobLogo} alt="Knob Logo" className="logo" />
-      </div>
+      </div> */}
 
       {/* Hero Section (Positioned Text) */}
       <h2 className="opportunity-text">

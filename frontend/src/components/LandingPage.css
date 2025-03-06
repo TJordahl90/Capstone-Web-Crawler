@@ -14,7 +14,7 @@
   }
   
   /* 🔹 Navbar (Top Menu) */
-  .navbar {
+  /* .navbar {
     position: absolute;
     top: 3vh;
     right: 3vw;
@@ -23,10 +23,10 @@
     display: flex;
     justify-content: space-between;
     align-items: center;
-    background: rgba(61, 61, 59, 0.5); /* #3d3d3b with 50% opacity */
+    background: rgba(61, 61, 59, 0.5);
     border-radius: 24px;
     z-index: 20;
-  }
+  } */
   
   /* 🔹 Sign Up & Log In Buttons */
   .btn {

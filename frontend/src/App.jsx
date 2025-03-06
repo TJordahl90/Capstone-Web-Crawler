@@ -6,8 +6,7 @@ import LandingPage from './components/LandingPage';
 import Register from './components/Register';
 import Login from  './components/Login';
 import AccountHome from './components/AccountHome';
-
-//import 'bootstrap/dist/css/bootstrap.min.css';  // imports bootstrap styles
+import 'bootstrap/dist/css/bootstrap.min.css';  // imports bootstrap styles
 
 
 function App() {
