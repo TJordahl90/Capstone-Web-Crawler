@@ -7,6 +7,7 @@ class Account(models.Model):
     experience = models.TextField(default='[]') # Same as here ^
     certifications = models.TextField(default='[]')
     accountStatus = models.BooleanField(default=False)
+    phone = models.CharField(max_length=15, blank=True, null=True)
 
     def __str__(self):
         return self.user.username

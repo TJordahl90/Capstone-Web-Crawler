@@ -27,6 +27,15 @@ const Register = () => {
       password: password,
     };
 
+    try {
+      const registration = await axios.post("http://localhost:8000/register/", registrationData);
+      console.log("Registration successful:", registration.data);
+      //navigate('/login');
+    }
+    catch(error) {
+      console.error("Error registering account:", error.response.data);
+    }
+
     console.log(registrationData);
   };
 
