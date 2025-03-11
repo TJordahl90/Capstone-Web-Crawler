@@ -14,7 +14,7 @@ const Register = () => {
   const [error, setError] = useState('');
   const navigate = useNavigate();
 
-  async function handleSubmit(e) {
+  const handleSubmit = async (e) => {
     e.preventDefault();
 
     const registrationData = {
@@ -37,22 +37,20 @@ const Register = () => {
   };
 
   return (
-    <Container className="account-setup py-5" style={{ maxWidth: "700px", padding: "30px" }} fluid>
+    <Container className="py-5" style={{ maxWidth: "75%" }} fluid>
       <Card
         style={{
           padding: "40px",
           borderWidth: "3px",
-          borderColor: "orange",
           borderStyle: "solid",
         }}
       >
         <Row className="justify-content-center">
           <Col>
-            <h1 className="text-center mb-4" style={{ color: "orange" }}>
-              Account Setup
-            </h1>
+            <h1 className="text-center mb-4" style={{ }}>Register</h1>
             {message && <Alert variant="success">{message}</Alert>}
             {error && <Alert variant="danger">{error}</Alert>}
+            
             <Form onSubmit={handleSubmit}>
               <Form.Group controlId="formFirstName" className="mb-3">
                 <Form.Label>First Name:</Form.Label>
