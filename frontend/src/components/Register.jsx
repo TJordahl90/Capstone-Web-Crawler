@@ -1,7 +1,7 @@
 import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import axios from 'axios';
 import { Container, Card, Row, Col, Form, Button, Alert } from 'react-bootstrap';
+import api from '../api.js';
 
 const Register = () => {
   const [firstName, setFirstName] = useState('');
@@ -14,8 +14,7 @@ const Register = () => {
   const [error, setError] = useState('');
   const navigate = useNavigate();
 
-  async function handleSubmit(e) 
-  {
+  async function handleSubmit(e) {
     e.preventDefault();
 
     const registrationData = {
@@ -28,15 +27,13 @@ const Register = () => {
     };
 
     try {
-      const registration = await axios.post("http://localhost:8000/register/", registrationData);
-      console.log("Registration successful:", registration.data);
+      const response = await api.post("/register/", registrationData)
+      console.log("Registration successful:", response.data);
       //navigate('/login');
     }
     catch(error) {
       console.error("Error registering account:", error.response.data);
     }
-
-    console.log(registrationData);
   };
 
   return (
