@@ -1,144 +1,120 @@
 /* 🔹 General Page Layout (Full Screen) */
 .landing-container {
-    display: flex;
-    flex-direction: column;
-    height: 100vh; /* Full screen height */
-    width: 100vw;  /* Full screen width */
-    align-items: center;
-    justify-content: center;
-    background-color: black;
-    color: white;
-    text-align: center;
-    overflow: hidden;
-    position: relative;
+  display: flex;
+  flex-direction: column;
+  height: 100vh; /* Full screen height */
+  width: 100vw;  /* Full screen width */
+  align-items: center;
+  justify-content: center;
+  background-color: black;
+  color: white;
+  text-align: center;
+  overflow: hidden;
+  position: relative;
+}
+
+/* 🔹 Navbar (Top Menu) */
+/* .navbar {
+  position: absolute;
+  top: 3vh;
+  right: 3vw;
+  width: 20vw;
+  height: 8vh;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  background: rgba(61, 61, 59, 0.5);
+  border-radius: 24px;
+  z-index: 20;
+} */
+
+
+/* 🔹 "Opportunities" (Above Small Rectangle) */
+.opportunity-text {
+  position: absolute;
+  font-size: 5vw;
+  font-weight: bold;
+  color: white;
+  left: 5vw;
+  top: 35vh;
+  z-index: 30;
+}
+/* 🔹 Large Black Ellipse (Above White, Scales with Screen Size) */
+.large_black_ellipse {
+  position: absolute;
+  width: max(72vw, 95vh); /* Increases as screen gets smaller */
+  height: max(72vw, 95vh);
+  background: black;
+  border-radius: 50%;
+  top: 60%;
+  right: -18vw;
+  transform: translateY(-50%);
+  z-index: 5;
+}
+/* 🔹 "to Connection" (Inside Small Rectangle) */
+.connection-text {
+  position: absolute;
+  font-size: 5vw;
+  font-weight: bold;
+  color: black;
+  left: 10vw;
+  top: 55vh;
+  z-index: 35;
+}
+
+/* 🔹 Small White Rectangle */
+.small_white_rectangle {
+  position: absolute;
+  width: 65vw;
+  height: 40vh;
+  background: white;
+  border-radius: 40px;
+  bottom: 0;
+  left: 0;
+  z-index: 3;
+}
+
+/* 🔹 Large White Ellipse (Right-Aligned, Scales with Screen Size) */
+.large_white_ellipse {
+  position: absolute;
+  width: max(78vw, 100vh); /* Increases as screen gets smaller */
+  height: max(78vw, 100vh);
+  background: white;
+  border-radius: 50%;
+  top: 60%; /* Adjust downward */
+  right: -20vw;
+  transform: translateY(-50%);
+  z-index: 4;
+}
+
+
+/* 🔹 Small White Ellipse */
+.small_white_ellipse {
+  position: absolute;
+  width: 25vw;
+  height: 30vh;
+  background: white;
+  border-radius: 50%;
+  bottom: -5vw;
+  left: -10vw;
+  z-index: 6;
+}
+/* 🔹 Logo */
+.logo-container {
+  position: absolute;
+  top: 3vh;
+  left: 3vw;
+}
+
+.logo {
+  height: 6vh;
+  width: auto;
+}
+/* 🔹 Hide Navbar & Buttons if Width is Below 840px */
+@media screen and (max-width: 840px) {
+  .navbar {
+    display: none;
   }
-  
-  /* 🔹 Navbar (Top Menu) */
-  /* .navbar {
-    position: absolute;
-    top: 3vh;
-    right: 3vw;
-    width: 20vw;
-    height: 8vh;
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    background: rgba(61, 61, 59, 0.5);
-    border-radius: 24px;
-    z-index: 20;
-  } */
-  
-  /* 🔹 Sign Up & Log In Buttons */
-  .btn {
-    width: 45%;
-    height: 100%;
-    border: none;
-    border-radius: 24px;
-    font-size: 1rem;
-    font-weight: bold;
-    cursor: pointer;
-    color: white;
-    transition: 0.3s;
-  }
-  
-  .signup {
-    background: rgba(61, 61, 59, 0.5);
-  }
-  
-  .login {
-    background: #5D5E59;
-  }
-  
-  .btn:hover {
-    opacity: 0.8;
-  }
-  
-  
-  /* 🔹 "Opportunities" (Above Small Rectangle) */
-  .opportunity-text {
-    position: absolute;
-    font-size: 5vw;
-    font-weight: bold;
-    color: white;
-    left: 5vw;
-    top: 35vh;
-    z-index: 30;
-  }
-  /* 🔹 Large Black Ellipse (Above White, Scales with Screen Size) */
-  .large_black_ellipse {
-    position: absolute;
-    width: max(72vw, 95vh); /* Increases as screen gets smaller */
-    height: max(72vw, 95vh);
-    background: black;
-    border-radius: 50%;
-    top: 60%;
-    right: -18vw;
-    transform: translateY(-50%);
-    z-index: 5;
-  }
-  /* 🔹 "to Connection" (Inside Small Rectangle) */
-  .connection-text {
-    position: absolute;
-    font-size: 5vw;
-    font-weight: bold;
-    color: black;
-    left: 10vw;
-    top: 55vh;
-    z-index: 35;
-  }
-  
-  /* 🔹 Small White Rectangle */
-  .small_white_rectangle {
-    position: absolute;
-    width: 65vw;
-    height: 40vh;
-    background: white;
-    border-radius: 40px;
-    bottom: 0;
-    left: 0;
-    z-index: 3;
-  }
-  
-  /* 🔹 Large White Ellipse (Right-Aligned, Scales with Screen Size) */
-  .large_white_ellipse {
-    position: absolute;
-    width: max(78vw, 100vh); /* Increases as screen gets smaller */
-    height: max(78vw, 100vh);
-    background: white;
-    border-radius: 50%;
-    top: 60%; /* Adjust downward */
-    right: -20vw;
-    transform: translateY(-50%);
-    z-index: 4;
-  }
-  
-  
-  /* 🔹 Small White Ellipse */
-  .small_white_ellipse {
-    position: absolute;
-    width: 25vw;
-    height: 30vh;
-    background: white;
-    border-radius: 50%;
-    bottom: -5vw;
-    left: -10vw;
-    z-index: 6;
-  }
-  /* 🔹 Logo */
-  .logo-container {
-    position: absolute;
-    top: 3vh;
-    left: 3vw;
-  }
-  
-  .logo {
-    height: 6vh;
-    width: auto;
-  }
-  /* 🔹 Hide Navbar & Buttons if Width is Below 840px */
-  @media screen and (max-width: 840px) {
-    .navbar {
-      display: none;
-    }
-  }
-  
+}
+
+
