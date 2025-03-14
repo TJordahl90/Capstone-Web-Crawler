@@ -1,120 +1,60 @@
-/* 🔹 General Page Layout (Full Screen) */
 .landing-container {
   display: flex;
   flex-direction: column;
-  height: 100vh; /* Full screen height */
-  width: 100vw;  /* Full screen width */
+  height: 100vh;
+  width: 100vw;
   align-items: center;
   justify-content: center;
-  background-color: black;
+  background-color: #3B0B24;
   color: white;
   text-align: center;
   overflow: hidden;
   position: relative;
 }
 
-/* 🔹 Navbar (Top Menu) */
-/* .navbar {
-  position: absolute;
-  top: 3vh;
-  right: 3vw;
-  width: 20vw;
-  height: 8vh;
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  background: rgba(61, 61, 59, 0.5);
-  border-radius: 24px;
-  z-index: 20;
-} */
-
-
-/* 🔹 "Opportunities" (Above Small Rectangle) */
-.opportunity-text {
-  position: absolute;
-  font-size: 5vw;
-  font-weight: bold;
-  color: white;
-  left: 5vw;
-  top: 35vh;
-  z-index: 30;
-}
-/* 🔹 Large Black Ellipse (Above White, Scales with Screen Size) */
-.large_black_ellipse {
-  position: absolute;
-  width: max(72vw, 95vh); /* Increases as screen gets smaller */
-  height: max(72vw, 95vh);
+/* Ensure navbar spans the full width */
+.navbar {
+  width: 100%;
+  height: 60px;
   background: black;
-  border-radius: 50%;
-  top: 60%;
-  right: -18vw;
-  transform: translateY(-50%);
-  z-index: 5;
-}
-/* 🔹 "to Connection" (Inside Small Rectangle) */
-.connection-text {
-  position: absolute;
-  font-size: 5vw;
-  font-weight: bold;
-  color: black;
-  left: 10vw;
-  top: 55vh;
-  z-index: 35;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0 20px;
 }
 
-/* 🔹 Small White Rectangle */
-.small_white_rectangle {
-  position: absolute;
-  width: 65vw;
-  height: 40vh;
-  background: white;
-  border-radius: 40px;
-  bottom: 0;
-  left: 0;
-  z-index: 3;
-}
-
-/* 🔹 Large White Ellipse (Right-Aligned, Scales with Screen Size) */
-.large_white_ellipse {
-  position: absolute;
-  width: max(78vw, 100vh); /* Increases as screen gets smaller */
-  height: max(78vw, 100vh);
-  background: white;
-  border-radius: 50%;
-  top: 60%; /* Adjust downward */
-  right: -20vw;
-  transform: translateY(-50%);
-  z-index: 4;
-}
-
-
-/* 🔹 Small White Ellipse */
-.small_white_ellipse {
-  position: absolute;
-  width: 25vw;
-  height: 30vh;
-  background: white;
-  border-radius: 50%;
-  bottom: -5vw;
-  left: -10vw;
-  z-index: 6;
-}
-/* 🔹 Logo */
-.logo-container {
-  position: absolute;
-  top: 3vh;
-  left: 3vw;
-}
-
+/* Adjust logo size */
 .logo {
-  height: 6vh;
-  width: auto;
-}
-/* 🔹 Hide Navbar & Buttons if Width is Below 840px */
-@media screen and (max-width: 840px) {
-  .navbar {
-    display: none;
-  }
+  height: 40px;
+  width: 40px;
 }
 
+/* Fix search box */
+.search-box {
+  width: 200px;
+  height: 35px;
+  font-size: 0.9rem;
+}
 
+.navbar a {
+  color: white;
+  text-decoration: none;
+  margin-left: 15px;
+  font-size: 14px;
+}
+
+.find-jobs-btn {
+  background-color: rgba(255, 255, 255, 0.5);
+  color: white;
+  font-size: 18px;
+  font-weight: bold;
+  border: none;
+  border-radius: 25px;
+  padding: 12px 30px;
+  cursor: pointer;
+  transition: 0.3s;
+}
+
+.find-jobs-btn:hover {
+  background-color: #8C7527;
+}
