@@ -1,13 +1,9 @@
 import React from 'react';
 import { Routes, Route } from 'react-router-dom';
 import Navbar from './components/Navbar';
-import Footer from './components/Footer';
 import LandingPage from './components/LandingPage';
-import Register from './components/Register';
-import Login from  './components/Login';
-import AccountHome from './components/AccountHome';
-import 'bootstrap/dist/css/bootstrap.min.css';  // imports bootstrap styles
-
+import AuthForm from "./components/AuthForm";
+import 'bootstrap/dist/css/bootstrap.min.css'; // Import Bootstrap styles
 
 function App() {
   return (
@@ -16,12 +12,10 @@ function App() {
       <div>
         <Routes>
           <Route path="/" element={<LandingPage />} />
-          <Route path="/register" element={<Register />} />
-          <Route path="/login" element={<Login />} />
-          <Route path="/account" element={<AccountHome />} />
+          <Route path="/login" element={<AuthForm isLogin={true} />} />
+          <Route path="/register" element={<AuthForm isLogin={false} />} />
         </Routes>
       </div>
-      <Footer />
     </>
   );
 }
