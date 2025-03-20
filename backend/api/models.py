@@ -14,15 +14,15 @@ class Account(models.Model):
 class JobPosting(models.Model):
     company = models.CharField(max_length=150)
     title = models.CharField(max_length=100)
-    description = models.CharField(max_length=2000)
+    description = models.TextField()
     requirements = models.CharField(max_length=2000)
-    location = models.CharField(max_length=50)
+    location = models.CharField(max_length=50, blank=True, null=True)
     datePosted = models.DateField()
     salary = models.CharField(max_length=255)
-    jobURL = models.CharField(max_length=255)
+    jobURL = models.URLField()
 
     def __str__(self):
-        return self.title
+        return f"{self.title} at {self.company}"
 
 class SavedJob(models.Model):
     applied = models.BooleanField(default=False)
