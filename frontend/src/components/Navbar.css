@@ -1,0 +1,13 @@
+.custom-navbar {
+    background-color: #3b0b24 !important;
+    padding: 10px 15px;
+}
+
+.custom-navbar .nav-link {
+    color: white;
+}
+
+.navbar-search-container {
+    flex: 1;
+    max-width: 400px;
+}

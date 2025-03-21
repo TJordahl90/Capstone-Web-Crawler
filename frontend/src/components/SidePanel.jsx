@@ -97,7 +97,7 @@ const SidePanel = () => {
                     <div className="hamburger-menu" onClick={togglePanel}>
                         <FaBars size={24} />
                     </div>
-                    <span className="web-name">Web Name</span>
+                    <a href="/find-jobs" className="web-name">Web Name</a>
                 </div>
             </div>
         </div>

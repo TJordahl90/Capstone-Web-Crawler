@@ -15,7 +15,7 @@ function App() {
 
   return (
     <>
-      {/* {showNavMenus && <Navbar />} */}
+      {showNavMenus && <Navbar />}
       {showNavMenus && <SidePanel />}
 
       <div>
