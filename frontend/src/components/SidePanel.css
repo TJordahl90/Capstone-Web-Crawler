@@ -1,0 +1,200 @@
+/* Full Page Styling */
+.sidepanel-container {
+    height: 100vh;
+    width: 100vw; 
+    background-color: #3b0b24;
+    display: flex;
+}
+
+/* Header Styling */
+.header {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 200px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    background-color: #3B0B24;
+    padding: 10px 20px;
+    color: white;
+    z-index: 100;
+}
+
+/* LEFT SIDE (Hamburger + Web Name) */
+.header-left {
+    display: flex;
+    align-items: center;
+}
+
+/* Hamburger Menu (Left Side) */
+.hamburger-menu {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    border-radius: 50%;
+    padding: 10px;
+    transition: background 0.3s ease;
+    width: 40px;
+    height: 40px;
+    margin-left: -10px;
+}
+
+.hamburger-menu:hover {
+    background-color: rgba(255, 255, 255, 0.2);
+}
+
+/* Fix Web Name Position */
+.web-name {
+    font-size: 1.2rem;
+    font-weight: bold;
+    margin-left: 10px;
+    white-space: nowrap;
+}
+
+/* Default Side Panel */
+.side-panel {
+    width: 200px;
+    height: 100vh;
+    background-color: #3B0B24;
+    color: white;
+    position: fixed;
+    left: 0;
+    top: 60px;
+    padding-top: 20px;
+    transition: transform 0.3s ease, width 0.3s ease;
+}
+
+/* When collapsed, side panel remains hidden */
+.side-panel.hidden {
+    transform: translateX(-100%);
+}
+
+.menu-item {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: 10px 10px 10px 20px;
+    font-size: 1rem;
+    cursor: pointer;
+    transition: background 0.3s ease;
+}
+.menu-divider-line {
+    height: 1px;
+    background-color: white;
+    width: 180px;
+    margin: 10px auto;
+    transition: width 0.3s ease;
+}
+
+/* When the side panel collapses, reduce the white line width */
+.side-panel.collapsed .menu-divider-line {
+    width: 40px;
+}
+
+
+.menu-item:hover {
+    background-color: rgba(255, 255, 255, 0.1);
+    border-radius: 5px;
+}
+
+.menu-divider {
+    margin: 15px 0;
+    font-size: 0.9rem;
+    color: #b3b3b3;
+    padding-left: 23px;
+}
+
+
+.icon {
+    font-size: 1.2rem;
+}
+
+.side-panel.collapsed {
+    width: 60px;
+    transition: width 0.3s ease;
+}
+
+.side-panel.collapsed .menu-item span {
+    display: none;
+}
+
+.side-panel.collapsed .menu-divider {  
+    display: none;
+}
+
+/* WingPanel Styling - Only appears when screen width <= 620px */
+.wing-panel {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 200px;
+    height: 100vh;
+    background-color: #3B0B24;
+    color: white;
+    padding-top: 20px;
+    display: flex;
+    flex-direction: column;
+    transition: transform 0.3s ease;
+    transform: translateX(-100%);
+    z-index: 1000; /* Ensure it's on top */
+}
+
+/* Show WingPanel when it's active */
+.wing-panel.active {
+    transform: translateX(0);
+}
+
+
+.wing-header {
+    display: flex;
+    align-items: center;
+    padding: 15px 15px;
+    height: 50px;
+}
+
+.wing-header .web-name {
+    font-size: 1.2rem;
+    font-weight: bold;
+    margin-left: 38px;
+    position: absolute;
+    top: 30px;
+    transform: translateY(-50%);
+}
+
+/* Big Mac button inside WingPanel */
+.bigmac-menu {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    border-radius: 50%;
+    padding: 10px;
+    transition: background 0.3s ease;
+    width: 40px;
+    height: 40px;
+    margin-left: 0px;
+    position: absolute;
+    top: 10px;
+    left: 10px;
+}
+
+.bigmac-menu:hover {
+    background-color: rgba(255, 255, 255, 0.2);
+}
+
+/* Hide side panel when screen width <= 620px */
+@media (max-width: 620px) {
+    .side-panel {
+        display: none;
+    }
+
+    .search-bar {
+        position: absolute;
+        top: 60px; /* Moves search bar down below header */
+        left: 50%;
+        transform: translateX(-50%);
+        width: 100%;
+    }
+}
