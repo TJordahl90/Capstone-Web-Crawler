@@ -10,17 +10,16 @@ from .models import *
 
 class CreateUserSerializer(serializers.ModelSerializer): 
     """Serializer for new user registering"""
-    phone = serializers.CharField(write_only=True) # deserialize the phone field
+
 
     class Meta:
         """Deserialize the user model fields below"""
         model = User
-        fields = ['email', 'username', 'password', 'first_name', 'last_name', 'phone']
+        fields = ['email', 'username', 'password', 'first_name', 'last_name']
         extra_kwargs = {'password': {'write_only': True}}
 
     def create(self, validated_data):
         """Creates the user and account"""
-        phone = validated_data.pop('phone')
         
         # user object created and data set
         user = User(
@@ -34,11 +33,5 @@ class CreateUserSerializer(serializers.ModelSerializer):
         user.set_password(validated_data['password']) # hashes the password- security measure
         user.save() # saves user object to database
     
-        # account object created and data set
-        account = Account(
-            user = user,
-            phone = phone,
-        )
-
-        account.save() # saves account object to database
+        
         return user # returns user object to views.py function call
