@@ -5,6 +5,7 @@ import SidePanel from "./components/SidePanel";
 import LandingPage from "./components/LandingPage";
 import AuthForm from "./components/AuthForm";
 import FindJobs from "./components/FindJobs";
+import Account from "./components/Account";
 import "bootstrap/dist/css/bootstrap.min.css";
 
 function App() {
@@ -23,6 +24,7 @@ function App() {
           <Route path="/login" element={<AuthForm isLogin={true} />} />
           <Route path="/register" element={<AuthForm isLogin={false} />} />
           <Route path="/find-jobs" element={<FindJobs />} />
+          <Route path="/account" element={<Account />} />
         </Routes>
       </div>
     </>
