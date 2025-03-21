@@ -16,9 +16,15 @@ Including another URLconf
 """
 from django.contrib import admin
 from django.urls import path, include
+from django.http import JsonResponse
+
+def home_view(request):
+    return JsonResponse({"message": "Welcome to the Capstone API"}, status=200)
 
 urlpatterns = [
+    path('', home_view, name='home'),  # the root URL
+    path('api/', include('api.urls')),  # the API routes
     path('admin/', admin.site.urls),
-    path('api-auth/', include('rest_framework.urls')),
-    path('', include('api.urls')),
 ]
+
+#to try to register a new user http://127.0.0.1:8000/api/register/
