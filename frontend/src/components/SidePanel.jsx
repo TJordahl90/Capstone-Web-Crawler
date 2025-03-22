@@ -1,7 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { FaBars, FaUserCircle } from "react-icons/fa";
-import { FaBriefcase, FaBookmark, FaUser } from "react-icons/fa";
-import { Container } from "react-bootstrap";
+import { FaBriefcase, FaBookmark, FaUser, FaBars, FaUserCircle, FaChartBar } from "react-icons/fa";
 import "./SidePanel.css";
 
 
@@ -53,7 +51,10 @@ const SidePanel = () => {
                         <span>Saved</span>
                     </div>
                     <div className="menu-divider-line"></div>
-                    <div className="menu-divider">Explore</div>
+                    <div className="menu-item">
+                        <FaChartBar className="icon" />
+                        <span>Trends</span>
+                    </div>
                     <div className="menu-item">
                         <FaUser className="icon" />
                         <span>People</span>
