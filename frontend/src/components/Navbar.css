@@ -1,13 +1,95 @@
 .custom-navbar {
-    background-color: #3b0b24 !important;
-    padding: 10px 15px;
+    background-color: #3b0b24;
+    /* border-top: 2px solid whitesmoke; */
+    border-bottom: 1px solid whitesmoke;
 }
 
-.custom-navbar .nav-link {
-    color: white;
+.container-fluid {
+    display: flex !important;
+    flex-wrap: nowrap !important;
+    align-items: center;
+    justify-content: space-between;
+    width: 100%;
+    max-width: 1400px;
+    margin: 0 auto;
+}
+
+.navbar-logo, .navbar-icon {
+    width: auto;
+    height: 45px;
 }
 
 .navbar-search-container {
     flex: 1;
-    max-width: 400px;
+    min-width: 160px;
+    max-width: 500px;
+    margin: 0 20px;
+}
+
+.navbar-search {
+    width: 100%;
+    height: 45px;
+    font-size: 16px;
+}
+
+.hamburger-icon {
+    width: auto;
+    height: 35px;
+    padding-right: 10px;
+}
+
+.navbar-canvas-container {
+    width: 40vw !important;
+}
+
+.navbar-canvas {
+    background-color: #3b0b24;
+    color: white;
+}
+
+.menu-item {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: 10px 10px 10px 20px;
+    font-size: 1rem;
+    cursor: pointer;
+    transition: background 0.3s ease;
+}
+
+.menu-divider-line {
+    height: 1px;
+    background-color: white;
+    width: 180px;
+    margin: 10px auto;
+    transition: width 0.3s ease;
+}
+
+.menu-item:hover {
+    background-color: rgba(255, 255, 255, 0.1);
+    border-radius: 5px;
+}
+
+.menu-divider {
+    margin: 15px 0;
+    font-size: 0.9rem;
+    color: #b3b3b3;
+    padding-left: 23px;
+}
+
+@media (max-width: 620px) {
+    .navbar-logo, .navbar-icon {
+        height: 45px;
+        min-width: 45px;
+    }
+    
+    .navbar-search-container {
+        min-width: 100px;
+        margin: 0 20px;
+    }
+    
+    .navbar-search {
+        height: 45px;
+        font-size: 16px;
+    }
 }

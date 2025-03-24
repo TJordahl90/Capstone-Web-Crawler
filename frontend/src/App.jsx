@@ -9,26 +9,32 @@ import Account from "./components/Account";
 import "bootstrap/dist/css/bootstrap.min.css";
 
 function App() {
-  const location = useLocation();
-  const hideNavMenus = ["/", "/login", "/register"];
-  const showNavMenus = !hideNavMenus.includes(location.pathname);
+  	const location = useLocation();
+  	const hideNavMenus = ["/", "/login", "/register"];
+  	const showNavMenus = !hideNavMenus.includes(location.pathname);
 
-  return (
-    <>
-      {showNavMenus && <Navbar />}
-      {showNavMenus && <SidePanel />}
+  	return (
+  	  	<>
+  	    	{showNavMenus ? (
+				<>
+					<Navbar />
+					<SidePanel>
+						<Routes>
+							<Route path="/find-jobs" element={<FindJobs />} />
+							<Route path="/account" element={<Account />} />
+						</Routes>
+					</SidePanel>
+				</>
+  	    	) : (
+  	      		<Routes>
+  	      		  	<Route path="/" element={<LandingPage />} />
+  	      		  	<Route path="/login" element={<AuthForm isLogin={true} />} />
+  	      		  	<Route path="/register" element={<AuthForm isLogin={false} />} />
+  	      		</Routes>
+  	    	)}
 
-      <div>
-        <Routes>
-          <Route path="/" element={<LandingPage />} />
-          <Route path="/login" element={<AuthForm isLogin={true} />} />
-          <Route path="/register" element={<AuthForm isLogin={false} />} />
-          <Route path="/find-jobs" element={<FindJobs />} />
-          <Route path="/account" element={<Account />} />
-        </Routes>
-      </div>
-    </>
-  );
+  	  	</>
+  	);
 }
 
 export default App;
