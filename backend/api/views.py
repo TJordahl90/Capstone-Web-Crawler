@@ -7,8 +7,13 @@ from rest_framework.permissions import AllowAny, IsAuthenticated
 from django.contrib.auth.models import User
 from django.contrib.auth import authenticate
 from rest_framework_simplejwt.tokens import RefreshToken
+from django.core.mail import send_mail
+from django.conf import settings
 
 # Create your views here.
+
+def sendMail(to, subject, message):
+    send_mail(subject, message, settings.EMAIL_HOST_USER, to, fail_silently=False)
 
 class CreateUserView(APIView):
     """Register a new user"""
@@ -16,7 +21,7 @@ class CreateUserView(APIView):
 
     def post(self, request):
         serializer = CreateUserSerializer(data=request.data) # deserialize registration data
-        
+        sendMail(["jordahl902002@gmail.com"], 'test', 'test')
         if serializer.is_valid():  # built-in function that validates data
             serializer.save() # saves serialized valid data
             return Response(serializer.data, status=status.HTTP_201_CREATED) # sends response to frontend
@@ -54,3 +59,4 @@ class UserProfileView(APIView):
     def get(self, request):
         serializer = CreateUserSerializer(request.user)
         return Response(serializer.data)
+
