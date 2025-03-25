@@ -6,6 +6,8 @@ import LandingPage from "./components/LandingPage";
 import AuthForm from "./components/AuthForm";
 import FindJobs from "./components/FindJobs";
 import Account from "./components/Account";
+import SuggestedJobs from "./components/SuggestedJobs";
+import SavedJobs from "./components/SavedJobs";
 import "bootstrap/dist/css/bootstrap.min.css";
 
 function App() {
@@ -22,6 +24,8 @@ function App() {
 						<Routes>
 							<Route path="/find-jobs" element={<FindJobs />} />
 							<Route path="/account" element={<Account />} />
+							<Route path="/suggested-jobs" element={<SuggestedJobs />} />
+							<Route path="/saved-jobs" element={<SavedJobs />} />
 						</Routes>
 					</SidePanel>
 				</>

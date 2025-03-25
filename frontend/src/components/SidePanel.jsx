@@ -8,23 +8,23 @@ const SidePanel = ({ children }) => {
     return (
         <div className="sidepanel-container">
             <div className="side-panel">
-                <div className="menu-item">
+                <a href="/find-jobs" className="menu-item">
                     <FaBriefcase className="icon" />
                     <span>Jobs</span>
-                </div>
-                <div className="menu-item">
+                </a>
+                <a href="/saved-jobs" className="menu-item">
                     <FaBookmark className="icon" />
                     <span>Saved</span>
-                </div>
+                </a>
                 <div className="menu-divider-line"></div>
-                <div className="menu-item">
+                <a href="/#" className="menu-item">
                     <FaChartBar className="icon" />
                     <span>Trends</span>
-                </div>
-                <div className="menu-item">
+                </a>
+                <a href="/#" className="menu-item">
                     <FaUser className="icon" />
                     <span>People</span>
-                </div>
+                </a>
             </div>
             <div className="content-wrapper">
                 {children}

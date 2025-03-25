@@ -1,19 +1,18 @@
 import React, { useState, useEffect } from "react";
 import { Container, Card } from "react-bootstrap";
-import "./FindJobs.css";
 
-const FindJobs = () => {
+const SuggestedJobs = () => {
 
     return (
         <Container className="py-5">
             <Card>
                 <Card.Body>
-                    <Card.Title>Find Jobs</Card.Title>
-                    <Card.Text>List of all available jobs</Card.Text>
+                    <Card.Title>Suggested jobs</Card.Title>
+                    <Card.Text>provide recommended jobs from match system</Card.Text>
                 </Card.Body>
             </Card>
         </Container>
     );
 };
 
-export default FindJobs;
+export default SuggestedJobs;
