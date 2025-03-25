@@ -33,10 +33,18 @@ class LoginView(APIView):
 
         if user is not None:
             refresh = RefreshToken.for_user(user)
-            return Response({
-                "refresh": str(refresh),
-                "access": str(refresh.access_token),
+            response = Response({
+                "access": str(refresh.access_token)
+                # need to also include user & account data
             })
+            response.set_cookie(
+                key="refresh_token",
+                value=str(refresh),
+                httponly=True,
+                secure=True,
+                samesite="Lax"
+            )
+            return response
         return Response({"error": "Invalid credentials"}, status=400)
 
 class UserProfileView(APIView):

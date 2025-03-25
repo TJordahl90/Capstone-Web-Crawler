@@ -11,7 +11,6 @@ from .models import *
 class CreateUserSerializer(serializers.ModelSerializer): 
     """Serializer for new user registering"""
 
-
     class Meta:
         """Deserialize the user model fields below"""
         model = User
@@ -33,5 +32,9 @@ class CreateUserSerializer(serializers.ModelSerializer):
         user.set_password(validated_data['password']) # hashes the password- security measure
         user.save() # saves user object to database
     
-        
+        account = Account (
+            user = user
+        )
+
+        account.save()
         return user # returns user object to views.py function call

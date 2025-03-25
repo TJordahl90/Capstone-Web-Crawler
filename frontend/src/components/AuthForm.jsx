@@ -9,10 +9,9 @@ const AuthForm = ({ isLogin }) => {
     const [formData, setFormData] = useState({
         username: '',
         password: '',
-        firstName: '',
-        lastName: '',
+        first_name: '',
+        last_name: '',
         email: '',
-        phone: ''
     });
     const [message, setMessage] = useState('');
     const [error, setError] = useState('');
@@ -23,6 +22,9 @@ const AuthForm = ({ isLogin }) => {
 
         try {
             const response = await api.post(endpoint, formData);
+            const { access } = response.data;
+            localStorage.setItem("accessToken", access);
+
             setMessage(isLogin ? "Login successful!" : "Registration successful!");
             setTimeout(() => navigate(isLogin ? "/account" : "/login"), 1000);
         } catch (err) {
@@ -47,21 +49,17 @@ const AuthForm = ({ isLogin }) => {
                         <Form onSubmit={handleSubmit}>
                             {!isLogin && (
                                 <>
-                                    <InputField label="First Name" type="text" value={formData.firstName}
-                                        onChange={(e) => setFormData({ ...formData, firstName: e.target.value })}
+                                    <InputField label="First Name" type="text" value={formData.first_name}
+                                        onChange={(e) => setFormData({ ...formData, first_name: e.target.value })}
                                         placeholder="Enter your first name"
                                     />
-                                    <InputField label="Last Name" type="text" value={formData.lastName}
-                                        onChange={(e) => setFormData({ ...formData, lastName: e.target.value })}
+                                    <InputField label="Last Name" type="text" value={formData.last_name}
+                                        onChange={(e) => setFormData({ ...formData, last_name: e.target.value })}
                                         placeholder="Enter your last name"
                                     />
                                     <InputField label="Email" type="email" value={formData.email}
                                         onChange={(e) => setFormData({ ...formData, email: e.target.value })}
                                         placeholder="Enter your email"
-                                    />
-                                    <InputField label="Phone" type="text" value={formData.phone}
-                                        onChange={(e) => setFormData({ ...formData, phone: e.target.value })}
-                                        placeholder="Enter your phone number"
                                     />
                                 </>
                             )}

@@ -138,7 +138,7 @@ CSRF_TRUSTED_ORIGINS = [
 
 CORS_ALLOW_CREDENTIALS = True
 
-CSRF_COOKIE_SAMESITE = 'None'
+CSRF_COOKIE_SAMESITE = 'Lax'
 #SESSION_COOKIE_SAMESITE = 'None' # This line is the reason we were being redirected instead of logged on to the admin page. Not sure how to fix it at the moment
 
 CSRF_COOKIE_HTTPONLY = False
