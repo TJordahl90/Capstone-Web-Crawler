@@ -60,3 +60,35 @@ class UserProfileView(APIView):
         serializer = CreateUserSerializer(request.user)
         return Response(serializer.data)
 
+class CreateVerificationView(APIView):
+    permission_classes = [AllowAny]
+
+
+    def post(self, request):
+        email = request.data.get('email')
+        serializer = CreateUserSerializer(data=request.data)
+
+
+        delInstance = Verification.objects.filter(email=email)
+        try:
+            delInstance.delete()
+        except(delInstance.DoesNotExist):
+            pass
+
+
+        if(serializer.is_valid()):
+            code = str(random.randint(100000, 999999))
+
+
+            message = f'Your verification code is: {code}'
+            subject = 'Verification Code for DFWork Account'
+            recipient = [email]
+
+
+            instance = Verification(email=email, code=code)
+            instance.save()
+
+
+            serializer = VerificationSerializer(instance)
+            return(Response(serializer.data, status=status.HTTP_201_CREATED))
+        return(Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST))

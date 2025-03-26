@@ -38,3 +38,8 @@ class CreateUserSerializer(serializers.ModelSerializer):
 
         account.save()
         return user # returns user object to views.py function call
+
+class VerificationSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Verification
+        fields = ['code', 'email']
