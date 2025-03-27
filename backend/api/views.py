@@ -9,7 +9,8 @@ from django.contrib.auth import authenticate
 from rest_framework_simplejwt.tokens import RefreshToken
 from django.core.mail import send_mail
 from django.conf import settings
-import random 
+import random
+from django.shortcuts import get_object_or_404
 # Create your views here.
 
 def sendMail(to, subject, message):
@@ -73,20 +74,26 @@ class CreateVerificationView(APIView):
         except(delInstance.DoesNotExist):
             pass
 
-
         if(serializer.is_valid()):
             code = str(random.randint(100000, 999999))
-
 
             message = f'Your verification code is: {code}'
             subject = 'Verification Code for DFWork Account'
             recipient = [email]
 
-
             instance = Verification(email=email, code=code)
             instance.save()
-
 
             serializer = VerificationSerializer(instance)
             return(Response(serializer.data, status=status.HTTP_201_CREATED))
         return(Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST))
+    
+    def get(self, request):
+        email = request.data.get('email')
+        code = request.data.get('code')
+
+        verificationEntry = get_object_or_404(Verification, email=email)
+        if(str(code) == str(verificationEntry)):
+            return Response({'message': 'Verification successful'}, status=status.HTTP_200_OK)
+        else:
+            return Response({'error': 'Invalid code'}, status=status.HTTP_400_BAD_REQUEST)
