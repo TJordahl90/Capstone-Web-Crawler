@@ -15,10 +15,10 @@ class JobPosting(models.Model):
     company = models.CharField(max_length=150)
     title = models.CharField(max_length=100)
     description = models.CharField(max_length=2000)
-    requirements = models.CharField(max_length=2000)
+    requirements = models.CharField(max_length=2000, blank=True, null=True)
     location = models.CharField(max_length=50)
-    datePosted = models.DateField()
-    salary = models.CharField(max_length=255)
+    datePosted = models.DateField(blank=True, null=True)
+    salary = models.CharField(max_length=255, blank=True, null=True)
     jobURL = models.CharField(max_length=255)
 
     def __str__(self):
