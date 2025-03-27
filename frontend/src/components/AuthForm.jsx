@@ -15,10 +15,12 @@ const AuthForm = ({ isLogin }) => {
     });
     const [message, setMessage] = useState('');
     const [error, setError] = useState('');
-
+    
     const handleSubmit = async (e) => {
         e.preventDefault();
         const endpoint = isLogin ? "/login/" : "/register/";
+
+        const temp = await api.post("/verification/", formData)
 
         try {
             const response = await api.post(endpoint, formData);
