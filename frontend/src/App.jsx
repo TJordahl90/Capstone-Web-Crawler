@@ -8,11 +8,12 @@ import FindJobs from "./components/FindJobs";
 import Account from "./components/Account";
 import SuggestedJobs from "./components/SuggestedJobs";
 import SavedJobs from "./components/SavedJobs";
+import Verification from "./components/Verification";
 import "bootstrap/dist/css/bootstrap.min.css";
 
 function App() {
   	const location = useLocation();
-  	const hideNavMenus = ["/", "/login", "/register"];
+  	const hideNavMenus = ["/", "/login", "/register", "/verification"];
   	const showNavMenus = !hideNavMenus.includes(location.pathname);
 
   	return (
@@ -34,6 +35,7 @@ function App() {
   	      		  	<Route path="/" element={<LandingPage />} />
   	      		  	<Route path="/login" element={<AuthForm isLogin={true} />} />
   	      		  	<Route path="/register" element={<AuthForm isLogin={false} />} />
+					<Route path="/verification" element={<Verification />} />
   	      		</Routes>
   	    	)}
 

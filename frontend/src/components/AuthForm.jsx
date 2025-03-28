@@ -27,8 +27,8 @@ const AuthForm = ({ isLogin }) => {
             const { access } = response.data;
             localStorage.setItem("accessToken", access);
 
-            setMessage(isLogin ? "Login successful!" : "Registration successful!");
-            setTimeout(() => navigate(isLogin ? "/account" : "/login"), 1000);
+            //setMessage(isLogin ? "Login successful!" : "Registration successful!");
+            setTimeout(() => navigate(isLogin ? "/account" : "/verification"), 1000);
         } catch (err) {
             setError(err.response?.data?.message || "Something went wrong.");
         }
