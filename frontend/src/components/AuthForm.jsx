@@ -20,7 +20,20 @@ const AuthForm = ({ isLogin }) => {
     const handleSubmit = async (e) => {
         e.preventDefault();
         const endpoint = isLogin ? "/login/" : "/register/";
-        const temp = await api.post("/verification/", formData); // Feel free to get rid of this or move it this was just to test the verification table in the database
+
+        // If user is registering, take them to the verification page and create a verification code for them
+        if(!isLogin){
+            try{
+                const verificationCode = await api.post("/verification/", formData); // Feel free to get rid of this or move it this was just to test the verification table in the database
+                console.log("Verification code created for: ", formData.email);
+                navigate("/verification");
+            }
+            catch(err){
+                setError(err.temp?.data?.message || "Something went wrong.");
+            }
+        }
+
+
 
         try {
             const response = await api.post(endpoint, formData);
