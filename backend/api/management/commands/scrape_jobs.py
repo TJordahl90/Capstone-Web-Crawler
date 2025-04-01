@@ -9,7 +9,6 @@ class Command(BaseCommand):
         
         # list all scrapers here
         scrapers = [
-            Alkami_Technology.alkami_technology,
             Fugetec.fugetec,
             tekreant.tekreant,
             # continue...
