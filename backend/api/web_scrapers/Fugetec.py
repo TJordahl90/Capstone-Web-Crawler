@@ -102,17 +102,16 @@ def fugetec():
                 # Add the company name
                 company = "Fugetec"
 
-                # Store the extracted data with reordered fields
-                job_info = {
-                    'Job Title': job_title,
+                # Format the job data USING THE EXACT FIELD NAMES expected by scrape_jobs.py
+                job_data.append({
                     'Company Name': company,
+                    'Job Title': job_title,
                     'Job Description': description,
                     'Location': location,
                     'Application Link': job_url
-                }
+                })
 
-                job_data.append(job_info)
-                logging.info(f"Successfully scraped job: {job_title}")
+                print(f"Successfully scraped: {job_title}")
 
                 # Add a small delay to avoid overloading the server
                 time.sleep(1)
