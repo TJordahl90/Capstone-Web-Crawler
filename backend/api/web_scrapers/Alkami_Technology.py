@@ -8,25 +8,29 @@ from selenium.webdriver.support import expected_conditions as EC
 from selenium.webdriver.common.by import By
 from selenium.common.exceptions import TimeoutException, WebDriverException
 import time
-import csv
-import logging
 import traceback
 import re
 from webdriver_manager.chrome import ChromeDriverManager
 
+
 def alkami_technology():
+    """
+    Scrapes job postings from Alkami Technology's career page.
+
+    Returns:
+        list: A list of dictionaries containing job information.
+    """
+    print("Starting Alkami Technology scraper...")
+
     # Setup Chrome options
     chrome_options = Options()
     chrome_options.add_argument("--headless")  # Run in background
     chrome_options.add_argument("--no-sandbox")
     chrome_options.add_argument("--disable-dev-shm-usage")
 
-
     # Setup the webdriver
-    #driver = webdriver.Chrome(service=Service(ChromeDriverManager().install()), options=chrome_options)
     service = Service(ChromeDriverManager().install())
     driver = webdriver.Chrome(service=service, options=chrome_options)
-
 
     # Prepare to store job data
     job_data = []
@@ -56,6 +60,8 @@ def alkami_technology():
             full_link = f"https://recruiting2.ultipro.com{link}"
             links_to_crawl.append(full_link)
 
+        print(f"Found {len(links_to_crawl)} Alkami job listings to process")
+
         # Crawl each job page
         for job_url in links_to_crawl:
             try:
@@ -70,16 +76,12 @@ def alkami_technology():
                 # Wait a bit more for dynamic content
                 time.sleep(2)
 
-                # Refresh the page source
+                # Refresh the page source to ensure we have the most current content
                 driver.refresh()
                 time.sleep(2)
 
                 # Create BeautifulSoup object for this specific page
                 job_page_soup = BeautifulSoup(driver.page_source, "html.parser")
-
-                # Debug: Print entire page source
-                print("Page Source:")
-                print(driver.page_source[:1000])  # Print first 1000 characters
 
                 # Extract job details with more robust selectors
                 job_title_element = job_page_soup.find('h1') or job_page_soup.find('a', class_='opportunity-link')
@@ -92,41 +94,41 @@ def alkami_technology():
                 job_description_element = (
                         job_page_soup.find('p', class_='opportunity-description') or
                         job_page_soup.find('div', class_='job-description') or
-                        job_page_soup.find('div', id='job-description')
+                        job_page_soup.find('div', id='job-description') or
+                        job_page_soup.find('div', class_='job-content')
                 )
+
                 job_description = job_description_element.get_text(
                     strip=True) if job_description_element else "No Description Found"
 
-                # Location
-                location = "Remote in US (Plano, TX option)"
+                # Location - try to find it, fallback to default
+                location_element = job_page_soup.find('span', class_='opportunity-location')
+                location = location_element.text.strip() if location_element else "Remote in US (Plano, TX option)"
 
-                # Application Link
-                application_link = job_url
-
-                # Store the job data
+                # Format the job data USING THE EXACT FIELD NAMES expected by scrape_jobs.py
                 job_data.append({
-                    'Job Title': job_title,
                     'Company Name': company_name,
+                    'Job Title': job_title,
                     'Job Description': job_description,
                     'Location': location,
-                    'Application Link': application_link
+                    'Application Link': job_url
                 })
 
-                # Print for verification
-                print(f"Scraped: {job_title}")
+                print(f"Successfully scraped: {job_title}")
 
-                # Optional: Add a small delay
+                # Add a small delay between requests to avoid overwhelming the server
                 time.sleep(1)
 
             except Exception as e:
-                print(f"Detailed error scraping {job_url}:")
+                print(f"Error scraping job at {job_url}:")
                 print(traceback.format_exc())
                 continue
 
+        print(f"Alkami Technology scraping complete. Found {len(job_data)} jobs.")
         return job_data
 
     except Exception as e:
-        print(f"An error occurred: {e}")
+        print(f"An error occurred during Alkami Technology scraping: {e}")
         traceback.print_exc()
         return []
 
@@ -134,6 +136,10 @@ def alkami_technology():
         # Always close the driver
         driver.quit()
 
-# used for views.py to import and call function
+
+# For testing the function directly
 if __name__ == "__main__":
     jobs = alkami_technology()
+    print(f"Total jobs found: {len(jobs)}")
+    for job in jobs:
+        print(f"Job: {job['Job Title']} at {job['Company Name']}")
