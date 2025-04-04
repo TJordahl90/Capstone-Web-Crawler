@@ -1,11 +1,12 @@
 from django.db import models
 from django.contrib.auth.models import User
+from django.contrib.postgres.fields import ArrayField
 
 class Account(models.Model):
     user = models.OneToOneField(User, on_delete=models.CASCADE) # each account is linked to a user
-    skills = models.TextField(default='[]') # We need to implement it like this to work with SQLite. We can either change it to have a new skills model, or change it when we change to Postgres
-    experience = models.TextField(default='[]') # Same as here ^
-    certifications = models.TextField(default='[]')
+    skills = ArrayField(models.CharField(max_length=20, blank=True), size=15)
+    experience = ArrayField(models.CharField(max_length=20, blank=True), size=15) # Shoudl probably be its own table, or at least some kind of multidimensional array.
+    certifications = ArrayField(models.CharField(max_length=20, blank=True), size=15) # Same here ^
     accountStatus = models.BooleanField(default=False)
 
     def __str__(self):
@@ -15,7 +16,7 @@ class JobPosting(models.Model):
     company = models.CharField(max_length=150)
     title = models.CharField(max_length=100)
     description = models.TextField()  # TextField is better for long text
-    requirements = models.CharField(max_length=2000, blank=True, null=True)  # Optional makes sense
+    requirements = ArrayField(models.CharField(max_length=20), size=15, default=list)
     location = models.CharField(max_length=50, blank=True, null=True)  # Optional is good
     datePosted = models.DateField(null=True, blank=True)  # Allow NULL and blank values
     salary = models.CharField(max_length=255, blank=True, null=True)  # Optional seems better
