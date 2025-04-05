@@ -2,6 +2,7 @@ import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { Container, Card, Row, Col, Form, Button, Alert } from 'react-bootstrap';
 import InputField from './InputField';
+import "./AuthForm.css";
 import api from '../api.js';
 
 const AuthForm = ({ isLogin }) => {
@@ -54,7 +55,7 @@ const AuthForm = ({ isLogin }) => {
 
     return (
         <Container className="auth-container" fluid>
-            <Card className="p-4 border-3">
+            <Card className="p-4">
                 <Row className="justify-content-center">
                     <Col>
                         <h1 className="text-center mb-4">{isLogin ? "Login" : "Register"}</h1>
@@ -86,7 +87,7 @@ const AuthForm = ({ isLogin }) => {
                                 onChange={(e) => setFormData({ ...formData, password: e.target.value })}
                                 placeholder="Enter your password"
                             />
-                            <Button variant="primary" type="submit" className="w-100">
+                            <Button type="submit" className="auth-button">
                                 {isLogin ? "Login" : "Register"}
                             </Button>
                         </Form>

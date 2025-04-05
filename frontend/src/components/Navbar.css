@@ -1,7 +1,5 @@
 .custom-navbar {
-    background-color: #3b0b24;
-    /* border-top: 2px solid whitesmoke; */
-    border-bottom: 1px solid whitesmoke;
+    border-bottom: 1px solid #48494c;
 }
 
 .container-fluid {
@@ -43,7 +41,7 @@
 }
 
 .navbar-canvas {
-    background-color: #3b0b24;
+    background-color: #292a2b;
     color: white;
 }
 
@@ -59,7 +57,6 @@
 
 .menu-divider-line {
     height: 1px;
-    background-color: white;
     width: 180px;
     margin: 10px auto;
     transition: width 0.3s ease;
@@ -68,6 +65,7 @@
 .menu-item:hover {
     background-color: rgba(255, 255, 255, 0.1);
     border-radius: 5px;
+    color: white;
 }
 
 .menu-divider {

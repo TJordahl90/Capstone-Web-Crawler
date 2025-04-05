@@ -48,11 +48,6 @@ h1 {
   }
 }
 
-.auth-container {
-  padding-top: 5vh;
-  max-width: 75%;
-}
-
 body, html {
   margin: 0;
   padding: 0;
@@ -60,4 +55,6 @@ body, html {
   height: 100%;
   overflow: hidden;
   background-color: white;
+  background-color: #292a2b;
+  border-top: 2px solid #c50e42;
 }
