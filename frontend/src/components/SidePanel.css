@@ -2,7 +2,6 @@
 .sidepanel-container {
     height: 100vh;
     width: 100vw; 
-    background-color: #3b0b24;
     display: flex;
 }
 
@@ -13,10 +12,10 @@
     color: white;
     position: fixed;
     left: 0;
-    top: 78px;
+    top: 81px;
     padding-top: 20px;
     transition: transform 0.3s ease, width 0.3s ease;
-    border-right: 1px solid white;
+    border-right: 1px solid #48494c;
 }
 
 .menu-item {
@@ -32,7 +31,7 @@
 
 .menu-divider-line {
     height: 1px;
-    background-color: white;
+    background-color: #48494c;
     width: 180px;
     margin: 10px auto;
     transition: width 0.3s ease;
@@ -71,7 +70,6 @@
 
 .sidebar {
     width: 250px; /* Adjust width of the side panel */
-    background-color: #3b0b24;
 }
 
 .content-wrapper {

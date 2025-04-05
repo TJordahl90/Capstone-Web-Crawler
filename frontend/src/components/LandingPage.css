@@ -5,7 +5,6 @@
   width: 100vw;
   align-items: center;
   justify-content: center;
-  background-color: #3B0B24;
   color: white;
   text-align: center;
   overflow: hidden;
@@ -84,5 +83,5 @@
 }
 
 .find-jobs-btn:hover {
-  background-color: #8C7527;
+  background-color: #c50e42;
 }
