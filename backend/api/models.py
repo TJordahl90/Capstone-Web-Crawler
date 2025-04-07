@@ -1,6 +1,7 @@
 from django.db import models
 from django.contrib.auth.models import User
 from django.contrib.postgres.fields import ArrayField
+from jobMatching import matchUsersToJobs
 
 class Account(models.Model):
     user = models.OneToOneField(User, on_delete=models.CASCADE) # each account is linked to a user
@@ -60,3 +61,11 @@ class Verification(models.Model):
 
     def __str__(self):
         return self.email
+
+def JobMatchingView(request):
+    userAccount = Account.objects.get(user=request.user)
+    userSkills = userAccount.skills or []
+
+    jobs = JobPosting.objects.all()
+
+    matchedJobs = matchUsersToJobs(user, jobs)

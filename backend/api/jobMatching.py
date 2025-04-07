@@ -1,4 +1,4 @@
-def matchUserToJobs(user, jobs):
-    matches = []
+# Use this file to match users to jobs
 
-    skills = set(skills.lower() for skills in user.skills.all())
+def matchUsersToJobs(user, jobs):
+    pass
