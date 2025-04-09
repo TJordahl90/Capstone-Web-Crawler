@@ -43,3 +43,8 @@ class VerificationSerializer(serializers.ModelSerializer):
     class Meta:
         model = Verification
         fields = ['code', 'email']
+
+class AccountSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Account
+        fields = ['user', 'skills', 'experience', 'certifications', 'accountStatus']

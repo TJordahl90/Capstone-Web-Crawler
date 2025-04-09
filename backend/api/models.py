@@ -4,9 +4,9 @@ from django.contrib.postgres.fields import ArrayField
 
 class Account(models.Model):
     user = models.OneToOneField(User, on_delete=models.CASCADE) # each account is linked to a user
-    skills = ArrayField(models.CharField(max_length=20, blank=True), size=15, null=True)
-    experience = ArrayField(models.CharField(max_length=20, blank=True), size=15, null=True) # Shoudl probably be its own table, or at least some kind of multidimensional array.
-    certifications = ArrayField(models.CharField(max_length=20, blank=True), size=15, null=True) # Same here ^
+    skills = ArrayField(models.CharField(max_length=20), size=15, default=list)
+    experience = ArrayField(models.CharField(max_length=20), size=15, default=list) # Shoudl probably be its own table, or at least some kind of multidimensional array.
+    certifications = ArrayField(models.CharField(max_length=20), size=15, default=list) # Same here ^
     accountStatus = models.BooleanField(default=False)
 
     def __str__(self):

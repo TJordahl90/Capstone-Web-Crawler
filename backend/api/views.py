@@ -11,8 +11,10 @@ from django.core.mail import send_mail
 from django.conf import settings
 import random
 from django.shortcuts import get_object_or_404
-# Create your views here.
+from django.http import JsonResponse
+from .jobMatching import matchUsersToJobs
 
+# Create your views here.
 def sendMail(to, subject, message):
     send_mail(subject, message, settings.EMAIL_HOST_USER, to, fail_silently=False)
 
@@ -97,3 +99,16 @@ class CreateVerificationView(APIView):
             return Response({'message': 'Verification successful'}, status=status.HTTP_200_OK)
         else:
             return Response({'error': 'Invalid code'}, status=status.HTTP_400_BAD_REQUEST)
+
+#@login_required # Implement this later so that only users who are logged in can use this function. For now we can leave it accessible by everyone
+def JobMatchingView(request):
+    userAccount = Account.objects.get(user=request.user)
+    userSkills = userAccount.skills or []
+
+    jobs = JobPosting.objects.all()
+
+    matchedJobs = matchUsersToJobs(userSkills, jobs)
+    print(f'User: {userAccount.user} matched with {len(matchedJobs)}.')
+    print('Matched Jobs:')
+    print(matchedJobs)
+    return JsonResponse(matchedJobs, safe=False)
