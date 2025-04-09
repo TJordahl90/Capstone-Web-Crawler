@@ -2,9 +2,15 @@ from django.db import models
 from django.contrib.auth.models import User
 from django.contrib.postgres.fields import ArrayField
 
+class CommonSkills(models.Model):
+    name = models.CharField(max_length=100, unique=True)
+
+    def __str__(self):
+        return self.name
+
 class Account(models.Model):
     user = models.OneToOneField(User, on_delete=models.CASCADE) # each account is linked to a user
-    skills = ArrayField(models.CharField(max_length=20), size=15, default=list)
+    skills = models.ManyToManyField(CommonSkills, related_name='account', blank=True)
     experience = ArrayField(models.CharField(max_length=20), size=15, default=list) # Shoudl probably be its own table, or at least some kind of multidimensional array.
     certifications = ArrayField(models.CharField(max_length=20), size=15, default=list) # Same here ^
     accountStatus = models.BooleanField(default=False)
