@@ -138,6 +138,8 @@ class CreateVerificationView(APIView):
             return Response({'error': 'Invalid code'}, status=status.HTTP_400_BAD_REQUEST)
 
 #@login_required # Implement this later so that only users who are logged in can use this function. For now we can leave it accessible by everyone
+# This needs to be modified and tested since we are changing the batabase schema
+'''
 def JobMatchingView(request):
     userAccount = Account.objects.get(user=request.user)
     userSkills = userAccount.skills or []
@@ -149,3 +151,4 @@ def JobMatchingView(request):
     print('Matched Jobs:')
     print(matchedJobs)
     return JsonResponse(matchedJobs, safe=False)
+'''

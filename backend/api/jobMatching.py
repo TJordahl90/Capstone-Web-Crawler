@@ -1,19 +1,22 @@
 # Use this file to match users to jobs
+from api.models import Account, JobPosting
 
-def matchUsersToJobs(userSkills, jobs):
-    if(not userSkills or not jobs): # No need to run the function if the user has no skills or no jobs are available
-        return set()
-    
-    matchedJobs = set() # This will be what we return to the user. Set to ensure no duplicates
-    userSkills = set(skills.lower() for skills in userSkills) # Lowercase set for comparison. Ensures no duplicates and is hashed for quick comparison
-    
+def matchUsersToJobs(account):
+    skills = set(account.skills.all()) # Skills are stored as a query set
+
+    jobMatches = []
+
+    jobs = JobPosting.objects.prefetch_related('requirements').all() # Should be modified for specific roles but for now we can leave it like this
+
     for job in jobs:
-        jobSkills = set(skills.lower() for skills in job.requirements) # Same as skills ^
+        jobSkills = set(job.requirements.all())
 
-        matchingSkills = userSkills & jobSkills # & is the intersection operator for sets, so this will compare the intersection of the user/job skill sets and return that set
+        matchingSkills = skills & jobSkills
+        numOfMatchingSkills = len(matchingSkills)
 
-        if(matchingSkills):
-            print(f'User matches with: {job.title} at {job.company} with {len(matchingSkills)} matching skills: {matchingSkills}')
-            matchedJobs.add(job.id) # Will be returning a set of job IDs
-        
-    return(matchedJobs)
+        if(numOfMatchingSkills >= 1):
+            jobMatches.append(job.id)
+            print(f'{account} matched to {job} with {numOfMatchingSkills} matching skills')
+            
+    return jobMatches
+
