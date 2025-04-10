@@ -7,12 +7,45 @@ class CommonSkills(models.Model):
 
     def __str__(self):
         return self.name
+    
+class CommonJobPreferences(models.Model):
+    name = models.CharField(max_length=100, unique=True)
 
+    def __str__(self):
+        return self.name
+
+class Education(models.Model):
+    educationLevel = models.CharField(max_length=50)
+    institution = models.CharField(max_length=100)
+    degree = models.CharField(max_length=50)
+    major = models.CharField(max_length=50)
+    minor = models.CharField(max_length=50, blank=True, null=True)
+    graduationDate = models.DateField()
+    gpa = models.FloatField()
+
+    def __str__(self):
+        return self.institution
+    
+class Experience(models.Model):
+    company = models.CharField(max_length=50)
+    title = models.CharField(max_length=50)
+    location = models.CharField(max_length=50, blank=True, null=True)
+    startDate = models.DateField(blank=True, null=True)
+    description = models.TextField(blank=True, null=True)
+
+    def __str__(self):
+        return self.company
+    
 class Account(models.Model):
     user = models.OneToOneField(User, on_delete=models.CASCADE) # each account is linked to a user
-    skills = models.ManyToManyField(CommonSkills, related_name='account', blank=True)
-    experience = ArrayField(models.CharField(max_length=20), size=15, default=list) # Shoudl probably be its own table, or at least some kind of multidimensional array.
-    certifications = ArrayField(models.CharField(max_length=20), size=15, default=list) # Same here ^
+    accountImage = models.ImageField(upload_to='api/uploads', blank=True, null=True)
+    resume = models.FileField(upload_to='api/uploads', blank=True, null=True)
+    location = models.CharField(max_length=50, blank=True, null=True)
+    summary = models.TextField(blank=True, null=True)
+    skills = models.ManyToManyField(CommonSkills, blank=True)
+    jobPrefs = models.ManyToManyField(CommonJobPreferences, blank=True)
+    education = models.ManyToManyField(Education, blank=True)
+    experience = models.ManyToManyField(Experience, blank=True)
     accountStatus = models.BooleanField(default=False)
 
     def __str__(self):
@@ -48,17 +81,6 @@ class JobTrends(models.Model):
 
     def __str__(self):
         return self.industry
-    
-class Education(models.Model):
-    educationLevel = models.CharField(max_length=50)
-    institution = models.CharField(max_length=100)
-    major = models.CharField(max_length=50)
-    minor = models.CharField(max_length=50, blank=True, null=True)
-    graduationDate = models.DateField()
-    account = models.ForeignKey(Account, on_delete=models.CASCADE)
-
-    def __str__(self):
-        return self.institution
 
 class Verification(models.Model):
     email = models.TextField(blank=False, null=False)
