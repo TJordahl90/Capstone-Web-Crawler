@@ -37,7 +37,7 @@ class CreateUserView(APIView):
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST) # or sends error msg
 
 class LoginView(APIView):
-    """Handles user authentication and returns JWT tokens"""
+    """Handles user authentication and returns session id"""
     permission_classes = [AllowAny]
 
     def post(self, request):
@@ -65,6 +65,39 @@ class UserProfileView(APIView):
     def get(self, request):
         serializer = CreateUserSerializer(request.user)
         return Response(serializer.data)
+    
+class AccountView(APIView):
+    """Updates user account details"""
+    permission_classes = [IsAuthenticated]
+
+    def patch(self, request):
+        user = request.user
+        account = user.account
+
+        user_data = request.data.get('user')
+        account_data = request.data.get('account')
+        skills_data = request.data.get('skills')
+        jobPrefs_data = request.data.get('jobPreferences')
+        education_data = request.data.get('education')
+        experience_data = request.data.get('experience')
+
+        if user_data:
+            user_serializer = UserSerializer(user, data=user_data, partial=True)
+            if user_serializer.is_valid():
+                user_serializer.save()
+
+        if account_data:
+            account_serializer = AccountSerializer(account, data=account_data, partial=True)
+            if account_serializer.is_valid():
+                account_serializer.save()
+
+        # if skills_data:
+        #     skills_serializer = CommonSkillsSerializer(account.skills, data=skills_data, partial=True)
+        #     if skills_serializer.is_valid():
+        #         skills_serializer.save()
+    
+        return Response({"message": "Sucessfully updated account"}, status=200)
+        #return Response({"error": "Unable to update account"})
 
 class CreateVerificationView(APIView):
     permission_classes = [AllowAny]
