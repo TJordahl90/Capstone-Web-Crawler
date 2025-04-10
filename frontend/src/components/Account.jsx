@@ -1,12 +1,16 @@
 import React, { useState, useEffect } from "react";
-import { Container, Card, Button, Form, Modal, Badge } from "react-bootstrap";
+import { Container, Card, Button, Form, Modal, Badge, Alert } from "react-bootstrap";
 import { FaPencilAlt } from "react-icons/fa";
 import profile from "../assets/profile.png";
 import InputField from './InputField';
 import { jobList, skillList } from "../AccountOptions.js";
 import "./Account.css";
+import api from '../api.js';
 
 const Account = () => {
+    const [message, setMessage] = useState('');
+    const [error, setError] = useState('');
+
     const [editPersonalInfo, setEditPersonalInfo] = useState(false);
     const [editSummary, setEditSummary] = useState(false);
     const [editjobs, setEditjobs] = useState(false);
@@ -17,7 +21,7 @@ const Account = () => {
     const [tempjobs, setTempjobs] = useState([]);
     const [tempSkills, setTempSkills] = useState([]);
 
-    const [formData, setFormData] = useState({
+    const [accountData, setaccountData] = useState({
         firstName: "",
         lastName: "",
         email: "",
@@ -39,15 +43,15 @@ const Account = () => {
 
     useEffect(() => {
         if (editjobs) {
-            setTempjobs(formData.jobs);
+            setTempjobs(accountData.jobs);
         }
-    }, [editjobs, formData.jobs]);
+    }, [editjobs, accountData.jobs]);
 
     useEffect(() => {
         if (editSkills) {
-            setTempSkills(formData.skills);
+            setTempSkills(accountData.skills);
         }
-    }, [editSkills, formData.skills]);
+    }, [editSkills, accountData.skills]);
     
     const toggleBadge = (item, type) => {
         if (type == "job") {
@@ -70,64 +74,181 @@ const Account = () => {
 
     const handlePersonalInfo = async (e) => {
         e.preventDefault();
+        const data = {
+            user: {
+                first_name: accountData.firstName,
+                last_name: accountData.lastName,
+                email: accountData.email,
+            },
+            account: {
+                // accountImage: accountData.accountImage,
+                // resume: accountData.resume,
+                location: accountData.location,
+            }
+            
+        };
+
+        try {
+            await api.patch("/account/", data);
+            setMessage("Account successfully updated!");
+        } 
+        catch (err) {
+            setError("Error updating account.");
+            console.log(err);
+        }
+
         setEditPersonalInfo(false);
-        // send data to backend
+        setTimeout(() => {
+            setMessage('');
+            setError('');
+        }, 3000);
     }
 
     const handleSummary = async (e) => {
         e.preventDefault();
+        const data = { summary: accountData.summary };
+
+        try {
+            await api.patch("/account/", data);
+            setMessage("Account successfully updated!");
+        }
+        catch (err) {
+            setError("Error updating account.");
+            console.log(err);
+        }
+
         setEditSummary(false);
-        // send data to backend
+        setTimeout(() => {
+            setMessage('');
+            setError('');
+        }, 3000);
     }
 
     const handlejobs = async (e) => {
         e.preventDefault();
-        setFormData({ ...formData, jobs: tempjobs });
+        setaccountData({ ...accountData, jobs: tempjobs });
+        const data = { jobPreferences: accountData.jobs };
+
+        try {
+            await api.patch("/account/", data);
+            setMessage("Account successfully updated!");
+        }
+        catch (err) {
+            setError("Error updating account.");
+            console.log(err);
+        }
+
         setEditjobs(false);
-        // send data to backend
+        setTimeout(() => {
+            setMessage('');
+            setError('');
+        }, 3000);
     }
 
     const handleSkills = async (e) => {
         e.preventDefault();
-        setFormData({ ...formData, skills: tempSkills });
+        setaccountData({ ...accountData, skills: tempSkills });
+        const data = { skills: accountData.skills };
+
+        try {
+            await api.patch("/account/", data);
+            setMessage("Account successfully updated!");
+        }
+        catch (err) {
+            setError("Error updating account.");
+            console.log(err);
+        }
+
         setEditSkills(false);
-        // send data to backend
+        setTimeout(() => {
+            setMessage('');
+            setError('');
+        }, 3000);
     }
 
     const handleEducation = async (e) => {
         e.preventDefault();
+        const data = {
+            education: {
+                // educationLevel: accountData.educationLevel,
+                institution: accountData.school,
+                degree: accountData.degree,
+                major: accountData.major,
+                // minor: accountData.minor,
+                graduationDate: accountData.graduationDate,
+                gpa: accountData.gpa,
+            }
+        };
+
+        try {
+            await api.patch("/account/", data);
+            setMessage("Account successfully updated!");
+        }
+        catch (err) {
+            setError("Error updating account.");
+            console.log(err);
+        }
+
         setEditEducation(false);
-        // send data to backend
+        setTimeout(() => {
+            setMessage('');
+            setError('');
+        }, 3000);
     }
 
     const handleExperience = async (e) => {
         e.preventDefault();
+        const data = {
+            experience: {
+                company: accountData.company,
+                title: accountData.position,
+                location: accountData.location,
+                startDate: accountData.startDate,
+                description: accountData.responsibilities,
+            }
+        };
+
+        try {
+            await api.patch("/account/", data);
+            setMessage("Account successfully updated!");
+        }
+        catch (err) {
+            setError("Error updating account.");
+            console.log(err);
+        }
+
         setEditExperience(false);
-        // send data to backend
+        setTimeout(() => {
+            setMessage('');
+            setError('');
+        }, 3000);
     }
 
 
     return (
         <Container className="account-container py-4">
+            {/* Alert Messages */}
+            {message && <Alert variant="success">{message}</Alert>}
+            {error && <Alert variant="danger">{error}</Alert>}
 
             {/* Personal Information */}
             <Card className="mb-4">
                 <Card.Body className="text-start">
                     <Card.Img src={profile} className="account-image mb-3" style={{ width: "50px", height: "50px" }} alt="Profile Image" />
                     <Card.Title>
-                        {(formData.firstName || formData.lastName)
-                            ? `${formData.firstName} ${formData.lastName}`
+                        {(accountData.firstName || accountData.lastName)
+                            ? `${accountData.firstName} ${accountData.lastName}`
                             : "Please enter your name."
                         }
                     </Card.Title>
                     <Card.Text>
-                        {(formData.email)
-                            ? `${formData.email}`
+                        {(accountData.email)
+                            ? `${accountData.email}`
                             : "Please enter your email."
                         }
                         <br />
-                        {(formData.location)
-                            ? `${formData.location}`
+                        {(accountData.location)
+                            ? `${accountData.location}`
                             : "Please enter your location."
                         }
                     </Card.Text>
@@ -144,20 +265,20 @@ const Account = () => {
                     <Modal.Header closeButton><Modal.Title>Edit Personal Info</Modal.Title></Modal.Header>
                     <Modal.Body>
                         <Form onSubmit={handlePersonalInfo}>
-                            <InputField label="First Name" type="text" value={formData.firstName}
-                                onChange={(e) => setFormData({ ...formData, firstName: e.target.value })}
+                            <InputField label="First Name" type="text" value={accountData.firstName}
+                                onChange={(e) => setaccountData({ ...accountData, firstName: e.target.value })}
                                 placeholder="Enter your first name..."
                             />
-                            <InputField label="Last Name" type="text" value={formData.lastName}
-                                onChange={(e) => setFormData({ ...formData, lastName: e.target.value })}
+                            <InputField label="Last Name" type="text" value={accountData.lastName}
+                                onChange={(e) => setaccountData({ ...accountData, lastName: e.target.value })}
                                 placeholder="Enter your last name..."
                             />
-                            <InputField label="Email" type="email" value={formData.email}
-                                onChange={(e) => setFormData({ ...formData, email: e.target.value })}
+                            <InputField label="Email" type="email" value={accountData.email}
+                                onChange={(e) => setaccountData({ ...accountData, email: e.target.value })}
                                 placeholder="Enter your email..."
                             />
-                            <InputField label="Location" type="text" value={formData.location}
-                                onChange={(e) => setFormData({ ...formData, location: e.target.value })}
+                            <InputField label="Location" type="text" value={accountData.location}
+                                onChange={(e) => setaccountData({ ...accountData, location: e.target.value })}
                                 placeholder="Enter your City, State..."
                             />
                             <Button type="submit">Submit</Button>
@@ -171,8 +292,8 @@ const Account = () => {
                 <Card.Body className="text-start">
                     <Card.Title>Summary</Card.Title>
                     <Card.Text>
-                        {(formData.summary)
-                            ? `${formData.summary}`
+                        {(accountData.summary)
+                            ? `${accountData.summary}`
                             : "No summary yet."
                         }
                     </Card.Text>
@@ -188,8 +309,8 @@ const Account = () => {
                     <Modal.Header closeButton><Modal.Title>Edit Profile Summary</Modal.Title></Modal.Header>
                     <Modal.Body>
                         <Form onSubmit={handleSummary}>
-                            <InputField label="Summary" type="text" value={formData.summary}
-                                onChange={(e) => setFormData({ ...formData, summary: e.target.value })}
+                            <InputField label="Summary" type="text" value={accountData.summary}
+                                onChange={(e) => setaccountData({ ...accountData, summary: e.target.value })}
                                 placeholder="Enter 2-3 sentences about yourself..."
                             />
                             <Button type="submit">Submit</Button>
@@ -203,9 +324,9 @@ const Account = () => {
                 <Card.Body className="text-start">
                     <Card.Title>Your Job Preferences</Card.Title>
                     <Card.Text>
-                        {formData.jobs.length > 0 ? (
-                            formData.jobs.map((job, index) => (
-                                <Badge className="badge-selected">
+                        {accountData.jobs.length > 0 ? (
+                            accountData.jobs.map((job, index) => (
+                                <Badge key={index} className="badge-selected">
                                     {job}
                                 </Badge>
                             ))
@@ -243,9 +364,9 @@ const Account = () => {
                 <Card.Body className="text-start">
                     <Card.Title>Your Skills</Card.Title>
                     <Card.Text>
-                        {formData.skills.length > 0 ? (
-                            formData.skills.map((skill, index) => (
-                                <Badge className="badge-selected">
+                        {accountData.skills.length > 0 ? (
+                            accountData.skills.map((skill, index) => (
+                                <Badge key={index} className="badge-selected">
                                     {skill}
                                 </Badge>
                             ))
@@ -283,28 +404,28 @@ const Account = () => {
                 <Card.Body className="text-start">
                     <Card.Title>Education</Card.Title>
                     <Card.Text>
-                        {(formData.school)
-                            ? `${formData.school}`
+                        {(accountData.school)
+                            ? `${accountData.school}`
                             : "School not selected."
                         }
                         <br />
-                        {(formData.degree)
-                            ? `${formData.degree}`
+                        {(accountData.degree)
+                            ? `${accountData.degree}`
                             : "Degree not selected."
                         }
                         <br />
-                        {(formData.major)
-                            ? `${formData.major}`
+                        {(accountData.major)
+                            ? `${accountData.major}`
                             : "Major not selected."
                         }
                         <br />
-                        {(formData.graduationDate)
-                            ? `${formData.graduationDate}`
+                        {(accountData.graduationDate)
+                            ? `${accountData.graduationDate}`
                             : "Graduation date not selected."
                         }
                         <br />
-                        {(formData.gpa)
-                            ? `${formData.gpa}`
+                        {(accountData.gpa)
+                            ? `${accountData.gpa}`
                             : "GPA not selected."
                         }
                     </Card.Text>
@@ -320,24 +441,24 @@ const Account = () => {
                     <Modal.Header closeButton><Modal.Title>Edit Education</Modal.Title></Modal.Header>
                     <Modal.Body>
                         <Form onSubmit={handleEducation}>
-                            <InputField label="School" type="text" value={formData.school}
-                                onChange={(e) => setFormData({ ...formData, school: e.target.value })}
+                            <InputField label="School" type="text" value={accountData.school}
+                                onChange={(e) => setaccountData({ ...accountData, school: e.target.value })}
                                 placeholder="Enter your school name..."
                             />
-                            <InputField label="Degree Type" type="text" value={formData.degree}
-                                onChange={(e) => setFormData({ ...formData, degree: e.target.value })}
+                            <InputField label="Degree Type" type="text" value={accountData.degree}
+                                onChange={(e) => setaccountData({ ...accountData, degree: e.target.value })}
                                 placeholder="Enter your degree type..."
                             />
-                            <InputField label="Major/Field of Study" type="text" value={formData.major}
-                                onChange={(e) => setFormData({ ...formData, major: e.target.value })}
+                            <InputField label="Major/Field of Study" type="text" value={accountData.major}
+                                onChange={(e) => setaccountData({ ...accountData, major: e.target.value })}
                                 placeholder="Enter your major..."
                             />
-                            <InputField label="Graduation Date" type="text" value={formData.graduationDate}
-                                onChange={(e) => setFormData({ ...formData, graduationDate: e.target.value })}
+                            <InputField label="Graduation Date" type="text" value={accountData.graduationDate}
+                                onChange={(e) => setaccountData({ ...accountData, graduationDate: e.target.value })}
                                 placeholder="Enter your graduation date: Month, Year..."
                             />
-                            <InputField label="Cumulative GPA" type="text" value={formData.gpa}
-                                onChange={(e) => setFormData({ ...formData, gpa: e.target.value })}
+                            <InputField label="Cumulative GPA" type="text" value={accountData.gpa}
+                                onChange={(e) => setaccountData({ ...accountData, gpa: e.target.value })}
                                 placeholder="Enter your GPA..."
                             />
                             <Button type="submit">Submit</Button>
@@ -351,28 +472,28 @@ const Account = () => {
                 <Card.Body className="text-start">
                     <Card.Title>Work Experience</Card.Title>
                     <Card.Text>
-                        {(formData.company)
-                            ? `${formData.company}`
+                        {(accountData.company)
+                            ? `${accountData.company}`
                             : "Company not selected."
                         }
                         <br />
-                        {(formData.position)
-                            ? `${formData.position}`
+                        {(accountData.position)
+                            ? `${accountData.position}`
                             : "Work position not selected."
                         }
                         <br />
-                        {(formData.companyLocation)
-                            ? `${formData.companyLocation}`
+                        {(accountData.companyLocation)
+                            ? `${accountData.companyLocation}`
                             : "Company location not selected."
                         }
                         <br />
-                        {(formData.startDate)
-                            ? `${formData.startDate}`
+                        {(accountData.startDate)
+                            ? `${accountData.startDate}`
                             : "Start date not selected."
                         }
                         <br />
-                        {(formData.responsibilities)
-                            ? `${formData.responsibilities}`
+                        {(accountData.responsibilities)
+                            ? `${accountData.responsibilities}`
                             : "Work responsibilities not selected."
                         }
                     </Card.Text>
@@ -388,24 +509,24 @@ const Account = () => {
                     <Modal.Header closeButton><Modal.Title>Edit Work Experience</Modal.Title></Modal.Header>
                     <Modal.Body>
                         <Form onSubmit={handleExperience}>
-                            <InputField label="Company" type="text" value={formData.company}
-                                onChange={(e) => setFormData({ ...formData, company: e.target.value })}
+                            <InputField label="Company" type="text" value={accountData.company}
+                                onChange={(e) => setaccountData({ ...accountData, company: e.target.value })}
                                 placeholder="Enter your company name..."
                             />
-                            <InputField label="Job Position/Title" type="text" value={formData.position}
-                                onChange={(e) => setFormData({ ...formData, position: e.target.value })}
+                            <InputField label="Job Position/Title" type="text" value={accountData.position}
+                                onChange={(e) => setaccountData({ ...accountData, position: e.target.value })}
                                 placeholder="Enter your work position/title..."
                             />
-                            <InputField label="Company Location" type="text" value={formData.companyLocation}
-                                onChange={(e) => setFormData({ ...formData, companyLocation: e.target.value })}
+                            <InputField label="Company Location" type="text" value={accountData.companyLocation}
+                                onChange={(e) => setaccountData({ ...accountData, companyLocation: e.target.value })}
                                 placeholder="Enter your company location..."
                             />
-                            <InputField label="Start Date" type="text" value={formData.startDate}
-                                onChange={(e) => setFormData({ ...formData, startDate: e.target.value })}
+                            <InputField label="Start Date" type="text" value={accountData.startDate}
+                                onChange={(e) => setaccountData({ ...accountData, startDate: e.target.value })}
                                 placeholder="Enter your start date: Month, Year..."
                             />
-                            <InputField label="Work Responsibilities" type="text" value={formData.responsibilities}
-                                onChange={(e) => setFormData({ ...formData, responsibilities: e.target.value })}
+                            <InputField label="Work Responsibilities" type="text" value={accountData.responsibilities}
+                                onChange={(e) => setaccountData({ ...accountData, responsibilities: e.target.value })}
                                 placeholder="Enter your work responsibilities..."
                             />
                             <Button type="submit">Submit</Button>
