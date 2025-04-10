@@ -44,7 +44,13 @@ class VerificationSerializer(serializers.ModelSerializer):
         model = Verification
         fields = ['code', 'email']
 
+class UserSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = User
+        fields = ['email', 'username', 'first_name', 'last_name']
+
 class AccountSerializer(serializers.ModelSerializer):
     class Meta:
         model = Account
         fields = ['user', 'skills', 'experience', 'certifications', 'accountStatus']
+        extra_kwargs = {"user": {"read_only": True}}

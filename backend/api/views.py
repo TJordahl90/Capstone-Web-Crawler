@@ -4,9 +4,10 @@ from rest_framework.response import Response
 from rest_framework import status
 from rest_framework.views import APIView
 from rest_framework.permissions import AllowAny, IsAuthenticated
-from django.contrib.auth.models import User
-from django.contrib.auth import authenticate
-from rest_framework_simplejwt.tokens import RefreshToken
+from rest_framework.decorators import permission_classes
+from django.middleware.csrf import get_token
+from django.views.decorators.csrf import ensure_csrf_cookie
+from django.contrib.auth import authenticate, login
 from django.core.mail import send_mail
 from django.conf import settings
 import random
@@ -14,7 +15,13 @@ from django.shortcuts import get_object_or_404
 from django.http import JsonResponse
 from .jobMatching import matchUsersToJobs
 
-# Create your views here.
+@permission_classes([AllowAny])
+@ensure_csrf_cookie
+def CsrfTokenView(request):
+    """Create csrf token and send to frontend"""
+    csrf_token = get_token(request) # built-in function that creates csrf tokens
+    return JsonResponse({'csrfToken': csrf_token})
+
 def sendMail(to, subject, message):
     send_mail(subject, message, settings.EMAIL_HOST_USER, to, fail_silently=False)
 
@@ -39,19 +46,16 @@ class LoginView(APIView):
         user = authenticate(username=username, password=password)
 
         if user is not None:
-            refresh = RefreshToken.for_user(user)
-            response = Response({
-                "access": str(refresh.access_token)
-                # need to also include user & account data
-            })
-            response.set_cookie(
-                key="refresh_token",
-                value=str(refresh),
-                httponly=True,
-                secure=True,
-                samesite="Lax"
-            )
-            return response
+            login(request, user)
+            account = Account.objects.get(user=user)
+            user_serialized_data = UserSerializer(user).data
+            account_serialized_data = AccountSerializer(account).data
+
+            response = {
+                'user': user_serialized_data,
+                'account': account_serialized_data
+            }
+            return Response(response, status=200)
         return Response({"error": "Invalid credentials"}, status=400)
 
 class UserProfileView(APIView):

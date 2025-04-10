@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { Container, Card, Row, Col, Form, Button, Alert } from 'react-bootstrap';
 import InputField from './InputField';
@@ -7,6 +7,8 @@ import api from '../api.js';
 
 const AuthForm = ({ isLogin }) => {
     const navigate = useNavigate();
+    const [message, setMessage] = useState('');
+    const [error, setError] = useState('');
     const [formData, setFormData] = useState({
         username: '',
         password: '',
@@ -14,18 +16,28 @@ const AuthForm = ({ isLogin }) => {
         last_name: '',
         email: '',
     });
-
-    const [message, setMessage] = useState('');
-    const [error, setError] = useState('');
     
+    useEffect(() => {
+        const getCsrfToken = async () => {
+            try {
+                const response = await api.get('/csrf/');
+                console.log(response.data);
+            } 
+            catch (err) {
+                setError(err.response?.data?.message || "Something went wrong.");
+            }
+        };
+
+        getCsrfToken();
+    }, []);
+
     const handleSubmit = async (e) => {
         e.preventDefault();
         const endpoint = isLogin ? "/login/" : "/register/";
 
-        // If user is registering, take them to the verification page and create a verification code for them
         if(!isLogin){
             try{
-                const verificationCode = await api.post("/verification/", formData); // Feel free to get rid of this or move it this was just to test the verification table in the database
+                const verificationCode = await api.post("/verification/", formData);
                 console.log("Verification code created for: ", formData.email);
                 navigate("/verification");
             }
@@ -34,14 +46,12 @@ const AuthForm = ({ isLogin }) => {
             }
         }
 
-
-
         try {
             const response = await api.post(endpoint, formData);
-            const { access } = response.data;
-            localStorage.setItem("accessToken", access);
+            localStorage.setItem("userData", JSON.stringify(response.data.user));
+            localStorage.setItem("accountData", JSON.stringify(response.data.account));
 
-            //setMessage(isLogin ? "Login successful!" : "Registration successful!");
+            setMessage("Login successful!");
             setTimeout(() => navigate(isLogin ? "/account" : "/verification"), 1000);
         } catch (err) {
             setError(err.response?.data?.message || "Something went wrong.");
