@@ -1,0 +1,484 @@
+# Tech Field Keywords
+
+## Academic Fields & Degrees
+entry
+computer science
+information technology
+information systems
+software engineering
+computer engineering
+data science
+cybersecurity
+artificial intelligence
+machine learning
+robotics
+bioinformatics
+game development
+web development
+mobile development
+network engineering
+systems engineering
+electrical engineering
+computational mathematics
+human-computer interaction
+it management
+digital media
+computer graphics
+information security
+database administration
+cloud computing
+bachelor's degree
+master's degree
+phd
+doctorate
+associate degree
+certification
+diploma
+bootcamp
+undergraduate
+graduate
+post-graduate
+mba
+mscs
+bscs
+bsit
+msis
+
+## Programming Languages & Frameworks
+python
+javascript
+java
+c++
+c#
+php
+ruby
+swift
+kotlin
+typescript
+golang
+rust
+scala
+r
+perl
+haskell
+sql
+nosql
+react
+angular
+vue
+node.js
+django
+flask
+spring
+rails
+laravel
+express.js
+next.js
+gatsby
+bootstrap
+jquery
+asp.net
+.net
+xamarin
+flutter
+react native
+ionic
+symfony
+ember
+svelte
+backbone.js
+
+## Cloud & DevOps
+aws
+azure
+gcp
+google cloud
+cloud computing
+kubernetes
+docker
+jenkins
+gitlab
+github
+bitbucket
+terraform
+ansible
+puppet
+chef
+ci/cd
+continuous integration
+continuous deployment
+infrastructure as code
+serverless
+microservices
+devops
+sre
+site reliability engineering
+cloud native
+containerization
+virtualization
+vmware
+openstack
+digitalocean
+heroku
+
+## Data Science & Analytics
+machine learning
+deep learning
+artificial intelligence
+ai
+ml
+data mining
+data visualization
+data modeling
+etl
+data warehouse
+data lake
+big data
+hadoop
+spark
+tableau
+power bi
+looker
+data studio
+elasticsearch
+kibana
+logstash
+splunk
+grafana
+prometheus
+pandas
+numpy
+scikit-learn
+tensorflow
+pytorch
+keras
+opencv
+nlp
+natural language processing
+computer vision
+predictive analytics
+statistical analysis
+a/b testing
+data engineering
+data science
+business intelligence
+bi
+data analytics
+
+## Database Technologies
+mysql
+postgresql
+mongodb
+oracle
+sql server
+sqlite
+redis
+cassandra
+dynamodb
+mariadb
+neo4j
+couchdb
+firestore
+bigtable
+hbase
+cockroachdb
+influxdb
+graphql
+data modeling
+database design
+database administration
+dba
+data architecture
+data migration
+etl
+normalization
+indexing
+sharding
+replication
+
+## Security
+cybersecurity
+infosec
+penetration testing
+vulnerability assessment
+security audit
+encryption
+cryptography
+firewall
+iam
+identity and access management
+siem
+zero trust
+oauth
+saml
+single sign-on
+sso
+mfa
+multi-factor authentication
+threat detection
+threat intelligence
+security compliance
+gdpr
+hipaa
+pci dss
+soc
+security operations center
+security architecture
+devsecops
+intrusion detection
+intrusion prevention
+security posture
+
+## Infrastructure & Networking
+tcp/ip
+dns
+dhcp
+vpn
+vlan
+load balancing
+cdn
+content delivery network
+proxy
+reverse proxy
+networking
+routing
+switching
+ipv4
+ipv6
+bgp
+ospf
+mpls
+nat
+firewall
+ipsec
+ssl/tls
+network security
+network architecture
+sdn
+software-defined networking
+wan
+lan
+wireless
+5g
+edge computing
+
+## Project Management & Methodologies
+agile
+scrum
+kanban
+waterfall
+jira
+confluence
+trello
+asana
+monday.com
+project management
+sprint planning
+backlog grooming
+retrospective
+stand-up
+product owner
+scrum master
+burndown chart
+user stories
+epics
+product roadmap
+gantt chart
+critical path
+pmp
+prince2
+itil
+devops
+lean
+six sigma
+sdlc
+software development lifecycle
+
+## Software Development & Design
+oop
+object-oriented programming
+functional programming
+api
+rest
+soap
+grpc
+microservices
+mvc
+design patterns
+software architecture
+uml
+git
+version control
+code review
+unit testing
+integration testing
+e2e testing
+qa
+quality assurance
+ci/cd
+build automation
+dependency management
+refactoring
+debugging
+performance optimization
+test-driven development
+tdd
+ux/ui
+user experience
+user interface
+responsive design
+mobile-first
+accessibility
+i18n
+internationalization
+l10n
+localization
+seo
+caching
+middleware
+backend
+frontend
+full-stack
+
+## Operating Systems & Hardware
+linux
+unix
+windows
+macos
+android
+ios
+ubuntu
+debian
+red hat
+centos
+fedora
+bash
+powershell
+command line
+shell scripting
+system administration
+sysadmin
+embedded systems
+firmware
+iot
+internet of things
+hardware design
+pcb design
+fpga
+microcontroller
+raspberry pi
+arduino
+robotics
+automation
+3d printing
+cad
+computer aided design
+
+## Emerging Technologies
+blockchain
+distributed ledger
+cryptocurrency
+smart contracts
+web3
+nft
+metaverse
+ar
+augmented reality
+vr
+virtual reality
+xr
+extended reality
+quantum computing
+edge computing
+5g
+computer vision
+speech recognition
+cognitive computing
+digital twin
+autonomous systems
+robotics process automation
+rpa
+generative ai
+computer vision
+neural networks
+gans
+transformers
+llm
+large language models
+generative ai
+autonomous vehicles
+drones
+wearable technology
+
+## Industry-Specific Technologies
+fintech
+insurtech
+healthtech
+medtech
+edtech
+proptech
+regtech
+legaltech
+adtech
+martech
+biotech
+cleantech
+agtech
+retailtech
+supplychain tech
+govtech
+automotive tech
+aerospace tech
+defense tech
+energy tech
+manufacturing tech
+telecom tech
+media tech
+
+## Professional Skills & Certifications
+aws certified
+azure certified
+google cloud certified
+cissp
+ceh
+comptia
+itil
+pmp
+scrum certified
+safe
+togaf
+cisa
+cism
+ccna
+mcse
+rhce
+lpic
+oracle certified
+mongodb certified
+hadoop certified
+tableau certified
+salesforce certified
+servicenow certified
+six sigma
+lean
+cmmi
+iso
+data analytics
+business analysis
+requirements gathering
+solution architecture
+enterprise architecture
+technical documentation
+technical writing
+api documentation
+requirements specification
+uml diagrams
+workflow diagrams
+process mapping
+stakeholder management
+vendor management
+service management
+##Experience
+Bachelorâ€™s
+Masters
+ 
