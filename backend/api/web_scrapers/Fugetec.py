@@ -14,6 +14,81 @@ import traceback
 import re
 from webdriver_manager.chrome import ChromeDriverManager
 
+def load_requirement_keywords(filename="message.txt"):
+    requirement_keywords = []
+
+    try:
+        with open(filename, 'r') as file:
+            for line in file:
+                # Remove whitespace and add non-empty lines to array
+                keyword = line.strip()
+                if keyword:  # Skip empty lines
+                    requirement_keywords.append(keyword)
+
+        print(f"Successfully loaded {len(requirement_keywords)} keywords from {filename}")
+    except FileNotFoundError:
+        print(f"Error: File '{filename}' not found.")
+    except Exception as e:
+        print(f"Error loading file: {e}")
+
+    return requirement_keywords
+
+def extract_requirements(description, requirement_keywords):
+    requirements = []
+
+    description_lower = description.lower()
+
+    # Experience regex patterns
+    experience_patterns = [
+        r'(\d+)(?:\+)?\s+years?\s+(?:of\s+)?experience',
+        r'experience\s*:\s*(\d+)(?:\+)?',
+        r'(\d+)\s*-\s*(\d+)\s+years?',
+        r'minimum\s+(?:of\s+)?(\d+)\s+years?',
+        r'at\s+least\s+(\d+)\s+years?'
+    ]
+
+    for pattern in experience_patterns:
+        experience_match = re.search(pattern, description_lower)
+        if experience_match:
+            if len(experience_match.groups()) == 2:
+                min_years, max_years = experience_match.groups()
+                years_required = f"{min_years}-{max_years}"
+            else:
+                years_required = experience_match.group(1)
+            requirements.append(years_required)
+            break
+
+    # Education detection and normalization
+    degree_patterns = {
+        r'\b(?:bachel(?:or|[^\w\s]{1,3}s)?)\b': 'bachelors',
+        r'\b(?:master(?:s|[^\w\s]{1,3}s)?)\b': 'masters',
+        r'\b(?:associate(?:s|[^\w\s]{1,3}s)?)\b': 'associates',
+        r'\bph\.?d\.?\b': 'phd'
+    }
+
+    for pattern, label in degree_patterns.items():
+        if re.search(pattern, description_lower):
+            requirements.append(label)
+
+    # Keyword matching
+    words = set(re.findall(r'\b\w+\b', description_lower))
+    for keyword in requirement_keywords:
+        keyword_lower = keyword.lower()
+        if " " not in keyword_lower:
+            if keyword_lower in words:
+                requirements.append(keyword)
+        else:
+            if keyword_lower in description_lower:
+                requirements.append(keyword)
+
+    return requirements
+
+
+
+
+
+
+# Now requirement_keywords is an array containing all non-empty lines from message.txt
 
 def fugetec():
     # Setup logging
@@ -22,6 +97,8 @@ def fugetec():
         format='%(asctime)s - %(levelname)s - %(message)s',
         filename='job_scraper.log'
     )
+
+    requirement_keywords = load_requirement_keywords()
 
     # Setup Chrome options
     chrome_options = Options()
@@ -102,13 +179,21 @@ def fugetec():
                 # Add the company name
                 company = "Fugetec"
 
-                # Format the job data USING THE EXACT FIELD NAMES expected by scrape_jobs.py
+                requirements = []
+
+                requirements = extract_requirements(description, requirement_keywords)
+
+
+                #Company,Title,Description,Location,Salary,JobURL,Requirements
+                # Store the extracted data with reordered fields
                 job_data.append({
                     'Company Name': company,
                     'Job Title': job_title,
                     'Job Description': description,
                     'Location': location,
-                    'Application Link': job_url
+                    'Application Link': job_url,
+                    'requirements':requirements,
+                     'salary' : "NOT POSTED"
                 })
 
                 print(f"Successfully scraped: {job_title}")
