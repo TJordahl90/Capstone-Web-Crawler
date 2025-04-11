@@ -56,7 +56,7 @@ class JobPosting(models.Model):
     title = models.CharField(max_length=100)
     description = models.TextField()  # TextField is better for long text
     requirements = models.ManyToManyField(CommonSkills, related_name='job_posting', blank=True)
-    location = models.CharField(max_length=50, blank=True, null=True)  # Optional is good
+    location = models.CharField(max_length=150, blank=True, null=True)  # Optional is good
     datePosted = models.DateField(null=True, blank=True)  # Allow NULL and blank values
     salary = models.CharField(max_length=255, blank=True, null=True)  # Optional seems better
     jobURL = models.URLField()  # URLField is better for URLs
