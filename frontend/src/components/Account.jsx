@@ -106,7 +106,7 @@ const Account = () => {
 
     const handleSummary = async (e) => {
         e.preventDefault();
-        const data = { summary: accountData.summary };
+        const data = { account: { summary: accountData.summary } };
 
         try {
             await api.patch("/account/", data);
@@ -126,12 +126,12 @@ const Account = () => {
 
     const handlejobs = async (e) => {
         e.preventDefault();
-        setaccountData({ ...accountData, jobs: tempjobs });
-        const data = { jobPreferences: accountData.jobs };
+        const data = { jobPreferences: tempjobs };
 
         try {
             await api.patch("/account/", data);
             setMessage("Account successfully updated!");
+            setaccountData({ ...accountData, jobs: tempjobs });
         }
         catch (err) {
             setError("Error updating account.");
@@ -147,12 +147,12 @@ const Account = () => {
 
     const handleSkills = async (e) => {
         e.preventDefault();
-        setaccountData({ ...accountData, skills: tempSkills });
-        const data = { skills: accountData.skills };
+        const data = { skills: tempSkills };
 
         try {
             await api.patch("/account/", data);
             setMessage("Account successfully updated!");
+            setaccountData({ ...accountData, skills: tempSkills });
         }
         catch (err) {
             setError("Error updating account.");
@@ -170,11 +170,11 @@ const Account = () => {
         e.preventDefault();
         const data = {
             education: {
-                // educationLevel: accountData.educationLevel,
+                educationLevel: "accountData.educationLevel",
                 institution: accountData.school,
                 degree: accountData.degree,
                 major: accountData.major,
-                // minor: accountData.minor,
+                minor: accountData.minor,
                 graduationDate: accountData.graduationDate,
                 gpa: accountData.gpa,
             }
@@ -453,7 +453,7 @@ const Account = () => {
                                 onChange={(e) => setaccountData({ ...accountData, major: e.target.value })}
                                 placeholder="Enter your major..."
                             />
-                            <InputField label="Graduation Date" type="text" value={accountData.graduationDate}
+                            <InputField label="Graduation Date" type="date" value={accountData.graduationDate}
                                 onChange={(e) => setaccountData({ ...accountData, graduationDate: e.target.value })}
                                 placeholder="Enter your graduation date: Month, Year..."
                             />
@@ -521,7 +521,7 @@ const Account = () => {
                                 onChange={(e) => setaccountData({ ...accountData, companyLocation: e.target.value })}
                                 placeholder="Enter your company location..."
                             />
-                            <InputField label="Start Date" type="text" value={accountData.startDate}
+                            <InputField label="Start Date" type="date" value={accountData.startDate}
                                 onChange={(e) => setaccountData({ ...accountData, startDate: e.target.value })}
                                 placeholder="Enter your start date: Month, Year..."
                             />

@@ -80,24 +80,63 @@ class AccountView(APIView):
         jobPrefs_data = request.data.get('jobPreferences')
         education_data = request.data.get('education')
         experience_data = request.data.get('experience')
+        errors = {}
 
         if user_data:
             user_serializer = UserSerializer(user, data=user_data, partial=True)
             if user_serializer.is_valid():
                 user_serializer.save()
+            else:
+                errors['user'] = user_serializer.errors
 
         if account_data:
             account_serializer = AccountSerializer(account, data=account_data, partial=True)
             if account_serializer.is_valid():
                 account_serializer.save()
+            else:
+                errors['account'] = account_serializer.errors
 
-        # if skills_data:
-        #     skills_serializer = CommonSkillsSerializer(account.skills, data=skills_data, partial=True)
-        #     if skills_serializer.is_valid():
-        #         skills_serializer.save()
-    
+        if skills_data:
+            try:
+                skills_list = []
+                for skill in skills_data:
+                    new_skill, created_bool = CommonSkills.objects.get_or_create(name=skill)
+                    skills_list.append(new_skill)
+                account.skills.set(skills_list)
+            except Exception as e:
+                errors['skills'] = str(e)
+
+        if jobPrefs_data:
+            try:
+                jobPrefs_list = []
+                for jobPref in jobPrefs_data:
+                    new_jobPref, created_bool = CommonJobPreferences.objects.get_or_create(name=jobPref)
+                    jobPrefs_list.append(new_jobPref)
+                account.jobPrefs.set(jobPrefs_list)
+            except Exception as e:
+                errors['jobPrefs'] = str(e)
+
+        if education_data:
+            education_serializer = EducationSerializer(data=education_data)
+            if education_serializer.is_valid():
+                instance = education_serializer.save()
+                account.education.set([instance])
+            else:
+                errors['education'] = education_serializer.errors
+
+        if experience_data:
+            experience_serializer = ExperienceSerializer(data=experience_data)
+            if experience_serializer.is_valid():
+                instance = experience_serializer.save()
+                account.experience.set([instance])
+            else:
+                errors['experience'] = experience_serializer.errors
+
+        account.save()
+
+        if errors:
+            return Response(errors, status=400)
         return Response({"message": "Sucessfully updated account"}, status=200)
-        #return Response({"error": "Unable to update account"})
 
 class CreateVerificationView(APIView):
     permission_classes = [AllowAny]
