@@ -71,8 +71,8 @@ class ExperienceSerializer(serializers.ModelSerializer):
 class AccountSerializer(serializers.ModelSerializer):
     skills = CommonSkillsSerializer(many=True, read_only=False)
     jobPrefs = CommonJobPreferencesSerializer(many=True, read_only=False)
-    education = EducationSerializer(many=True, read_only=False)
-    experience = ExperienceSerializer(many=True, read_only=False)
+    education = EducationSerializer(many=False, read_only=False)
+    experience = ExperienceSerializer(many=False, read_only=False)
 
     class Meta:
         model = Account

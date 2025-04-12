@@ -120,7 +120,7 @@ class AccountView(APIView):
             education_serializer = EducationSerializer(data=education_data)
             if education_serializer.is_valid():
                 instance = education_serializer.save()
-                account.education.set([instance])
+                account.education = instance
             else:
                 errors['education'] = education_serializer.errors
 
@@ -128,7 +128,7 @@ class AccountView(APIView):
             experience_serializer = ExperienceSerializer(data=experience_data)
             if experience_serializer.is_valid():
                 instance = experience_serializer.save()
-                account.experience.set([instance])
+                account.experience = instance
             else:
                 errors['experience'] = experience_serializer.errors
 

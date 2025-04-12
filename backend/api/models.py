@@ -46,8 +46,8 @@ class Account(models.Model):
     summary = models.TextField(blank=True, null=True)
     skills = models.ManyToManyField(CommonSkills, blank=True)
     jobPrefs = models.ManyToManyField(CommonJobPreferences, blank=True)
-    education = models.ManyToManyField(Education, blank=True)
-    experience = models.ManyToManyField(Experience, blank=True)
+    education = models.OneToOneField(Education, blank=True, null=True, on_delete=models.SET_NULL)
+    experience = models.OneToOneField(Experience, blank=True, null=True, on_delete=models.SET_NULL)
     accountStatus = models.BooleanField(default=False)
 
     def __str__(self):
