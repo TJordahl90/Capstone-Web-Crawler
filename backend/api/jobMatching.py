@@ -20,3 +20,9 @@ def matchUsersToJobs(account):
             
     return jobMatches
 
+def searchForJobs(preference):
+    jobTitle = preference.lower()
+
+    jobs = JobPosting.objects.filter(title=jobTitle)
+    
+    return jobs
