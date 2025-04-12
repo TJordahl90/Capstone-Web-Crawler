@@ -54,23 +54,12 @@ class AccountSerializer(serializers.ModelSerializer):
         fields = ['user', 'accountImage', 'resume', 'location', 'summary', 'skills', 'jobPrefs', 'education', 'experience', 'accountStatus']
         extra_kwargs = {"user": {"read_only": True}}
 
-# not sure if this is needed yet
-# class CommonSkillsSerializer(serializers.ModelSerializer):
-#     class Meta:
-#         model = CommonSkills
-#         fields = ['id', 'name']
+class EducationSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Education
+        fields = ['id', 'educationLevel', 'institution', 'degree', 'major', 'minor', 'graduationDate', 'gpa']
 
-# class CommonJobPreferencesSerializer(serializers.ModelSerializer):
-#     class Meta:
-#         model = CommonJobPreferences
-#         fields = ['id', 'name']
-
-# class EducationSerializer(serializers.ModelSerializer):
-#     class Meta:
-#         model = Education
-#         fields = ['id', 'educationLevel', 'institution', 'degree', 'major', 'minor', 'graduationDate', 'gpa']
-
-# class ExperienceSerializer(serializers.ModelSerializer):
-#     class Meta:
-#         model = Experience
-#         fields = ['id', 'company', 'title', 'location', 'startDate', 'description']
+class ExperienceSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Experience
+        fields = ['id', 'company', 'title', 'location', 'startDate', 'description']
