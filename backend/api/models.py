@@ -40,6 +40,8 @@ class Account(models.Model):
     user = models.OneToOneField(User, on_delete=models.CASCADE) # each account is linked to a user
     accountImage = models.ImageField(upload_to='api/uploads', blank=True, null=True)
     resume = models.FileField(upload_to='api/uploads', blank=True, null=True)
+    headline = models.CharField(max_length=50, blank=True, null=True)
+    pronouns = models.CharField(max_length=25, blank=True, null=True)
     location = models.CharField(max_length=50, blank=True, null=True)
     summary = models.TextField(blank=True, null=True)
     skills = models.ManyToManyField(CommonSkills, blank=True)
