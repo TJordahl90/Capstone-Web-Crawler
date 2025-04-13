@@ -46,17 +46,31 @@ const Account = () => {
         description: "",
     });
 
-    const normalizeItems = (items) => {
-        if (!Array.isArray(items)) {
-            try {
-                items = JSON.parse(items);
-            } catch {
-                return [];
-            }
-        }
-        return items
-            .filter(item => item && typeof item === 'object' && 'id' in item && 'name' in item)
-            .map(item => ({ id: item.id, name: item.name }));
+    const populateAccountData = (user, account, skills, prefs, education, experience) => {
+        setaccountData({
+            firstName: user.first_name || "",
+            lastName: user.last_name || "",
+            accountImage: account.accountImage || null,
+            resume: account.resume || null,
+            headline: account.headline || "",
+            pronouns: account.pronouns || "",
+            location: account.location || "",
+            summary: account.summary || "",
+            skills: skills || [],
+            preferences: prefs || [],
+            educationLevel: education.educationLevel || "",
+            institution: education.institution || "",
+            degree: education.degree || "",
+            major: education.major || "",
+            minor: education.minor || "",
+            graduationDate: education.graduationDate || "",
+            gpa: education.gpa || "",
+            company: experience.company || "",
+            title: experience.title || "",
+            companyLocation: experience.companyLocation || "",
+            startDate: experience.startDate || "",
+            description: experience.description || "",
+        });
     };
 
     // Store locally saved data to accountData
@@ -75,34 +89,9 @@ const Account = () => {
             const preferences = JSON.parse(storedPreferences);
             const education = JSON.parse(storedEducation);
             const experience = JSON.parse(storedExperience);
-
-            setaccountData({
-                firstName: user.first_name || "",
-                lastName: user.last_name || "",
-                accountImage: account.accountImage || null,
-                resume: account.resume || null,
-                headline: account.headline || "",
-                pronouns: account.pronouns || "",
-                location: account.location || "",
-                summary: account.summary || "",
-                skills: skills || [],
-                preferences: preferences || [],
-                educationLevel: education.educationLevel || "",
-                institution: education.institution || "",
-                degree: education.degree || "",
-                major: education.major || "",
-                minor: education.minor || "",
-                graduationDate: education.graduationDate || "",
-                gpa: education.gpa || "",
-                company: experience.company || "",
-                title: experience.title || "",
-                companyLocation: experience.companyLocation || "",
-                startDate: experience.startDate || "",
-                description: experience.description || "",
-            });
+            populateAccountData(user, account, skills, preferences, education, experience);
         }
     }, []);
-
 
     useEffect(() => {
         if (editPreferences) {
@@ -212,41 +201,15 @@ const Account = () => {
             const response = await api.patch("/account/", data);
             setMessage("Account successfully updated!");
 
-            localStorage.setItem("user", JSON.stringify({
-                first_name: accountData.firstName,
-                last_name: accountData.lastName,
-            }));
-    
-            localStorage.setItem("account", JSON.stringify(normalizeItems({
-                accountImage: accountData.accountImage,
-                resume: accountData.resume,
-                headline: accountData.headline,
-                pronouns: accountData.pronouns,
-                location: accountData.location,
-                summary: accountData.summary,
-            })));
-    
-            localStorage.setItem("skills", JSON.stringify(normalizeItems(tempSkills)));
-            localStorage.setItem("preferences", JSON.stringify(normalizeItems(tempPreferences)));
-    
-            localStorage.setItem("education", JSON.stringify(normalizeItems({
-                educationLevel: accountData.educationLevel,
-                institution: accountData.institution,
-                degree: accountData.degree,
-                major: accountData.major,
-                minor: accountData.minor,
-                graduationDate: accountData.graduationDate,
-                gpa: accountData.gpa,
-            })));
-    
-            localStorage.setItem("experience", JSON.stringify(normalizeItems({
-                company: accountData.company,
-                title: accountData.title,
-                companyLocation: accountData.companyLocation,
-                startDate: accountData.startDate,
-                description: accountData.description,
-            })));
-
+            const { skills, jobPrefs, education, experience, ...otherAccountData } = response.data.account;
+            localStorage.clear();
+            localStorage.setItem("user", JSON.stringify(response.data.user));
+            localStorage.setItem("account", JSON.stringify(otherAccountData));
+            localStorage.setItem("skills", JSON.stringify(skills));
+            localStorage.setItem("preferences", JSON.stringify(jobPrefs));
+            localStorage.setItem("education", JSON.stringify(education));
+            localStorage.setItem("experience", JSON.stringify(experience));      
+            populateAccountData(response.data.user, otherAccountData, skills, jobPrefs, education, experience);
         } 
         catch (err) {
             setError("Error updating account.");

@@ -133,10 +133,17 @@ class AccountView(APIView):
                 errors['experience'] = experience_serializer.errors
 
         account.save()
+        user_serialized_data = UserSerializer(user).data
+        account_serialized_data = AccountSerializer(account).data
+
+        response = {
+            'user': user_serialized_data,
+            'account': account_serialized_data
+        }
 
         if errors:
             return Response(errors, status=400)
-        return Response({"message": "Sucessfully updated account"}, status=200)
+        return Response(response, status=200)
 
 class CreateVerificationView(APIView):
     permission_classes = [AllowAny]
