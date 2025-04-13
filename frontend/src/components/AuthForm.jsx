@@ -48,11 +48,11 @@ const AuthForm = ({ isLogin }) => {
         try {
             const response = await api.post(endpoint, formData);
 
-            const { skills, jobPrefs, education, experience, ...otherAccountData } = response.data.account;
+            const { skills, preferences, education, experience, ...otherAccountData } = response.data.account;
             localStorage.setItem("user", JSON.stringify(response.data.user));
             localStorage.setItem("account", JSON.stringify(otherAccountData));
             localStorage.setItem("skills", JSON.stringify(skills));
-            localStorage.setItem("preferences", JSON.stringify(jobPrefs));
+            localStorage.setItem("preferences", JSON.stringify(preferences));
             localStorage.setItem("education", JSON.stringify(education));
             localStorage.setItem("experience", JSON.stringify(experience));
 

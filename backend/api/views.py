@@ -77,7 +77,7 @@ class AccountView(APIView):
         user_data = request.data.get('user')
         account_data = request.data.get('account')
         skills_data = request.data.get('skills')
-        jobPrefs_data = request.data.get('preferences')
+        preferences_data = request.data.get('preferences')
         education_data = request.data.get('education')
         experience_data = request.data.get('experience')
         errors = {}
@@ -106,19 +106,21 @@ class AccountView(APIView):
             except Exception as e:
                 errors['skills'] = str(e)
 
-        if jobPrefs_data:
+        if preferences_data:
             try:
-                jobPrefs_list = []
-                for jobPref in jobPrefs_data:
-                    new_jobPref, created_bool = CommonJobPreferences.objects.get_or_create(name=jobPref)
-                    jobPrefs_list.append(new_jobPref)
-                account.jobPrefs.set(jobPrefs_list)
+                preferences_list = []
+                for preference in preferences_data:
+                    new_preference, created_bool = CommonPreferences.objects.get_or_create(name=preference)
+                    preferences_list.append(new_preference)
+                account.preferences.set(preferences_list)
             except Exception as e:
-                errors['jobPrefs'] = str(e)
+                errors['preferences'] = str(e)
 
         if education_data:
             education_serializer = EducationSerializer(data=education_data)
             if education_serializer.is_valid():
+                if account.education:
+                    account.education.delete()
                 instance = education_serializer.save()
                 account.education = instance
             else:
@@ -127,6 +129,8 @@ class AccountView(APIView):
         if experience_data:
             experience_serializer = ExperienceSerializer(data=experience_data)
             if experience_serializer.is_valid():
+                if account.experience:
+                    account.experience.delete()
                 instance = experience_serializer.save()
                 account.experience = instance
             else:

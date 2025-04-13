@@ -53,15 +53,15 @@ class CommonSkillsSerializer(serializers.ModelSerializer):
         model = CommonSkills
         fields = ['id', 'name']
 
-class CommonJobPreferencesSerializer(serializers.ModelSerializer):
+class CommonPreferencesSerializer(serializers.ModelSerializer):
     class Meta:
-        model = CommonJobPreferences
+        model = CommonPreferences
         fields = ['id', 'name']
 
 class EducationSerializer(serializers.ModelSerializer):
     class Meta:
         model = Education
-        fields = ['id', 'educationLevel', 'institution', 'degree', 'major', 'minor', 'graduationDate', 'gpa']
+        fields = ['id', 'grade', 'institution', 'degree', 'major', 'minor', 'graduationDate', 'gpa']
 
 class ExperienceSerializer(serializers.ModelSerializer):
     class Meta:
@@ -70,11 +70,11 @@ class ExperienceSerializer(serializers.ModelSerializer):
 
 class AccountSerializer(serializers.ModelSerializer):
     skills = CommonSkillsSerializer(many=True, read_only=False)
-    jobPrefs = CommonJobPreferencesSerializer(many=True, read_only=False)
+    preferences = CommonPreferencesSerializer(many=True, read_only=False)
     education = EducationSerializer(many=False, read_only=False)
     experience = ExperienceSerializer(many=False, read_only=False)
 
     class Meta:
         model = Account
-        fields = ['user', 'accountImage', 'resume', 'headline', 'pronouns', 'location', 'summary', 'skills', 'jobPrefs', 'education', 'experience', 'accountStatus']
+        fields = ['user', 'photo', 'resume', 'headline', 'pronouns', 'hometown', 'summary', 'skills', 'preferences', 'education', 'experience', 'accountStatus']
         extra_kwargs = {"user": {"read_only": True}}

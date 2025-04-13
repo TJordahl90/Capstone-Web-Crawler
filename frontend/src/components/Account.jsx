@@ -24,15 +24,15 @@ const Account = () => {
     const [accountData, setaccountData] = useState({
         firstName: "",
         lastName: "",
-        accountImage: null,
+        photo: null,
         resume: null,
         headline: "",
         pronouns: "",
-        location: "",
+        hometown: "",
         summary: "",
         preferences: [],
         skills: [],
-        educationLevel: "",
+        grade: "",
         institution: "",
         degree: "",
         major: "",
@@ -41,24 +41,27 @@ const Account = () => {
         gpa: "",
         company: "",
         title: "",
-        companyLocation: "",
+        location: "",
         startDate: "",
         description: "",
     });
 
-    const populateAccountData = (user, account, skills, prefs, education, experience) => {
+    const populateAccountData = (user, account, skills, preferences, education, experience) => {
+        education = education || {};
+        experience = experience || {};
+        
         setaccountData({
             firstName: user.first_name || "",
             lastName: user.last_name || "",
-            accountImage: account.accountImage || null,
+            photo: account.photo || null,
             resume: account.resume || null,
             headline: account.headline || "",
             pronouns: account.pronouns || "",
-            location: account.location || "",
+            hometown: account.hometown || "",
             summary: account.summary || "",
             skills: skills || [],
-            preferences: prefs || [],
-            educationLevel: education.educationLevel || "",
+            preferences: preferences || [],
+            grade: education.grade || "",
             institution: education.institution || "",
             degree: education.degree || "",
             major: education.major || "",
@@ -67,7 +70,7 @@ const Account = () => {
             gpa: education.gpa || "",
             company: experience.company || "",
             title: experience.title || "",
-            companyLocation: experience.companyLocation || "",
+            location: experience.location || "",
             startDate: experience.startDate || "",
             description: experience.description || "",
         });
@@ -132,11 +135,11 @@ const Account = () => {
                 last_name: accountData.lastName,
             },
             account: {
-                accountImage: accountData.accountImage,
+                photo: accountData.photo,
                 resume: accountData.resume,
                 headline: accountData.headline,
                 pronouns: accountData.pronouns,
-                location: accountData.location,
+                hometown: accountData.hometown,
             },
         };
         handleSubmit(data);
@@ -168,7 +171,7 @@ const Account = () => {
         e.preventDefault();
         const data = {
             education: {
-                educationLevel: accountData.educationLevel,
+                grade: accountData.grade,
                 institution: accountData.institution,
                 degree: accountData.degree,
                 major: accountData.major,
@@ -187,7 +190,7 @@ const Account = () => {
             experience: {
                 company: accountData.company,
                 title: accountData.title,
-                location: accountData.companyLocation,
+                location: accountData.location,
                 startDate: accountData.startDate,
                 description: accountData.description,
             }
@@ -201,15 +204,15 @@ const Account = () => {
             const response = await api.patch("/account/", data);
             setMessage("Account successfully updated!");
 
-            const { skills, jobPrefs, education, experience, ...otherAccountData } = response.data.account;
+            const { skills, preferences, education, experience, ...otherAccountData } = response.data.account;
             localStorage.clear();
             localStorage.setItem("user", JSON.stringify(response.data.user));
             localStorage.setItem("account", JSON.stringify(otherAccountData));
             localStorage.setItem("skills", JSON.stringify(skills));
-            localStorage.setItem("preferences", JSON.stringify(jobPrefs));
+            localStorage.setItem("preferences", JSON.stringify(preferences));
             localStorage.setItem("education", JSON.stringify(education));
             localStorage.setItem("experience", JSON.stringify(experience));      
-            populateAccountData(response.data.user, otherAccountData, skills, jobPrefs, education, experience);
+            populateAccountData(response.data.user, otherAccountData, skills, preferences, education, experience);
         } 
         catch (err) {
             setError("Error updating account.");
@@ -250,12 +253,12 @@ const Account = () => {
                             : "Please enter your pronouns."
                         }
                         <br />
-                        {(accountData.location)
-                            ? `${accountData.location}`
+                        {(accountData.hometown)
+                            ? `${accountData.hometown}`
                             : "Please enter your location."
                         }
                         <br />
-                        <Card.Link>Resume</Card.Link>
+                        {/* <Card.Link>Resume</Card.Link> */}
                     </Card.Text>
                     <Card.Link onClick={() => setEditPersonalInfo(true)}>
                         <FaPencilAlt className="account-icon" />
@@ -285,8 +288,8 @@ const Account = () => {
                                 onChange={(e) => setaccountData({ ...accountData, pronouns: e.target.value })}
                                 placeholder="Enter your pronouns..."
                             />
-                            <InputField label="Location" type="text" value={accountData.location}
-                                onChange={(e) => setaccountData({ ...accountData, location: e.target.value })}
+                            <InputField label="Location" type="text" value={accountData.hometown}
+                                onChange={(e) => setaccountData({ ...accountData, hometown: e.target.value })}
                                 placeholder="Enter your City, State..."
                             />
                             <Button type="submit">Submit</Button>
@@ -412,8 +415,8 @@ const Account = () => {
                 <Card.Body className="text-start">
                     <Card.Title>Education</Card.Title>
                     <Card.Text>
-                        {(accountData.educationLevel)
-                            ? `${accountData.educationLevel}`
+                        {(accountData.grade)
+                            ? `${accountData.grade}`
                             : "Class not selected."
                         }
                         <br />
@@ -459,8 +462,8 @@ const Account = () => {
                     <Modal.Header closeButton><Modal.Title>Edit Education</Modal.Title></Modal.Header>
                     <Modal.Body>
                         <Form onSubmit={handleEducation}>
-                            <InputField label="Class" type="text" value={accountData.educationLevel}
-                                onChange={(e) => setaccountData({ ...accountData, educationLevel: e.target.value })}
+                            <InputField label="Class" type="text" value={accountData.grade}
+                                onChange={(e) => setaccountData({ ...accountData, grade: e.target.value })}
                                 placeholder="Enter your class (senior, freshman, etc)..."
                             />
                             <InputField label="Institution" type="text" value={accountData.institution}
@@ -481,7 +484,7 @@ const Account = () => {
                             />
                             <InputField label="Graduation Date" type="date" value={accountData.graduationDate}
                                 onChange={(e) => setaccountData({ ...accountData, graduationDate: e.target.value })}
-                                placeholder="Enter your graduation date: Month, Year..."
+                                placeholder="Enter your graduation date..."
                             />
                             <InputField label="Cumulative GPA" type="text" value={accountData.gpa}
                                 onChange={(e) => setaccountData({ ...accountData, gpa: e.target.value })}
@@ -508,8 +511,8 @@ const Account = () => {
                             : "Work title not selected."
                         }
                         <br />
-                        {(accountData.companyLocation)
-                            ? `${accountData.companyLocation}`
+                        {(accountData.location)
+                            ? `${accountData.location}`
                             : "Company location not selected."
                         }
                         <br />
@@ -543,8 +546,8 @@ const Account = () => {
                                 onChange={(e) => setaccountData({ ...accountData, title: e.target.value })}
                                 placeholder="Enter your work title/title..."
                             />
-                            <InputField label="Company Location" type="text" value={accountData.companyLocation}
-                                onChange={(e) => setaccountData({ ...accountData, companyLocation: e.target.value })}
+                            <InputField label="Company Location" type="text" value={accountData.location}
+                                onChange={(e) => setaccountData({ ...accountData, location: e.target.value })}
                                 placeholder="Enter your company location..."
                             />
                             <InputField label="Start Date" type="date" value={accountData.startDate}
