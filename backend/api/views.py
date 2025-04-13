@@ -77,7 +77,7 @@ class AccountView(APIView):
         user_data = request.data.get('user')
         account_data = request.data.get('account')
         skills_data = request.data.get('skills')
-        jobPrefs_data = request.data.get('jobPreferences')
+        jobPrefs_data = request.data.get('preferences')
         education_data = request.data.get('education')
         experience_data = request.data.get('experience')
         errors = {}

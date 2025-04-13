@@ -21,7 +21,6 @@ const AuthForm = ({ isLogin }) => {
         const getCsrfToken = async () => {
             try {
                 const response = await api.get('/csrf/');
-                console.log(response.data);
             } 
             catch (err) {
                 setError(err.response?.data?.message || "Something went wrong.");
@@ -48,8 +47,14 @@ const AuthForm = ({ isLogin }) => {
 
         try {
             const response = await api.post(endpoint, formData);
-            localStorage.setItem("userData", JSON.stringify(response.data.user));
-            localStorage.setItem("accountData", JSON.stringify(response.data.account));
+
+            const { skills, jobPrefs, education, experience, ...otherAccountData } = response.data.account;
+            localStorage.setItem("user", JSON.stringify(response.data.user));
+            localStorage.setItem("account", JSON.stringify(otherAccountData));
+            localStorage.setItem("skills", JSON.stringify(skills));
+            localStorage.setItem("preferences", JSON.stringify(jobPrefs));
+            localStorage.setItem("education", JSON.stringify(education));
+            localStorage.setItem("experience", JSON.stringify(experience));
 
             setMessage("Login successful!");
             setTimeout(() => navigate(isLogin ? "/account" : "/verification"), 1000);
