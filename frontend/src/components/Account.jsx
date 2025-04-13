@@ -15,39 +15,94 @@ const Account = () => {
 
     const [editPersonalInfo, setEditPersonalInfo] = useState(false);
     const [editSummary, setEditSummary] = useState(false);
-    const [editjobs, setEditjobs] = useState(false);
+    const [editPreferences, setEditPreferences] = useState(false);
     const [editSkills, setEditSkills] = useState(false);
     const [editEducation, setEditEducation] = useState(false);
     const [editExperience, setEditExperience] = useState(false);
 
-    const [tempjobs, setTempjobs] = useState([]);
+    const [tempPreferences, setTempPreferences] = useState([]);
     const [tempSkills, setTempSkills] = useState([]);
 
     const [accountData, setaccountData] = useState({
         firstName: "",
         lastName: "",
-        email: "",
-        location: "",
+        photo: null,
+        resume: null,
+        headline: "",
+        pronouns: "",
+        hometown: "",
         summary: "",
-        jobs: [],
+        preferences: [],
         skills: [],
-        school: "",
+        grade: "",
+        institution: "",
         degree: "",
         major: "",
+        minor: "",
         graduationDate: "",
         gpa: "",
         company: "",
-        position: "",
-        companyLocation: "",
+        title: "",
+        location: "",
         startDate: "",
-        responsibilities: "",
+        description: "",
     });
 
+    const populateAccountData = (user, account, skills, preferences, education, experience) => {
+        education = education || {};
+        experience = experience || {};
+        
+        setaccountData({
+            firstName: user.first_name || "",
+            lastName: user.last_name || "",
+            photo: account.photo || null,
+            resume: account.resume || null,
+            headline: account.headline || "",
+            pronouns: account.pronouns || "",
+            hometown: account.hometown || "",
+            summary: account.summary || "",
+            skills: skills || [],
+            preferences: preferences || [],
+            grade: education.grade || "",
+            institution: education.institution || "",
+            degree: education.degree || "",
+            major: education.major || "",
+            minor: education.minor || "",
+            graduationDate: education.graduationDate || "",
+            gpa: education.gpa || "",
+            company: experience.company || "",
+            title: experience.title || "",
+            location: experience.location || "",
+            startDate: experience.startDate || "",
+            description: experience.description || "",
+        });
+    };
+
+    // Store locally saved data to accountData
     useEffect(() => {
-        if (editjobs) {
-            setTempjobs(accountData.jobs);
+        const storedUser = localStorage.getItem("user");
+        const storedAccount = localStorage.getItem("account");
+        const storedSkills = localStorage.getItem("skills");
+        const storedPreferences = localStorage.getItem("preferences");
+        const storedEducation = localStorage.getItem("education");
+        const storedExperience = localStorage.getItem("experience");
+    
+        if (storedUser) {
+            const user = JSON.parse(storedUser);
+            const account = JSON.parse(storedAccount);
+            const skills = JSON.parse(storedSkills);
+            const preferences = JSON.parse(storedPreferences);
+            const education = JSON.parse(storedEducation);
+            const experience = JSON.parse(storedExperience);
+            populateAccountData(user, account, skills, preferences, education, experience);
         }
-    }, [editjobs, accountData.jobs]);
+    }, []);
+
+    useEffect(() => {
+        if (editPreferences) {
+            setTempPreferences(accountData.preferences);
+        }
+    }, [editPreferences, accountData.preferences]);
 
     useEffect(() => {
         if (editSkills) {
@@ -56,15 +111,15 @@ const Account = () => {
     }, [editSkills, accountData.skills]);
 
     const toggleBadge = (item, type) => {
-        if (type == "job") {
-            if (tempjobs.includes(item)) {
-                setTempjobs(tempjobs.filter((selectedJob) => selectedJob !== item));
+        if (type === "preference") {
+            if (tempPreferences.includes(item)) {
+                setTempPreferences(tempPreferences.filter((preference) => preference !== item));
             }
             else {
-                setTempjobs([...tempjobs, item]);
+                setTempPreferences([...tempPreferences, item]);
             }
         }
-        else if (type == "skill") {
+        else if (type === "skill") {
             if (tempSkills.includes(item)) {
                 setTempSkills(tempSkills.filter((skill) => skill !== item));
             }
@@ -73,107 +128,53 @@ const Account = () => {
             }
         }
     };
-
-    const handlePersonalInfo = async (e) => {
+    
+    const handlePersonalInfo = (e) => {
         e.preventDefault();
         const data = {
             user: {
                 first_name: accountData.firstName,
                 last_name: accountData.lastName,
-                email: accountData.email,
             },
             account: {
-                // accountImage: accountData.accountImage,
-                // resume: accountData.resume,
-                location: accountData.location,
-            }
-
+                photo: accountData.photo,
+                resume: accountData.resume,
+                headline: accountData.headline,
+                pronouns: accountData.pronouns,
+                hometown: accountData.hometown,
+            },
         };
-
-        try {
-            await api.patch("/account/", data);
-            setMessage("Account successfully updated!");
-        }
-        catch (err) {
-            setError("Error updating account.");
-            console.log(err);
-        }
-
+        handleSubmit(data);
         setEditPersonalInfo(false);
-        setTimeout(() => {
-            setMessage('');
-            setError('');
-        }, 3000);
     }
 
-    const handleSummary = async (e) => {
+    const handleSummary = (e) => {
         e.preventDefault();
         const data = { account: { summary: accountData.summary } };
-
-        try {
-            await api.patch("/account/", data);
-            setMessage("Account successfully updated!");
-        }
-        catch (err) {
-            setError("Error updating account.");
-            console.log(err);
-        }
-
+        handleSubmit(data);
         setEditSummary(false);
-        setTimeout(() => {
-            setMessage('');
-            setError('');
-        }, 3000);
     }
 
-    const handlejobs = async (e) => {
+    const handlePreferences = (e) => {
         e.preventDefault();
-        const data = { jobPreferences: tempjobs };
-
-        try {
-            await api.patch("/account/", data);
-            setMessage("Account successfully updated!");
-            setaccountData({ ...accountData, jobs: tempjobs });
-        }
-        catch (err) {
-            setError("Error updating account.");
-            console.log(err);
-        }
-
-        setEditjobs(false);
-        setTimeout(() => {
-            setMessage('');
-            setError('');
-        }, 3000);
+        const data = { preferences: tempPreferences };
+        handleSubmit(data);
+        setEditPreferences(false);
     }
 
-    const handleSkills = async (e) => {
+    const handleSkills = (e) => {
         e.preventDefault();
         const data = { skills: tempSkills };
-
-        try {
-            await api.patch("/account/", data);
-            setMessage("Account successfully updated!");
-            setaccountData({ ...accountData, skills: tempSkills });
-        }
-        catch (err) {
-            setError("Error updating account.");
-            console.log(err);
-        }
-
+        handleSubmit(data);
         setEditSkills(false);
-        setTimeout(() => {
-            setMessage('');
-            setError('');
-        }, 3000);
     }
 
-    const handleEducation = async (e) => {
+    const handleEducation = (e) => {
         e.preventDefault();
         const data = {
             education: {
-                educationLevel: "accountData.educationLevel",
-                institution: accountData.school,
+                grade: accountData.grade,
+                institution: accountData.institution,
                 degree: accountData.degree,
                 major: accountData.major,
                 minor: accountData.minor,
@@ -181,45 +182,45 @@ const Account = () => {
                 gpa: accountData.gpa,
             }
         };
-
-        try {
-            await api.patch("/account/", data);
-            setMessage("Account successfully updated!");
-        }
-        catch (err) {
-            setError("Error updating account.");
-            console.log(err);
-        }
-
+        handleSubmit(data);
         setEditEducation(false);
-        setTimeout(() => {
-            setMessage('');
-            setError('');
-        }, 3000);
     }
 
-    const handleExperience = async (e) => {
+    const handleExperience = (e) => {
         e.preventDefault();
         const data = {
             experience: {
                 company: accountData.company,
-                title: accountData.position,
+                title: accountData.title,
                 location: accountData.location,
                 startDate: accountData.startDate,
-                description: accountData.responsibilities,
+                description: accountData.description,
             }
         };
+        handleSubmit(data);
+        setEditExperience(false);
+    }
 
+    const handleSubmit = async (data) => {
         try {
-            await api.patch("/account/", data);
+            const response = await api.patch("/account/", data);
             setMessage("Account successfully updated!");
-        }
+
+            const { skills, preferences, education, experience, ...otherAccountData } = response.data.account;
+            localStorage.clear();
+            localStorage.setItem("user", JSON.stringify(response.data.user));
+            localStorage.setItem("account", JSON.stringify(otherAccountData));
+            localStorage.setItem("skills", JSON.stringify(skills));
+            localStorage.setItem("preferences", JSON.stringify(preferences));
+            localStorage.setItem("education", JSON.stringify(education));
+            localStorage.setItem("experience", JSON.stringify(experience));      
+            populateAccountData(response.data.user, otherAccountData, skills, preferences, education, experience);
+        } 
         catch (err) {
             setError("Error updating account.");
-            console.log(err);
+            console.error(err);
         }
 
-        setEditExperience(false);
         setTimeout(() => {
             setMessage('');
             setError('');
@@ -252,18 +253,24 @@ const Account = () => {
                             }
                         </Card.Title>
                         <Card.Text>
-                            {(accountData.email)
-                                ? `${accountData.email}`
-                                : "Please enter your email."
+                            {(accountData.headline)
+                                ? `${accountData.headline}`
+                                : "Please enter your headline."
+                        }
+                        <br />
+                        {(accountData.pronouns)
+                            ? `${accountData.pronouns}`
+                            : "Please enter your pronouns."
                             }
                             <br />
-                            {(accountData.location)
-                                ? `${accountData.location}`
+                            {(accountData.hometown)
+                                ? `${accountData.hometown}`
                                 : "Please enter your location."
                             }
-                        </Card.Text>
+                        <br />
                         {/* <Card.Link>Resume</Card.Link> */}
-                        <Card.Link onClick={() => setEditPersonalInfo(true)}>
+                        </Card.Text>
+                            <Card.Link onClick={() => setEditPersonalInfo(true)}>
                             <FaPencilAlt className="account-icon" />
                         </Card.Link>
                     </Card.Body>
@@ -283,12 +290,16 @@ const Account = () => {
                                     onChange={(e) => setaccountData({ ...accountData, lastName: e.target.value })}
                                     placeholder="Enter your last name..."
                                 />
-                                <InputField label="Email" type="email" value={accountData.email}
-                                    onChange={(e) => setaccountData({ ...accountData, email: e.target.value })}
-                                    placeholder="Enter your email..."
+                                <InputField label="Headline" type="text" value={accountData.headline}
+                                    onChange={(e) => setaccountData({ ...accountData, headline: e.target.value })}
+                                    placeholder="Enter your headline..."
+                            />
+                            <InputField label="Pronouns" type="text" value={accountData.pronouns}
+                                onChange={(e) => setaccountData({ ...accountData, pronouns: e.target.value })}
+                                placeholder="Enter your pronouns..."
                                 />
-                                <InputField label="Location" type="text" value={accountData.location}
-                                    onChange={(e) => setaccountData({ ...accountData, location: e.target.value })}
+                                <InputField label="Location" type="text" value={accountData.hometown}
+                                    onChange={(e) => setaccountData({ ...accountData, hometown: e.target.value })}
                                     placeholder="Enter your City, State..."
                                 />
                                 <Button type="submit">Submit</Button>
@@ -329,37 +340,37 @@ const Account = () => {
                     </Modal>
                 )}
 
-                {/* Display Job Selections */}
+                {/* Display Job Preference Selections */}
                 <Card className="mb-4">
                     <Card.Body className="text-start">
                         <Card.Title>Your Job Preferences</Card.Title>
                         <Card.Text>
-                            {accountData.jobs.length > 0 ? (
-                                accountData.jobs.map((job, index) => (
+                            {accountData.preferences.length > 0 ? (
+                                accountData.preferences.map((preference, index) => (
                                     <Badge key={index} className="badge-selected">
-                                        {job}
+                                        {preference.name}
                                     </Badge>
                                 ))
                             ) : (
-                                "No job selections yet"
+                                "No job preferences yet"
                             )}
                         </Card.Text>
-                        <Card.Link onClick={() => setEditjobs(true)}>
+                        <Card.Link onClick={() => setEditPreferences(true)}>
                             <FaPencilAlt className="account-icon" />
                         </Card.Link>
                     </Card.Body>
                 </Card>
 
-                {/* Edit Job Selections Modal */}
-                {editjobs && (
-                    <Modal show={editjobs} onHide={() => setEditjobs(false)}>
+                {/* Edit Job Preference Selections */}
+                {editPreferences && (
+                    <Modal show={editPreferences} onHide={() => setEditPreferences(false)}>
                         <Modal.Header closeButton><Modal.Title>Edit Job Preferences</Modal.Title></Modal.Header>
                         <Modal.Body>
-                            <Form onSubmit={handlejobs}>
+                            <Form onSubmit={handlePreferences}>
                                 <Container>
-                                    {jobList.map((job, index) => (
-                                        <Badge className={tempjobs.includes(job) ? "badge-selected" : "badge-unselected"} key={index} onClick={() => toggleBadge(job, "job")}>
-                                            {job}
+                                    {jobList.map((preference, index) => (
+                                        <Badge className={tempPreferences.includes(preference) ? "badge-selected" : "badge-unselected"} key={index} onClick={() => toggleBadge(preference, "preference")}>
+                                            {preference}
                                         </Badge>
                                     ))}
                                 </Container>
@@ -377,7 +388,7 @@ const Account = () => {
                             {accountData.skills.length > 0 ? (
                                 accountData.skills.map((skill, index) => (
                                     <Badge key={index} className="badge-selected">
-                                        {skill}
+                                        {skill.name}
                                     </Badge>
                                 ))
                             ) : (
@@ -414,9 +425,14 @@ const Account = () => {
                     <Card.Body className="text-start">
                         <Card.Title>Education</Card.Title>
                         <Card.Text>
-                            {(accountData.school)
-                                ? `${accountData.school}`
-                                : "School not selected."
+                            {(accountData.grade)
+                            ? `${accountData.grade}`
+                            : "Class not selected."
+                        }
+                        <br />
+                        {(accountData.institution)
+                                ? `${accountData.institution}`
+                                : "Institution not selected."
                             }
                             <br />
                             {(accountData.degree)
@@ -428,6 +444,11 @@ const Account = () => {
                                 ? `${accountData.major}`
                                 : "Major not selected."
                             }
+                        <br />
+                        {(accountData.minor)
+                            ? `${accountData.minor}`
+                            : "Minor not selected."
+                        }
                             <br />
                             {(accountData.graduationDate)
                                 ? `${accountData.graduationDate}`
@@ -451,21 +472,29 @@ const Account = () => {
                         <Modal.Header closeButton><Modal.Title>Edit Education</Modal.Title></Modal.Header>
                         <Modal.Body>
                             <Form onSubmit={handleEducation}>
-                                <InputField label="School" type="text" value={accountData.school}
-                                    onChange={(e) => setaccountData({ ...accountData, school: e.target.value })}
-                                    placeholder="Enter your school name..."
+                                <InputField label="Class" type="text" value={accountData.grade}
+                                onChange={(e) => setaccountData({ ...accountData, grade: e.target.value })}
+                                placeholder="Enter your class (senior, freshman, etc)..."
+                            />
+                            <InputField label="Institution" type="text" value={accountData.institution}
+                                    onChange={(e) => setaccountData({ ...accountData, institution: e.target.value })}
+                                    placeholder="Enter your institution name..."
                                 />
                                 <InputField label="Degree Type" type="text" value={accountData.degree}
                                     onChange={(e) => setaccountData({ ...accountData, degree: e.target.value })}
                                     placeholder="Enter your degree type..."
                                 />
-                                <InputField label="Major/Field of Study" type="text" value={accountData.major}
+                                <InputField label="Major Field of Study" type="text" value={accountData.major}
                                     onChange={(e) => setaccountData({ ...accountData, major: e.target.value })}
                                     placeholder="Enter your major..."
                                 />
+                            <InputField label="Minor Field of Study" type="text" value={accountData.minor}
+                                onChange={(e) => setaccountData({ ...accountData, minor: e.target.value })}
+                                placeholder="Enter your minor..."
+                            />
                                 <InputField label="Graduation Date" type="date" value={accountData.graduationDate}
                                     onChange={(e) => setaccountData({ ...accountData, graduationDate: e.target.value })}
-                                    placeholder="Enter your graduation date: Month, Year..."
+                                    placeholder="Enter your graduation date..."
                                 />
                                 <InputField label="Cumulative GPA" type="text" value={accountData.gpa}
                                     onChange={(e) => setaccountData({ ...accountData, gpa: e.target.value })}
@@ -487,13 +516,13 @@ const Account = () => {
                                 : "Company not selected."
                             }
                             <br />
-                            {(accountData.position)
-                                ? `${accountData.position}`
-                                : "Work position not selected."
+                            {(accountData.title)
+                                ? `${accountData.title}`
+                                : "Work title not selected."
                             }
                             <br />
-                            {(accountData.companyLocation)
-                                ? `${accountData.companyLocation}`
+                            {(accountData.location)
+                                ? `${accountData.location}`
                                 : "Company location not selected."
                             }
                             <br />
@@ -502,9 +531,9 @@ const Account = () => {
                                 : "Start date not selected."
                             }
                             <br />
-                            {(accountData.responsibilities)
-                                ? `${accountData.responsibilities}`
-                                : "Work responsibilities not selected."
+                            {(accountData.description)
+                                ? `${accountData.description}`
+                                : "Work description not selected."
                             }
                         </Card.Text>
                         <Card.Link onClick={() => setEditExperience(true)}>
@@ -523,21 +552,21 @@ const Account = () => {
                                     onChange={(e) => setaccountData({ ...accountData, company: e.target.value })}
                                     placeholder="Enter your company name..."
                                 />
-                                <InputField label="Job Position/Title" type="text" value={accountData.position}
-                                    onChange={(e) => setaccountData({ ...accountData, position: e.target.value })}
-                                    placeholder="Enter your work position/title..."
+                                <InputField label="Job title/Title" type="text" value={accountData.title}
+                                    onChange={(e) => setaccountData({ ...accountData, title: e.target.value })}
+                                    placeholder="Enter your work title/title..."
                                 />
-                                <InputField label="Company Location" type="text" value={accountData.companyLocation}
-                                    onChange={(e) => setaccountData({ ...accountData, companyLocation: e.target.value })}
+                                <InputField label="Company Location" type="text" value={accountData.location}
+                                    onChange={(e) => setaccountData({ ...accountData, location: e.target.value })}
                                     placeholder="Enter your company location..."
                                 />
                                 <InputField label="Start Date" type="date" value={accountData.startDate}
                                     onChange={(e) => setaccountData({ ...accountData, startDate: e.target.value })}
                                     placeholder="Enter your start date: Month, Year..."
                                 />
-                                <InputField label="Work Responsibilities" type="text" value={accountData.responsibilities}
-                                    onChange={(e) => setaccountData({ ...accountData, responsibilities: e.target.value })}
-                                    placeholder="Enter your work responsibilities..."
+                                <InputField label="Work description" type="text" value={accountData.description}
+                                    onChange={(e) => setaccountData({ ...accountData, description: e.target.value })}
+                                    placeholder="Enter your work description..."
                                 />
                                 <Button type="submit">Submit</Button>
                             </Form>
