@@ -16,13 +16,13 @@ const AuthForm = ({ isLogin }) => {
         last_name: '',
         email: '',
     });
-    
+
     useEffect(() => {
         const getCsrfToken = async () => {
             try {
                 const response = await api.get('/csrf/');
                 console.log(response.data);
-            } 
+            }
             catch (err) {
                 setError(err.response?.data?.message || "Something went wrong.");
             }
@@ -35,13 +35,13 @@ const AuthForm = ({ isLogin }) => {
         e.preventDefault();
         const endpoint = isLogin ? "/login/" : "/register/";
 
-        if(!isLogin){
-            try{
+        if (!isLogin) {
+            try {
                 const verificationCode = await api.post("/verification/", formData);
                 console.log("Verification code created for: ", formData.email);
                 navigate("/verification");
             }
-            catch(err){
+            catch (err) {
                 setError(err.temp?.data?.message || "Something went wrong.");
             }
         }
@@ -65,9 +65,18 @@ const AuthForm = ({ isLogin }) => {
 
     return (
         <Container className="auth-container" fluid>
+
             <Card className="p-4">
                 <Row className="justify-content-center">
                     <Col>
+                        <div className="text-start w-100">
+                            <Button
+                                onClick={() => navigate("/")}
+                                className="auth-back-button"
+                            >
+                                ← Back to Home
+                            </Button>
+                        </div>
                         <h1 className="text-center mb-4">{isLogin ? "Login" : "Register"}</h1>
                         {message && <Alert variant="success">{message}</Alert>}
                         {error && <Alert variant="danger">{error}</Alert>}

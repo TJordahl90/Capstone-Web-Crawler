@@ -3,21 +3,39 @@
     display: flex;
     align-items: center;
     justify-content: center;
+    background-color: #c9c6a5
 }
-  
+
 .auth-container .card {
     width: 100%;
     max-width: 750px;
-    background-color: white;
-    border: 2px solid #48494c;
+    background-color: #c9c6a5;
+    border: 2px solid #8f650a;
 }
-  
+
 .auth-button {
-    background-color: #48494c !important;
+    background-color: #4d4c43 !important;
     width: 100%
 }
-  
-.auth-button:hover, 
+
+.auth-button:hover,
 .auth-button:active {
-    background-color: #c50e42 !important;
+    background-color: #8f650a !important;
+    color: black;
+}
+
+.auth-back-button {
+    background-color: #4d4c43 !important;
+    color: #c9c6a5 !important;
+    border: none !important;
+    border-radius: 8px !important;
+    padding: 8px 16px !important;
+    font-weight: bold !important;
+    margin-bottom: 20px !important;
+    transition: background-color 0.2s ease !important;
+}
+
+.auth-back-button:hover {
+    background-color: #8f650a !important;
+    color: #ffffff !important;
 }

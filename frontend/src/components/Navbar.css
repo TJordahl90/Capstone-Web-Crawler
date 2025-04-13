@@ -1,5 +1,6 @@
 .custom-navbar {
     border-bottom: 1px solid #48494c;
+    background-color: #c9c6a5;
 }
 
 .container-fluid {
@@ -12,7 +13,8 @@
     margin: 0 auto;
 }
 
-.navbar-logo, .navbar-icon {
+.navbar-logo,
+.navbar-icon {
     width: auto;
     height: 45px;
 }
@@ -25,25 +27,50 @@
 }
 
 .navbar-search {
-    width: 100%;
+    background-color: #4d4c43 !important;
+    color: #ffffff !important;
+    border-radius: 20px !important;
+    border: none !important;
     height: 45px;
-    font-size: 16px;
+    padding: 0 15px;
+    box-shadow: none !important;
 }
+
+.navbar-search::placeholder {
+    color: #c9c6a5 !important;
+    opacity: 1 !important;
+}
+
 
 .hamburger-icon {
     width: auto;
+    color: #4d4c43;
     height: 35px;
     padding-right: 10px;
+    cursor: pointer;
+    transition: color 0.3s ease;
 }
 
-.navbar-canvas-container {
-    width: 40vw !important;
+.hamburger-icon:hover {
+    color: #8f650a;
 }
+
 
 .navbar-canvas {
-    background-color: #292a2b;
+    background-color: #c9c6a5;
     color: white;
+    height: 100%;
+    padding: 1rem;
 }
+
+.offcanvas.offcanvas-start {
+    width: 210px !important;
+    /* Fixed size */
+    max-width: 80vw !important;
+    /* Just in case for tiny screens */
+    border-right: 2px solid #4d4c43;
+}
+
 
 .menu-item {
     display: flex;
@@ -75,19 +102,82 @@
     padding-left: 23px;
 }
 
+.navbar-logo {
+    height: 60px;
+    width: auto;
+    padding-left: 1px;
+    align-items: center;
+    transition: filter 0.3s ease;
+}
+
+.navbar-logo:hover {
+    filter: brightness(0) saturate(100%) invert(46%) sepia(21%) saturate(1549%) hue-rotate(7deg) brightness(89%) contrast(85%);
+}
+
 @media (max-width: 620px) {
-    .navbar-logo, .navbar-icon {
+
+    .navbar-icon {
         height: 45px;
         min-width: 45px;
     }
-    
+
     .navbar-search-container {
         min-width: 100px;
         margin: 0 20px;
     }
-    
+
     .navbar-search {
         height: 45px;
         font-size: 16px;
+    }
+
+}
+
+/* Big Mac & Logo Container at Top of Offcanvas */
+.offcanvas-header-bar {
+    display: flex;
+    align-items: center;
+    justify-content: flex-start;
+}
+
+.bigmac {
+    height: 35px;
+    width: auto;
+    cursor: pointer;
+    color: #4d4c43;
+    transition: color 0.3s ease;
+    padding-left: 15px;
+}
+
+.bigmac:hover {
+    color: #8f650a;
+}
+
+.navbar-canvas {
+    background-color: #c9c6a5;
+    color: white;
+    height: 100%;
+    padding: 1rem 0 1rem 0 !important;
+}
+
+.navbar-canvas .menu-item {
+    padding: 10px 10px 10px 20px;
+    color: #4d4c43;
+    gap: 10px;
+}
+
+.offcanvas.offcanvas-start {
+    padding-top: 0 !important;
+}
+
+
+.offcanvas-body {
+    padding-top: 12px !important;
+    margin-top: 0 !important;
+}
+
+@media (min-width: 621px) {
+    .offcanvas.offcanvas-start {
+        display: none !important;
     }
 }

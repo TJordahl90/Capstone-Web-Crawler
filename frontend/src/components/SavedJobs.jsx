@@ -1,17 +1,18 @@
-import React, { useState, useEffect } from "react";
-import { Container, Card } from "react-bootstrap";
+import React from "react";
+import { Card } from "react-bootstrap";
+import "./FindJobs.css";
+
 
 const SavedJobs = () => {
-
     return (
-        <Container className="py-5">
-            <Card>
+        <div className="findjobs-container"> {/* This gives the full background */}
+            <Card className="savedjobs-card">
                 <Card.Body>
                     <Card.Title>Saved jobs</Card.Title>
-                    <Card.Text>list of all saved jobs</Card.Text>
+                    <Card.Text>List of all saved jobs</Card.Text>
                 </Card.Body>
             </Card>
-        </Container>
+        </div>
     );
 };
 

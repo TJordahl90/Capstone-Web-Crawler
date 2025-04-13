@@ -1,23 +1,117 @@
+/* Update existing */
 .account-icon {
     position: absolute;
     top: 15px;
     right: 15px;
     cursor: pointer;
     font-size: 1.25rem;
-    color: #c50e42;
+    color: #8f650a;
 }
 
 .badge {
     margin: 5px !important;
     cursor: pointer !important;
     font-size: 1rem !important;
+    color: white !important;
 }
 
 .badge.badge-selected {
     background-color: #c50e42 !important;
-
 }
 
 .badge.badge-unselected {
     background-color: #48494c !important;
 }
+
+/* Container background & text */
+.account-container {
+    background-color: #c9c6a5;
+    color: #4d4c43;
+    min-height: 100vh;
+    padding: 20px;
+    box-sizing: border-box;
+}
+
+/* Profile image */
+.account-image {
+    border-radius: 50%;
+    object-fit: cover;
+    border: 2px solid #4d4c43;
+}
+
+/* NEW: Style every Card component */
+.card {
+    background-color: #b0ad8b !important;
+    color: #4d4c43 !important;
+    border: 2px solid #8f650a;
+    border-radius: 12px;
+}
+
+/* Modal Background */
+.modal-content {
+    background-color: #c9c6a5 !important;
+    color: #4d4c43 !important;
+    border: 2px solid #8f650a;
+    border-radius: 12px;
+  }
+  
+  /* Modal Header */
+  .modal-header {
+    border-bottom: 1px solid #8f650a;
+  }
+  
+  /* Modal Title */
+  .modal-title {
+    color: #4d4c43;
+  }
+  
+  /* Modal Close Button */
+  .btn-close {
+    filter: brightness(0.3);
+  }
+  
+  /* Form Fields */
+  .form-control {
+    background-color: #4d4c43 !important;
+    color: white !important;
+    border: 1px solid #8f650a !important;
+    border-radius: 8px;
+    box-shadow: none;
+  }
+  
+  .form-control::placeholder {
+    color: #c9c6a5 !important;
+    opacity: 1;
+  }
+  
+  /* Submit Button */
+  button[type="submit"] {
+    background-color: #8f650a !important;
+    border: none;
+    color: white;
+    padding: 10px 20px;
+    margin-top: 10px;
+    border-radius: 8px;
+    font-weight: bold;
+  }
+  
+  button[type="submit"]:hover {
+    background-color: #f0a605 !important;
+  }
+  
+  
+  .back-btn {
+    background-color: #4d4c43;
+    color: #c9c6a5;
+    border: none;
+    border-radius: 8px;
+    padding: 8px 16px;
+    cursor: pointer;
+    font-weight: bold;
+    transition: background-color 0.3s ease;
+  }
+  
+  .back-btn:hover {
+    background-color: #8f650a;
+  }
+  
