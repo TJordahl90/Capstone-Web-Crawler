@@ -21,8 +21,14 @@ def matchUsersToJobs(account):
     return jobMatches
 
 def searchForJobs(preference):
-    jobTitle = preference.lower()
+    jobTitle = preference.strip().lower() # Take input and strip spaces off ends. Lowercase if necessary
 
-    jobs = JobPosting.objects.filter(title=jobTitle)
-    
-    return jobs
+    jobIds = set(JobPosting.objects.filter(title__icontains=jobTitle).values_list('id', flat=True)) # This is more efficient. flat=True returns a 'flat' array instead of an array of tuples
+
+    ''' This is a functional version, I found a better method in the documentation ^
+    jobs = JobPosting.objects.filter(title__icontains=jobTitle)
+    jobIds = set()
+    for job in jobs:
+        jobIds.add(job.id)
+    '''
+    return jobIds
