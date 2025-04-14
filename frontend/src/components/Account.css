@@ -16,7 +16,7 @@
 }
 
 .badge.badge-selected {
-    background-color: #c50e42 !important;
+    background-color: #8f650a !important;
 }
 
 .badge.badge-unselected {
@@ -30,6 +30,8 @@
     min-height: 100vh;
     padding: 20px;
     box-sizing: border-box;
+    display: flex;
+  flex-direction: column;
 }
 
 /* Profile image */
@@ -114,4 +116,4 @@
   .back-btn:hover {
     background-color: #8f650a;
   }
-  
+   

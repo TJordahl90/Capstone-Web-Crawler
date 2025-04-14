@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from "react";
 import { Container, Form, Nav, Navbar as NavBar, Offcanvas } from "react-bootstrap";
 import { FaBriefcase, FaBookmark, FaUser, FaBars, FaChartBar, FaUserCircle } from "react-icons/fa";
+import { Dropdown } from "react-bootstrap";
 
 import logo from "../assets/logo3.png";
 import "./Navbar.css";
@@ -9,6 +10,8 @@ const Navbar = ({ setCollapsed, collapsed }) => {
 
   const [isMobileView, setIsMobileView] = useState(window.innerWidth <= 620);
   const [show, setShow] = useState(false);
+  const storedUser = localStorage.getItem("user");
+  const user = storedUser ? JSON.parse(storedUser) : null;
 
   // Detect screen resize
   useEffect(() => {
@@ -30,6 +33,10 @@ const Navbar = ({ setCollapsed, collapsed }) => {
     return () => window.removeEventListener("resize", handleResize);
   }, []); // ✅ Use empty dependency to only run once on mount
 
+  const handleLogout = () => {
+    localStorage.clear();
+    window.location.href = "/login";
+  };
 
   const handleClick = () => {
     if (isMobileView) {
@@ -89,9 +96,27 @@ const Navbar = ({ setCollapsed, collapsed }) => {
         </Form>
 
         <div className="navbar-right">
-          <Nav.Link href="/account" className="p-2">
-            <FaUserCircle className="navbar-icon" size={45} />
-          </Nav.Link>
+          <div className="d-flex align-items-center">
+            {user ? (
+              <>
+                <Dropdown align="end">
+                  <Dropdown.Toggle as="div" className="p-2 cursor-pointer">
+                    <FaUserCircle className="navbar-icon" size={45} />
+                  </Dropdown.Toggle>
+
+                  <Dropdown.Menu className="dropdown-menu-custom">
+                    <Dropdown.Item href="/account">Edit Profile</Dropdown.Item>
+                    <Dropdown.Item onClick={handleLogout}>Log Out</Dropdown.Item>
+                  </Dropdown.Menu>
+                </Dropdown>
+                <span className="text-dark ms-2">{user.username}</span>
+              </>
+            ) : (
+              <Nav.Link href="/login" className="loginpg-btn">Login</Nav.Link>
+            )}
+          </div>
+
+
         </div>
 
       </Container>

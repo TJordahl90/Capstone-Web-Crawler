@@ -17,6 +17,7 @@
 .navbar-icon {
     width: auto;
     height: 45px;
+
 }
 
 .navbar-search-container {
@@ -114,6 +115,30 @@
     filter: brightness(0) saturate(100%) invert(46%) sepia(21%) saturate(1549%) hue-rotate(7deg) brightness(89%) contrast(85%);
 }
 
+.loginpg-btn {
+    width: auto !important;
+    padding: 8px 20px !important;
+    border: 2px solid #4d4c43 !important;
+    background-color: transparent !important;
+    color: #4d4c43 !important;
+    transition: all 0.3s ease;
+    border-radius: 0 !important;
+    /* square corners */
+    height: 45px !important;
+    display: flex !important;
+    align-items: center;
+    justify-content: center;
+    font-weight: 600;
+    text-decoration: none !important;
+}
+
+.loginpg-btn:hover {
+    background-color: #8f650a !important;
+    color: white !important;
+    border-color: #8f650a !important;
+}
+
+
 @media (max-width: 620px) {
 
     .navbar-icon {
@@ -182,3 +207,23 @@
     }
 }
 
+.dropdown-toggle::after {
+    display: none !important;
+  }
+  
+  .dropdown-menu-custom {
+    background-color: #4d4c43 !important;
+    border: 2px solid #8f650a !important;
+    color: white !important;
+  }
+  
+  .dropdown-menu-custom .dropdown-item {
+    color: white !important;
+    font-weight: 500 !important;
+  }
+  
+  .dropdown-menu-custom .dropdown-item:hover {
+    background-color: #8f650a !important;
+    color: white !important;
+  }
+  
