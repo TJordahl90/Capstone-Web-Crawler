@@ -88,11 +88,12 @@ const Navbar = ({ setCollapsed, collapsed }) => {
           />
         </Form>
 
-        <Nav className="d-flex align-items-center">
+        <div className="navbar-right">
           <Nav.Link href="/account" className="p-2">
             <FaUserCircle className="navbar-icon" size={45} />
           </Nav.Link>
-        </Nav>
+        </div>
+
       </Container>
     </NavBar>
   );

@@ -3,15 +3,15 @@
     background-color: #c9c6a5;
 }
 
-.container-fluid {
-    display: flex !important;
-    flex-wrap: nowrap !important;
+.navbar-container {
+    display: flex;
+    flex-wrap: nowrap;
     align-items: center;
     justify-content: space-between;
     width: 100%;
-    max-width: 1400px;
-    margin: 0 auto;
+    padding: 0 20px;
 }
+
 
 .navbar-logo,
 .navbar-icon {
@@ -181,3 +181,4 @@
         display: none !important;
     }
 }
+
