@@ -188,10 +188,10 @@ class CreateVerificationView(APIView):
             return Response({'error': 'Invalid code'}, status=status.HTTP_400_BAD_REQUEST)
 
 #@login_required # Implement this later so that only users who are logged in can use this function. For now we can leave it accessible by everyone
-# Needs to be tested once frontend is ready
 def JobMatchingView(request):
     userAccount = Account.objects.get(user=request.user) # Get user account
+    matchedJobIds = matchUsersToJobs(userAccount) # Call job matching function
+    matchedJobs = JobPosting.objects.filter(id__in=matchedJobIds)
+    serializedJobs = JobPostingSerializer(matchedJobs, many=True).data
 
-    matchedJobs = matchUsersToJobs(userAccount) # Call job matching function
-
-    return JsonResponse(matchedJobs, safe=False) # Return array of jobs
+    return JsonResponse(serializedJobs, safe=False)

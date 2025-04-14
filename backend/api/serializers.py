@@ -78,3 +78,10 @@ class AccountSerializer(serializers.ModelSerializer):
         model = Account
         fields = ['user', 'photo', 'resume', 'headline', 'pronouns', 'hometown', 'summary', 'skills', 'preferences', 'education', 'experience', 'accountStatus']
         extra_kwargs = {"user": {"read_only": True}}
+
+class JobPostingSerializer(serializers.ModelSerializer):
+    requirements = CommonSkillsSerializer(many=True, read_only=True)
+
+    class Meta:
+        model = JobPosting
+        fields = ['id', 'company', 'title', 'description', 'requirements', 'location', 'datePosted', 'salary', 'jobURL']
