@@ -13,7 +13,7 @@ from django.conf import settings
 import random
 from django.shortcuts import get_object_or_404
 from django.http import JsonResponse
-from .jobMatching import matchUsersToJobs
+from .jobMatching import matchUsersToJobs, searchForJobs
 
 @permission_classes([AllowAny])
 @ensure_csrf_cookie
@@ -195,3 +195,12 @@ def JobMatchingView(request):
     serializedJobs = JobPostingSerializer(matchedJobs, many=True).data
 
     return JsonResponse(serializedJobs, safe=False)
+
+#@login_required # Same as above ^
+def JobSearchingView(request):
+    # I'm writing this assuming request.data will have the users search in it so this will probably need to be updated.
+    searchedJobsIds = searchForJobs(request.data) # Call function
+    foundJobs = JobPosting.objects.filter(id__in=searchedJobsIds) # Get jobs based on returned IDs
+    serializedJobs = JobPostingSerializer(foundJobs, many=True).data # Serialize job postings for frontend
+
+    return JsonResponse(serializedJobs, safe=False) # Send jobs to frontend
