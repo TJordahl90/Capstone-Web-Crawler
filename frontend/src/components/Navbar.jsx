@@ -8,7 +8,10 @@ import "./Navbar.css";
 
 const Navbar = ({ setCollapsed, collapsed }) => {
 
-  const [isMobileView, setIsMobileView] = useState(window.innerWidth <= 620);
+  const [isMobile, setIsMobile] = useState(window.innerWidth <= 480);
+  const [isSmallWidth, setIsSmallWidth] = useState(
+    window.innerWidth > 480 && window.innerWidth <= 620
+  );
   const [show, setShow] = useState(false);
   const storedUser = localStorage.getItem("user");
   const user = storedUser ? JSON.parse(storedUser) : null;
@@ -16,22 +19,22 @@ const Navbar = ({ setCollapsed, collapsed }) => {
   // Detect screen resize
   useEffect(() => {
     const handleResize = () => {
-      const isNowMobile = window.innerWidth <= 620;
-      setIsMobileView(isNowMobile);
+      const width = window.innerWidth;
 
-      // ✅ Always hide Offcanvas if not on mobile
-      if (!isNowMobile) {
+      setIsMobile(width <= 480);
+      setIsSmallWidth(width > 480 && width <= 620);
+
+      // Always hide Offcanvas if not in small screen mode
+      if (!(width <= 620)) {
         setShow(false);
       }
     };
 
     window.addEventListener("resize", handleResize);
-
-    // Call once on mount to ensure it's synced immediately
     handleResize();
-
     return () => window.removeEventListener("resize", handleResize);
-  }, []); // ✅ Use empty dependency to only run once on mount
+  }, []);
+
 
   const handleLogout = () => {
     localStorage.clear();
@@ -39,7 +42,7 @@ const Navbar = ({ setCollapsed, collapsed }) => {
   };
 
   const handleClick = () => {
-    if (isMobileView) {
+    if (isSmallWidth) {
       setShow(true);
     } else {
       setCollapsed(!collapsed);
@@ -53,40 +56,44 @@ const Navbar = ({ setCollapsed, collapsed }) => {
     <NavBar expand="lg" className="custom-navbar">
       <Container fluid className="navbar-container">
         <div className="navbar-left">
-          <FaBars className="hamburger-icon" onClick={handleClick} />
-          <NavBar.Brand href="/suggested-jobs" className="navbar-logo-wrapper">
-            <img src={logo} alt="website logo" className="navbar-logo" />
-          </NavBar.Brand>
+          {!isMobile && (
+            <FaBars className="hamburger-icon" onClick={handleClick} />
+          )}
+          {!isMobile && (
+            <NavBar.Brand href="/suggested-jobs" className="navbar-logo-wrapper">
+              <img src={logo} alt="website logo" className="navbar-logo" />
+            </NavBar.Brand>
+          )}
         </div>
+        {!isMobile && (
+          <Offcanvas show={show} onHide={() => setShow(false)} className="navbar-canvas-container" placement="start">
+            <Offcanvas.Body className="navbar-canvas">
+              <div className="offcanvas-header-bar">
+                <FaBars className="hamburger-icon bigmac" onClick={handleClose} />
+                <img src={logo} alt="logo inside offcanvas" className="navbar-logo" />
+              </div>
+              <div className="menu-divider-line"></div>
 
-        <Offcanvas show={show} onHide={() => setShow(false)} className="navbar-canvas-container" placement="start">
-          <Offcanvas.Body className="navbar-canvas">
-            <div className="offcanvas-header-bar">
-              <FaBars className="hamburger-icon bigmac" onClick={handleClose} />
-              <img src={logo} alt="logo inside offcanvas" className="navbar-logo" />
-            </div>
-            <div className="menu-divider-line"></div>
-
-            <a href="/find-jobs" className="menu-item">
-              <FaBriefcase className="icon" />
-              <span>Jobs</span>
-            </a>
-            <a href="/saved-jobs" className="menu-item">
-              <FaBookmark className="icon" />
-              <span>Saved</span>
-            </a>
-            <div className="menu-divider-line"></div>
-            <a href="/#" className="menu-item">
-              <FaChartBar className="icon" />
-              <span>Trends</span>
-            </a>
-            <a href="/#" className="menu-item">
-              <FaUser className="icon" />
-              <span>People</span>
-            </a>
-          </Offcanvas.Body>
-        </Offcanvas>
-
+              <a href="/find-jobs" className="menu-item">
+                <FaBriefcase className="icon" />
+                <span>Jobs</span>
+              </a>
+              <a href="/saved-jobs" className="menu-item">
+                <FaBookmark className="icon" />
+                <span>Saved</span>
+              </a>
+              <div className="menu-divider-line"></div>
+              <a href="/#" className="menu-item">
+                <FaChartBar className="icon" />
+                <span>Trends</span>
+              </a>
+              <a href="/#" className="menu-item">
+                <FaUser className="icon" />
+                <span>People</span>
+              </a>
+            </Offcanvas.Body>
+          </Offcanvas>
+        )}
         <Form className="navbar-search-container">
           <Form.Control
             type="text"
@@ -104,7 +111,7 @@ const Navbar = ({ setCollapsed, collapsed }) => {
                     <FaUserCircle className="navbar-icon" size={45} />
                   </Dropdown.Toggle>
 
-                  <Dropdown.Menu className="dropdown-menu-custom">
+                  <Dropdown.Menu className="dropdown-menu-custom align-left">
                     <Dropdown.Item href="/account">Edit Profile</Dropdown.Item>
                     <Dropdown.Item onClick={handleLogout}>Log Out</Dropdown.Item>
                   </Dropdown.Menu>

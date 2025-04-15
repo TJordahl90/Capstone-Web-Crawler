@@ -10,6 +10,7 @@ import SuggestedJobs from "./components/SuggestedJobs";
 import SavedJobs from "./components/SavedJobs";
 import Verification from "./components/Verification";
 import "bootstrap/dist/css/bootstrap.min.css";
+import MobileNavBar from "./components/MobileNavBar";
 
 function App() {
 	const location = useLocation();
@@ -17,11 +18,15 @@ function App() {
 	const showNavMenus = !hideNavMenus.includes(location.pathname);
 
 	const [collapsed, setCollapsed] = useState(false);
-	const [isMobile, setIsMobile] = useState(window.innerWidth <= 620);
-
+	const [isSmallWidth, setIsSmallWidth] = useState(
+		window.innerWidth > 480 && window.innerWidth <= 620
+	);
+	const [isMobile, setIsMobile] = useState(window.innerWidth <= 480);
 	useEffect(() => {
 		const handleResize = () => {
-			setIsMobile(window.innerWidth <= 620);
+			const width = window.innerWidth;
+			setIsMobile(width <= 480);
+			setIsSmallWidth(width > 480 && width <= 620);
 		};
 		window.addEventListener("resize", handleResize);
 		return () => window.removeEventListener("resize", handleResize);
@@ -32,17 +37,20 @@ function App() {
 			{showNavMenus ? (
 				<>
 					<Navbar collapsed={collapsed} setCollapsed={setCollapsed} />
-					{!isMobile ? (
+					{!isSmallWidth ? (
 						<SidePanel collapsed={collapsed}>
-							<Routes>
-								<Route path="/find-jobs" element={<FindJobs />} />
-								<Route path="/account" element={<Account />} />
-								<Route path="/suggested-jobs" element={<SuggestedJobs />} />
-								<Route path="/saved-jobs" element={<SavedJobs />} />
-							</Routes>
+							<>
+								<Routes>
+									<Route path="/find-jobs" element={<FindJobs />} />
+									<Route path="/account" element={<Account />} />
+									<Route path="/suggested-jobs" element={<SuggestedJobs />} />
+									<Route path="/saved-jobs" element={<SavedJobs />} />
+								</Routes>
+								{isMobile && showNavMenus && <MobileNavBar />}
+							</>
+
 						</SidePanel>
 					) : (
-						// On mobile, just render the page directly without SidePanel
 						<Routes>
 							<Route path="/find-jobs" element={<FindJobs />} />
 							<Route path="/account" element={<Account />} />
