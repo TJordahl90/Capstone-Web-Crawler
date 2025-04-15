@@ -117,18 +117,19 @@ const Account = () => {
 
     const toggleBadge = (item, type) => {
         if (type === "preference") {
-            if (tempPreferences.includes(item)) {
-                setTempPreferences(tempPreferences.filter((preference) => preference !== item));
-            }
-            else {
+            const exists = tempPreferences.some((p) => cleanName(p.name || p) === cleanName(item.name || item));
+            if (exists) {
+                setTempPreferences(tempPreferences.filter((p) => cleanName(p.name || p) !== cleanName(item.name || item)));
+            } else {
                 setTempPreferences([...tempPreferences, item]);
             }
         }
+
         else if (type === "skill") {
-            if (tempSkills.includes(item)) {
-                setTempSkills(tempSkills.filter((skill) => skill !== item));
-            }
-            else {
+            const exists = tempSkills.some((s) => cleanName(s.name || s) === cleanName(item.name || item));
+            if (exists) {
+                setTempSkills(tempSkills.filter((s) => cleanName(s.name || s) !== cleanName(item.name || item)));
+            } else {
                 setTempSkills([...tempSkills, item]);
             }
         }
@@ -162,14 +163,28 @@ const Account = () => {
 
     const handlePreferences = (e) => {
         e.preventDefault();
-        const data = { preferences: tempPreferences };
+        //id print fix
+        const data = {
+            preferences: tempPreferences.map((p) =>
+                typeof p === "string"
+                    ? p
+                    : cleanName(p.name || p)
+            ),
+        };
         handleSubmit(data);
         setEditPreferences(false);
     }
 
     const handleSkills = (e) => {
         e.preventDefault();
-        const data = { skills: tempSkills };
+        //id print fix
+        const data = {
+            skills: [...new Set(tempSkills.map((s) =>
+                typeof s === "string"
+                    ? s
+                    : cleanName(s.name || s)
+            ))],
+        };
         handleSubmit(data);
         setEditSkills(false);
     }
@@ -231,17 +246,48 @@ const Account = () => {
             setError('');
         }, 3000);
     }
-
-
+    const cleanName = (value) => {
+        try {
+            if (typeof value === "string" && value.includes("{")) {
+                const parsed = JSON.parse(value.replace(/'/g, '"'));
+                return parsed.name || value;
+            }
+            return value;
+        } catch {
+            return value;
+        }
+    };
+    const handleReset = async () => {
+        try {
+          await api.patch("/account/", {
+            preferences: [],
+            skills: []
+          });
+          localStorage.removeItem("preferences");
+          localStorage.removeItem("skills");
+          setaccountData({ ...accountData, preferences: [], skills: [] });
+          setTempPreferences([]);
+          setTempSkills([]);
+          alert("Cleared preferences and skills permanently.");
+        } catch (err) {
+          console.error("Failed to clear:", err);
+        }
+      };
+      
     return (
         <>
             <Container className="account-container">
                 <div className="account-content">
-                    <div className="back-btn-container pb-3">
+                    <div className="back-and-reset-container pb-3">
                         <button onClick={() => navigate("/find-jobs")} className="back-btn">
                             ← Back to Jobs
                         </button>
+                        <button onClick={handleReset} className="reset-btn">
+                            Reset Preferences & Skills
+                        </button>
                     </div>
+
+
                     {/* Alert Messages */}
                     {message && <Alert variant="success">{message}</Alert>}
                     {error && <Alert variant="danger">{error}</Alert>}
@@ -352,7 +398,7 @@ const Account = () => {
                                 {accountData.preferences.length > 0 ? (
                                     accountData.preferences.map((preference, index) => (
                                         <Badge key={index} className="badge-selected">
-                                            {preference.name}
+                                            {cleanName(preference.name)}
                                         </Badge>
                                     ))
                                 ) : (
@@ -392,7 +438,7 @@ const Account = () => {
                                 {accountData.skills.length > 0 ? (
                                     accountData.skills.map((skill, index) => (
                                         <Badge key={index} className="badge-selected">
-                                            {skill.name}
+                                            {cleanName(skill.name)}
                                         </Badge>
                                     ))
                                 ) : (
