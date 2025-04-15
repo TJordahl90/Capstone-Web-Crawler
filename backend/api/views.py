@@ -96,7 +96,7 @@ class AccountView(APIView):
             else:
                 errors['account'] = account_serializer.errors
 
-        if skills_data:
+        if skills_data is not None:
             try:
                 skills_list = []
                 for skill in skills_data:
@@ -106,7 +106,7 @@ class AccountView(APIView):
             except Exception as e:
                 errors['skills'] = str(e)
 
-        if preferences_data:
+        if preferences_data is not None:
             try:
                 preferences_list = []
                 for preference in preferences_data:

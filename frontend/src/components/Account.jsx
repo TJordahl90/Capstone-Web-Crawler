@@ -22,6 +22,7 @@ const Account = () => {
 
     const [tempPreferences, setTempPreferences] = useState([]);
     const [tempSkills, setTempSkills] = useState([]);
+    const [showResetConfirm, setShowResetConfirm] = useState(false);
 
     const [accountData, setaccountData] = useState({
         firstName: "",
@@ -257,23 +258,6 @@ const Account = () => {
             return value;
         }
     };
-    const handleReset = async () => {
-        try {
-          await api.patch("/account/", {
-            preferences: [],
-            skills: []
-          });
-          localStorage.removeItem("preferences");
-          localStorage.removeItem("skills");
-          setaccountData({ ...accountData, preferences: [], skills: [] });
-          setTempPreferences([]);
-          setTempSkills([]);
-          alert("Cleared preferences and skills permanently.");
-        } catch (err) {
-          console.error("Failed to clear:", err);
-        }
-      };
-      
     return (
         <>
             <Container className="account-container">
@@ -282,9 +266,13 @@ const Account = () => {
                         <button onClick={() => navigate("/find-jobs")} className="back-btn">
                             ← Back to Jobs
                         </button>
-                        <button onClick={handleReset} className="reset-btn">
+                        <button
+                            onClick={() => setShowResetConfirm(true)}
+                            className="reset-btn"
+                        >
                             Reset Preferences & Skills
                         </button>
+
                     </div>
 
 
@@ -416,15 +404,32 @@ const Account = () => {
                         <Modal show={editPreferences} onHide={() => setEditPreferences(false)}>
                             <Modal.Header closeButton><Modal.Title>Edit Job Preferences</Modal.Title></Modal.Header>
                             <Modal.Body>
+                                <button
+                                    type="button"
+                                    className="remove-all-btn"
+                                    onClick={() => setTempPreferences([])}
+                                >
+                                    Remove All Preferences
+                                </button>
+
                                 <Form onSubmit={handlePreferences}>
                                     <Container>
                                         {jobList.map((preference, index) => (
-                                            <Badge className={tempPreferences.includes(preference) ? "badge-selected" : "badge-unselected"} key={index} onClick={() => toggleBadge(preference, "preference")}>
+                                            <Badge
+                                                className={
+                                                    tempPreferences.some((p) => cleanName(p.name || p) === cleanName(preference))
+                                                        ? "badge-selected"
+                                                        : "badge-unselected"
+                                                }
+                                                key={index}
+                                                onClick={() => toggleBadge(preference, "preference")}
+                                            >
                                                 {preference}
                                             </Badge>
                                         ))}
                                     </Container>
                                     <Button type="submit" className="mt-3">Submit</Button>
+
                                 </Form>
                             </Modal.Body>
                         </Modal>
@@ -456,10 +461,26 @@ const Account = () => {
                         <Modal show={editSkills} onHide={() => setEditSkills(false)}>
                             <Modal.Header closeButton><Modal.Title>Edit Skills</Modal.Title></Modal.Header>
                             <Modal.Body>
+                                <button
+                                    type="button"
+                                    className="remove-all-btn"
+                                    onClick={() => setTempSkills([])}
+                                >
+                                    Remove All Skills
+                                </button>
+
                                 <Form onSubmit={handleSkills}>
                                     <Container>
                                         {skillList.map((skill, index) => (
-                                            <Badge className={tempSkills.includes(skill) ? "badge-selected" : "badge-unselected"} key={index} onClick={() => toggleBadge(skill, "skill")}>
+                                            <Badge
+                                                className={
+                                                    tempSkills.some((s) => cleanName(s.name || s) === cleanName(skill))
+                                                        ? "badge-selected"
+                                                        : "badge-unselected"
+                                                }
+                                                key={index}
+                                                onClick={() => toggleBadge(skill, "skill")}
+                                            >
                                                 {skill}
                                             </Badge>
                                         ))}
@@ -623,6 +644,42 @@ const Account = () => {
                             </Modal.Body>
                         </Modal>
                     )}
+                    <Modal show={showResetConfirm} onHide={() => setShowResetConfirm(false)}>
+                        <Modal.Header closeButton>
+                            <Modal.Title>Confirm Reset</Modal.Title>
+                        </Modal.Header>
+                        <Modal.Body>
+                            Are you sure you want to permanently remove all preferences and skills?
+                        </Modal.Body>
+                        <Modal.Footer>
+                            <Button variant="secondary" onClick={() => setShowResetConfirm(false)}>
+                                Cancel
+                            </Button>
+                            <Button
+                                variant="danger"
+                                onClick={async () => {
+                                    try {
+                                        await api.patch("/account/", {
+                                            preferences: [],
+                                            skills: []
+                                        });
+                                        localStorage.removeItem("preferences");
+                                        localStorage.removeItem("skills");
+                                        setaccountData({ ...accountData, preferences: [], skills: [] });
+                                        setTempPreferences([]);
+                                        setTempSkills([]);
+                                        setShowResetConfirm(false);
+                                        setMessage("Cleared preferences and skills permanently.");
+                                    } catch (err) {
+                                        console.error("Failed to clear:", err);
+                                        setError("Reset failed.");
+                                    }
+                                }}
+                            >
+                                Yes, Reset All
+                            </Button>
+                        </Modal.Footer>
+                    </Modal>
 
 
                     {/* Possibly add a projects section */}
