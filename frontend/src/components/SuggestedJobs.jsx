@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { Container, Row, Col, ListGroup, Card, Button, Alert } from "react-bootstrap";
+import { Container, Row, Col, ListGroup, Card, Button, Alert, Modal } from "react-bootstrap";
 import api from "../api.js";
 
 const SuggestedJobs = () => {
@@ -89,6 +89,8 @@ const SuggestedJobs = () => {
     const [error, setError] = useState('');
     const [matchedJobs, setMatchedJobs] = useState([]);
     const [selectedJob, setSelectedJob] = useState(null);
+    const [showModal, setShowModal] = useState(false);
+    const [isSmallScreen, setIsSmallScreen] = useState(window.innerWidth <= 770);
 
     const handleJobRetrieval = async () => {
         try {
@@ -98,6 +100,13 @@ const SuggestedJobs = () => {
             console.error(err);
         }
     };
+    useEffect(() => {
+        const handleResize = () => {
+            setIsSmallScreen(window.innerWidth <= 770);
+        };
+        window.addEventListener("resize", handleResize);
+        return () => window.removeEventListener("resize", handleResize);
+    }, []);
 
     useEffect(() => {
         const fetchJobs = async () => {
@@ -148,7 +157,12 @@ const SuggestedJobs = () => {
                                 key={job.id}
                                 action
                                 active={selectedJob?.id === job.id}
-                                onClick={() => setSelectedJob(job)}
+                                onClick={() => {
+                                    setSelectedJob(job);
+                                    if (isSmallScreen) {
+                                        setShowModal(true);
+                                    }
+                                }}
                                 className="py-3"
                                 style={{ backgroundColor: "#b0ac8c" }}
                             >
@@ -160,41 +174,66 @@ const SuggestedJobs = () => {
                 </Col>
 
                 {/* Right column: selected job details */}
-                <Col
-                    xs={12}
-                    md={isLargeWidth ? 8 : 6}
-                    className="mt-3 mt-md-0"
-                >
-                    {selectedJob ? (
-                        <Card className="suggestedjobs-detail">
-                            <Card.Body>
-                                <Card.Title>{selectedJob.title}</Card.Title>
-                                <Button as="a" variant="outline-dark" href={selectedJob.jobURL}>Apply</Button>
-                                <Card.Text>
-                                    <strong>Company:</strong> {selectedJob.company}
-                                    <br />
-                                    <strong>Location:</strong> {selectedJob.location}
-                                    <br />
-                                    <strong>Date Posted:</strong> {selectedJob.datePosted}
-                                </Card.Text>
-                                <Card.Text>
-                                    <strong>Description: </strong>
-                                    {selectedJob.description}
-                                </Card.Text>
-                                <Card.Text>
-                                    <strong>Requirements: </strong>
-                                    {selectedJob.requirements.map(skill => skill.name).join(', ')}
-                                </Card.Text>
-                            </Card.Body>
-                        </Card>
-                    ) : (
-                        <div className="suggestedjobs-placeholder">
-                            <p>Select a job to view details.</p>
-                        </div>
-                    )}
-                </Col>
+                {!isSmallScreen && (
+                    <Col
+                        xs={12}
+                        md={isLargeWidth ? 8 : 6}
+                        className="mt-3 mt-md-0"
+                    >
+                        {selectedJob ? (
+                            <Card className="suggestedjobs-detail">
+                                <Card.Body>
+                                    <Card.Title>{selectedJob.title}</Card.Title>
+                                    <Button as="a" variant="outline-dark" href={selectedJob.jobURL}>Apply</Button>
+                                    <Card.Text>
+                                        <strong>Company:</strong> {selectedJob.company}
+                                        <br />
+                                        <strong>Location:</strong> {selectedJob.location}
+                                        <br />
+                                        <strong>Date Posted:</strong> {selectedJob.datePosted}
+                                    </Card.Text>
+                                    <Card.Text>
+                                        <strong>Description: </strong>
+                                        {selectedJob.description}
+                                    </Card.Text>
+                                    <Card.Text>
+                                        <strong>Requirements: </strong>
+                                        {selectedJob.requirements.map(skill => skill.name).join(', ')}
+                                    </Card.Text>
+                                </Card.Body>
+                            </Card>
+                        ) : (
+                            <div className="suggestedjobs-placeholder">
+                                <p>Select a job to view details.</p>
+                            </div>
+                        )}
+                    </Col>
+                )}
                 {!isLargeWidth && <Col md={3}></Col>}
             </Row>
+            {isSmallScreen && selectedJob && (
+                <Modal show={showModal} onHide={() => setShowModal(false)} centered>
+                    <Modal.Header closeButton>
+                        <Modal.Title>{selectedJob.title}</Modal.Title>
+                    </Modal.Header>
+                    <Modal.Body>
+                        <p><strong>Company:</strong> {selectedJob.company}</p>
+                        <p><strong>Location:</strong> {selectedJob.location}</p>
+                        <p><strong>Date Posted:</strong> {selectedJob.postedDate}</p>
+                        <p><strong>Description:</strong> {selectedJob.description}</p>
+                        <p><strong>Requirements:</strong> {selectedJob.requirements.map(skill => skill.name).join(', ')}</p>
+                    </Modal.Body>
+                    <Modal.Footer>
+                        <Button variant="secondary" onClick={() => setShowModal(false)}>
+                            Close
+                        </Button>
+                        <Button variant="dark" href={selectedJob.jobURL}>
+                            Apply
+                        </Button>
+                    </Modal.Footer>
+                </Modal>
+            )}
+
         </div>
     );
 };
