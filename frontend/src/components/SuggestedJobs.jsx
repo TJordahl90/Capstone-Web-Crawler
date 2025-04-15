@@ -1,8 +1,90 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { Container, Row, Col, ListGroup, Card, Button, Alert } from "react-bootstrap";
 import api from "../api.js";
 
 const SuggestedJobs = () => {
+    const exampleJobs = [
+        {
+            id: 1,
+            title: "Job Example 1",
+            company: "For frontend testing",
+            location: "5005 WEST ROYAL LANE, SUITE NO 228 IRVING, TX, 75063",
+            postedDate: "2025-04-10",
+            description: `Analyze, design and configure network architecture and layout strategies. 
+        Configure and assist service deployment and document network issues. 
+        Detect, and mitigate DDOS attacks on the network. Install, maintain and monitor LAN servers, LAN systems. 
+        Troubleshoot and resolve all types of production network outages. 
+        Implement test plans and find bugs.`,
+            requirements: [
+                { name: "VLAN" },
+                { name: "BGP" },
+                { name: "OSPF" },
+                { name: "Cisco" },
+                { name: "Python" },
+                { name: "Juniper" },
+                { name: "Arista" },
+                { name: "DNS" },
+                { name: "Wireshark" },
+                { name: "network architecture" },
+                { name: "bachelors" },
+            ],
+            jobURL: "#", // keep "#" or a dummy URL if you're not linking out
+        },
+        {
+            id: 2,
+            title: "Job Example 2",
+            company: "For frontend testing",
+            location: "5005 WEST ROYAL LANE, SUITE NO 228 IRVING, TX, 75063",
+            postedDate: "2025-04-10",
+            description: `Analyze, design and configure network architecture and layout strategies. 
+        Configure and assist service deployment and document network issues. 
+        Detect, and mitigate DDOS attacks on the network. Install, maintain and monitor LAN servers, LAN systems. 
+        Troubleshoot and resolve all types of production network outages. 
+        Implement test plans and find bugs.`,
+            requirements: [
+                { name: "VLAN" },
+                { name: "BGP" },
+                { name: "OSPF" },
+                { name: "Cisco" },
+                { name: "Python" },
+                { name: "Juniper" },
+                { name: "Arista" },
+                { name: "DNS" },
+                { name: "Wireshark" },
+                { name: "network architecture" },
+                { name: "bachelors" },
+            ],
+            jobURL: "#", // keep "#" or a dummy URL if you're not linking out
+        },
+        {
+            id: 3,
+            title: "Job Example 3",
+            company: "For frontend testing",
+            location: "5005 WEST ROYAL LANE, SUITE NO 228 IRVING, TX, 75063",
+            postedDate: "2025-04-10",
+            description: `Analyze, design and configure network architecture and layout strategies. 
+        Configure and assist service deployment and document network issues. 
+        Detect, and mitigate DDOS attacks on the network. Install, maintain and monitor LAN servers, LAN systems. 
+        Troubleshoot and resolve all types of production network outages. 
+        Implement test plans and find bugs.`,
+            requirements: [
+                { name: "VLAN" },
+                { name: "BGP" },
+                { name: "OSPF" },
+                { name: "Cisco" },
+                { name: "Python" },
+                { name: "Juniper" },
+                { name: "Arista" },
+                { name: "DNS" },
+                { name: "Wireshark" },
+                { name: "network architecture" },
+                { name: "bachelors" },
+            ],
+            jobURL: "#", // keep "#" or a dummy URL if you're not linking out
+        },
+    ];
+
+
     const [message, setMessage] = useState('');
     const [error, setError] = useState('');
     const [matchedJobs, setMatchedJobs] = useState([]);
@@ -17,25 +99,58 @@ const SuggestedJobs = () => {
         }
     };
 
-    useState(() => {
-        handleJobRetrieval();
-        setError("No suggested jobs, please set up account.")
-    })
+    useEffect(() => {
+        const fetchJobs = async () => {
+            try {
+                const response = await api.get("/job_matching/");
+                if (response.data.length > 0) {
+                    setMatchedJobs(response.data);
+                } else {
+                    setMatchedJobs(exampleJobs); // fallback if empty
+                    setError("No matched jobs found. Showing sample jobs.");
+                }
+            } catch (err) {
+                console.error("Backend fetch failed, using example jobs.");
+                setMatchedJobs(exampleJobs); // fallback if error
+                setError("Could not fetch jobs from backend. Showing example jobs.");
+            }
+        };
+
+        fetchJobs();
+    }, []);
+
+    const [isLargeWidth, setIsLargeWidth] = useState(
+        window.innerWidth > 480 && window.innerWidth <= 1000
+    );
+
+    useEffect(() => {
+        const handleResize = () => {
+            const width = window.innerWidth;
+            setIsLargeWidth(width > 480 && width <= 1000);
+        };
+        handleResize();
+        window.addEventListener("resize", handleResize);
+        return () => window.removeEventListener("resize", handleResize);
+    }, []);
 
     return (
-        <Container className="py-5">
+        <div className="findjobs-container">
             <Row>
                 {/* Left column: job list */}
-                <Col md={4}>
-                    <ListGroup className="suggestedjobs-card">
+                <Col
+                    xs={12}
+                    md={isLargeWidth ? 3 : 3}
+                    style={{ minWidth: "220px" }}
+                >
+                    <ListGroup className="suggestedjobs-list">
                         {matchedJobs.map((job) => (
-                            <ListGroup.Item 
-                                key={job.id} 
-                                action 
+                            <ListGroup.Item
+                                key={job.id}
+                                action
                                 active={selectedJob?.id === job.id}
                                 onClick={() => setSelectedJob(job)}
                                 className="py-3"
-                                style={{backgroundColor: "#b0ac8c" }}
+                                style={{ backgroundColor: "#b0ac8c" }}
                             >
                                 <strong>{job.title}</strong><br />
                                 <p>{job.company}</p>
@@ -45,9 +160,13 @@ const SuggestedJobs = () => {
                 </Col>
 
                 {/* Right column: selected job details */}
-                <Col md={8}>
+                <Col
+                    xs={12}
+                    md={isLargeWidth ? 8 : 6}
+                    className="mt-3 mt-md-0"
+                >
                     {selectedJob ? (
-                        <Card className="suggestedjobs-card">
+                        <Card className="suggestedjobs-detail">
                             <Card.Body>
                                 <Card.Title>{selectedJob.title}</Card.Title>
                                 <Button as="a" variant="outline-dark" href={selectedJob.jobURL}>Apply</Button>
@@ -69,11 +188,14 @@ const SuggestedJobs = () => {
                             </Card.Body>
                         </Card>
                     ) : (
-                        null
+                        <div className="suggestedjobs-placeholder">
+                            <p>Select a job to view details.</p>
+                        </div>
                     )}
                 </Col>
+                {!isLargeWidth && <Col md={3}></Col>}
             </Row>
-        </Container>
+        </div>
     );
 };
 

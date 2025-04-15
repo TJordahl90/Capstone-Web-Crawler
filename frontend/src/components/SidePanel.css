@@ -105,8 +105,8 @@
     width: calc(100vw - 60px);
 }
 
-/* Hide side panel when screen width <= 620px */
-@media (max-width: 620px) {
+/* Hide side panel when screen width <= 770px */
+@media (max-width: 770px) {
     .side-panel {
         display: none !important;
     }

@@ -28,11 +28,17 @@
     border: 2px solid #8f650a !important;
 
 }
-.suggestedjobs-card {
+
+.suggestedjobs-list {
     width: 100%;
-    max-width: 600px;
-    margin-top: 20px;
-    margin-left: 20px;
+    background-color: #c9c6a5 !important;
+    border-radius: 12px !important;
+    color: #4d4c43 !important;
+    border: 2px solid #8f650a !important;
+}
+
+.suggestedjobs-detail {
+    width: 100%;
     background-color: #c9c6a5 !important;
     border-radius: 12px !important;
     color: #4d4c43 !important;

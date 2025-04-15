@@ -10,7 +10,7 @@ const Navbar = ({ setCollapsed, collapsed }) => {
 
   const [isMobile, setIsMobile] = useState(window.innerWidth <= 480);
   const [isSmallWidth, setIsSmallWidth] = useState(
-    window.innerWidth > 480 && window.innerWidth <= 620
+    window.innerWidth > 480 && window.innerWidth <= 770
   );
   const [show, setShow] = useState(false);
   const storedUser = localStorage.getItem("user");
@@ -22,10 +22,10 @@ const Navbar = ({ setCollapsed, collapsed }) => {
       const width = window.innerWidth;
 
       setIsMobile(width <= 480);
-      setIsSmallWidth(width > 480 && width <= 620);
+      setIsSmallWidth(width > 480 && width <= 770);
 
       // Always hide Offcanvas if not in small screen mode
-      if (!(width <= 620)) {
+      if (!(width <= 770)) {
         setShow(false);
       }
     };

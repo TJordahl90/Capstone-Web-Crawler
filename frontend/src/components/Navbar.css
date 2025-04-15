@@ -139,7 +139,7 @@
 }
 
 
-@media (max-width: 620px) {
+@media (max-width: 770px) {
 
     .navbar-icon {
         height: 45px;
@@ -201,7 +201,7 @@
     margin-top: 0 !important;
 }
 
-@media (min-width: 621px) {
+@media (min-width: 771px) {
     .offcanvas.offcanvas-start {
         display: none !important;
     }

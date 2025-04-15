@@ -19,15 +19,17 @@ function App() {
 
 	const [collapsed, setCollapsed] = useState(false);
 	const [isSmallWidth, setIsSmallWidth] = useState(
-		window.innerWidth > 480 && window.innerWidth <= 620
+		window.innerWidth > 480 && window.innerWidth <= 770
 	);
 	const [isMobile, setIsMobile] = useState(window.innerWidth <= 480);
 	useEffect(() => {
 		const handleResize = () => {
 			const width = window.innerWidth;
 			setIsMobile(width <= 480);
-			setIsSmallWidth(width > 480 && width <= 620);
+			setIsSmallWidth(width > 480 && width <= 770);
+			setCollapsed(width < 1000);
 		};
+		handleResize();
 		window.addEventListener("resize", handleResize);
 		return () => window.removeEventListener("resize", handleResize);
 	}, []);

@@ -37,16 +37,16 @@ const MobileNavBar = () => {
                 />
             </button>
             <button
-                className={`nav-btn ${location.pathname === "/suggested-jobs" ? "active" : ""}`}
-                onClick={() => navigate("/suggested-jobs")}
+                className={`nav-btn`}
+                onClick={() => navigate("")}
             >
                 <FaChartBar />
                 <span>Trends</span>
             </button>
 
             <button
-                className={`nav-btn ${location.pathname === "/account" ? "active" : ""}`}
-                onClick={() => navigate("/account")}
+                className={`nav-btn`}
+                onClick={() => navigate("")}
             >
                 <FaUser />
                 <span>People</span>
