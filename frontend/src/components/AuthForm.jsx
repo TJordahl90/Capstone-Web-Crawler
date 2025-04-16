@@ -38,35 +38,37 @@ const AuthForm = ({ isLogin }) => {
             try {
                 const verificationCode = await api.post("/verification/", formData);
                 console.log("Verification code created for: ", formData.email);
-                navigate("/verification");
+                navigate("/verification", {state : {formData}});
             }
             catch (err) {
                 setError(err.temp?.data?.message || "Something went wrong.");
             }
         }
 
-        try {
-            const response = await api.post(endpoint, formData);
-
-            const { skills, preferences, education, experience, ...otherAccountData } = response.data.account;
-            localStorage.setItem("user", JSON.stringify(response.data.user));
-            localStorage.setItem("account", JSON.stringify(otherAccountData));
-            localStorage.setItem("skills", JSON.stringify(skills));
-            localStorage.setItem("preferences", JSON.stringify(preferences));
-            localStorage.setItem("education", JSON.stringify(education));
-            localStorage.setItem("experience", JSON.stringify(experience));
-
-            setMessage("Login successful!");
-            setTimeout(() => navigate(isLogin ? "/account" : "/verification"), 1000);
-        } catch (err) {
-            setError(err.response?.data?.message || "Something went wrong.");
-        }
-
-        setTimeout(() => {
-            setMessage('');
-            setError('');
-        }, 3000);
-    };
+        if(isLogin){
+            try {
+                const response = await api.post('/login/', formData);
+            
+                    const { skills, preferences, education, experience, ...otherAccountData } = response.data.account;
+                localStorage.setItem("user", JSON.stringify(response.data.user));
+                localStorage.setItem("account", JSON.stringify(otherAccountData));
+                localStorage.setItem("skills", JSON.stringify(skills));
+                localStorage.setItem("preferences", JSON.stringify(preferences));
+                localStorage.setItem("education", JSON.stringify(education));
+                localStorage.setItem("experience", JSON.stringify(experience));
+            
+                    setMessage("Login successful!");
+                setTimeout(() => navigate(isLogin ? "/account" : "/verification"), 1000);
+            } catch (err) {
+                setError(err.response?.data?.message || "Something went wrong.");
+            }
+        
+                setTimeout(() => {
+                setMessage('');
+                setError('');
+            }, 3000);
+        };
+    }  
 
     return (
         <Container className="auth-container" fluid>

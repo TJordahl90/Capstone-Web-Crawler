@@ -172,20 +172,25 @@ class CreateVerificationView(APIView):
 
             instance = Verification(email=email, code=code)
             instance.save()
+            sendMail(recipient, subject, message)
 
             serializer = VerificationSerializer(instance)
             return(Response(serializer.data, status=status.HTTP_201_CREATED))
         return(Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST))
     
     def get(self, request):
-        email = request.data.get('email')
-        code = request.data.get('code')
+        email = request.GET.get('email')
+        code = request.GET.get('code')
+        #print(f'email: {email} code: {code}')
 
-        verificationEntry = get_object_or_404(Verification, email=email)
-        if(str(code) == str(verificationEntry)):
+        #print(f'email: {email} type: {type(email)} code: {code} type: {type(code)}')
+
+        verificationEntry = Verification.objects.get(email=email)
+        if(str(code) == str(verificationEntry.code)):
+            verificationEntry.delete()
             return Response({'message': 'Verification successful'}, status=status.HTTP_200_OK)
-        else:
-            return Response({'error': 'Invalid code'}, status=status.HTTP_400_BAD_REQUEST)
+        
+        return Response({'error': 'Invalid code'}, status=status.HTTP_400_BAD_REQUEST)
 
 #@login_required # Implement this later so that only users who are logged in can use this function. For now we can leave it accessible by everyone
 def JobMatchingView(request):

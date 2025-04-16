@@ -1,6 +1,6 @@
 import { useState } from 'react';
-import { useNavigate } from 'react-router-dom';
-import { Container, Card, Form, Button } from 'react-bootstrap';
+import { useNavigate, useLocation } from 'react-router-dom';
+import { Container, Card, Form, Button, Alert } from 'react-bootstrap';
 import InputField from './InputField';
 import api from '../api.js';
 
@@ -9,14 +9,27 @@ const Verification = () => {
     const [message, setMessage] = useState('');
     const [error, setError] = useState('');
     const navigate = useNavigate();
+    const location = useLocation();
+    const data = location.state;
 
     const handleSubmit = async (e) => {
         e.preventDefault();
         try {
-            const response = await api.post("/verification-check", {code});
-            setMessage("Registration successful!");
-            setTimeout(() => navigate("/suggested-jobs/"), 1000);
+            //console.log(data.email);
+            const response = await api.get("/verification/", {params: { email: data.formData.email, code: code } });
+            if(response.status == 200){
+                try{
+                    const response = await api.post('/register/', data.formData);
+                    setMessage("Registration successful!");
+                    setTimeout(() => navigate("/login/"), 1000);
+                }
+                catch(err){
+                    console.log(data)
+                    setError(err.response?.data?.message || "Invalid Verification Code.");
+                }
+            }
         } catch (err) {
+            console.log(data);
             setError(err.response?.data?.message || "Invalid Verification Code.");
         }
 
