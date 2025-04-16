@@ -17,7 +17,7 @@
     transition: transform 0.3s ease, width 0.3s ease;
     border-right: 1px solid #48494c;
     border-top: 1px solid #48494c;
-    background-color: #c9c6a5;
+    background-color: #e6e4cf;
 }
 
 .side-panel.collapsed {
@@ -73,12 +73,12 @@
 .sidepanel-container {
     display: flex;
     height: 100vh;
-    background-color: #c9c6a5;
+    background-color: #e6e4cf;
 }
 
 .sidebar {
     width: 250px;
-    background-color: #c9c6a5;
+    background-color: #e6e4cf;
 }
 
 .sidepanel-container {

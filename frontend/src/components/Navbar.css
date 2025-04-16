@@ -1,6 +1,6 @@
 .custom-navbar {
     border-bottom: 1px solid #48494c;
-    background-color: #c9c6a5;
+    background-color: #e6e4cf;
 }
 
 .navbar-container {
@@ -179,7 +179,7 @@
 }
 
 .navbar-canvas {
-    background-color: #c9c6a5;
+    background-color: #e6e4cf;
     color: white;
     height: 100%;
     padding: 1rem 0 1rem 0 !important;

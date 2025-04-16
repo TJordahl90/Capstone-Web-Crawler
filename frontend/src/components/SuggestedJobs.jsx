@@ -1,12 +1,13 @@
 import React, { useState, useEffect } from "react";
 import { Container, Row, Col, ListGroup, Card, Button, Alert, Modal } from "react-bootstrap";
 import api from "../api.js";
+import { FaBookmark } from "react-icons/fa";
 
 const SuggestedJobs = () => {
     const exampleJobs = [
         {
             id: 1,
-            title: "Job Example 1",
+            title: "Suggested Job Example 1",
             company: "For frontend testing",
             location: "5005 WEST ROYAL LANE, SUITE NO 228 IRVING, TX, 75063",
             postedDate: "2025-04-10",
@@ -32,7 +33,7 @@ const SuggestedJobs = () => {
         },
         {
             id: 2,
-            title: "Job Example 2",
+            title: "Suggested Job Example 2",
             company: "For frontend testing",
             location: "5005 WEST ROYAL LANE, SUITE NO 228 IRVING, TX, 75063",
             postedDate: "2025-04-10",
@@ -58,7 +59,7 @@ const SuggestedJobs = () => {
         },
         {
             id: 3,
-            title: "Job Example 3",
+            title: "Suggested Job Example 3",
             company: "For frontend testing",
             location: "5005 WEST ROYAL LANE, SUITE NO 228 IRVING, TX, 75063",
             postedDate: "2025-04-10",
@@ -91,6 +92,7 @@ const SuggestedJobs = () => {
     const [selectedJob, setSelectedJob] = useState(null);
     const [showModal, setShowModal] = useState(false);
     const [isSmallScreen, setIsSmallScreen] = useState(window.innerWidth <= 770);
+    const [saved, setSaved] = useState(false);
 
     const handleJobRetrieval = async () => {
         try {
@@ -128,14 +130,14 @@ const SuggestedJobs = () => {
         fetchJobs();
     }, []);
 
-    const [isLargeWidth, setIsLargeWidth] = useState(
+    const [isLargeScreen, setIsLargeScreen] = useState(
         window.innerWidth > 480 && window.innerWidth <= 1000
     );
 
     useEffect(() => {
         const handleResize = () => {
             const width = window.innerWidth;
-            setIsLargeWidth(width > 480 && width <= 1000);
+            setIsLargeScreen(width > 480 && width <= 1000);
         };
         handleResize();
         window.addEventListener("resize", handleResize);
@@ -148,7 +150,7 @@ const SuggestedJobs = () => {
                 {/* Left column: job list */}
                 <Col
                     xs={12}
-                    md={isLargeWidth ? 3 : 3}
+                    md={isLargeScreen ? 3 : 3}
                     style={{ minWidth: "220px" }}
                 >
                     <ListGroup className="suggestedjobs-list">
@@ -177,13 +179,24 @@ const SuggestedJobs = () => {
                 {!isSmallScreen && (
                     <Col
                         xs={12}
-                        md={isLargeWidth ? 8 : 6}
+                        md={isLargeScreen ? 8 : 6}
                         className="mt-3 mt-md-0"
                     >
                         {selectedJob ? (
                             <Card className="suggestedjobs-detail">
                                 <Card.Body>
-                                    <Card.Title>{selectedJob.title}</Card.Title>
+                                    <div className="d-flex justify-content-between align-items-start">
+                                        <Card.Title className="mb-2">{selectedJob.title}</Card.Title>
+                                        <Button
+                                            variant="link"
+                                            className="p-0 save-btn"
+                                            title="Save Job"
+                                            onClick={() => setSaved(!saved)}
+                                        >
+                                            <FaBookmark size={22} style={{ color: saved ? "gold" : "#333" }} />
+                                        </Button>
+                                    </div>
+
                                     <Button as="a" variant="outline-dark" href={selectedJob.jobURL}>Apply</Button>
                                     <Card.Text>
                                         <strong>Company:</strong> {selectedJob.company}
@@ -209,7 +222,7 @@ const SuggestedJobs = () => {
                         )}
                     </Col>
                 )}
-                {!isLargeWidth && <Col md={3}></Col>}
+                {!isLargeScreen && <Col md={3}></Col>}
             </Row>
             {isSmallScreen && selectedJob && (
                 <Modal show={showModal} onHide={() => setShowModal(false)} centered>

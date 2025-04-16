@@ -14,6 +14,7 @@ import random
 from django.shortcuts import get_object_or_404
 from django.http import JsonResponse
 from .jobMatching import matchUsersToJobs, searchForJobs
+from rest_framework.decorators import api_view
 
 @permission_classes([AllowAny])
 @ensure_csrf_cookie
@@ -209,3 +210,11 @@ def JobSearchingView(request):
     serializedJobs = JobPostingSerializer(foundJobs, many=True).data # Serialize job postings for frontend
 
     return JsonResponse(serializedJobs, safe=False) # Send jobs to frontend
+
+@api_view(['GET'])
+@permission_classes([AllowAny])
+def AllJobsView(request):
+    """Returns all available jobs"""
+    all_jobs = JobPosting.objects.all()
+    serialized = JobPostingSerializer(all_jobs, many=True)
+    return Response(serialized.data, status=200)

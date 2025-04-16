@@ -19,10 +19,27 @@
     border: 2px solid #8f650a !important;
 }
 
+.findjobs-list {
+    width: 100%;
+    background-color: white !important;
+    border-radius: 12px !important;
+    color: #4d4c43 !important;
+    border: 2px solid #8f650a !important;
+}
+
+.findjobs-detail {
+    width: 100%;
+    background-color: #c9c6a5 !important;
+    border-radius: 12px !important;
+    color: #4d4c43 !important;
+    border: 2px solid #8f650a !important;
+}
+
+
 .savedjobs-card {
     width: 100%;
     max-width: 600px;
-    background-color: #c9c6a5 !important;
+    background-color: white !important;
     border-radius: 12px !important;
     color: #4d4c43 !important;
     border: 2px solid #8f650a !important;
@@ -44,4 +61,13 @@
     color: #4d4c43 !important;
     border: 2px solid #8f650a !important;
 }
+
+button.btn-link {
+    text-decoration: none;
+}
+.save-btn {
+    text-decoration: none;
+    margin-left: 10px;
+}
+
 
