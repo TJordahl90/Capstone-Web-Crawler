@@ -4,21 +4,23 @@ from api.models import Account, JobPosting
 def matchUsersToJobs(account):
     skills = set(account.skills.all()) # Skills are stored as a query set
 
-    jobMatches = []
+    matchedDict = {}
 
     jobs = JobPosting.objects.prefetch_related('requirements').all() # Should be modified for specific roles but for now we can leave it like this
 
     for job in jobs:
-        jobSkills = set(job.requirements.all())
+        jobSkills = set(job.requirements.all()) # Get user skills as a set
 
-        matchingSkills = skills & jobSkills
+        matchingSkills = skills & jobSkills # Use intersection for O(1) matching
         numOfMatchingSkills = len(matchingSkills)
 
         if(numOfMatchingSkills >= 1):
-            jobMatches.append(job.id)
-            print(f'{account} matched to {job} with {numOfMatchingSkills} matching skills')
-            
-    return jobMatches
+            matchedDict[job.id] = numOfMatchingSkills # Add the matching skills to the dictionary
+            #print(f'{account} matched to {job} with {numOfMatchingSkills} matching skills')
+    print('unsorted', matchedDict)
+    matchedDict = dict(sorted(matchedDict.items(), key=lambda item: item[1], reverse=True))
+    print('sorted', matchedDict)
+    return matchedDict
 
 def searchForJobs(preference):
     jobTitle = preference.strip().lower() # Take input and strip spaces off ends. Lowercase if necessary
