@@ -17,9 +17,8 @@ def matchUsersToJobs(account):
         if(numOfMatchingSkills >= 1):
             matchedDict[job.id] = numOfMatchingSkills # Add the matching skills to the dictionary
             #print(f'{account} matched to {job} with {numOfMatchingSkills} matching skills')
-    print('unsorted', matchedDict)
-    matchedDict = dict(sorted(matchedDict.items(), key=lambda item: item[1], reverse=True))
-    print('sorted', matchedDict)
+    matchedDict = dict(sorted(matchedDict.items(), key=lambda item: item[1], reverse=True)) # Reverse the Array
+    
     return matchedDict
 
 def searchForJobs(preference):

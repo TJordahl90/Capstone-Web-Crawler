@@ -221,7 +221,6 @@ def JobSearchingView(request):
 
     return JsonResponse(serializedJobs, safe=False) # Send jobs to frontend
 
-<<<<<<< Updated upstream
 @api_view(['GET'])
 @permission_classes([AllowAny])
 def AllJobsView(request):
@@ -229,11 +228,3 @@ def AllJobsView(request):
     all_jobs = JobPosting.objects.all()
     serialized = JobPostingSerializer(all_jobs, many=True)
     return Response(serialized.data, status=200)
-=======
-class Person:
-    def __init__(self):
-        self.age = 10
-        self.name = "trent"
-    def getInfo(self):
-        print(self.age, self.name)
->>>>>>> Stashed changes
