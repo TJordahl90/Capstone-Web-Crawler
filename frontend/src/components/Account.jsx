@@ -1,12 +1,11 @@
 import React, { useState, useEffect } from "react";
 import { Container, Card, Button, Form, Modal, Badge, Alert } from "react-bootstrap";
+import { useNavigate } from "react-router-dom";
 import { FaPencilAlt } from "react-icons/fa";
 import profile from "../assets/profile.png";
 import InputField from './InputField';
-import { jobList, skillList } from "../AccountOptions.js";
-import "./Account.css";
 import api from '../api.js';
-import { useNavigate } from "react-router-dom";
+import "./Account.css";
 
 const Account = () => {
     const [message, setMessage] = useState('');
@@ -20,9 +19,8 @@ const Account = () => {
     const [editEducation, setEditEducation] = useState(false);
     const [editExperience, setEditExperience] = useState(false);
 
-    const [tempPreferences, setTempPreferences] = useState([]);
-    const [tempSkills, setTempSkills] = useState([]);
-    const [showResetConfirm, setShowResetConfirm] = useState(false);
+    const [tempPreferencesText, setTempPreferencesText] = useState('');
+    const [tempSkillsText, setTempSkillsText] = useState('');
 
     const [accountData, setaccountData] = useState({
         firstName: "",
@@ -79,12 +77,6 @@ const Account = () => {
         });
     };
 
-    const handleLogout = () => {
-        localStorage.clear();
-        navigate("/login");
-    };
-
-    // Store locally saved data to accountData
     useEffect(() => {
         const storedUser = localStorage.getItem("user");
         const storedAccount = localStorage.getItem("account");
@@ -106,35 +98,21 @@ const Account = () => {
 
     useEffect(() => {
         if (editPreferences) {
-            setTempPreferences(accountData.preferences);
+            const preferencesStr = accountData.preferences
+                .map(p => cleanName(p.name || p))
+                .join(", ");
+            setTempPreferencesText(preferencesStr);
         }
     }, [editPreferences, accountData.preferences]);
 
     useEffect(() => {
         if (editSkills) {
-            setTempSkills(accountData.skills);
+            const skillsStr = accountData.skills
+                .map(s => cleanName(s.name || s))
+                .join(", ");
+            setTempSkillsText(skillsStr);
         }
     }, [editSkills, accountData.skills]);
-
-    const toggleBadge = (item, type) => {
-        if (type === "preference") {
-            const exists = tempPreferences.some((p) => cleanName(p.name || p) === cleanName(item.name || item));
-            if (exists) {
-                setTempPreferences(tempPreferences.filter((p) => cleanName(p.name || p) !== cleanName(item.name || item)));
-            } else {
-                setTempPreferences([...tempPreferences, item]);
-            }
-        }
-
-        else if (type === "skill") {
-            const exists = tempSkills.some((s) => cleanName(s.name || s) === cleanName(item.name || item));
-            if (exists) {
-                setTempSkills(tempSkills.filter((s) => cleanName(s.name || s) !== cleanName(item.name || item)));
-            } else {
-                setTempSkills([...tempSkills, item]);
-            }
-        }
-    };
 
     const handlePersonalInfo = (e) => {
         e.preventDefault();
@@ -164,28 +142,24 @@ const Account = () => {
 
     const handlePreferences = (e) => {
         e.preventDefault();
-        //id print fix
-        const data = {
-            preferences: tempPreferences.map((p) =>
-                typeof p === "string"
-                    ? p
-                    : cleanName(p.name || p)
-            ),
-        };
+        const preferencesArray = tempPreferencesText
+            .split(',')
+            .map(item => item.trim().toLowerCase())
+            .filter(item => item.length > 0);
+
+        const data = { preferences: preferencesArray };
         handleSubmit(data);
         setEditPreferences(false);
     }
 
     const handleSkills = (e) => {
         e.preventDefault();
-        //id print fix
-        const data = {
-            skills: [...new Set(tempSkills.map((s) =>
-                typeof s === "string"
-                    ? s
-                    : cleanName(s.name || s)
-            ))],
-        };
+        const skillsArray = tempSkillsText
+            .split(',')
+            .map(item => item.trim().toLowerCase())
+            .filter(item => item.length > 0);
+
+        const data = { skills: skillsArray };
         handleSubmit(data);
         setEditSkills(false);
     }
@@ -247,6 +221,7 @@ const Account = () => {
             setError('');
         }, 3000);
     }
+    
     const cleanName = (value) => {
         try {
             if (typeof value === "string" && value.includes("{")) {
@@ -258,6 +233,7 @@ const Account = () => {
             return value;
         }
     };
+    
     return (
         <>
             <Container className="account-container">
@@ -266,15 +242,7 @@ const Account = () => {
                         <button onClick={() => navigate("/find-jobs")} className="back-btn">
                             ← Back to Jobs
                         </button>
-                        <button
-                            onClick={() => setShowResetConfirm(true)}
-                            className="reset-btn"
-                        >
-                            Reset Preferences & Skills
-                        </button>
-
                     </div>
-
 
                     {/* Alert Messages */}
                     {message && <Alert variant="success">{message}</Alert>}
@@ -283,7 +251,7 @@ const Account = () => {
                     {/* Personal Information */}
                     <Card className="mb-4">
                         <Card.Body className="text-start">
-                            <Card.Img src={profile} className="account-image mb-3" style={{ width: "50px", height: "50px" }} alt="Profile Image" />
+                            {/* <Card.Img src={profile} className="account-image mb-3" style={{ width: "50px", height: "50px" }} alt="Profile Image" /> */}
                             <Card.Title>
                                 {(accountData.firstName || accountData.lastName)
                                     ? `${accountData.firstName} ${accountData.lastName}`
@@ -386,7 +354,7 @@ const Account = () => {
                                 {accountData.preferences.length > 0 ? (
                                     accountData.preferences.map((preference, index) => (
                                         <Badge key={index} className="badge-selected">
-                                            {cleanName(preference.name)}
+                                            {cleanName(preference.name || preference)}
                                         </Badge>
                                     ))
                                 ) : (
@@ -404,32 +372,17 @@ const Account = () => {
                         <Modal show={editPreferences} onHide={() => setEditPreferences(false)}>
                             <Modal.Header closeButton><Modal.Title>Edit Job Preferences</Modal.Title></Modal.Header>
                             <Modal.Body>
-                                <button
-                                    type="button"
-                                    className="remove-all-btn"
-                                    onClick={() => setTempPreferences([])}
-                                >
-                                    Remove All Preferences
-                                </button>
-
                                 <Form onSubmit={handlePreferences}>
-                                    <Container>
-                                        {jobList.map((preference, index) => (
-                                            <Badge
-                                                className={
-                                                    tempPreferences.some((p) => cleanName(p.name || p) === cleanName(preference))
-                                                        ? "badge-selected"
-                                                        : "badge-unselected"
-                                                }
-                                                key={index}
-                                                onClick={() => toggleBadge(preference, "preference")}
-                                            >
-                                                {preference}
-                                            </Badge>
-                                        ))}
-                                    </Container>
-                                    <Button type="submit" className="mt-3">Submit</Button>
-
+                                    <InputField label="Job Preferences" type="text" value={tempPreferencesText}
+                                        onChange={(e) => setTempPreferencesText(e.target.value)}
+                                        placeholder="e.g. Part-Time, Software Engineer, Data Analyst"
+                                    />
+                                    <small className="text-muted">
+                                        Enter preferences as comma-separated values (e.g. Part-Time, Software Engineer, Data Analyst)
+                                    </small>
+                                    <div className="mt-3">
+                                        <Button type="submit">Submit</Button>
+                                    </div>
                                 </Form>
                             </Modal.Body>
                         </Modal>
@@ -443,7 +396,7 @@ const Account = () => {
                                 {accountData.skills.length > 0 ? (
                                     accountData.skills.map((skill, index) => (
                                         <Badge key={index} className="badge-selected">
-                                            {cleanName(skill.name)}
+                                            {cleanName(skill.name || skill)}
                                         </Badge>
                                     ))
                                 ) : (
@@ -461,31 +414,17 @@ const Account = () => {
                         <Modal show={editSkills} onHide={() => setEditSkills(false)}>
                             <Modal.Header closeButton><Modal.Title>Edit Skills</Modal.Title></Modal.Header>
                             <Modal.Body>
-                                <button
-                                    type="button"
-                                    className="remove-all-btn"
-                                    onClick={() => setTempSkills([])}
-                                >
-                                    Remove All Skills
-                                </button>
-
                                 <Form onSubmit={handleSkills}>
-                                    <Container>
-                                        {skillList.map((skill, index) => (
-                                            <Badge
-                                                className={
-                                                    tempSkills.some((s) => cleanName(s.name || s) === cleanName(skill))
-                                                        ? "badge-selected"
-                                                        : "badge-unselected"
-                                                }
-                                                key={index}
-                                                onClick={() => toggleBadge(skill, "skill")}
-                                            >
-                                                {skill}
-                                            </Badge>
-                                        ))}
-                                    </Container>
-                                    <Button type="submit" className="mt-3">Submit</Button>
+                                    <InputField label="Skills" type="text" value={tempSkillsText}
+                                        onChange={(e) => setTempSkillsText(e.target.value)}
+                                        placeholder="e.g. Python, JavaScript, SQL, OOP"
+                                    />
+                                    <small className="text-muted">
+                                        Enter preferences as comma-separated values (e.g. Python, JavaScript, SQL, OOP)
+                                    </small>
+                                    <div className="mt-3">
+                                        <Button type="submit">Submit</Button>
+                                    </div>
                                 </Form>
                             </Modal.Body>
                         </Modal>
@@ -644,47 +583,6 @@ const Account = () => {
                             </Modal.Body>
                         </Modal>
                     )}
-                    <Modal show={showResetConfirm} onHide={() => setShowResetConfirm(false)}>
-                        <Modal.Header closeButton>
-                            <Modal.Title>Confirm Reset</Modal.Title>
-                        </Modal.Header>
-                        <Modal.Body>
-                            Are you sure you want to permanently remove all preferences and skills?
-                        </Modal.Body>
-                        <Modal.Footer>
-                            <Button variant="secondary" onClick={() => setShowResetConfirm(false)}>
-                                Cancel
-                            </Button>
-                            <Button
-                                variant="danger"
-                                onClick={async () => {
-                                    try {
-                                        await api.patch("/account/", {
-                                            preferences: [],
-                                            skills: []
-                                        });
-                                        localStorage.removeItem("preferences");
-                                        localStorage.removeItem("skills");
-                                        setaccountData({ ...accountData, preferences: [], skills: [] });
-                                        setTempPreferences([]);
-                                        setTempSkills([]);
-                                        setShowResetConfirm(false);
-                                        setMessage("Cleared preferences and skills permanently.");
-                                    } catch (err) {
-                                        console.error("Failed to clear:", err);
-                                        setError("Reset failed.");
-                                    }
-                                }}
-                            >
-                                Yes, Reset All
-                            </Button>
-                        </Modal.Footer>
-                    </Modal>
-
-
-                    {/* Possibly add a projects section */}
-                    {/* Possibly add a relevant courses section */}
-                    {/* Possibly add a language section */}
                 </div>
             </Container>
         </>
