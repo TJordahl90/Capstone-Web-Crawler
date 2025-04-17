@@ -15,6 +15,9 @@ from django.shortcuts import get_object_or_404
 from django.http import JsonResponse
 from .jobMatching import matchUsersToJobs, searchForJobs
 from rest_framework.decorators import api_view
+from rest_framework.parsers import MultiPartParser
+from .models import ResumeParser
+from .resumeParser import extract_text_from_pdf, parser
 
 @permission_classes([AllowAny])
 @ensure_csrf_cookie
@@ -228,3 +231,26 @@ def AllJobsView(request):
     all_jobs = JobPosting.objects.all()
     serialized = JobPostingSerializer(all_jobs, many=True)
     return Response(serialized.data, status=200)
+
+class ResumeUploadView(APIView):
+    permission_classes = [AllowAny]
+    parser_classes = [MultiPartParser]
+
+    def post(self, request, *args, **kwargs):
+        file = request.FILES.get("resume")
+        if not file:
+            return Response({"error": "No file uploaded"}, status=400)
+
+        text = extract_text_from_pdf(file)
+        parsed = parser(text)
+
+        resume = ResumeParser.objects.create(
+            name=parsed.get("name"),
+            email=parsed.get("email"),
+            phone=parsed.get("phone"),
+            skills=", ".join(parsed.get("skills")),
+            education=" | ".join(parsed.get("education")),
+            experience=" | ".join(parsed.get("experience")),
+        )
+        return Response({"id": resume.id, "status": "Resume parsed and saved"})
+    

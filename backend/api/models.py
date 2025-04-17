@@ -90,3 +90,12 @@ class Verification(models.Model):
 
     def __str__(self):
         return self.email
+    
+class ResumeParser(models.Model):
+    name = models.CharField(max_length=255, blank=True)
+    email = models.EmailField(blank=True)
+    phone = models.CharField(max_length=50, blank=True)
+    skills = models.TextField(blank=True)
+    education = models.TextField(blank=True)
+    experience = models.TextField(blank=True)
+    uploaded_at = models.DateTimeField(auto_now_add=True)
