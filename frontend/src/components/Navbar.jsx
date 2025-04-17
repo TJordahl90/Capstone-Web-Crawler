@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { Container, Form, Nav, Navbar as NavBar, Offcanvas, Dropdown } from "react-bootstrap";
-import { FaBriefcase, FaBookmark, FaUser, FaBars, FaChartBar, FaUserCircle } from "react-icons/fa";
+import { FaBriefcase, FaBookmark, FaUser, FaBars, FaChartBar, FaUserCircle, FaBell } from "react-icons/fa";
 import { useNavigate } from 'react-router-dom';
 import api from '../api.js';
 import logo from "../assets/logo3.png";
@@ -101,13 +101,6 @@ const Navbar = ({ setCollapsed, collapsed }) => {
             </Offcanvas.Body>
           </Offcanvas>
         )}
-        <Form className="navbar-search-container">
-          <Form.Control
-            type="text"
-            placeholder="Search Jobs..."
-            className="navbar-search"
-          />
-        </Form>
 
         <div className="navbar-right">
           <div className="d-flex align-items-center">
