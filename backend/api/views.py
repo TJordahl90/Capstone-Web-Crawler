@@ -7,7 +7,7 @@ from rest_framework.permissions import AllowAny, IsAuthenticated
 from rest_framework.decorators import permission_classes
 from django.middleware.csrf import get_token
 from django.views.decorators.csrf import ensure_csrf_cookie
-from django.contrib.auth import authenticate, login
+from django.contrib.auth import authenticate, login, logout
 from django.core.mail import send_mail
 from django.conf import settings
 import random
@@ -59,6 +59,16 @@ class LoginView(APIView):
             return Response(response, status=200)
         return Response({"error": "Invalid credentials"}, status=400)
 
+class LogoutView(APIView):
+    permission_classes = [IsAuthenticated]
+
+    def post(self, request):
+        logout(request)
+        response = Response({"message": "Logged out of account"}, status=200)
+        response.delete_cookie(settings.SESSION_COOKIE_NAME, path='/')
+        response.delete_cookie(settings.CSRF_COOKIE_NAME, path='/')
+        return response
+
 class UserProfileView(APIView):
     """Fetches authenticated user details"""
     permission_classes = [IsAuthenticated]
@@ -67,7 +77,7 @@ class UserProfileView(APIView):
         serializer = CreateUserSerializer(request.user)
         return Response(serializer.data)
     
-class AccountView(APIView):
+class AccountView(APIView): 
     """Updates user account details"""
     permission_classes = [IsAuthenticated]
 

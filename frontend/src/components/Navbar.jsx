@@ -1,13 +1,13 @@
 import React, { useState, useEffect } from "react";
-import { Container, Form, Nav, Navbar as NavBar, Offcanvas } from "react-bootstrap";
+import { Container, Form, Nav, Navbar as NavBar, Offcanvas, Dropdown } from "react-bootstrap";
 import { FaBriefcase, FaBookmark, FaUser, FaBars, FaChartBar, FaUserCircle } from "react-icons/fa";
-import { Dropdown } from "react-bootstrap";
-
+import { useNavigate } from 'react-router-dom';
+import api from '../api.js';
 import logo from "../assets/logo3.png";
 import "./Navbar.css";
 
 const Navbar = ({ setCollapsed, collapsed }) => {
-
+  const navigate = useNavigate();
   const [isMobile, setIsMobile] = useState(window.innerWidth <= 480);
   const [isSmallWidth, setIsSmallWidth] = useState(
     window.innerWidth > 480 && window.innerWidth <= 770
@@ -36,9 +36,16 @@ const Navbar = ({ setCollapsed, collapsed }) => {
   }, []);
 
 
-  const handleLogout = () => {
+  const handleLogout = async (e) => {
+    e.preventDefault();
+    try {
+      await api.post("/logout/");
+    }
+    catch (err) {
+      console.error(err);
+    }
     localStorage.clear();
-    window.location.href = "/login";
+    navigate("/");
   };
 
   const handleClick = () => {
