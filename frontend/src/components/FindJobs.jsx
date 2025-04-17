@@ -1,243 +1,235 @@
 import React, { useState, useEffect } from "react";
-import { Container, Row, Col, ListGroup, Card, Button, Alert, Modal } from "react-bootstrap";
-import "./FindJobs.css";
+import { Container, Row, Col, Form, Nav, ListGroup, Card, Button, Badge, ProgressBar } from "react-bootstrap";
+import { FaSearch, FaBriefcase, FaMapMarkerAlt, FaClock, FaStar, FaRegStar, FaFilter } from "react-icons/fa";
 import api from "../api.js";
-
+import "./FindJobs.css";
 
 const FindJobs = () => {
-    const exampleJobs = [
-        {
-            id: 1,
-            title: "Job Example 1",
-            company: "For frontend testing",
-            location: "5005 WEST ROYAL LANE, SUITE NO 228 IRVING, TX, 75063",
-            postedDate: "2025-04-10",
-            description: `Analyze, design and configure network architecture and layout strategies. 
-        Configure and assist service deployment and document network issues. 
-        Detect, and mitigate DDOS attacks on the network. Install, maintain and monitor LAN servers, LAN systems. 
-        Troubleshoot and resolve all types of production network outages. 
-        Implement test plans and find bugs.`,
-            requirements: [
-                { name: "VLAN" },
-                { name: "BGP" },
-                { name: "OSPF" },
-                { name: "Cisco" },
-                { name: "Python" },
-                { name: "Juniper" },
-                { name: "Arista" },
-                { name: "DNS" },
-                { name: "Wireshark" },
-                { name: "network architecture" },
-                { name: "bachelors" },
-            ],
-            jobURL: "#", // keep "#" or a dummy URL if you're not linking out
-        },
-        {
-            id: 2,
-            title: "Job Example 2",
-            company: "For frontend testing",
-            location: "5005 WEST ROYAL LANE, SUITE NO 228 IRVING, TX, 75063",
-            postedDate: "2025-04-10",
-            description: `Analyze, design and configure network architecture and layout strategies. 
-        Configure and assist service deployment and document network issues. 
-        Detect, and mitigate DDOS attacks on the network. Install, maintain and monitor LAN servers, LAN systems. 
-        Troubleshoot and resolve all types of production network outages. 
-        Implement test plans and find bugs.`,
-            requirements: [
-                { name: "VLAN" },
-                { name: "BGP" },
-                { name: "OSPF" },
-                { name: "Cisco" },
-                { name: "Python" },
-                { name: "Juniper" },
-                { name: "Arista" },
-                { name: "DNS" },
-                { name: "Wireshark" },
-                { name: "network architecture" },
-                { name: "bachelors" },
-            ],
-            jobURL: "#", // keep "#" or a dummy URL if you're not linking out
-        },
-        {
-            id: 3,
-            title: "Job Example 3",
-            company: "For frontend testing",
-            location: "5005 WEST ROYAL LANE, SUITE NO 228 IRVING, TX, 75063",
-            postedDate: "2025-04-10",
-            description: `Analyze, design and configure network architecture and layout strategies. 
-        Configure and assist service deployment and document network issues. 
-        Detect, and mitigate DDOS attacks on the network. Install, maintain and monitor LAN servers, LAN systems. 
-        Troubleshoot and resolve all types of production network outages. 
-        Implement test plans and find bugs.`,
-            requirements: [
-                { name: "VLAN" },
-                { name: "BGP" },
-                { name: "OSPF" },
-                { name: "Cisco" },
-                { name: "Python" },
-                { name: "Juniper" },
-                { name: "Arista" },
-                { name: "DNS" },
-                { name: "Wireshark" },
-                { name: "network architecture" },
-                { name: "bachelors" },
-            ],
-            jobURL: "#", // keep "#" or a dummy URL if you're not linking out
-        },
-    ];
-
-
-    const [message, setMessage] = useState('');
-    const [error, setError] = useState('');
+    const [error, setError] = useState("");
     const [matchedJobs, setMatchedJobs] = useState([]);
+    const [allJobs, setAllJobs] = useState([]);
+    const [savedJobs, setSavedJobs] = useState([]);
     const [selectedJob, setSelectedJob] = useState(null);
-    const [showModal, setShowModal] = useState(false);
-    const [isSmallScreen, setIsSmallScreen] = useState(window.innerWidth <= 770);
-
-    const handleJobRetrieval = async () => {
-        try {
-            const response = await api.get("/all_jobs/");
-            setMatchedJobs(response.data);
-        } catch (err) {
-            console.error(err);
-        }
-    };
-    useEffect(() => {
-        const handleResize = () => {
-            setIsSmallScreen(window.innerWidth <= 770);
-        };
-        window.addEventListener("resize", handleResize);
-        return () => window.removeEventListener("resize", handleResize);
-    }, []);
+    const [activeTab, setActiveTab] = useState("matched");
+    const [searchTerm, setSearchTerm] = useState("");
 
     useEffect(() => {
-        const fetchJobs = async () => {
+        // Fetch matched jobs
+        const fetchMatchedJobs = async () => {
             try {
-                const response = await api.get("/all_jobs/");
-                if (response.data.length > 0) {
+                const response = await api.get("/job_matching/");
+                if (response.data && response.data.length > 0) {
                     setMatchedJobs(response.data);
-                } else {
-                    setMatchedJobs(exampleJobs); // fallback if empty
-                    setError("No matched jobs found. Showing sample jobs.");
+                    setSelectedJob(response.data[0]);
+                } 
+                else {
+                  setError("No matched jobs found. Expand your account skills/preferences selections.");
                 }
-            } catch (err) {
-                console.error("Backend fetch failed, using example jobs.");
-                setMatchedJobs(exampleJobs); // fallback if error
-                setError("Could not fetch jobs from backend. Showing example jobs.");
+            } 
+            catch (err) {
+                console.error(err);
+                setError("Error retrieving job data.");
             }
         };
-
-        fetchJobs();
-    }, []);
-
-    const [isLargeScreen, setIsLargeScreen] = useState(
-        window.innerWidth > 480 && window.innerWidth <= 1000
-    );
-
-    useEffect(() => {
-        const handleResize = () => {
-            const width = window.innerWidth;
-            setIsLargeScreen(width > 480 && width <= 1000);
+      
+        // Fetch all jobs
+        const fetchAllJobs = async () => {
+            try {
+                const response = await api.get("/all_jobs/");
+                if (response.data && response.data.length > 0) {
+                  setAllJobs(response.data);
+                } else {
+                  setError("No jobs found. Please try again later.");
+                }
+            } 
+            catch (err) {
+                console.error(err);
+                setError("Error retrieving job data.");
+            }
         };
-        handleResize();
-        window.addEventListener("resize", handleResize);
-        return () => window.removeEventListener("resize", handleResize);
+      
+        fetchMatchedJobs();
+        fetchAllJobs();
     }, []);
+
+    const toggleSaveJob = (e) => {
+        // implement save jobs in backend
+    };
+
+    // Determines which jobs to display
+    const getJobs = () => {
+        let jobs = activeTab === "matched" ? matchedJobs : allJobs;
+        return jobs;
+    };
+
+    const displayJobs = getJobs();
+    
+    // Renders each of the job listings in the left sidebar
+    const renderJobItem = (job) => {    
+        return (
+            <div 
+                key={job.id}
+                className={`border-bottom p-3 job-list-item`}
+                onClick={() => setSelectedJob(job)}
+                style={{ cursor: 'pointer' }}
+            >
+                <div className="d-flex justify-content-between align-items-start">
+                    <div>
+                        <h5 className="mb-1">{job.title}</h5>
+                        <p className="mb-1">{job.company}</p>
+                        <div className="d-flex align-items-center">
+                            <small className="text-muted">
+                                <FaMapMarkerAlt size={12} className="me-1" />
+                                <span>{job.location}</span> {/*format location to city, state */}
+                            </small>
+                        </div>
+                    </div>
+                </div>
+                <div className="d-flex justify-content-between align-items-center mt-2">
+                    <small className="text-muted">
+                        <FaClock size={12} className="me-1" />
+                        <span>{job.datePosted} date not working</span>
+                    </small>
+                    {activeTab === "matched" && (
+                        <Badge >
+                            #% Match {/* implement match % in backend */}
+                        </Badge>
+                    )}
+                </div>
+            </div>
+        );
+    };
 
     return (
-        <div className="findjobs-container">
-            <Row>
-                {/* Left column: job list */}
-                <Col
-                    xs={12}
-                    md={isLargeScreen ? 3 : 3}
-                    style={{ minWidth: "220px" }}
-                >
-                    <ListGroup className="findjobs-list">
-                        {matchedJobs.map((job) => (
-                            <ListGroup.Item
-                                key={job.id}
-                                action
-                                active={selectedJob?.id === job.id}
-                                onClick={() => {
-                                    setSelectedJob(job);
-                                    if (isSmallScreen) {
-                                        setShowModal(true);
-                                    }
-                                }}
-                                className="py-3"
-                                style={{ backgroundColor: "#b0ac8c" }}
-                            >
-                                <strong>{job.title}</strong><br />
-                                <p>{job.company}</p>
-                            </ListGroup.Item>
-                        ))}
-                    </ListGroup>
-                </Col>
+        <Container fluid className="p-0 h-100">
+            <Row className="m-0 h-100">
+                
+                {/* Left sidebar */}
+                <Col md={4} className="p-0 border-end bg-white h-100 d-flex flex-column">
+                    <div className="p-3 border-bottom">
+                        <h1 className="h4 mb-3">Find Jobs</h1>
 
-                {/* Right column: selected job details */}
-                {!isSmallScreen && (
-                    <Col
-                        xs={12}
-                        md={isLargeScreen ? 8 : 6}
-                        className="mt-3 mt-md-0"
-                    >
-                        {selectedJob ? (
-                            <Card className="findjobs-detail">
-                                <Card.Body>
-                                    <Card.Title>{selectedJob.title}</Card.Title>
-                                    <Button as="a" variant="outline-dark" href={selectedJob.jobURL}>Apply</Button>
-                                    <Card.Text>
-                                        <strong>Company:</strong> {selectedJob.company}
-                                        <br />
-                                        <strong>Location:</strong> {selectedJob.location}
-                                        <br />
-                                        <strong>Date Posted:</strong> {selectedJob.datePosted}
-                                    </Card.Text>
-                                    <Card.Text>
-                                        <strong>Description: </strong>
-                                        {selectedJob.description}
-                                    </Card.Text>
-                                    <Card.Text>
-                                        <strong>Requirements: </strong>
-                                        {selectedJob.requirements.map(skill => skill.name).join(', ')}
-                                    </Card.Text>
-                                </Card.Body>
-                            </Card>
+                        {/* Search bar */}
+                        <Form.Group className="mb-3 position-relative">
+                            <div className="position-absolute" style={{ left: "10px", top: "12px" }}>
+                                <FaSearch className="text-muted" />
+                            </div>
+                            <Form.Control
+                                type="text"
+                                placeholder="Search jobs by title, company or location"
+                                value={searchTerm}
+                                onChange={(e) => setSearchTerm(e.target.value)}
+                                style={{ paddingLeft: "30px" }}
+                            />
+                        </Form.Group>
+
+                        {/* Tabs */}
+                        <Nav variant="tabs" className="mb-2">
+                            <Nav.Item>
+                                <Nav.Link 
+                                    active={activeTab === "matched"} 
+                                    onClick={() => setActiveTab("matched")}
+                                >
+                                    Matched Jobs
+                                </Nav.Link>
+                            </Nav.Item>
+                            <Nav.Item>
+                                <Nav.Link
+                                    active={activeTab === "all"} 
+                                    onClick={() => setActiveTab("all")}
+                                >
+                                    All Jobs
+                                </Nav.Link>
+                            </Nav.Item>
+                      </Nav>
+                    </div>
+
+                    {/* Job listings */}
+                    <div className="overflow-auto flex-grow-1">
+                        {error && <div className="p-3 text-danger">{error}</div>}
+
+                        {displayJobs.length === 0 ? (
+                            <div className="p-3 text-muted">No jobs found</div>
                         ) : (
-                            <div className="findjobs-placeholder">
-                                <p>Select a job to view details.</p>
+                            <div className="job-list">
+                                {displayJobs.map(job => renderJobItem(job))}
                             </div>
                         )}
-                    </Col>
-                )}
-                {!isLargeScreen && <Col md={3}></Col>}
-            </Row>
-            {isSmallScreen && selectedJob && (
-                <Modal show={showModal} onHide={() => setShowModal(false)} centered>
-                    <Modal.Header closeButton>
-                        <Modal.Title>{selectedJob.title}</Modal.Title>
-                    </Modal.Header>
-                    <Modal.Body>
-                        <p><strong>Company:</strong> {selectedJob.company}</p>
-                        <p><strong>Location:</strong> {selectedJob.location}</p>
-                        <p><strong>Date Posted:</strong> {selectedJob.postedDate}</p>
-                        <p><strong>Description:</strong> {selectedJob.description}</p>
-                        <p><strong>Requirements:</strong> {selectedJob.requirements.map(skill => skill.name).join(', ')}</p>
-                    </Modal.Body>
-                    <Modal.Footer>
-                        <Button variant="secondary" onClick={() => setShowModal(false)}>
-                            Close
-                        </Button>
-                        <Button variant="dark" href={selectedJob.jobURL}>
-                            Apply
-                        </Button>
-                    </Modal.Footer>
-                </Modal>
-            )}
+                    </div>
+                </Col>
+                  
+                {/* Job Posting Details */}
+                <Col md={8} className="p-0 bg-white h-100">
+                    {selectedJob ? (
+                        <div className="h-100 overflow-auto">
+                            <div className="p-4 border-bottom">
 
-        </div>
+                                {/* Header Section */}
+                                <div className="d-flex justify-content-between align-items-start mb-3">
+                                    <div>
+                                        <h2 className="mb-1">{selectedJob.title}</h2>
+                                        <h5 className="text-muted mb-2">{selectedJob.company}</h5>
+                                        <div className="d-flex align-items-center text-muted">
+                                            <FaMapMarkerAlt size={14} className="me-1" />
+                                            <span className="me-3">{selectedJob.location}</span>
+                                            <FaBriefcase size={14} className="me-1" />
+                                            <span>{selectedJob.jobType || "Full-time"}</span> {/* implement job type in backend*/}
+                                        </div>
+                                    </div>
+                                    <div className="d-flex">
+                                        {/* implement saved jobs in backend*/}
+                                        <Button 
+                                            variant="outline-secondary"
+                                            className="me-2 d-flex align-items-center"
+                                            onClick={(e) => toggleSaveJob(e)}
+                                        >
+                                            Save Job
+                                        </Button>
+                                        <Button variant="primary" as="a" href={selectedJob.jobURL}>
+                                            Apply Now
+                                        </Button>
+                                    </div>
+                                </div>
+                            </div>
+                          
+                            {/* Description and Requirements Section */}
+                            <div className="p-4">
+                                <Card className="mb-4">
+                                    <Card.Body>
+                                        <Card.Title>Job Description</Card.Title>
+                                        <Card.Text>{selectedJob.description || "No description available."}</Card.Text>
+                                    </Card.Body>
+                                </Card>
+
+                                <Card className="mb-4">
+                                    <Card.Body>
+                                        <Card.Title>Requirements</Card.Title>
+                                            {selectedJob.requirements && selectedJob.requirements.length > 0 ? (
+                                                <ul className="ps-3">
+                                                    {selectedJob.requirements.map(r => (
+                                                        <li key={r.id}>{r.name}</li>
+                                                    ))}
+                                                </ul>
+                                            ) : (
+                                                <Card.Text>No specific requirements listed.</Card.Text>
+                                            )}
+                                    </Card.Body>
+                                </Card>
+                            </div>
+                        </div>
+                    ) : (
+                        <div className="h-100 d-flex align-items-center justify-content-center text-muted">
+                          <div className="text-center">
+                            <FaBriefcase size={48} className="mb-3 text-secondary" />
+                            <p>Select a job to view details</p>
+                          </div>
+                        </div>
+                    )}
+                </Col>
+            </Row>
+        </Container>
     );
 };
+
 
 export default FindJobs;

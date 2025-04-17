@@ -1,73 +1,12 @@
-.findjobs-container {
-    height: 100vh;
-    width: 100vw;
-    background-color: #c9c6a5;
-    display: flex;
-    flex-direction: column;
-    align-items: flex-start;
-    padding: 20px;
-    box-sizing: border-box;
+.job-list-item {
+    position: relative;
+    cursor: pointer;
+    transition: background-color 0.2s, color 0.2s;
 }
-
-/* Style the Card */
-.findjobs-card {
-    width: 100%;
-    max-width: 600px;
-    background-color: #c9c6a5 !important;
-    border-radius: 12px !important;
-    color: #4d4c43 !important;
-    border: 2px solid #8f650a !important;
+  
+.job-list-item:hover {
+    background-color: #f8f9fa;
 }
+  
 
-.findjobs-list {
-    width: 100%;
-    background-color: white !important;
-    border-radius: 12px !important;
-    color: #4d4c43 !important;
-    border: 2px solid #8f650a !important;
-}
-
-.findjobs-detail {
-    width: 100%;
-    background-color: #c9c6a5 !important;
-    border-radius: 12px !important;
-    color: #4d4c43 !important;
-    border: 2px solid #8f650a !important;
-}
-
-
-.savedjobs-card {
-    width: 100%;
-    max-width: 600px;
-    background-color: white !important;
-    border-radius: 12px !important;
-    color: #4d4c43 !important;
-    border: 2px solid #8f650a !important;
-
-}
-
-.suggestedjobs-list {
-    width: 100%;
-    background-color: #c9c6a5 !important;
-    border-radius: 12px !important;
-    color: #4d4c43 !important;
-    border: 2px solid #8f650a !important;
-}
-
-.suggestedjobs-detail {
-    width: 100%;
-    background-color: #c9c6a5 !important;
-    border-radius: 12px !important;
-    color: #4d4c43 !important;
-    border: 2px solid #8f650a !important;
-}
-
-button.btn-link {
-    text-decoration: none;
-}
-.save-btn {
-    text-decoration: none;
-    margin-left: 10px;
-}
-
-
+  

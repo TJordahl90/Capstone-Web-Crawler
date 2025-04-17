@@ -11,7 +11,7 @@ const MobileNavBar = () => {
     const [clicked, setClicked] = useState(false);
 
     const handleLogoClick = () => {
-        navigate("/suggested-jobs");
+        navigate("/");
     };
     return (
         <div className="mobile-nav-bar">
@@ -31,7 +31,7 @@ const MobileNavBar = () => {
             </button>
             <button className="nav-logo-btn" onClick={handleLogoClick}>
                 <img
-                    src={location.pathname === "/suggested-jobs" ? logoClicked : logo}
+                    src={location.pathname === "/find-jobs" ? logoClicked : logo}
                     alt="Logo"
                     className="nav-logo"
                 />

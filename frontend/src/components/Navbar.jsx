@@ -67,7 +67,7 @@ const Navbar = ({ setCollapsed, collapsed }) => {
             <FaBars className="hamburger-icon" onClick={handleClick} />
           )}
           {!isMobile && (
-            <NavBar.Brand href="/suggested-jobs" className="navbar-logo-wrapper">
+            <NavBar.Brand href="/find-jobs" className="navbar-logo-wrapper">
               <img src={logo} alt="website logo" className="navbar-logo" />
             </NavBar.Brand>
           )}

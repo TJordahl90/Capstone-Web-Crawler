@@ -6,11 +6,11 @@ import LandingPage from "./components/LandingPage";
 import AuthForm from "./components/AuthForm";
 import FindJobs from "./components/FindJobs";
 import Account from "./components/Account";
-import SuggestedJobs from "./components/SuggestedJobs";
 import SavedJobs from "./components/SavedJobs";
 import Verification from "./components/Verification";
-import "bootstrap/dist/css/bootstrap.min.css";
 import MobileNavBar from "./components/MobileNavBar";
+import "bootstrap/dist/css/bootstrap.min.css";
+
 
 function App() {
 	const location = useLocation();
@@ -45,7 +45,6 @@ function App() {
 								<Routes>
 									<Route path="/find-jobs" element={<FindJobs />} />
 									<Route path="/account" element={<Account />} />
-									<Route path="/suggested-jobs" element={<SuggestedJobs />} />
 									<Route path="/saved-jobs" element={<SavedJobs />} />
 								</Routes>
 								{isMobile && showNavMenus && <MobileNavBar />}
@@ -56,7 +55,6 @@ function App() {
 						<Routes>
 							<Route path="/find-jobs" element={<FindJobs />} />
 							<Route path="/account" element={<Account />} />
-							<Route path="/suggested-jobs" element={<SuggestedJobs />} />
 							<Route path="/saved-jobs" element={<SavedJobs />} />
 						</Routes>
 					)}
