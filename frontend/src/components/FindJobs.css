@@ -1,0 +1,12 @@
+.job-list-item {
+    position: relative;
+    cursor: pointer;
+    transition: background-color 0.2s, color 0.2s;
+}
+  
+.job-list-item:hover {
+    background-color: #f8f9fa;
+}
+  
+
+  

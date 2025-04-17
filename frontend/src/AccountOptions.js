@@ -1,0 +1,41 @@
+export const jobList = [
+    "full-time",
+    "part-time",
+    "intership",
+    "software engineer",
+    "systems engineer",
+    "cloud engineer",
+    "embedded systems engineer",
+    "network engineer",
+    'devops engineer',
+    "data scientist",
+    "data engineer",
+    "data analyst",
+    // include more
+];
+
+export const skillList = [
+    "c",
+    "c++",
+    "c#",
+    "python",
+    "java",
+    "javascript",
+    "typescript",
+    "php",
+    "go",
+    "html",
+    "css",
+    "swift",
+    "ruby",
+    "kotlin",
+    "node.js",
+    "asp.net",
+    "django",
+    "spring boot",
+    "react.js",
+    "angular.js",
+    "git",
+    "linux",
+    // include more
+];
