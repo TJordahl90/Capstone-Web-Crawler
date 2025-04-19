@@ -221,12 +221,8 @@ def JobSearchingView(request):
     searchedJobsIds = searchForJobs(request.data) # Call function
     foundJobs = JobPosting.objects.filter(id__in=searchedJobsIds) # Get jobs based on returned IDs
     serializedJobs = JobPostingSerializer(foundJobs, many=True).data # Serialize job postings for frontend
-
-    responseData = {
-        'count' : len(serializedJobs),
-        'jobs' : serializedJobs
-    }
-    return JsonResponse(responseData, safe=False) # Send jobs to frontend
+    
+    return JsonResponse(serializedJobs, safe=False) # Send jobs to frontend
 
 @api_view(['GET'])
 @permission_classes([AllowAny])
