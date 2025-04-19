@@ -1,15 +1,17 @@
 from django.core.management.base import BaseCommand
 from api.models import JobPosting,CommonSkills
-from api.web_scrapers import Alkami_Technology, Fugetec, tekreant
+from api.web_scrapers import Alkami_Technology, Fugetec, tekreant, TexasInstruments, Lockhead
 
 class Command(BaseCommand):
     """Runs all web scrapers in the 'web_scraper' folder"""
 
     def handle(self, *args, **options):
-
+        
         # list all scrapers here
         scrapers = [
             Fugetec.fugetec,
+            TexasInstruments.TexInstr,
+            Lockhead.lockheed_scraper
             # continue...
         ]
 
@@ -19,7 +21,7 @@ class Command(BaseCommand):
         self.stdout.write(self.style.SUCCESS('Starting web scraping...'))
 
         for scraper in scrapers:
-            try:
+            try: 
                 job_data = scraper() # runs scraper function
                 jobs_saved = 0
 
@@ -45,6 +47,7 @@ class Command(BaseCommand):
                         for skill in job['requirements']:
                             obj, _ = CommonSkills.objects.get_or_create(name=skill)
                             skill_objs.append(obj)
+                            print(skill)
 
                         job_post.requirements.set(skill_objs)
                         jobs_saved += 1
