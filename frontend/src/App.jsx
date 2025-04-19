@@ -9,12 +9,13 @@ import Account from "./components/Account";
 import SavedJobs from "./components/SavedJobs";
 import Verification from "./components/Verification";
 import MobileNavBar from "./components/MobileNavBar";
+import PasswordReset from "./components/PasswordReset";
 import "bootstrap/dist/css/bootstrap.min.css";
 
 
 function App() {
 	const location = useLocation();
-	const hideNavMenus = ["/", "/login", "/register", "/verification"];
+	const hideNavMenus = ["/", "/login", "/register", "/verification", "/password-reset"];
 	const showNavMenus = !hideNavMenus.includes(location.pathname);
 
 	const [collapsed, setCollapsed] = useState(false);
@@ -65,6 +66,7 @@ function App() {
 					<Route path="/login" element={<AuthForm isLogin={true} />} />
 					<Route path="/register" element={<AuthForm isLogin={false} />} />
 					<Route path="/verification" element={<Verification />} />
+					<Route path="/password-reset" element={<PasswordReset />} />
 				</Routes>
 			)}
 		</>
