@@ -1,6 +1,7 @@
+/* header */
 .custom-navbar {
-    border-bottom: 1px solid #48494c;
-    background-color: #e6e4cf;
+    border-bottom: 1px solid var(--border);
+    background-color: var(--lbg);
 }
 
 .navbar-container {
@@ -38,14 +39,14 @@
 }
 
 .navbar-search::placeholder {
-    color: #c9c6a5 !important;
+    color: var(--bg) !important;
     opacity: 1 !important;
 }
 
-
+/* 3 line icon */
 .hamburger-icon {
     width: auto;
-    color: #4d4c43;
+    color: var(--text);
     height: 35px;
     padding-right: 10px;
     cursor: pointer;
@@ -53,12 +54,12 @@
 }
 
 .hamburger-icon:hover {
-    color: #8f650a;
+    color: var(--hovertext);
 }
 
-
+/* */
 .navbar-canvas {
-    background-color: #c9c6a5;
+    background-color: var(--lbg);
     color: white;
     height: 100%;
     padding: 1rem;
@@ -69,10 +70,10 @@
     /* Fixed size */
     max-width: 80vw !important;
     /* Just in case for tiny screens */
-    border-right: 2px solid #4d4c43;
+    border-right: 2px solid var(--border);
 }
 
-
+/*
 .menu-item {
     display: flex;
     align-items: center;
@@ -102,6 +103,7 @@
     color: #b3b3b3;
     padding-left: 23px;
 }
+*/
 
 .navbar-logo {
     height: 60px;
@@ -115,15 +117,16 @@
     filter: brightness(0) saturate(100%) invert(46%) sepia(21%) saturate(1549%) hue-rotate(7deg) brightness(89%) contrast(85%);
 }
 
+
+/* Longin btn */
 .loginpg-btn {
     width: auto !important;
     padding: 8px 20px !important;
-    border: 2px solid #4d4c43 !important;
+    border: 2px solid var(--border) !important;
     background-color: transparent !important;
-    color: #4d4c43 !important;
+    color: var(--text) !important;
     transition: all 0.3s ease;
     border-radius: 0 !important;
-    /* square corners */
     height: 45px !important;
     display: flex !important;
     align-items: center;
@@ -133,9 +136,9 @@
 }
 
 .loginpg-btn:hover {
-    background-color: #8f650a !important;
-    color: white !important;
-    border-color: #8f650a !important;
+    background-color: var(--hover) !important;
+    color: var(--hovertext) !important;
+    border-color: var(--border) !important;
 }
 
 
@@ -159,35 +162,38 @@
 }
 
 /* Big Mac & Logo Container at Top of Offcanvas */
+
 .offcanvas-header-bar {
     display: flex;
     align-items: center;
     justify-content: flex-start;
 }
 
+/* big mac button */
 .bigmac {
     height: 35px;
     width: auto;
     cursor: pointer;
-    color: #4d4c43;
+    color: var(--text);
     transition: color 0.3s ease;
     padding-left: 15px;
 }
 
 .bigmac:hover {
-    color: #8f650a;
+    color: var(--hovertext);
 }
 
+/* the small screen navigation */
 .navbar-canvas {
-    background-color: #e6e4cf;
-    color: white;
+    background-color: var(--lbg);
+    color: var(--text);
     height: 100%;
     padding: 1rem 0 1rem 0 !important;
 }
 
 .navbar-canvas .menu-item {
     padding: 10px 10px 10px 20px;
-    color: #4d4c43;
+    color: var(--text);
     gap: 10px;
 }
 
@@ -217,10 +223,11 @@
     display: none !important;
 }
 
+/* Edit profile and log out button */
 .dropdown-menu-custom.align-left {
-    background-color: #4d4c43 !important;
-    border: 2px solid #8f650a !important;
-    color: white !important;
+    background-color: var(--text) !important;
+    border: 2px solid var(--border) !important;
+    color: var(--hovertext) !important;
     left: -2 !important;
     right: auto!important;
     transform: none !important;
@@ -232,11 +239,13 @@
 }
 
 .dropdown-menu-custom .dropdown-item {
-    color: white !important;
+    color: var(--text2) !important;
     font-weight: 500 !important;
 }
 
 .dropdown-menu-custom .dropdown-item:hover {
-    background-color: #8f650a !important;
-    color: white !important;
+    background-color: var(--hover) !important;
+    color: var(--text) !important;
 }
+
+  

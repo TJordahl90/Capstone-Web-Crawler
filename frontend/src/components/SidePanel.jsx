@@ -1,8 +1,11 @@
 import React from "react";
 import { FaBriefcase, FaBookmark, FaUser, FaChartBar } from "react-icons/fa";
 import "./SidePanel.css";
+import { useTheme } from './ThemeContext';
+
 
 const SidePanel = ({ children, collapsed }) => {
+    const { theme } = useTheme();
     return (
         <div className="sidepanel-container">
             <div className={`side-panel ${collapsed ? "collapsed" : ""}`}>

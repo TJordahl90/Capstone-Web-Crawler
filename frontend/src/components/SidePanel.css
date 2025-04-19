@@ -9,15 +9,15 @@
 .side-panel {
     width: 200px;
     height: 100vh;
-    color: white;
+    color: var(--hovertext);
     position: fixed;
     left: 0;
     top: 81px;
     padding-top: 20px;
     transition: transform 0.3s ease, width 0.3s ease;
-    border-right: 1px solid #48494c;
-    border-top: 1px solid #48494c;
-    background-color: #e6e4cf;
+    border-right: 1px solid var(--border);
+    border-top: 1px solid  var(--border);
+    background-color:  var(--lbg);
 }
 
 .side-panel.collapsed {
@@ -40,29 +40,29 @@
     font-size: 1rem;
     cursor: pointer;
     transition: background 0.3s ease;
-    color: #4d4c43;
+    color: var(--text-color);
     max-width: 40vw !important;
 
 }
 
 .menu-divider-line {
     height: 1px;
-    background-color: #48494c;
+    background-color: var(--text);
     width: 180px;
     margin: 10px auto;
     transition: width 0.3s ease;
 }
 
 .menu-item:hover {
-    background-color: #8f650a;
+    background-color: var(--hover);
     border-radius: 5px;
-    color: white;
+    color: var(--hovertext);
 }
 
 .menu-divider {
     margin: 15px 0;
     font-size: 0.9rem;
-    color: #b3b3b3;
+    color: var(--text);
     padding-left: 23px;
 }
 
@@ -73,12 +73,12 @@
 .sidepanel-container {
     display: flex;
     height: 100vh;
-    background-color: #e6e4cf;
+    background-color: var(--lbg);
 }
 
 .sidebar {
     width: 250px;
-    background-color: #e6e4cf;
+    background-color: var(--text)
 }
 
 .sidepanel-container {

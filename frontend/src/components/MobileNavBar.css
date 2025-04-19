@@ -3,8 +3,8 @@
     bottom: 0;
     width: 100%;
     height: 65px;
-    background-color: #e6e4cf;
-    border-top: 5px solid #8f650a;
+    background-color: var(--lbg);
+    border-top: 5px solid var(--border);
     display: flex;
     justify-content: space-around;
     align-items: center;
@@ -17,7 +17,7 @@
     display: flex;
     flex-direction: column;
     align-items: center;
-    color: #444;
+    color: var(--text);
     font-size: 12px;
   }
   
@@ -27,14 +27,14 @@
   }
   
   .nav-btn.active {
-    color: #8f650a;
+    color: var(--hover);
   }
   
   .nav-logo-btn {
     position: relative;
     top: -20px;
-    background: #e6e4cf;
-    border: 5px solid #8f650a;
+    background: var(--lbg);
+    border: 5px solid var(--border);
     border-radius: 50%;
     width: 70px;
     height: 70px;

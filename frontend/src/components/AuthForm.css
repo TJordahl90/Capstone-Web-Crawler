@@ -3,30 +3,30 @@
     display: flex;
     align-items: center;
     justify-content: center;
-    background-color: #c9c6a5
+    background-color: var(--lbg)
 }
 
 .auth-container .card {
     width: 100%;
     max-width: 750px;
-    background-color: #c9c6a5;
-    border: 2px solid #8f650a;
+    background-color: var(--bg);
+    border: 2px solid var(--border);
 }
 
 .auth-button {
-    background-color: #4d4c43 !important;
+    background-color: var(--text) !important;
     width: 100%
 }
 
 .auth-button:hover,
 .auth-button:active {
-    background-color: #8f650a !important;
-    color: black;
+    background-color: var(--hover) !important;
+    color: var(--text2);
 }
 
 .auth-back-button {
-    background-color: #4d4c43 !important;
-    color: #c9c6a5 !important;
+    background-color: var(--text) !important;
+    color: var(--bg) !important;
     border: none !important;
     border-radius: 8px !important;
     padding: 8px 16px !important;
@@ -36,6 +36,6 @@
 }
 
 .auth-back-button:hover {
-    background-color: #8f650a !important;
-    color: #ffffff !important;
+    background-color: var(--hover) !important;
+    color: var(--button1)!important;
 }

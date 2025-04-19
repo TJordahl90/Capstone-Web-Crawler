@@ -116,7 +116,7 @@ const Navbar = ({ setCollapsed, collapsed }) => {
                     <Dropdown.Item onClick={handleLogout}>Log Out</Dropdown.Item>
                   </Dropdown.Menu>
                 </Dropdown>
-                <span className="text-dark ms-2">{user.username}</span>
+                <span className="text-gray ms-2">{user.username}</span>
               </>
             ) : (
               <Nav.Link href="/login" className="loginpg-btn">Login</Nav.Link>

@@ -5,127 +5,127 @@
     right: 15px;
     cursor: pointer;
     font-size: 1.25rem;
-    color: #8f650a;
+    color: var(--hover);
 }
 
 .badge {
     margin: 5px !important;
     cursor: pointer !important;
     font-size: 1rem !important;
-    color: white !important;
+    color: var(--text2) !important;
 }
 
 .badge.badge-selected {
-    background-color: #8f650a !important;
+    background-color: var(--hover) !important;
 }
 
 .badge.badge-unselected {
-    background-color: #48494c !important;
+    background-color: var(--text) !important;
 }
 
 /* Container background & text */
 .account-container {
-    background-color: #c9c6a5;
-    color: #4d4c43;
+    background-color: var(--bg);
+    color: var(--text);
     min-height: 100vh;
     padding: 20px;
     box-sizing: border-box;
     display: flex;
-  flex-direction: column;
+    flex-direction: column;
 }
 
 /* Profile image */
 .account-image {
     border-radius: 50%;
     object-fit: cover;
-    border: 2px solid #4d4c43;
+    border: 2px solid var(--text);
 }
 
 /* NEW: Style every Card component */
 .card {
-    background-color: #b0ad8b !important;
-    color: #4d4c43 !important;
-    border: 2px solid #8f650a;
+    background-color: var(--bg2) !important;
+    color: var(--text) !important;
+    border: 2px solid var(--border);
     border-radius: 12px;
 }
 
 /* Modal Background */
 .modal-content {
-    background-color: #c9c6a5 !important;
-    color: #4d4c43 !important;
-    border: 2px solid #8f650a;
+    background-color: var(--bg) !important;
+    color: var(--text) !important;
+    border: 2px solid var(--border);
     border-radius: 12px;
-  }
-  
-  /* Modal Header */
-  .modal-header {
-    border-bottom: 1px solid #8f650a;
-  }
-  
-  /* Modal Title */
-  .modal-title {
-    color: #4d4c43;
-  }
-  
-  /* Modal Close Button */
-  .btn-close {
+}
+
+/* Modal Header */
+.modal-header {
+    border-bottom: 1px solid var(--border);
+}
+
+/* Modal Title */
+.modal-title {
+    color: var(--text);
+}
+
+/* Modal Close Button */
+.btn-close {
     filter: brightness(0.3);
-  }
-  
-  /* Form Fields */
-  .form-control {
-    background-color: #4d4c43 !important;
-    color: white !important;
-    border: 1px solid #8f650a !important;
+}
+
+/* Form Fields search bar ???*/
+.form-control {
+    background-color: var(--bg) !important;
+    color: var(--text) !important;
+    border: 1px solid var(--border) !important;
     border-radius: 8px;
     box-shadow: none;
-  }
-  
-  .form-control::placeholder {
-    color: #c9c6a5 !important;
+}
+
+.form-control::placeholder {
+    color: var(--text) !important;
     opacity: 1;
-  }
-  
-  /* Submit Button */
-  button[type="submit"] {
-    background-color: #8f650a !important;
+}
+
+/* Submit Button */
+button[type="submit"] {
+    background-color: var(--hover)!important;
     border: none;
-    color: white;
+    color: var(--text);
     padding: 10px 20px;
     margin-top: 10px;
     border-radius: 8px;
     font-weight: bold;
-  }
-  
-  button[type="submit"]:hover {
-    background-color: #f0a605 !important;
-  }
-  
-  
-  .back-btn {
-    background-color: #4d4c43;
-    color: #c9c6a5;
+}
+
+button[type="submit"]:hover {
+    background-color: var(--hover2) !important;
+}
+
+
+.back-btn {
+    background-color: var(--hover2);
+    color: var(--text);
     border: none;
     border-radius: 8px;
     padding: 8px 16px;
     cursor: pointer;
     font-weight: bold;
     transition: background-color 0.3s ease;
-  }
-  
-  .back-btn:hover {
-    background-color: #8f650a;
-  }
-   
+}
 
-  .back-and-reset-container {
+.back-btn:hover {
+    background-color: var(--hover);
+}
+
+
+.back-and-reset-container {
     display: flex;
     gap: 1rem;
     justify-content: flex-start;
     align-items: center;
-  }
-  
-  .reset-btn {
+}
+
+.reset-btn {
     background-color: #dc3545;
     color: white;
     padding: 6px 12px;
@@ -133,13 +133,13 @@
     border-radius: 6px;
     font-weight: 500;
     transition: background-color 0.3s ease;
-  }
-  
-  .reset-btn:hover {
+}
+
+.reset-btn:hover {
     background-color: #bb2d3b;
-  }
-  
-  .remove-all-btn {
+}
+
+.remove-all-btn {
     background-color: #dc3545;
     color: white;
     font-size: 0.9rem;
@@ -151,10 +151,9 @@
     transition: background-color 0.3s ease;
     display: block;
     margin: 0.5rem auto 1rem auto;
-  }
-  
-  .remove-all-btn:hover {
+}
+
+.remove-all-btn:hover {
     background-color: #bb2d3b;
     cursor: pointer;
-  }
-  
+}
