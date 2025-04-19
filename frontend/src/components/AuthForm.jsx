@@ -66,7 +66,7 @@ const AuthForm = ({ isLogin }) => {
             }
             
             try {
-                await api.post("/verification/", formDataWithFile, {
+                await api.post("/verification/", formDataPayload, {
                     headers: {
                         'Content-Type': 'multipart/form-data'
                     }

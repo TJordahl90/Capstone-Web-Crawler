@@ -21,7 +21,7 @@ const Verification = () => {
                 try{
                     const response = await api.post('/register/', data.formData);
                     setMessage("Registration successful!");
-                    setTimeout(() => navigate("/login/"), 1000);
+                    setTimeout(() => navigate("/login"), 1000);
                 }
                 catch(err){
                     console.log(data)
