@@ -55,13 +55,13 @@ class Account(models.Model):
 
 class JobPosting(models.Model):
     company = models.CharField(max_length=150)
-    title = models.CharField(max_length=100)
+    title = models.CharField(max_length=200)
     description = models.TextField()  # TextField is better for long text
     requirements = models.ManyToManyField(CommonSkills, related_name='job_posting', blank=True)
     location = models.CharField(max_length=150, blank=True, null=True)  # Optional is good
-    datePosted = models.DateField(null=True, blank=True)  # Allow NULL and blank values
+    datePosted = models.CharField(max_length=50, null=True, blank=True)
     salary = models.CharField(max_length=255, blank=True, null=True)  # Optional seems better
-    jobURL = models.URLField()  # URLField is better for URLs
+    jobURL = models.URLField(max_length=500)
 
     def __str__(self):
         return f'{self.title} at {self.company}'
