@@ -72,6 +72,7 @@ const Navbar = ({ setCollapsed, collapsed }) => {
             </NavBar.Brand>
           )}
         </div>
+        
         {!isMobile && (
           <Offcanvas show={show} onHide={() => setShow(false)} className="navbar-canvas-container" placement="start">
             <Offcanvas.Body className="navbar-canvas">
@@ -112,7 +113,9 @@ const Navbar = ({ setCollapsed, collapsed }) => {
                   </Dropdown.Toggle>
 
                   <Dropdown.Menu className="dropdown-menu-custom align-left">
-                    <Dropdown.Item href="/account">Edit Profile</Dropdown.Item>
+                    <Dropdown.Item href="/account">Profile</Dropdown.Item>
+                    <Dropdown.Item href="/documents">Documents</Dropdown.Item>
+                    <Dropdown.Item href="/#">Settings</Dropdown.Item>
                     <Dropdown.Item onClick={handleLogout}>Log Out</Dropdown.Item>
                   </Dropdown.Menu>
                 </Dropdown>
@@ -122,8 +125,6 @@ const Navbar = ({ setCollapsed, collapsed }) => {
               <Nav.Link href="/login" className="loginpg-btn">Login</Nav.Link>
             )}
           </div>
-
-
         </div>
 
       </Container>
