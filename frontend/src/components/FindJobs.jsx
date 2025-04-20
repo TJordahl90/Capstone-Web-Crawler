@@ -8,6 +8,7 @@ const FindJobs = () => {
     const [error, setError] = useState("");
     const [matchedJobs, setMatchedJobs] = useState([]);
     const [allJobs, setAllJobs] = useState([]);
+    const [searchedJobs, setSearchedJobs] = useState([]);
     const [savedJobs, setSavedJobs] = useState([]);
     const [selectedJob, setSelectedJob] = useState(null);
     const [activeTab, setActiveTab] = useState("matched");
@@ -18,6 +19,7 @@ const FindJobs = () => {
         const fetchMatchedJobs = async () => {
             try {
                 const response = await api.get("/job_matching/");
+                console.log(response.data); // for testing
                 if (response.data && response.data.length > 0) {
                     setMatchedJobs(response.data);
                     setSelectedJob(response.data[0]);
@@ -37,9 +39,9 @@ const FindJobs = () => {
             try {
                 const response = await api.get("/all_jobs/");
                 if (response.data && response.data.length > 0) {
-                  setAllJobs(response.data);
+                    setAllJobs(response.data);
                 } else {
-                  setError("No jobs found. Please try again later.");
+                    setError("No jobs found. Please try again later.");
                 }
             } 
             catch (err) {
@@ -52,14 +54,34 @@ const FindJobs = () => {
         fetchAllJobs();
     }, []);
 
+    const fetchSearchJobs = async () => {
+        try {
+            const response = await api.get(`/job_searching/?search=${searchTerm}`);
+            if (response.data && response.data.length > 0) {
+                    setSearchedJobs(response.data);
+            } else {
+                setError("No jobs found. Please try again later.");
+            }
+        } 
+        catch (err) {
+              console.error(err);
+              setError("Error retrieving job data.");
+        }
+    };
+
     const toggleSaveJob = (e) => {
         // implement save jobs in backend
     };
 
     // Determines which jobs to display
     const getJobs = () => {
-        let jobs = activeTab === "matched" ? matchedJobs : allJobs;
-        return jobs;
+        if (activeTab === "matched") {
+            return matchedJobs;
+        } else if (activeTab === "search") {
+            return searchedJobs;
+        } else {
+            return allJobs;
+        }
     };
 
     const displayJobs = getJobs();
@@ -110,18 +132,24 @@ const FindJobs = () => {
                         <h1 className="h4 mb-3">Find Jobs</h1>
 
                         {/* Search bar */}
-                        <Form.Group className="mb-3 position-relative">
-                            <div className="position-absolute" style={{ left: "10px", top: "12px" }}>
-                                <FaSearch className="text-muted" />
-                            </div>
-                            <Form.Control
-                                type="text"
-                                placeholder="Search jobs by title, company or location"
-                                value={searchTerm}
-                                onChange={(e) => setSearchTerm(e.target.value)}
-                                style={{ paddingLeft: "30px" }}
-                            />
-                        </Form.Group>
+                        <Form onSubmit={e => {
+                            e.preventDefault(); 
+                            fetchSearchJobs();
+                            setActiveTab("search");
+                        }}>
+                            <Form.Group className="mb-3 position-relative">
+                                <div className="position-absolute" style={{ left: "10px", top: "12px" }}>
+                                    <FaSearch className="text-muted" />
+                                </div>
+                                <Form.Control
+                                    type="text"
+                                    placeholder="Search jobs by title, company or location"
+                                    value={searchTerm}
+                                    onChange={(e) => setSearchTerm(e.target.value)}
+                                    style={{ paddingLeft: "30px" }}
+                                />
+                            </Form.Group>
+                        </Form>
 
                         {/* Tabs */}
                         <Nav variant="tabs" className="mb-2">
@@ -130,7 +158,15 @@ const FindJobs = () => {
                                     active={activeTab === "matched"} 
                                     onClick={() => setActiveTab("matched")}
                                 >
-                                    Matched Jobs
+                                    Matches
+                                </Nav.Link>
+                            </Nav.Item>
+                            <Nav.Item>
+                                <Nav.Link
+                                    active={activeTab === "search"} 
+                                    onClick={() => setActiveTab("search")}
+                                >
+                                    Search
                                 </Nav.Link>
                             </Nav.Item>
                             <Nav.Item>
@@ -138,7 +174,7 @@ const FindJobs = () => {
                                     active={activeTab === "all"} 
                                     onClick={() => setActiveTab("all")}
                                 >
-                                    All Jobs
+                                    View All
                                 </Nav.Link>
                             </Nav.Item>
                       </Nav>
