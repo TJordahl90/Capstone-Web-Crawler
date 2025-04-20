@@ -5,13 +5,13 @@ import { FaPencilAlt } from "react-icons/fa";
 import profile from "../assets/profile.png";
 import InputField from './InputField';
 import api from '../api.js';
-import "./Account.css";
+//import "./Account.css";
 
 const Account = () => {
     const [message, setMessage] = useState('');
     const [error, setError] = useState('');
     const navigate = useNavigate();
-
+    const [isHovered, setIsHovered] = useState(false);
     const [editPersonalInfo, setEditPersonalInfo] = useState(false);
     const [editSummary, setEditSummary] = useState(false);
     const [editPreferences, setEditPreferences] = useState(false);
@@ -221,7 +221,7 @@ const Account = () => {
             setError('');
         }, 3000);
     }
-    
+
     const cleanName = (value) => {
         try {
             if (typeof value === "string" && value.includes("{")) {
@@ -233,13 +233,49 @@ const Account = () => {
             return value;
         }
     };
-    
+
     return (
         <>
-            <Container className="account-container">
-                <div className="account-content">
-                    <div className="back-and-reset-container pb-3">
-                        <button onClick={() => navigate("/find-jobs")} className="back-btn">
+            <Container
+                style={{
+                    backgroundColor: "var(--bg)",
+                    color: "var(--text)",
+                    minHeight: "100vh",
+                    padding: "20px",
+                    boxSizing: "border-box",
+                    display: "flex",
+                    flexDirection: "column"
+                }}
+            >
+                <div
+                    style={{
+                        overflowY: "auto"
+                    }}
+                >
+                    <div
+                        style={{
+                            display: "flex",
+                            gap: "1rem",
+                            justifyContent: "flex-start",
+                            alignItems: "center",
+                            paddingBottom: "1rem" // equivalent to Bootstrap's pb-3
+                        }}
+                    >
+                        <button
+                            onClick={() => navigate("/find-jobs")}
+                            style={{
+                                backgroundColor: "var(--hover2)",
+                                color: "var(--text)",
+                                border: "none",
+                                borderRadius: "8px",
+                                padding: "8px 16px",
+                                cursor: "pointer",
+                                fontWeight: "bold",
+                                transition: "background-color 0.3s ease"
+                            }}
+                            onMouseEnter={(e) => e.currentTarget.style.backgroundColor = "var(--hover)"}
+                            onMouseLeave={(e) => e.currentTarget.style.backgroundColor = "var(--hover2)"}
+                        >
                             ← Back to Jobs
                         </button>
                     </div>
@@ -249,9 +285,29 @@ const Account = () => {
                     {error && <Alert variant="danger">{error}</Alert>}
 
                     {/* Personal Information */}
-                    <Card className="mb-4">
+                    <Card
+                        className="mb-4"
+                        style={{
+                            backgroundColor: "var(--bg2)",
+                            color: "var(--text)",
+                            border: "2px solid var(--border)",
+                            borderRadius: "12px"
+                        }}
+                    >
                         <Card.Body className="text-start">
-                            {/* <Card.Img src={profile} className="account-image mb-3" style={{ width: "50px", height: "50px" }} alt="Profile Image" /> */}
+                            <Card.Img
+                                src={profile}
+                                className="account-image"
+                                alt="Profile Image"
+                                style={{
+                                    width: "50px",
+                                    height: "50px",
+                                    borderRadius: "50%",
+                                    objectFit: "cover",
+                                    border: "2px solid var(--text)",
+                                    marginBottom: "1rem"
+                                }}
+                            />
                             <Card.Title>
                                 {(accountData.firstName || accountData.lastName)
                                     ? `${accountData.firstName} ${accountData.lastName}`
@@ -277,7 +333,18 @@ const Account = () => {
                                 {/* <Card.Link>Resume</Card.Link> */}
                             </Card.Text>
                             <Card.Link onClick={() => setEditPersonalInfo(true)}>
-                                <FaPencilAlt className="account-icon" />
+                                <FaPencilAlt
+                                    className="account-icon"
+                                    style={{
+                                        position: "absolute",
+                                        top: "15px",
+                                        right: "15px",
+                                        cursor: "pointer",
+                                        fontSize: "1.25rem",
+                                        color: "var(--hover)",
+                                    }}
+                                />
+
                             </Card.Link>
                         </Card.Body>
                     </Card>
@@ -308,14 +375,37 @@ const Account = () => {
                                         onChange={(e) => setaccountData({ ...accountData, hometown: e.target.value })}
                                         placeholder="Enter your City, State..."
                                     />
-                                    <Button type="submit">Submit</Button>
+                                    <Button
+                                        type="submit"
+                                        style={{
+                                            backgroundColor: isHovered ? "var(--hover2)" : "var(--hover)",
+                                            border: "none",
+                                            color: "var(--text)",
+                                            padding: "10px 20px",
+                                            marginTop: "10px",
+                                            borderRadius: "8px",
+                                            fontWeight: "bold"
+                                        }}
+                                        onMouseEnter={() => setIsHovered(true)}
+                                        onMouseLeave={() => setIsHovered(false)}
+                                    >
+                                        Submit
+                                    </Button>
                                 </Form>
                             </Modal.Body>
                         </Modal>
                     )}
 
                     {/* Summary */}
-                    <Card className="mb-4">
+                    <Card
+                        className="mb-4"
+                        style={{
+                            backgroundColor: "var(--bg2)",
+                            color: "var(--text)",
+                            border: "2px solid var(--border)",
+                            borderRadius: "12px"
+                        }}
+                    >
                         <Card.Body className="text-start">
                             <Card.Title>Summary</Card.Title>
                             <Card.Text>
@@ -325,7 +415,17 @@ const Account = () => {
                                 }
                             </Card.Text>
                             <Card.Link onClick={() => setEditSummary(true)}>
-                                <FaPencilAlt className="account-icon" />
+                                <FaPencilAlt
+                                    className="account-icon"
+                                    style={{
+                                        position: "absolute",
+                                        top: "15px",
+                                        right: "15px",
+                                        cursor: "pointer",
+                                        fontSize: "1.25rem",
+                                        color: "var(--hover)",
+                                    }}
+                                />
                             </Card.Link>
                         </Card.Body>
                     </Card>
@@ -340,20 +440,53 @@ const Account = () => {
                                         onChange={(e) => setaccountData({ ...accountData, summary: e.target.value })}
                                         placeholder="Enter 2-3 sentences about yourself..."
                                     />
-                                    <Button type="submit">Submit</Button>
+                                    <Button
+                                        type="submit"
+                                        style={{
+                                            backgroundColor: isHovered ? "var(--hover2)" : "var(--hover)",
+                                            border: "none",
+                                            color: "var(--text)",
+                                            padding: "10px 20px",
+                                            marginTop: "10px",
+                                            borderRadius: "8px",
+                                            fontWeight: "bold"
+                                        }}
+                                        onMouseEnter={() => setIsHovered(true)}
+                                        onMouseLeave={() => setIsHovered(false)}
+                                    >
+                                        Submit
+                                    </Button>
                                 </Form>
                             </Modal.Body>
                         </Modal>
                     )}
 
                     {/* Display Job Preference Selections */}
-                    <Card className="mb-4">
+                    <Card
+                        className="mb-4"
+                        style={{
+                            backgroundColor: "var(--bg2)",
+                            color: "var(--text)",
+                            border: "2px solid var(--border)",
+                            borderRadius: "12px"
+                        }}
+                    >
                         <Card.Body className="text-start">
                             <Card.Title>Your Job Preferences</Card.Title>
                             <Card.Text>
                                 {accountData.preferences.length > 0 ? (
                                     accountData.preferences.map((preference, index) => (
-                                        <Badge key={index} className="badge-selected">
+                                        <Badge
+                                            key={index}
+                                            className="badge-selected"
+                                            style={{
+                                                margin: "5px",
+                                                cursor: "pointer",
+                                                fontSize: "1rem",
+                                                color: "var(--text2)",
+                                                backgroundColor: "var(--hover)",
+                                            }}
+                                        >
                                             {cleanName(preference.name || preference)}
                                         </Badge>
                                     ))
@@ -362,7 +495,17 @@ const Account = () => {
                                 )}
                             </Card.Text>
                             <Card.Link onClick={() => setEditPreferences(true)}>
-                                <FaPencilAlt className="account-icon" />
+                                <FaPencilAlt
+                                    className="account-icon"
+                                    style={{
+                                        position: "absolute",
+                                        top: "15px",
+                                        right: "15px",
+                                        cursor: "pointer",
+                                        fontSize: "1.25rem",
+                                        color: "var(--hover)",
+                                    }}
+                                />
                             </Card.Link>
                         </Card.Body>
                     </Card>
@@ -381,7 +524,22 @@ const Account = () => {
                                         Enter preferences as comma-separated values (e.g. Part-Time, Software Engineer, Data Analyst)
                                     </small>
                                     <div className="mt-3">
-                                        <Button type="submit">Submit</Button>
+                                        <Button
+                                            type="submit"
+                                            style={{
+                                                backgroundColor: isHovered ? "var(--hover2)" : "var(--hover)",
+                                                border: "none",
+                                                color: "var(--text)",
+                                                padding: "10px 20px",
+                                                marginTop: "10px",
+                                                borderRadius: "8px",
+                                                fontWeight: "bold"
+                                            }}
+                                            onMouseEnter={() => setIsHovered(true)}
+                                            onMouseLeave={() => setIsHovered(false)}
+                                        >
+                                            Submit
+                                        </Button>
                                     </div>
                                 </Form>
                             </Modal.Body>
@@ -389,13 +547,31 @@ const Account = () => {
                     )}
 
                     {/* Display Skill Selections */}
-                    <Card className="mb-4">
+                    <Card
+                        className="mb-4"
+                        style={{
+                            backgroundColor: "var(--bg2)",
+                            color: "var(--text)",
+                            border: "2px solid var(--border)",
+                            borderRadius: "12px"
+                        }}
+                    >
                         <Card.Body className="text-start">
                             <Card.Title>Your Skills</Card.Title>
                             <Card.Text>
                                 {accountData.skills.length > 0 ? (
                                     accountData.skills.map((skill, index) => (
-                                        <Badge key={index} className="badge-selected">
+                                        <Badge
+                                            key={index}
+                                            className="badge-selected"
+                                            style={{
+                                                margin: "5px",
+                                                cursor: "pointer",
+                                                fontSize: "1rem",
+                                                color: "var(--text2)",
+                                                backgroundColor: "var(--hover)",
+                                            }}
+                                        >
                                             {cleanName(skill.name || skill)}
                                         </Badge>
                                     ))
@@ -404,7 +580,17 @@ const Account = () => {
                                 )}
                             </Card.Text>
                             <Card.Link onClick={() => setEditSkills(true)}>
-                                <FaPencilAlt className="account-icon" />
+                                <FaPencilAlt
+                                    className="account-icon"
+                                    style={{
+                                        position: "absolute",
+                                        top: "15px",
+                                        right: "15px",
+                                        cursor: "pointer",
+                                        fontSize: "1.25rem",
+                                        color: "var(--hover)",
+                                    }}
+                                />
                             </Card.Link>
                         </Card.Body>
                     </Card>
@@ -423,7 +609,22 @@ const Account = () => {
                                         Enter preferences as comma-separated values (e.g. Python, JavaScript, SQL, OOP)
                                     </small>
                                     <div className="mt-3">
-                                        <Button type="submit">Submit</Button>
+                                        <Button
+                                            type="submit"
+                                            style={{
+                                                backgroundColor: isHovered ? "var(--hover2)" : "var(--hover)",
+                                                border: "none",
+                                                color: "var(--text)",
+                                                padding: "10px 20px",
+                                                marginTop: "10px",
+                                                borderRadius: "8px",
+                                                fontWeight: "bold"
+                                            }}
+                                            onMouseEnter={() => setIsHovered(true)}
+                                            onMouseLeave={() => setIsHovered(false)}
+                                        >
+                                            Submit
+                                        </Button>
                                     </div>
                                 </Form>
                             </Modal.Body>
@@ -431,7 +632,15 @@ const Account = () => {
                     )}
 
                     {/* Education */}
-                    <Card className="mb-4">
+                    <Card
+                        className="mb-4"
+                        style={{
+                            backgroundColor: "var(--bg2)",
+                            color: "var(--text)",
+                            border: "2px solid var(--border)",
+                            borderRadius: "12px"
+                        }}
+                    >
                         <Card.Body className="text-start">
                             <Card.Title>Education</Card.Title>
                             <Card.Text>
@@ -471,7 +680,17 @@ const Account = () => {
                                 }
                             </Card.Text>
                             <Card.Link onClick={() => setEditEducation(true)}>
-                                <FaPencilAlt className="account-icon" />
+                                <FaPencilAlt
+                                    className="account-icon"
+                                    style={{
+                                        position: "absolute",
+                                        top: "15px",
+                                        right: "15px",
+                                        cursor: "pointer",
+                                        fontSize: "1.25rem",
+                                        color: "var(--hover)",
+                                    }}
+                                />
                             </Card.Link>
                         </Card.Body>
                     </Card>
@@ -510,14 +729,37 @@ const Account = () => {
                                         onChange={(e) => setaccountData({ ...accountData, gpa: e.target.value })}
                                         placeholder="Enter your GPA..."
                                     />
-                                    <Button type="submit">Submit</Button>
+                                    <Button
+                                        type="submit"
+                                        style={{
+                                            backgroundColor: isHovered ? "var(--hover2)" : "var(--hover)",
+                                            border: "none",
+                                            color: "var(--text)",
+                                            padding: "10px 20px",
+                                            marginTop: "10px",
+                                            borderRadius: "8px",
+                                            fontWeight: "bold"
+                                        }}
+                                        onMouseEnter={() => setIsHovered(true)}
+                                        onMouseLeave={() => setIsHovered(false)}
+                                    >
+                                        Submit
+                                    </Button>
                                 </Form>
                             </Modal.Body>
                         </Modal>
                     )}
 
                     {/* Experience */}
-                    <Card className="mb-4">
+                    <Card
+                        className="mb-4"
+                        style={{
+                            backgroundColor: "var(--bg2)",
+                            color: "var(--text)",
+                            border: "2px solid var(--border)",
+                            borderRadius: "12px"
+                        }}
+                    >
                         <Card.Body className="text-start">
                             <Card.Title>Work Experience</Card.Title>
                             <Card.Text>
@@ -547,7 +789,17 @@ const Account = () => {
                                 }
                             </Card.Text>
                             <Card.Link onClick={() => setEditExperience(true)}>
-                                <FaPencilAlt className="account-icon" />
+                                <FaPencilAlt
+                                    className="account-icon"
+                                    style={{
+                                        position: "absolute",
+                                        top: "15px",
+                                        right: "15px",
+                                        cursor: "pointer",
+                                        fontSize: "1.25rem",
+                                        color: "var(--hover)",
+                                    }}
+                                />
                             </Card.Link>
                         </Card.Body>
                     </Card>
@@ -578,7 +830,22 @@ const Account = () => {
                                         onChange={(e) => setaccountData({ ...accountData, description: e.target.value })}
                                         placeholder="Enter your work description..."
                                     />
-                                    <Button type="submit">Submit</Button>
+                                    <Button
+                                        type="submit"
+                                        style={{
+                                            backgroundColor: isHovered ? "var(--hover2)" : "var(--hover)",
+                                            border: "none",
+                                            color: "var(--text)",
+                                            padding: "10px 20px",
+                                            marginTop: "10px",
+                                            borderRadius: "8px",
+                                            fontWeight: "bold"
+                                        }}
+                                        onMouseEnter={() => setIsHovered(true)}
+                                        onMouseLeave={() => setIsHovered(false)}
+                                    >
+                                        Submit
+                                    </Button>
                                 </Form>
                             </Modal.Body>
                         </Modal>

@@ -1,0 +1,28 @@
+
+
+.auth-button {
+    background-color: var(--text) !important;
+    width: 100%
+}
+
+.auth-button:hover,
+.auth-button:active {
+    background-color: var(--hover) !important;
+    color: var(--text2);
+}
+
+.auth-back-button {
+    background-color: var(--text) !important;
+    color: var(--bg) !important;
+    border: none !important;
+    border-radius: 8px !important;
+    padding: 8px 16px !important;
+    font-weight: bold !important;
+    margin-bottom: 20px !important;
+    transition: background-color 0.2s ease !important;
+}
+
+.auth-back-button:hover {
+    background-color: var(--hover) !important;
+    color: var(--button1)!important;
+}

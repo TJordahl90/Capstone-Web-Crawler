@@ -4,7 +4,7 @@ import { FaBriefcase, FaBookmark, FaUser, FaBars, FaChartBar, FaUserCircle, FaBe
 import { useNavigate } from 'react-router-dom';
 import api from '../api.js';
 import logo from "../assets/logo3.png";
-import "./Navbar.css";
+// import "./Navbar.css";
 
 const Navbar = ({ setCollapsed, collapsed }) => {
   const navigate = useNavigate();
@@ -15,7 +15,7 @@ const Navbar = ({ setCollapsed, collapsed }) => {
   const [show, setShow] = useState(false);
   const storedUser = localStorage.getItem("user");
   const user = storedUser ? JSON.parse(storedUser) : null;
-
+  const [hoveredItem, setHoveredItem] = useState(null);
   // Detect screen resize
   useEffect(() => {
     const handleResize = () => {
@@ -60,49 +60,212 @@ const Navbar = ({ setCollapsed, collapsed }) => {
   const handleShow = () => setShow(true);
 
   return (
-    <NavBar expand="lg" className="custom-navbar">
-      <Container fluid className="navbar-container">
-        <div className="navbar-left">
+    // Top Nav bar container
+    <NavBar
+      className="nav-bar"
+      expand="lg"
+      style={{
+        backgroundColor: "var(--lbg)",
+        paddingBottom: "0px"
+      }}>
+
+      <Container
+        fluid
+        style={{
+          display: "flex",
+          flexWrap: "nowrap",
+          alignItems: "center",
+          justifyContent: "space-between",
+          width: "100%",
+
+        }}
+      >
+        <div style={{ display: "flex", alignItems: "center" }}>
+
+          {/* Hamburger button */}
           {!isMobile && (
-            <FaBars className="hamburger-icon" onClick={handleClick} />
+            <FaBars
+              onClick={handleClick}
+              style={{
+                height: "35px",
+                width: "auto",
+                cursor: "pointer",
+                color: "var(--text)",
+                transition: "color 0.3s ease"
+              }}
+              onMouseEnter={(e) => (e.currentTarget.style.color = "var(--hovertext)")}
+              onMouseLeave={(e) => (e.currentTarget.style.color = "var(--text)")}
+            />
           )}
+
+          {/* Logo  */}
           {!isMobile && (
-            <NavBar.Brand href="/find-jobs" className="navbar-logo-wrapper">
-              <img src={logo} alt="website logo" className="navbar-logo" />
+            <NavBar.Brand href="/find-jobs" style={{ display: "flex", alignItems: "center" }}>
+              <img
+                src={logo}
+                alt="website logo"
+                style={{
+                  height: "60px",
+                  width: "auto",
+                  paddingLeft: "1px",
+                  transition: "filter 0.3s ease"
+                }}
+                onMouseEnter={(e) =>
+                (e.currentTarget.style.filter =
+                  "brightness(0) saturate(100%) invert(46%) sepia(21%) saturate(1549%) hue-rotate(7deg) brightness(89%) contrast(85%)")
+                }
+                onMouseLeave={(e) => (e.currentTarget.style.filter = "none")}
+              />
             </NavBar.Brand>
           )}
         </div>
-        
+
+        {/*Wing Pannel */}
         {!isMobile && (
           <Offcanvas show={show} onHide={() => setShow(false)} className="navbar-canvas-container" placement="start">
-            <Offcanvas.Body className="navbar-canvas">
-              <div className="offcanvas-header-bar">
-                <FaBars className="hamburger-icon bigmac" onClick={handleClose} />
-                <img src={logo} alt="logo inside offcanvas" className="navbar-logo" />
+            <Offcanvas.Body
+              className="wingpannel"
+              style={{
+                backgroundColor: "var(--lbg)",
+                color: "var(--text)",
+                height: "100%",
+                padding: "1rem 0"
+              }}
+            >
+              <div
+                style={{
+                  display: "flex",
+                  alignItems: "center",
+                  justifyContent: "flex-start"
+                }}
+              >
+                {/* Big mac button */}
+                <FaBars
+                  onClick={handleClose}
+                  style={{
+                    height: "35px",
+                    width: "auto",
+                    cursor: "pointer",
+                    color: "var(--text)",
+                    transition: "color 0.3s ease",
+                    paddingLeft: "15px"
+                  }}
+                  onMouseEnter={(e) => (e.target.style.color = "var(--hovertext)")}
+                  onMouseLeave={(e) => (e.target.style.color = "var(--text)")}
+                />
+                {/*Logo button */}
+                <NavBar.Brand href="/find-jobs" style={{ display: "flex", alignItems: "center" }}>
+                  <img
+                    src={logo}
+                    alt="website logo"
+                    style={{
+                      height: "60px",
+                      width: "auto",
+                      paddingLeft: "1px",
+                      transition: "filter 0.3s ease"
+                    }}
+                    onMouseEnter={(e) =>
+                    (e.currentTarget.style.filter =
+                      "brightness(0) saturate(100%) invert(46%) sepia(21%) saturate(1549%) hue-rotate(7deg) brightness(89%) contrast(85%)")
+                    }
+                    onMouseLeave={(e) => (e.currentTarget.style.filter = "none")}
+                  />
+                </NavBar.Brand>
               </div>
-              <div className="menu-divider-line"></div>
 
-              <a href="/find-jobs" className="menu-item">
+              {/* All button */}
+              <a
+                href="/find-jobs"
+                onMouseEnter={() => setHoveredItem("jobs")}
+                onMouseLeave={() => setHoveredItem(null)}
+                style={{
+                  display: "flex",
+                  alignItems: "center",
+                  gap: "10px",
+                  padding: "10px 10px 10px 20px",
+                  fontSize: "1rem",
+                  cursor: "pointer",
+                  transition: "background 0.3s ease",
+                  color: hoveredItem === "jobs" ? "var(--hovertext)" : "var(--text-color)",
+                  backgroundColor: hoveredItem === "jobs" ? "var(--hover)" : "transparent",
+                  borderRadius: hoveredItem === "jobs" ? "5px" : "0",
+                  maxWidth: "40vw",
+                }}
+              >
                 <FaBriefcase className="icon" />
-                <span>Jobs</span>
+                {<span>Jobs</span>}
               </a>
-              <a href="/saved-jobs" className="menu-item">
+              <a href="/saved-jobs"
+                onMouseEnter={() => setHoveredItem("saved")}
+                onMouseLeave={() => setHoveredItem(null)}
+                style={{
+                  display: "flex",
+                  alignItems: "center",
+                  gap: "10px",
+                  padding: "10px 10px 10px 20px",
+                  fontSize: "1rem",
+                  cursor: "pointer",
+                  transition: "background 0.3s ease",
+                  color: hoveredItem === "saved" ? "var(--hovertext)" : "var(--text-color)",
+                  backgroundColor: hoveredItem === "saved" ? "var(--hover)" : "transparent",
+                  borderRadius: hoveredItem === "saved" ? "5px" : "0",
+                  maxWidth: "40vw",
+                }}>
                 <FaBookmark className="icon" />
-                <span>Saved</span>
+                {<span>Saved</span>}
               </a>
-              <div className="menu-divider-line"></div>
-              <a href="/#" className="menu-item">
+              <div
+                style={{
+                  height: "1px",
+                  backgroundColor: "var(--text)",
+                  width: "180px",
+                  margin: "10px auto",
+                  transition: "width 0.3s ease"
+                }}
+              ></div>
+              <a href="/#"
+                onMouseEnter={() => setHoveredItem("trends")}
+                onMouseLeave={() => setHoveredItem(null)}
+                style={{
+                  display: "flex",
+                  alignItems: "center",
+                  gap: "10px",
+                  padding: "10px 10px 10px 20px",
+                  fontSize: "1rem",
+                  cursor: "pointer",
+                  transition: "background 0.3s ease",
+                  color: hoveredItem === "trends" ? "var(--hovertext)" : "var(--text-color)",
+                  backgroundColor: hoveredItem === "trends" ? "var(--hover)" : "transparent",
+                  borderRadius: hoveredItem === "trends" ? "5px" : "0",
+                  maxWidth: "40vw",
+                }}>
                 <FaChartBar className="icon" />
-                <span>Trends</span>
+                {<span>Trends</span>}
               </a>
-              <a href="/#" className="menu-item">
+              <a href="/#"
+                onMouseEnter={() => setHoveredItem("people")}
+                onMouseLeave={() => setHoveredItem(null)}
+                style={{
+                  display: "flex",
+                  alignItems: "center",
+                  gap: "10px",
+                  padding: "10px 10px 10px 20px",
+                  fontSize: "1rem",
+                  cursor: "pointer",
+                  transition: "background 0.3s ease",
+                  color: hoveredItem === "people" ? "var(--hovertext)" : "var(--text-color)",
+                  backgroundColor: hoveredItem === "people" ? "var(--hover)" : "transparent",
+                  borderRadius: hoveredItem === "people" ? "5px" : "0",
+                  maxWidth: "40vw",
+                }}>
                 <FaUser className="icon" />
-                <span>People</span>
+                {<span>People</span>}
               </a>
             </Offcanvas.Body>
           </Offcanvas>
         )}
 
+        {/* Top right side */}
         <div className="navbar-right">
           <div className="d-flex align-items-center">
             {user ? (
@@ -112,19 +275,91 @@ const Navbar = ({ setCollapsed, collapsed }) => {
                     <FaUserCircle className="navbar-icon" size={45} />
                   </Dropdown.Toggle>
 
-                  <Dropdown.Menu className="dropdown-menu-custom align-left">
-                    <Dropdown.Item href="/account">Profile</Dropdown.Item>
-                    <Dropdown.Item href="/documents">Documents</Dropdown.Item>
-                    <Dropdown.Item href="/#">Settings</Dropdown.Item>
-                    <Dropdown.Item onClick={handleLogout}>Log Out</Dropdown.Item>
+                  <Dropdown.Menu
+                    style={{
+                      backgroundColor: "var(--text)",
+                      border: "2px solid var(--border)",
+                      color: "var(--hovertext)",
+                      transform: "none",
+                      minWidth: "125px",
+                      maxWidth: "125px",
+                      padding: "5px",
+                      borderRadius: "6px",
+                      fontSize: "14px",
+                    }}
+                  >
+                    <Dropdown.Item
+                      href="/account"
+                      style={{
+                        color: "var(--text2)",
+                        fontWeight: "500",
+                      }}
+                      onMouseEnter={(e) => {
+                        e.target.style.backgroundColor = "var(--hover)";
+                        e.target.style.color = "var(--text)";
+                      }}
+                      onMouseLeave={(e) => {
+                        e.target.style.backgroundColor = "transparent";
+                        e.target.style.color = "var(--text2)";
+                      }}
+                    >
+                      Edit Profile
+                    </Dropdown.Item>
+                    <Dropdown.Item
+                      onClick={handleLogout}
+                      style={{
+                        color: "var(--text2)",
+                        fontWeight: "500",
+                      }}
+                      onMouseEnter={(e) => {
+                        e.target.style.backgroundColor = "var(--hover)";
+                        e.target.style.color = "var(--text)";
+                      }}
+                      onMouseLeave={(e) => {
+                        e.target.style.backgroundColor = "transparent";
+                        e.target.style.color = "var(--text2)";
+                      }}
+                    >
+                      Log Out
+                    </Dropdown.Item>
                   </Dropdown.Menu>
                 </Dropdown>
                 <span className="text-gray ms-2">{user.username}</span>
               </>
             ) : (
-              <Nav.Link href="/login" className="loginpg-btn">Login</Nav.Link>
+              <Nav.Link
+                href="/login"
+                style={{
+                  width: "auto",
+                  padding: "8px 20px",
+                  border: "2px solid var(--border)",
+                  backgroundColor: "transparent",
+                  color: "var(--text)",
+                  transition: "all 0.3s ease",
+                  borderRadius: "0",
+                  height: "45px",
+                  display: "flex",
+                  alignItems: "center",
+                  justifyContent: "center",
+                  fontWeight: "600",
+                  textDecoration: "none"
+                }}
+                onMouseEnter={(e) => {
+                  e.target.style.backgroundColor = "var(--hover)";
+                  e.target.style.color = "var(--hovertext)";
+                }}
+                onMouseLeave={(e) => {
+                  e.target.style.backgroundColor = "transparent";
+                  e.target.style.color = "var(--text)";
+                }}
+              >
+                Login
+              </Nav.Link>
+
             )}
           </div>
+
+
         </div>
 
       </Container>

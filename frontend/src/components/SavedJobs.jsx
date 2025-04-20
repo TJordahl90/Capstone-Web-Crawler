@@ -1,11 +1,11 @@
 import React from "react";
 import { Card } from "react-bootstrap";
-import "./FindJobs.css";
+//import "./FindJobs.css";
 
 
 const SavedJobs = () => {
     return (
-        <div className="findjobs-container"> {/* This gives the full background */}
+        <div className="findjobs-container">
             <Card className="savedjobs-card">
                 <Card.Body>
                     <Card.Title>Saved jobs</Card.Title>

@@ -2,7 +2,7 @@ import { useState, useEffect, useRef } from 'react';
 import { useNavigate, Link } from 'react-router-dom';
 import { Container, Card, Row, Col, Form, Button, Alert } from 'react-bootstrap';
 import InputField from './InputField';
-import "./AuthForm.css";
+//import "./AuthForm.css";
 import api from '../api.js';
 
 const AuthForm = ({ isLogin }) => {
@@ -40,13 +40,13 @@ const AuthForm = ({ isLogin }) => {
                 fileInputRef.current.value = null;
                 return;
             }
-            
+
             if (file.size > 5 * 1024 * 1024) {
                 setError('File size should be less than 5MB.');
                 fileInputRef.current.value = null;
                 return;
             }
-            
+
             setResumeFile(file);
             setError('');
         }
@@ -60,11 +60,11 @@ const AuthForm = ({ isLogin }) => {
             Object.keys(formData).forEach(key => {
                 formDataPayload.append(key, formData[key]);
             });
-            
+
             if (resumeFile) {
                 formDataPayload.append('resume', resumeFile);
             }
-            
+
             try {
                 await api.post("/verification/", formDataPayload, {
                     headers: {
@@ -72,17 +72,17 @@ const AuthForm = ({ isLogin }) => {
                     }
                 });
                 console.log("Verification code created for: ", formData.email);
-                navigate("/verification", {state : {formData}});
+                navigate("/verification", { state: { formData } });
             }
             catch (err) {
                 setError(err.response?.data?.message || "Something went wrong.");
             }
         }
 
-        if(isLogin){
+        if (isLogin) {
             try {
                 const response = await api.post('/login/', formData);
-            
+
                 const { skills, preferences, education, experience, ...otherAccountData } = response.data.account;
                 localStorage.setItem("user", JSON.stringify(response.data.user));
                 localStorage.setItem("account", JSON.stringify(otherAccountData));
@@ -90,29 +90,62 @@ const AuthForm = ({ isLogin }) => {
                 localStorage.setItem("preferences", JSON.stringify(preferences));
                 localStorage.setItem("education", JSON.stringify(education));
                 localStorage.setItem("experience", JSON.stringify(experience));
-        
+
                 setMessage("Login successful!");
                 setTimeout(() => navigate(isLogin ? "/account" : "/verification"), 1000);
             } catch (err) {
                 setError(err.response?.data?.message || "Something went wrong.");
             }
-        
+
             setTimeout(() => {
                 setMessage('');
                 setError('');
             }, 3000);
         };
-    }  
+    }
 
     return (
-        <Container className="auth-container" fluid>
-            <Card className="p-4">
+        <Container
+            fluid
+            style={{
+                minHeight: "100vh",
+                display: "flex",
+                alignItems: "center",
+                justifyContent: "center",
+                backgroundColor: "var(--lbg)"
+            }}
+        >
+            <Card
+                style={{
+                    width: "100%",
+                    maxWidth: "750px",
+                    backgroundColor: "var(--bg)",
+                    border: "2px solid var(--border)"
+                }}
+            >
                 <Row className="justify-content-center">
                     <Col>
                         <div className="text-start w-100">
                             <Button
                                 onClick={() => navigate("/")}
-                                className="auth-back-button"
+                                style={{
+                                    backgroundColor: "var(--text)",
+                                    color: "var(--bg)",
+                                    border: "none",
+                                    borderRadius: "8px",
+                                    padding: "8px 16px",
+                                    fontWeight: "bold",
+                                    marginBottom: "20px",
+                                    transition: "background-color 0.2s ease"
+                                }}
+                                onMouseEnter={(e) => {
+                                    e.target.style.backgroundColor = "var(--hover)";
+                                    e.target.style.color = "var(--button1)";
+                                }}
+                                onMouseLeave={(e) => {
+                                    e.target.style.backgroundColor = "var(--text)";
+                                    e.target.style.color = "var(--bg)";
+                                }}
                             >
                                 ← Back to Home
                             </Button>
@@ -150,7 +183,7 @@ const AuthForm = ({ isLogin }) => {
                                     />
                                 </>
                             )}
-                            
+
                             {isLogin && (
                                 <>
                                     <InputField label="Username" type="text" value={formData.username}
@@ -166,11 +199,28 @@ const AuthForm = ({ isLogin }) => {
                                     </div>
                                 </>
                             )}
-                            
-                            <Button type="submit" className="auth-button">
+
+                            <Button
+                                type="submit"
+                                style={{
+                                    backgroundColor: "var(--text)",
+                                    width: "100%",
+                                    color: "white", // or your default text color
+                                    transition: "all 0.3s ease"
+                                }}
+                                onMouseEnter={(e) => {
+                                    e.target.style.backgroundColor = "var(--hover)";
+                                    e.target.style.color = "var(--text2)";
+                                }}
+                                onMouseLeave={(e) => {
+                                    e.target.style.backgroundColor = "var(--text)";
+                                    e.target.style.color = "white";
+                                }}
+                            >
                                 {isLogin ? "Login" : "Register"}
                             </Button>
-                            
+
+
                             <div className="text-center mt-3">
                                 {isLogin ? (
                                     <p>Don't have an account? <Link to="/register">Register</Link></p>

@@ -10,7 +10,6 @@ import SavedJobs from "./components/SavedJobs";
 import Verification from "./components/Verification";
 import MobileNavBar from "./components/MobileNavBar";
 import PasswordReset from "./components/PasswordReset";
-import Documents from "./components/Documents";
 import "bootstrap/dist/css/bootstrap.min.css";
 
 
@@ -24,7 +23,6 @@ function App() {
 		window.innerWidth > 480 && window.innerWidth <= 770
 	);
 	const [isMobile, setIsMobile] = useState(window.innerWidth <= 480);
-
 	useEffect(() => {
 		const handleResize = () => {
 			const width = window.innerWidth;
@@ -47,19 +45,18 @@ function App() {
 							<>
 								<Routes>
 									<Route path="/find-jobs" element={<FindJobs />} />
-									<Route path="/saved-jobs" element={<SavedJobs />} />
 									<Route path="/account" element={<Account />} />
-									<Route path="/documents" element={<Documents />} />
+									<Route path="/saved-jobs" element={<SavedJobs />} />
 								</Routes>
 								{isMobile && showNavMenus && <MobileNavBar />}
 							</>
+
 						</SidePanel>
 					) : (
 						<Routes>
 							<Route path="/find-jobs" element={<FindJobs />} />
-							<Route path="/saved-jobs" element={<SavedJobs />} />
 							<Route path="/account" element={<Account />} />
-							<Route path="/documents" element={<Documents />} />
+							<Route path="/saved-jobs" element={<SavedJobs />} />
 						</Routes>
 					)}
 				</>

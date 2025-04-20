@@ -1,0 +1,251 @@
+/* header */
+.custom-navbar {
+    border-bottom: 1px solid var(--border);
+    background-color: var(--lbg);
+}
+
+.navbar-container {
+    display: flex;
+    flex-wrap: nowrap;
+    align-items: center;
+    justify-content: space-between;
+    width: 100%;
+    padding: 0 20px;
+}
+
+
+.navbar-logo,
+.navbar-icon {
+    width: auto;
+    height: 45px;
+
+}
+
+.navbar-search-container {
+    flex: 1;
+    min-width: 160px;
+    max-width: 500px;
+    margin: 0 20px;
+}
+
+.navbar-search {
+    background-color: #4d4c43 !important;
+    color: #ffffff !important;
+    border-radius: 20px !important;
+    border: none !important;
+    height: 45px;
+    padding: 0 15px;
+    box-shadow: none !important;
+}
+
+.navbar-search::placeholder {
+    color: var(--bg) !important;
+    opacity: 1 !important;
+}
+
+/* 3 line icon */
+.hamburger-icon {
+    width: auto;
+    color: var(--text);
+    height: 35px;
+    padding-right: 10px;
+    cursor: pointer;
+    transition: color 0.3s ease;
+}
+
+.hamburger-icon:hover {
+    color: var(--hovertext);
+}
+
+/* */
+.navbar-canvas {
+    background-color: var(--lbg);
+    color: white;
+    height: 100%;
+    padding: 1rem;
+}
+
+.offcanvas.offcanvas-start {
+    width: 210px !important;
+    /* Fixed size */
+    max-width: 80vw !important;
+    /* Just in case for tiny screens */
+    border-right: 2px solid var(--border);
+}
+
+/*
+.menu-item {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: 10px 10px 10px 20px;
+    font-size: 1rem;
+    cursor: pointer;
+    transition: background 0.3s ease;
+}
+
+.menu-divider-line {
+    height: 1px;
+    width: 180px;
+    margin: 10px auto;
+    transition: width 0.3s ease;
+}
+
+.menu-item:hover {
+    background-color: rgba(255, 255, 255, 0.1);
+    border-radius: 5px;
+    color: white;
+}
+
+.menu-divider {
+    margin: 15px 0;
+    font-size: 0.9rem;
+    color: #b3b3b3;
+    padding-left: 23px;
+}
+*/
+
+.navbar-logo {
+    height: 60px;
+    width: auto;
+    padding-left: 1px;
+    align-items: center;
+    transition: filter 0.3s ease;
+}
+
+.navbar-logo:hover {
+    filter: brightness(0) saturate(100%) invert(46%) sepia(21%) saturate(1549%) hue-rotate(7deg) brightness(89%) contrast(85%);
+}
+
+
+/* Longin btn */
+.loginpg-btn {
+    width: auto !important;
+    padding: 8px 20px !important;
+    border: 2px solid var(--border) !important;
+    background-color: transparent !important;
+    color: var(--text) !important;
+    transition: all 0.3s ease;
+    border-radius: 0 !important;
+    height: 45px !important;
+    display: flex !important;
+    align-items: center;
+    justify-content: center;
+    font-weight: 600;
+    text-decoration: none !important;
+}
+
+.loginpg-btn:hover {
+    background-color: var(--hover) !important;
+    color: var(--hovertext) !important;
+    border-color: var(--border) !important;
+}
+
+
+@media (max-width: 770px) {
+
+    .navbar-icon {
+        height: 45px;
+        min-width: 45px;
+    }
+
+    .navbar-search-container {
+        min-width: 100px;
+        margin: 0 20px;
+    }
+
+    .navbar-search {
+        height: 45px;
+        font-size: 16px;
+    }
+
+}
+
+/* Big Mac & Logo Container at Top of Offcanvas */
+
+.offcanvas-header-bar {
+    display: flex;
+    align-items: center;
+    justify-content: flex-start;
+}
+
+/* big mac button */
+.bigmac {
+    height: 35px;
+    width: auto;
+    cursor: pointer;
+    color: var(--text);
+    transition: color 0.3s ease;
+    padding-left: 15px;
+}
+
+.bigmac:hover {
+    color: var(--hovertext);
+}
+
+/* the small screen navigation */
+.navbar-canvas {
+    background-color: var(--lbg);
+    color: var(--text);
+    height: 100%;
+    padding: 1rem 0 1rem 0 !important;
+}
+
+.navbar-canvas .menu-item {
+    padding: 10px 10px 10px 20px;
+    color: var(--text);
+    gap: 10px;
+}
+
+.offcanvas.offcanvas-start {
+    padding-top: 0 !important;
+}
+
+
+.offcanvas-body {
+    padding-top: 12px !important;
+    margin-top: 0 !important;
+}
+
+@media (min-width: 771px) {
+    .offcanvas.offcanvas-start {
+        display: none !important;
+    }
+}
+
+@media (max-width: 480px) {
+    .offcanvas.offcanvas-start {
+        display: none !important;
+    }
+}
+
+.dropdown-toggle::after {
+    display: none !important;
+}
+
+/* Edit profile and log out button */
+.dropdown-menu-custom.align-left {
+    background-color: var(--text) !important;
+    border: 2px solid var(--border) !important;
+    color: var(--hovertext) !important;
+    left: -2 !important;
+    right: auto!important;
+    transform: none !important;
+    min-width: 125px !important; /* Control how wide it is */
+    max-width: 125px!important;    /* Optional */
+    padding: 5px 5px; 
+    border-radius: 6px;
+    font-size: 14px;
+}
+
+.dropdown-menu-custom .dropdown-item {
+    color: var(--text2) !important;
+    font-weight: 500 !important;
+}
+
+.dropdown-menu-custom .dropdown-item:hover {
+    background-color: var(--hover) !important;
+    color: var(--text) !important;
+}
+
+  

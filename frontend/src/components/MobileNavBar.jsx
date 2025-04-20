@@ -3,7 +3,7 @@ import { useNavigate, useLocation } from "react-router-dom";
 import { FaBriefcase, FaBookmark, FaChartBar, FaUser } from "react-icons/fa";
 import logo from "../assets/logo3.png";
 import logoClicked from "../assets/logo4.png";
-import "./MobileNavBar.css";
+//import "./MobileNavBar.css";
 
 const MobileNavBar = () => {
     const navigate = useNavigate();
@@ -14,43 +14,110 @@ const MobileNavBar = () => {
         navigate("/");
     };
     return (
-        <div className="mobile-nav-bar">
+        <div
+            className="mobile-nav-bar"
+            style={{
+                position: "fixed",
+                bottom: 0,
+                width: "100%",
+                height: "65px",
+                backgroundColor: "var(--lbg)",
+                borderTop: "5px solid var(--border)",
+                display: "flex",
+                justifyContent: "space-around",
+                alignItems: "center",
+                zIndex: 999
+            }}
+        >
             <button
-                className={`nav-btn ${location.pathname === "/find-jobs" ? "active" : ""}`}
                 onClick={() => navigate("/find-jobs")}
+                style={{
+                    background: "none",
+                    border: "none",
+                    display: "flex",
+                    flexDirection: "column",
+                    alignItems: "center",
+                    fontSize: "12px",
+                    color: location.pathname === "/find-jobs" ? "var(--hover)" : "var(--text)"
+                }}
             >
-                <FaBriefcase />
+                <FaBriefcase style={{ fontSize: "20px", marginBottom: "2px" }} />
                 <span>Jobs</span>
             </button>
             <button
-                className={`nav-btn ${location.pathname === "/saved-jobs" ? "active" : ""}`}
                 onClick={() => navigate("/saved-jobs")}
+                style={{
+                    background: "none",
+                    border: "none",
+                    display: "flex",
+                    flexDirection: "column",
+                    alignItems: "center",
+                    fontSize: "12px",
+                    color: location.pathname === "/saved-jobs" ? "var(--hover)" : "var(--text)"
+                }}
             >
-                <FaBookmark />
+                <FaBookmark style={{ fontSize: "20px", marginBottom: "2px" }} />
                 <span>Saved</span>
-            </button>
-            <button className="nav-logo-btn" onClick={handleLogoClick}>
-                <img
-                    src={location.pathname === "/find-jobs" ? logoClicked : logo}
-                    alt="Logo"
-                    className="nav-logo"
-                />
-            </button>
-            <button
-                className={`nav-btn`}
-                onClick={() => navigate("")}
-            >
-                <FaChartBar />
-                <span>Trends</span>
             </button>
 
             <button
-                className={`nav-btn`}
-                onClick={() => navigate("")}
+                onClick={handleLogoClick}
+                style={{
+                    position: "relative",
+                    top: "-20px",
+                    background: "var(--lbg)",
+                    border: "5px solid var(--border)",
+                    borderRadius: "50%",
+                    width: "70px",
+                    height: "70px",
+                    padding: 0,
+                    display: "flex",
+                    alignItems: "center",
+                    justifyContent: "center"
+                }}
             >
-                <FaUser />
+                <img
+                    src={location.pathname === "/find-jobs" ? logoClicked : logo}
+                    alt="Logo"
+                    style={{
+                        width: "50px",
+                        height: "50px",
+                        objectFit: "contain"
+                    }}
+                />
+            </button>
+
+            <button
+                onClick={() => navigate("")}
+                style={{
+                    background: "none",
+                    border: "none",
+                    display: "flex",
+                    flexDirection: "column",
+                    alignItems: "center",
+                    fontSize: "12px",
+                    color: location.pathname === "" ? "var(--hover)" : "var(--text)"
+                }}
+            >
+                <FaChartBar style={{ fontSize: "20px", marginBottom: "2px" }} />
+                <span>Trends</span>
+            </button>
+            <button
+                onClick={() => navigate("")}
+                style={{
+                    background: "none",
+                    border: "none",
+                    display: "flex",
+                    flexDirection: "column",
+                    alignItems: "center",
+                    fontSize: "12px",
+                    color: location.pathname === "" ? "var(--hover)" : "var(--text)"
+                }}
+            >
+                <FaUser style={{ fontSize: "20px", marginBottom: "2px" }} />
                 <span>People</span>
             </button>
+
         </div>
     );
 };

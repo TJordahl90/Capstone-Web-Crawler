@@ -22,16 +22,16 @@ const themes = {
         hover2:"#90a0d4",  // for submit button
     },
     light: {
-        background: "#f5f3dc", // main area background
-        text: "gray",     // text color
+        background: "#EEEEEE", // main area background
+        text: "#393E46",     // text color
         textonhover: "gray",  // text on hover
-        border: "gray",   // border color
+        border: "#00ADB5",   // border color
         lightbackground: "white",  // light background for sidepanel, header, phone-nav
-        hover: "black",      // button on hover
+        hover: "#00ADB5",      // button on hover
         text2:"white",      // 
         button1:"white",   // login and register button
         background2:"white",  // user edit card background
-        hover2:"#90a0d4",  // for submit button
+        hover2:"#00ADB5",  // for submit button
     }
 };
 
