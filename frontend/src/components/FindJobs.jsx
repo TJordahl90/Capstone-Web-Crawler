@@ -25,7 +25,7 @@ const FindJobs = () => {
                     setSelectedJob(response.data[0]);
                 } 
                 else {
-                  setError("No matched jobs found. Expand your account skills/preferences selections.");
+                //   setError("No matched jobs found. Expand your account skills/preferences selections.");
                 }
             } 
             catch (err) {
@@ -101,21 +101,19 @@ const FindJobs = () => {
                         <p className="mb-1">{job.company}</p>
                         <div className="d-flex align-items-center">
                             <small className="text-muted">
-                                <FaMapMarkerAlt size={12} className="me-1" />
-                                <span>{job.location}</span> {/*format location to city, state */}
+                                <FaMapMarkerAlt size={14} className="me-1" />
+                                <span>{job.location}</span>
                             </small>
                         </div>
                     </div>
                 </div>
                 <div className="d-flex justify-content-between align-items-center mt-2">
                     <small className="text-muted">
-                        <FaClock size={12} className="me-1" />
-                        <span>{job.datePosted} date not working</span>
+                        <FaClock size={14} className="me-1" />
+                        <span>{job.datePosted || "N/A"}</span>
                     </small>
                     {activeTab === "matched" && (
-                        <Badge >
-                            #% Match {/* implement match % in backend */}
-                        </Badge>
+                        <Badge>{job.matchPercent}%</Badge>
                     )}
                 </div>
             </div>
@@ -205,12 +203,20 @@ const FindJobs = () => {
                                     <div>
                                         <h2 className="mb-1">{selectedJob.title}</h2>
                                         <h5 className="text-muted mb-2">{selectedJob.company}</h5>
-                                        <div className="d-flex align-items-center text-muted">
-                                            <FaMapMarkerAlt size={14} className="me-1" />
-                                            <span className="me-3">{selectedJob.location}</span>
-                                            <FaBriefcase size={14} className="me-1" />
-                                            <span>{selectedJob.jobType || "Full-time"}</span> {/* implement job type in backend*/}
-                                        </div>
+                                            <div className="d-flex flex-column text-muted">
+                                                <div className="d-flex align-items-center mb-1">
+                                                    <FaMapMarkerAlt size={14} className="me-1" />
+                                                    <span>{selectedJob.location}</span>
+                                                </div>
+                                                <div className="d-flex align-items-center mb-1">
+                                                    <FaClock size={14} className="me-1" />
+                                                    <span>{selectedJob.datePosted || "N/A"}</span>
+                                                </div>
+                                                <div className="d-flex align-items-center">
+                                                    <FaBriefcase size={14} className="me-1" />
+                                                    <span>{"N/A"}</span> {/* need to implement job type in backend */}
+                                                </div>
+                                            </div>
                                     </div>
                                     <div className="d-flex">
                                         {/* implement saved jobs in backend*/}
