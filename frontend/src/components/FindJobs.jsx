@@ -1,6 +1,9 @@
 import React, { useState, useEffect } from "react";
 import { Container, Row, Col, Form, Nav, ListGroup, Card, Button, Badge, ProgressBar } from "react-bootstrap";
 import { FaSearch, FaBriefcase, FaMapMarkerAlt, FaClock, FaStar, FaRegStar, FaFilter } from "react-icons/fa";
+import fugetec from "../assets/FugeTechnologies.jpg";
+import texasIns from "../assets/TexasInstruments.jpg";
+import lockheed from "../assets/LockheedMartin.jpg";
 import api from "../api.js";
 import "./FindJobs.css";
 
@@ -13,6 +16,21 @@ const FindJobs = () => {
     const [selectedJob, setSelectedJob] = useState(null);
     const [activeTab, setActiveTab] = useState("matched");
     const [searchTerm, setSearchTerm] = useState("");
+
+    // Get company logo
+    const getCompanyLogo = (companyName) => {
+        if (!companyName) return null;
+        
+        const name = companyName.toLowerCase();
+        if (name.includes("fuge") || name.includes("fugetec")) {
+            return fugetec;
+        } else if (name.includes("texas") || name.includes("texas instruments")) {
+            return texasIns;
+        } else if (name.includes("lockheed") || name.includes("lockheed martin")) {
+            return lockheed;
+        }
+        return null;
+    };
 
     useEffect(() => {
         // Fetch matched jobs
@@ -87,7 +105,9 @@ const FindJobs = () => {
     const displayJobs = getJobs();
     
     // Renders each of the job listings in the left sidebar
-    const renderJobItem = (job) => {    
+    const renderJobItem = (job) => {
+        const logo = getCompanyLogo(job.company);
+        
         return (
             <div 
                 key={job.id}
@@ -96,20 +116,36 @@ const FindJobs = () => {
                 style={{ cursor: 'pointer' }}
             >
                 <div className="d-flex justify-content-between align-items-start">
-                    <div>
-                        <h5 className="mb-1">{job.title}</h5>
-                        <p className="mb-1">{job.company}</p>
-                        <div className="d-flex align-items-center">
-                            <small className="text-muted">
-                                <FaMapMarkerAlt size={14} className="me-1" />
-                                <span>{job.location}</span>
-                            </small>
+                    <div className="d-flex">
+                        {logo && (
+                            <div className="me-3">
+                                <img 
+                                    src={logo} 
+                                    alt={`${job.company} logo`} 
+                                    className="company-logo"
+                                    style={{ 
+                                        width: '50px', 
+                                        height: '50px', 
+                                        objectFit: 'contain'
+                                    }}
+                                />
+                            </div>
+                        )}
+                        <div>
+                            <h5 className="mb-1">{job.title}</h5>
+                            <p className="mb-1">{job.company}</p>
                         </div>
                     </div>
                 </div>
                 <div className="d-flex justify-content-between align-items-center mt-2">
                     <small className="text-muted">
-                        <FaClock size={14} className="me-1" />
+                        <FaMapMarkerAlt size={12} className="me-1" />
+                        <span>{job.location}</span>
+                    </small>
+                </div>
+                <div className="d-flex justify-content-between align-items-center mt-2">
+                    <small className="text-muted">
+                        <FaClock size={10} className="me-1" />
                         <span>{job.datePosted || "N/A"}</span>
                     </small>
                     {activeTab === "matched" && (
@@ -200,9 +236,23 @@ const FindJobs = () => {
 
                                 {/* Header Section */}
                                 <div className="d-flex justify-content-between align-items-start mb-3">
-                                    <div>
-                                        <h2 className="mb-1">{selectedJob.title}</h2>
-                                        <h5 className="text-muted mb-2">{selectedJob.company}</h5>
+                                    <div className="d-flex">
+                                        {getCompanyLogo(selectedJob.company) && (
+                                            <div className="me-3">
+                                                <img 
+                                                    src={getCompanyLogo(selectedJob.company)} 
+                                                    alt={`${selectedJob.company} logo`} 
+                                                    style={{ 
+                                                        width: '70px', 
+                                                        height: '70px', 
+                                                        objectFit: 'contain'
+                                                    }}
+                                                />
+                                            </div>
+                                        )}
+                                        <div>
+                                            <h2 className="mb-1">{selectedJob.title}</h2>
+                                            <h5 className="text-muted mb-2">{selectedJob.company}</h5>
                                             <div className="d-flex flex-column text-muted">
                                                 <div className="d-flex align-items-center mb-1">
                                                     <FaMapMarkerAlt size={14} className="me-1" />
@@ -217,6 +267,7 @@ const FindJobs = () => {
                                                     <span>{"N/A"}</span> {/* need to implement job type in backend */}
                                                 </div>
                                             </div>
+                                        </div>
                                     </div>
                                     <div className="d-flex">
                                         {/* implement saved jobs in backend*/}
