@@ -206,23 +206,36 @@ class CreateVerificationView(APIView):
         
         return Response({'error': 'Invalid code'}, status=status.HTTP_400_BAD_REQUEST)
 
-#@login_required # Implement this later so that only users who are logged in can use this function. For now we can leave it accessible by everyone
+@api_view(['GET'])
+@permission_classes([IsAuthenticated])
 def JobMatchingView(request):
     userAccount = Account.objects.get(user=request.user) # Get user account
     matchedJobIds = matchUsersToJobs(userAccount) # Call job matching function
     matchedJobs = JobPosting.objects.filter(id__in=matchedJobIds)
-    serializedJobs = JobPostingSerializer(matchedJobs, many=True).data
+    
+    jobList = []
+    for job in matchedJobs:
+        serializedJob = JobPostingSerializer(job).data
+        count = matchedJobIds.get(job.id, 0)
+        total = job.requirements.count() or 1
+        percentage = round(count / total * 100)
+        serializedJob['matchPercent'] = percentage
+        jobList.append(serializedJob)
 
-    return JsonResponse(serializedJobs, safe=False)
+    jobList.sort(key=lambda x: x['matchPercent'], reverse=True) # this sorts the job list by percentage
+    return Response(jobList, status=200)
 
-#@login_required # Same as above ^
+@api_view(['GET'])
+@permission_classes([IsAuthenticated])
 def JobSearchingView(request):
-    # I'm writing this assuming request.data will have the users search in it so this will probably need to be updated.
-    searchedJobsIds = searchForJobs(request.data) # Call function
+    search_term = request.GET.get('search', '').strip()
+    if not search_term:
+        return Response([], status=200)
+    
+    searchedJobsIds = searchForJobs(search_term) # Call function
     foundJobs = JobPosting.objects.filter(id__in=searchedJobsIds) # Get jobs based on returned IDs
     serializedJobs = JobPostingSerializer(foundJobs, many=True).data # Serialize job postings for frontend
-    
-    return JsonResponse(serializedJobs, safe=False) # Send jobs to frontend
+    return Response(serializedJobs, status=200) # Send jobs to frontend
 
 @api_view(['GET'])
 @permission_classes([AllowAny])
