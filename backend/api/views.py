@@ -12,12 +12,13 @@ from django.core.mail import send_mail
 from django.conf import settings
 import random
 from django.shortcuts import get_object_or_404
-from django.http import JsonResponse
+from django.http import JsonResponse, HttpResponse
 from .jobMatching import matchUsersToJobs, searchForJobs
 from rest_framework.decorators import api_view
 from rest_framework.parsers import MultiPartParser
 from .models import ResumeParser
 from .resumeParser import extract_text_from_pdf, parser
+import os
 
 @permission_classes([AllowAny])
 @ensure_csrf_cookie
@@ -245,25 +246,35 @@ def AllJobsView(request):
     serialized = JobPostingSerializer(all_jobs, many=True)
     return Response(serialized.data, status=200)
 
-class ResumeUploadView(APIView):
-    permission_classes = [AllowAny]
+class DocumentView(APIView):
+    permission_classes = [IsAuthenticated]
     parser_classes = [MultiPartParser]
 
-    def post(self, request, *args, **kwargs):
-        file = request.FILES.get("resume")
-        if not file:
+    def get(self, request):
+        user = request.user
+        account = Account.objects.get(user=user)
+        
+        if account.resume:
+            try:
+                file_path = account.resume.path
+                with open(file_path, 'rb') as f:
+                    response = HttpResponse(f.read(), content_type='application/pdf')
+                    response['Content-Disposition'] = f'inline; filename="{os.path.basename(file_path)}"'
+                    return response
+            except FileNotFoundError:
+                return Response({"error": "Resume file not found"}, status=404)
+            
+        return Response({"error": "No resume found"}, status=404)
+
+    def post(self, request):
+        user = request.user
+        account = Account.objects.get(user=user)
+        resume_file = request.FILES.get('resume')
+        
+        if not resume_file:
             return Response({"error": "No file uploaded"}, status=400)
-
-        text = extract_text_from_pdf(file)
-        parsed = parser(text)
-
-        resume = ResumeParser.objects.create(
-            name=parsed.get("name"),
-            email=parsed.get("email"),
-            phone=parsed.get("phone"),
-            skills=", ".join(parsed.get("skills")),
-            education=" | ".join(parsed.get("education")),
-            experience=" | ".join(parsed.get("experience")),
-        )
-        return Response({"id": resume.id, "status": "Resume parsed and saved"})
-    
+        
+        account.resume = resume_file
+        account.save()
+        
+        return Response({"message": "Resume uploaded successfully"}, status=201)

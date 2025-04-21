@@ -1,7 +1,7 @@
 from django.urls import path
 from .views import (
     CreateUserView, UserProfileView, CreateVerificationView, LoginView, LogoutView,
-    CsrfTokenView, AccountView, JobMatchingView, JobSearchingView, AllJobsView, ResumeUploadView
+    CsrfTokenView, AccountView, JobMatchingView, JobSearchingView, AllJobsView, DocumentView
 )
 
 urlpatterns = [
@@ -15,5 +15,5 @@ urlpatterns = [
     path('job_matching/', JobMatchingView, name="job_matching"),
     path('job_searching/', JobSearchingView, name='job_searching'),
     path("all_jobs/", AllJobsView, name='all_jobs'),
-    path("upload-resume/", ResumeUploadView.as_view(), name="upload-resume"),
+    path("documents/", DocumentView.as_view(), name="documents"),
 ]

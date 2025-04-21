@@ -303,7 +303,24 @@ const Navbar = ({ setCollapsed, collapsed }) => {
                         e.target.style.color = "var(--text2)";
                       }}
                     >
-                      Edit Profile
+                      Profile
+                    </Dropdown.Item>
+                    <Dropdown.Item
+                      href="/documents"
+                      style={{
+                        color: "var(--text2)",
+                        fontWeight: "500",
+                      }}
+                      onMouseEnter={(e) => {
+                        e.target.style.backgroundColor = "var(--hover)";
+                        e.target.style.color = "var(--text)";
+                      }}
+                      onMouseLeave={(e) => {
+                        e.target.style.backgroundColor = "transparent";
+                        e.target.style.color = "var(--text2)";
+                      }}
+                    >
+                      Documents
                     </Dropdown.Item>
                     <Dropdown.Item
                       onClick={handleLogout}
