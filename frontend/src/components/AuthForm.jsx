@@ -92,7 +92,7 @@ const AuthForm = ({ isLogin }) => {
                 localStorage.setItem("experience", JSON.stringify(experience));
 
                 setMessage("Login successful!");
-                setTimeout(() => navigate(isLogin ? "/account" : "/verification"), 1000);
+                setTimeout(() => navigate(isLogin ? "/find-jobs" : "/verification"), 1000);
             } catch (err) {
                 setError(err.response?.data?.message || "Something went wrong.");
             }

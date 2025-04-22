@@ -138,7 +138,7 @@ const LandingPage = () => {
                 color: "var(--webname)"
               }}
             >
-              NorthStar
+              Northstar
             </h1>
             <p className="lead mb-5">
               Find your dream job or the perfect candidate with our cutting-edge job matching platform
@@ -177,7 +177,7 @@ const LandingPage = () => {
       <Container className="py-5 bg-white">
         <Row className="text-center mb-5">
           <Col>
-            <h2 className="fw-bold">Why Choose DFWork?</h2>
+            <h2 className="fw-bold">Why Choose Northstar?</h2>
           </Col>
         </Row>
         <Row className="g-4">
@@ -188,7 +188,7 @@ const LandingPage = () => {
                 <i className="bi bi-search fs-3 text-primary"></i>
               </div>
               <h4 className="mb-3">Smart Job Matching</h4>
-              <p className="text-muted">Our AI-powered platform connects you with the perfect opportunities based on your skills and preferences.</p>
+              <p className="text-muted">Our job matching algorithms connect you with the perfect opportunities based on your skills and preferences.</p>
             </div>
           </Col>
           <Col md={4}>
@@ -223,7 +223,7 @@ const LandingPage = () => {
         <Row className="justify-content-center">
           <Col md={8} lg={6}>
             <h2 className="fw-bold mb-4">Ready to Start Your Journey?</h2>
-            <p className="mb-4">Join thousands of professionals who found their dream job through DFWork</p>
+            <p className="mb-4">Join thousands of professionals who found their dream job through Northstar</p>
             <Button
               size="lg"
               className="rounded-pill px-5 py-3 fw-bold"
@@ -253,7 +253,7 @@ const LandingPage = () => {
         <Container>
           <Row>
             <Col md={6}>
-              <p className="mb-0">© 2025 DFWork. All rights reserved.</p>
+              <p className="mb-0">© 2025 Northstar. All rights reserved.</p>
             </Col>
             <Col md={6} className="text-md-end">
               <a href="#" className="text-light me-3">Terms of Service</a>
