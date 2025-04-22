@@ -183,7 +183,8 @@ const LandingPage = () => {
         <Row className="g-4">
           <Col md={4}>
             <div className="p-4 text-center">
-              <div className="bg-primary bg-opacity-10 p-3 rounded-circle d-inline-flex mb-3">
+              <div className=" bg-opacity-10 p-3 rounded-circle d-inline-flex mb-3"
+                style={{ backgroundColor: "var(--border)" }}>
                 <i className="bi bi-search fs-3 text-primary"></i>
               </div>
               <h4 className="mb-3">Smart Job Matching</h4>
@@ -192,7 +193,8 @@ const LandingPage = () => {
           </Col>
           <Col md={4}>
             <div className="p-4 text-center">
-              <div className="bg-primary bg-opacity-10 p-3 rounded-circle d-inline-flex mb-3">
+              <div className="bg-opacity-10 p-3 rounded-circle d-inline-flex mb-3"
+                style={{ backgroundColor: "var(--border)" }}>
                 <i className="bi bi-graph-up fs-3 text-primary"></i>
               </div>
               <h4 className="mb-3">Career Growth</h4>
@@ -201,7 +203,8 @@ const LandingPage = () => {
           </Col>
           <Col md={4}>
             <div className="p-4 text-center">
-              <div className="bg-primary bg-opacity-10 p-3 rounded-circle d-inline-flex mb-3">
+              <div className="bg-opacity-10 p-3 rounded-circle d-inline-flex mb-3"
+                style={{ backgroundColor: "var(--border)" }}>
                 <i className="bi bi-building fs-3 text-primary"></i>
               </div>
               <h4 className="mb-3">Top Companies</h4>
@@ -212,15 +215,31 @@ const LandingPage = () => {
       </Container>
 
       {/* Call to Action Section (Added) */}
-      <Container fluid className="py-5 bg-primary text-white text-center">
+      <Container
+        fluid
+        className="py-5 text-white text-center"
+        style={{ backgroundColor: "var(--border)" }}
+      >
         <Row className="justify-content-center">
           <Col md={8} lg={6}>
             <h2 className="fw-bold mb-4">Ready to Start Your Journey?</h2>
             <p className="mb-4">Join thousands of professionals who found their dream job through DFWork</p>
             <Button
-              variant="light"
               size="lg"
-              className="rounded-pill px-5 py-3 text-primary fw-bold"
+              className="rounded-pill px-5 py-3 fw-bold"
+              style={{
+                backgroundColor: "var(--button1)",
+                color: "var(--text)",
+                border: "none",
+              }}
+              onMouseEnter={(e) => {
+                e.currentTarget.style.backgroundColor = "var(--hover)";
+                e.currentTarget.style.color = "var(--textonhover)";
+              }}
+              onMouseLeave={(e) => {
+                e.currentTarget.style.backgroundColor = "var(--button1)";
+                e.currentTarget.style.color = "var(--text)";
+              }}
               onClick={() => navigate("/register")}
             >
               Get Started Now

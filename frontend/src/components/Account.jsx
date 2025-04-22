@@ -263,16 +263,16 @@ const Account = () => {
                         <button
                             onClick={() => navigate("/find-jobs")}
                             style={{
-                                backgroundColor: "var(--hover2)",
-                                color: "var(--text)",
-                                border: "none",
+                                backgroundColor: "var(--backbg)",
+                                color: "var(--badgetxt)",
+                                border: "var(--border)",
                                 borderRadius: "8px",
                                 padding: "8px 16px",
                                 cursor: "pointer",
                                 fontWeight: "bold",
                                 transition: "background-color 0.3s ease"
                             }}
-                            onMouseEnter={(e) => e.currentTarget.style.backgroundColor = "var(--hover3)"}
+                            onMouseEnter={(e) => e.currentTarget.style.backgroundColor = "var(--hover)"}
                             onMouseLeave={(e) => e.currentTarget.style.backgroundColor = "var(--backbg)"}
                         >
                             ← Back to Jobs

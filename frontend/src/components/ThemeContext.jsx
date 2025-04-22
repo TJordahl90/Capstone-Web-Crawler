@@ -55,8 +55,8 @@ const themes = {
 
         // edit profile
         background4: "#EEEEEE", // edit profile bg
-        backbg: "#00ADB5", // back button bg color
-        backtxt: "gray", // back button text color
+        backbg: "#393E46", // back button bg color
+        backtxt: "#00ADB5", // back button text color
         cardbackground: "#EEEEEE", // each card bg color
         title: "gray", // title of each card color
         text3: "#393E46",  // text or description color
@@ -86,8 +86,8 @@ const themes = {
         hamhover: "#00ADB5",
         hover4: "#00ADB5",  // button on hover
         button2: "white",   // loginbutton
-        editbg: "#EEEEEE",  // edit bg
-        edithover: "00ADB5", // hover
+        editbg: "#393E46",  // edit bg
+        edithover: "#00ADB5", // hover
         edittxt: "white", // text when hover
 
     }

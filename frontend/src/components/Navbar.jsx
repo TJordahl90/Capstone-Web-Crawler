@@ -300,7 +300,7 @@ const Navbar = ({ setCollapsed, collapsed }) => {
                     <Dropdown.Item
                       href="/account"
                       style={{
-                        color: "var(--text2)",
+                        color: "var(--text5)",
                         fontWeight: "500",
                       }}
                       onMouseEnter={(e) => {
@@ -309,7 +309,7 @@ const Navbar = ({ setCollapsed, collapsed }) => {
                       }}
                       onMouseLeave={(e) => {
                         e.target.style.backgroundColor = "transparent";
-                        e.target.style.color = "var(--edittxt)";
+                        e.target.style.color = "var(--text5)";
                       }}
                     >
                       Profile
@@ -317,24 +317,7 @@ const Navbar = ({ setCollapsed, collapsed }) => {
                     <Dropdown.Item
                       href="/documents"
                       style={{
-                        color: "var(--text2)",
-                        fontWeight: "500",
-                      }}
-                      onMouseEnter={(e) => {
-                        e.target.style.backgroundColor = "var(--hover)";
-                        e.target.style.color = "var(--text)";
-                      }}
-                      onMouseLeave={(e) => {
-                        e.target.style.backgroundColor = "transparent";
-                        e.target.style.color = "var(--text2)";
-                      }}
-                    >
-                      Documents
-                    </Dropdown.Item>
-                    <Dropdown.Item
-                      onClick={handleLogout}
-                      style={{
-                        color: "var(--text2)",
+                        color: "var(--text5)",
                         fontWeight: "500",
                       }}
                       onMouseEnter={(e) => {
@@ -343,7 +326,24 @@ const Navbar = ({ setCollapsed, collapsed }) => {
                       }}
                       onMouseLeave={(e) => {
                         e.target.style.backgroundColor = "transparent";
+                        e.target.style.color = "var(--text5)";
+                      }}
+                    >
+                      Documents
+                    </Dropdown.Item>
+                    <Dropdown.Item
+                      onClick={handleLogout}
+                      style={{
+                        color: "var(--text5)",
+                        fontWeight: "500",
+                      }}
+                      onMouseEnter={(e) => {
+                        e.target.style.backgroundColor = "var(--edithover)";
                         e.target.style.color = "var(--edittxt)";
+                      }}
+                      onMouseLeave={(e) => {
+                        e.target.style.backgroundColor = "transparent";
+                        e.target.style.color = "var(--text5)";
                       }}
                     >
                       Log Out
