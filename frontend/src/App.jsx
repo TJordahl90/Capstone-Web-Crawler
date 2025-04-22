@@ -12,7 +12,7 @@ import MobileNavBar from "./components/MobileNavBar";
 import PasswordReset from "./components/PasswordReset";
 import Documents from "./components/Documents";
 import "bootstrap/dist/css/bootstrap.min.css";
-
+import backgroundImage from "./assets/background4.png";
 
 function App() {
 	const location = useLocation();
@@ -38,7 +38,17 @@ function App() {
 	}, []);
 
 	return (
-		<>
+		<div
+			style={{
+				backgroundImage: `url(${backgroundImage})`,
+				backgroundSize: "cover",
+				backgroundPosition: "center",
+				backgroundRepeat: "no-repeat",
+				minHeight: "100vh",
+				width: "100%",
+				position: "relative",
+			}}
+		>
 			{showNavMenus ? (
 				<>
 					<Navbar collapsed={collapsed} setCollapsed={setCollapsed} />
@@ -61,7 +71,7 @@ function App() {
 					<Route path="/password-reset" element={<PasswordReset />} />
 				</Routes>
 			)}
-		</>
+		</div>
 	);
 
 }

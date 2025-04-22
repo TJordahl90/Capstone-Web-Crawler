@@ -90,6 +90,96 @@ const themes = {
         edithover: "#00ADB5", // hover
         edittxt: "white", // text when hover
 
+    },
+    dark :{
+        // landing page
+        background: "#EEEEEE", // landing page
+        webname: "#00ADB5",     // web name color
+        aandl: "white",     // register and login box
+        text: "white",  // text : register, login, findjob
+        textonhover: "white",  // text on hover
+        border: "#00ADB5",   // border color
+        hover: "#00ADB5",      // button on hover
+        lightbackground: "white",
+        button1: "white",   // login and register button
+
+        // find job page
+        background2: "#EEEEEE",  // landing page bg
+        // main area 
+        background7: "#EEEEEE", // bg
+        text6: "#00ADB5",  // text color
+        searchbg: "white", // search bar background
+        searchtxt: "gray", // searchbar text and placeholder
+
+        tabsbg: "#EEEEEE",          // tab background
+        tabstxt: "#00ADB5",       // tab text
+        tabshover: "#00ADB5",     // tab hover color
+        tabactive: "white",     // active tab color
+        tabactivebg: "#00ADB5",   // active tab background
+
+        contentbg: "#EEEEEE",       // background of the inner content box
+        contenttxt: "#393E46",      // text inside content area
+        contentborder: "#00ADB5",   // border bottom color
+        savebtnbg: "white",           // Save Job button background
+        savebtntxt: "#00ADB5",        // Save Job button text color
+        savebtnhover: "#00ADB5",      // Save Job hover background
+        savebtnhovertxt: "white",     // Save Job hover text
+
+        applybtnbg: "#00ADB5",        // Apply Now button background
+        applybtntxt: "white",         // Apply Now button text
+        applybtnhover: "#393E46",     // Apply Now hover background
+        applybtnhovertxt: "white",    // Apply Now hover text
+
+        cardbg2: "#EEEEEE",          // background for job description cards
+        cardtext2: "#393E46",      // text color for job description
+        cardborder2: "#00ADB5",    // border color for job description card
+
+
+
+        //side panel- Wingpanel - mobile nav
+        background3: "#393E46", // sidepanel bg
+        text2: "white",  // Jobs, Saved, T,P button
+        textonhover2: "white",  // text on hover
+        hover2: "#00ADB5",      // button on hover
+        lightbackground2: "white",  // light background
+
+        // edit profile
+        background4: "#EEEEEE", // edit profile bg
+        backbg: "#393E46", // back button bg color
+        backtxt: "#00ADB5", // back button text color
+        cardbackground: "#EEEEEE", // each card bg color
+        title: "gray", // title of each card color
+        text3: "white",  // text or description color
+        pen: "#7ed2d6",  // pencil edit color
+        badgebg: "#00ADB5", // badge bg color
+        badgetxt: "white", // badge text color
+        textonhover3: "gray",  // text on hover
+        hover3: "#00ADB5",      // button on hover
+        lightbackground3: "white",  // light background
+        button3: "#393E46",   // submit button
+        submittxt: "white", // submit text
+
+        // Register and Login page
+        background5: "#EEEEEE", // bg
+        backbg1: "#00ADB5", // back button, register, login bg color
+        backtxt1: "white", // back button text color
+        hover4: "#00ADB5",  // button on hover
+        textonhover4: "white",  // text on hover
+        title1: "gray", // title
+        text4: "#393E46",  // text and placeholder color
+
+        // Nav bar
+        background6: "#EEEEEE", // bg
+        text5: "#00ADB5",  // login or username text
+        textonhover5: "gray",  // login or username text hover
+        hambuger: "white",  // hambuger button
+        hamhover: "#00ADB5",
+        hover4: "#00ADB5",  // button on hover
+        button2: "white",   // loginbutton
+        editbg: "#393E46",  // edit bg
+        edithover: "#00ADB5", // hover
+        edittxt: "white", // text when hover
+
     }
 };
 
@@ -98,7 +188,7 @@ const ThemeContext = createContext();
 export const useTheme = () => useContext(ThemeContext);
 
 export const ThemeProvider = ({ children }) => {
-    const [currentTheme, setCurrentTheme] = useState("light"); // chose theme here
+    const [currentTheme, setCurrentTheme] = useState("dark"); // chose theme here
 
     useEffect(() => {
         const root = document.documentElement;
@@ -125,6 +215,7 @@ export const ThemeProvider = ({ children }) => {
             root.style.setProperty("--text3", theme.text3);
             root.style.setProperty("--text4", theme.text4);
             root.style.setProperty("--text5", theme.text5);
+            root.style.setProperty("--text6", theme.text6);
             root.style.setProperty("--webname", theme.webname);
 
             // Hover Text Colors

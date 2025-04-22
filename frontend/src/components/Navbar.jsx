@@ -64,16 +64,16 @@ const Navbar = ({ setCollapsed, collapsed }) => {
     <NavBar
       className="nav-bar"
       style={{
-        backgroundColor: "var(--bg6)",
+        backgroundColor: "rgba(255, 255, 255, 0.03)",
         margin: 0,
         padding: 0,
         border: "none",
         boxShadow: "none",
-        borderTop: "1px solid var(--border)",
+        backdropFilter: "blur(15px)",
+        WebkitBackdropFilter: "blur(15px)",
+        zIndex: 10,
       }}
     >
-
-
       <Container
         fluid
         style={{
@@ -102,17 +102,25 @@ const Navbar = ({ setCollapsed, collapsed }) => {
               onMouseLeave={(e) => (e.currentTarget.style.color = "var(--hambuger)")}
             />
           )}
-
+          <span
+            style={{
+              fontSize: "2rem",
+              fontWeight: "bold",
+              paddingLeft: "15px",
+              color: "#00ADB5",
+            }}
+          >
+            Northstar
+          </span>
           {/* Logo  */}
           {!isMobile && (
-            <NavBar.Brand href="/find-jobs" style={{ display: "flex", alignItems: "center" }}>
+            <div style={{ position: "absolute", left: "50%", transform: "translateX(-50%)" }}>
               <img
                 src={logo}
-                alt="website logo"
+                alt="center logo"
                 style={{
-                  height: "60px",
+                  height: "50px",
                   width: "auto",
-                  paddingLeft: "1px",
                   transition: "filter 0.3s ease"
                 }}
                 onMouseEnter={(e) =>
@@ -121,8 +129,9 @@ const Navbar = ({ setCollapsed, collapsed }) => {
                 }
                 onMouseLeave={(e) => (e.currentTarget.style.filter = "none")}
               />
-            </NavBar.Brand>
+            </div>
           )}
+
         </div>
 
         {/*Wing Pannel */}
@@ -130,12 +139,14 @@ const Navbar = ({ setCollapsed, collapsed }) => {
           <Offcanvas show={show} onHide={() => setShow(false)}
             className="navbar-canvas-container"
             style={{
-              width: "200px"
+              width: "200px",
+              backgroundColor: "rgba(255, 255, 255, 0.2)", // more translucent
+              backdropFilter: "blur(10px)",                // adds frosted-glass effect
+              WebkitBackdropFilter: "blur(10px)",
             }}>
             <Offcanvas.Body
               className="wingpannel"
               style={{
-                backgroundColor: "var(--bg3)",
                 color: "var(--text2)",
                 height: "100%",
                 padding: "1rem 0"
@@ -158,9 +169,10 @@ const Navbar = ({ setCollapsed, collapsed }) => {
                     color: "var(--hambuger)",
                     transition: "color 0.3s ease",
                     paddingLeft: "15px"
+
                   }}
-                  onMouseEnter={(e) => (e.target.style.color = "var(--hambuger)")}
-                  onMouseLeave={(e) => (e.target.style.color = "var(--hamhover)")}
+                  onMouseEnter={(e) => (e.target.style.color = "var(--hamhover)")}
+                  onMouseLeave={(e) => (e.target.style.color = "var(--hambuge)")}
                 />
                 {/*Logo button */}
                 <NavBar.Brand href="/find-jobs" style={{ display: "flex", alignItems: "center" }}>
@@ -281,76 +293,86 @@ const Navbar = ({ setCollapsed, collapsed }) => {
               <>
                 <Dropdown align="end">
                   <Dropdown.Toggle as="div" className="p-2 cursor-pointer">
-                    <FaUserCircle className="navbar-icon" size={45} />
-                  </Dropdown.Toggle>
+                    <FaUserCircle
+                      className="navbar-icon"
+                      size={45}
+                      style={{
+                        color: "var(--border)",
+                      }}
+                    />
 
-                  <Dropdown.Menu
-                    style={{
-                      backgroundColor: "var(--editbg)",
-                      border: "2px solid var(--border)",
-                      color: "var(--edittxt)",
-                      transform: "none",
-                      minWidth: "125px",
-                      maxWidth: "125px",
-                      padding: "5px",
-                      borderRadius: "6px",
-                      fontSize: "14px",
-                    }}
-                  >
-                    <Dropdown.Item
-                      href="/account"
+                  </Dropdown.Toggle>
+                  <div style={{ transform: "translateX(60px)" }}>
+                    <Dropdown.Menu
                       style={{
-                        color: "var(--text5)",
-                        fontWeight: "500",
-                      }}
-                      onMouseEnter={(e) => {
-                        e.target.style.backgroundColor = "var(--edithover)";
-                        e.target.style.color = "var(--edittxt)";
-                      }}
-                      onMouseLeave={(e) => {
-                        e.target.style.backgroundColor = "transparent";
-                        e.target.style.color = "var(--text5)";
+                        backgroundColor: "var(--editbg)",
+                        border: "2px solid var(--border)",
+                        color: "var(--edittxt)",
+                        transform: "none",
+                        minWidth: "125px",
+                        maxWidth: "125px",
+                        padding: "5px",
+                        paddingLeft: "5px",
+                        borderRadius: "6px",
+                        fontSize: "14px",
+
                       }}
                     >
-                      Profile
-                    </Dropdown.Item>
-                    <Dropdown.Item
-                      href="/documents"
-                      style={{
-                        color: "var(--text5)",
-                        fontWeight: "500",
-                      }}
-                      onMouseEnter={(e) => {
-                        e.target.style.backgroundColor = "var(--edithover)";
-                        e.target.style.color = "var(--edittxt)";
-                      }}
-                      onMouseLeave={(e) => {
-                        e.target.style.backgroundColor = "transparent";
-                        e.target.style.color = "var(--text5)";
-                      }}
-                    >
-                      Documents
-                    </Dropdown.Item>
-                    <Dropdown.Item
-                      onClick={handleLogout}
-                      style={{
-                        color: "var(--text5)",
-                        fontWeight: "500",
-                      }}
-                      onMouseEnter={(e) => {
-                        e.target.style.backgroundColor = "var(--edithover)";
-                        e.target.style.color = "var(--edittxt)";
-                      }}
-                      onMouseLeave={(e) => {
-                        e.target.style.backgroundColor = "transparent";
-                        e.target.style.color = "var(--text5)";
-                      }}
-                    >
-                      Log Out
-                    </Dropdown.Item>
-                  </Dropdown.Menu>
+                      <Dropdown.Item
+                        href="/account"
+                        style={{
+                          color: "var(--text5)",
+                          fontWeight: "500",
+                        }}
+                        onMouseEnter={(e) => {
+                          e.target.style.backgroundColor = "var(--edithover)";
+                          e.target.style.color = "var(--edittxt)";
+                        }}
+                        onMouseLeave={(e) => {
+                          e.target.style.backgroundColor = "transparent";
+                          e.target.style.color = "var(--text5)";
+                        }}
+                      >
+                        Profile
+                      </Dropdown.Item>
+                      <Dropdown.Item
+                        href="/documents"
+                        style={{
+                          color: "var(--text5)",
+                          fontWeight: "500",
+                        }}
+                        onMouseEnter={(e) => {
+                          e.target.style.backgroundColor = "var(--edithover)";
+                          e.target.style.color = "var(--edittxt)";
+                        }}
+                        onMouseLeave={(e) => {
+                          e.target.style.backgroundColor = "transparent";
+                          e.target.style.color = "var(--text5)";
+                        }}
+                      >
+                        Documents
+                      </Dropdown.Item>
+                      <Dropdown.Item
+                        onClick={handleLogout}
+                        style={{
+                          color: "var(--text5)",
+                          fontWeight: "500",
+                        }}
+                        onMouseEnter={(e) => {
+                          e.target.style.backgroundColor = "var(--edithover)";
+                          e.target.style.color = "var(--edittxt)";
+                        }}
+                        onMouseLeave={(e) => {
+                          e.target.style.backgroundColor = "transparent";
+                          e.target.style.color = "var(--text5)";
+                        }}
+                      >
+                        Log Out
+                      </Dropdown.Item>
+                    </Dropdown.Menu>
+                  </div>
                 </Dropdown>
-                <span className="text-gray ms-2">{user.username}</span>
+                <span className="text-white ms-2">{user.username}</span>
               </>
             ) : (
               <Nav.Link
@@ -384,8 +406,6 @@ const Navbar = ({ setCollapsed, collapsed }) => {
 
             )}
           </div>
-
-
         </div>
 
       </Container>

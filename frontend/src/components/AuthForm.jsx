@@ -4,7 +4,7 @@ import { Container, Card, Row, Col, Form, Button, Alert } from 'react-bootstrap'
 import InputField from './InputField';
 //import "./AuthForm.css";
 import api from '../api.js';
-import backgroundImage from "../assets/background1.png";
+import backgroundImage from "../assets/background4.png";
 
 const AuthForm = ({ isLogin }) => {
     const navigate = useNavigate();
@@ -125,13 +125,13 @@ const AuthForm = ({ isLogin }) => {
                 style={{
                     width: "100%",
                     maxWidth: "750px",
-                    backgroundColor: "rgba(255, 255, 255, 0.05)",   // ultra light glassy feel
+                    backgroundColor: "rgba(255, 255, 255, 0.05)", 
                     backdropFilter: "blur(15px)",
                     WebkitBackdropFilter: "blur(15px)",
                     border: "1px solid rgba(255, 255, 255, 0.2)",
-                    borderRadius: "20px",                           // optional for smoother edges
-                    boxShadow: "0 0 20px rgba(0, 0, 0, 0.2)",        // optional soft glow
-                    padding: "30px"                                  // optional inner spacing
+                    borderRadius: "20px",                         
+                    boxShadow: "0 0 20px rgba(0, 0, 0, 0.2)",        
+                    padding: "30px"                              
                 }}
             >
 
@@ -149,7 +149,7 @@ const AuthForm = ({ isLogin }) => {
                             <Button
                                 onClick={() => navigate("/")}
                                 style={{
-                                    backgroundColor: "rgba(0, 173, 181, 0.3)", // translucent #00ADB5
+                                    backgroundColor: "rgba(0, 173, 181, 0.3)",
                                     color: "var(--text)",
                                     border: "2px solid var(--border)",
                                     borderRadius: "8px",
@@ -161,7 +161,7 @@ const AuthForm = ({ isLogin }) => {
                                     transition: "0.3s ease",
                                 }}
                                 onMouseEnter={(e) => {
-                                    e.target.style.backgroundColor = "#00ADB5"; // solid on hover
+                                    e.target.style.backgroundColor = "#00ADB5";
                                     e.target.style.color = "#fff";
                                 }}
                                 onMouseLeave={(e) => {
@@ -237,7 +237,7 @@ const AuthForm = ({ isLogin }) => {
                             <Button
                                 type="submit"
                                 style={{
-                                    backgroundColor: "rgba(0, 173, 181, 0.3)", // translucent #00ADB5
+                                    backgroundColor: "rgba(0, 173, 181, 0.3)",
                                     width: "50%",
                                     fontSize: "0.9rem",
                                     padding: "8px 16px",
@@ -251,7 +251,7 @@ const AuthForm = ({ isLogin }) => {
                                     display: "block",
                                 }}
                                 onMouseEnter={(e) => {
-                                    e.target.style.backgroundColor = "#00ADB5"; // solid hover
+                                    e.target.style.backgroundColor = "#00ADB5";
                                     e.target.style.color = "#fff";
                                 }}
                                 onMouseLeave={(e) => {
@@ -261,8 +261,6 @@ const AuthForm = ({ isLogin }) => {
                             >
                                 {isLogin ? "Login" : "Register"}
                             </Button>
-
-
 
                             <div className="text-center mt-3"
                                 style={{
