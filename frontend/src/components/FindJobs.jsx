@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
-import { Container, Row, Col, Form, Nav, ListGroup, Card, Button, Badge, ProgressBar } from "react-bootstrap";
-import { FaSearch, FaBriefcase, FaMapMarkerAlt, FaClock, FaStar, FaRegStar, FaFilter } from "react-icons/fa";
+import { Container, Row, Col, Form, Nav, ListGroup, Card, Button, Badge, ProgressBar, Spinner } from "react-bootstrap";
+import { FaSearch, FaBriefcase, FaMapMarkerAlt, FaClock, FaStar, FaRegStar, FaFilter, FaMoneyBill } from "react-icons/fa";
 import fugetec from "../assets/FugeTechnologies.jpg";
 import texasIns from "../assets/TexasInstruments.jpg";
 import lockheed from "../assets/LockheedMartin.jpg";
@@ -11,10 +11,10 @@ const FindJobs = () => {
     const [matchedJobs, setMatchedJobs] = useState([]);
     const [allJobs, setAllJobs] = useState([]);
     const [searchedJobs, setSearchedJobs] = useState([]);
-    const [savedJobs, setSavedJobs] = useState([]);
     const [selectedJob, setSelectedJob] = useState(null);
     const [activeTab, setActiveTab] = useState("matched");
     const [searchTerm, setSearchTerm] = useState("");
+    const [loading, setLoading] = useState(false);
 
     // Get company logo
     const getCompanyLogo = (companyName) => {
@@ -32,57 +32,65 @@ const FindJobs = () => {
     };
 
     useEffect(() => {
-        // Fetch matched jobs
-        const fetchMatchedJobs = async () => {
-            try {
-                const response = await api.get("/job_matching/");
-                console.log(response.data); // for testing
+        fetchJobsByTab(activeTab);
+    }, [activeTab]);
+
+    // Fetch jobs based on the active tab
+    const fetchJobsByTab = async (tab) => {
+        setLoading(true);
+        setError("");
+        
+        try {
+            let response;
+            
+            if (tab === "matched") {
+                response = await api.get("/job_matching/");
                 if (response.data && response.data.length > 0) {
                     setMatchedJobs(response.data);
                     setSelectedJob(response.data[0]);
+                } else {
+                    setMatchedJobs([]);
+                    setSelectedJob(null);
+                    setError("No matched jobs found. Expand your account skills/preferences selections.");
                 }
-                else {
-                    //   setError("No matched jobs found. Expand your account skills/preferences selections.");
-                }
-            }
-            catch (err) {
-                console.error(err);
-                setError("Error retrieving job data.");
-            }
-        };
-
-        // Fetch all jobs
-        const fetchAllJobs = async () => {
-            try {
-                const response = await api.get("/all_jobs/");
+            } else if (tab === "all") {
+                response = await api.get("/all_jobs/");
                 if (response.data && response.data.length > 0) {
                     setAllJobs(response.data);
+                    setSelectedJob(response.data[0]);
                 } else {
+                    setAllJobs([]);
+                    setSelectedJob(null);
                     setError("No jobs found. Please try again later.");
                 }
             }
-            catch (err) {
-                console.error(err);
-                setError("Error retrieving job data.");
-            }
-        };
-
-        fetchMatchedJobs();
-        fetchAllJobs();
-    }, []);
+        } catch (err) {
+            console.error(err);
+            setError("Error retrieving job data.");
+        } finally {
+            setLoading(false);
+        }
+    };
 
     const fetchSearchJobs = async () => {
+        setLoading(true);
+        setError("");
+        
         try {
             const response = await api.get(`/job_searching/?search=${searchTerm}`);
             if (response.data && response.data.length > 0) {
                 setSearchedJobs(response.data);
+                setSelectedJob(response.data[0]);
             } else {
-                setError("No jobs found. Please try again later.");
+                setSearchedJobs([]);
+                setSelectedJob(null);
+                setError("No matching jobs found. Try different search terms.");
             }
-        }
-        catch (err) {
+        } catch (err) {
             console.error(err);
             setError("Error retrieving job data.");
+        } finally {
+            setLoading(false);
         }
     };
 
@@ -178,12 +186,13 @@ const FindJobs = () => {
                 color: "var(--text6)",
                 padding: 0,
                 margin: 0,
+                maxWidth: "100%"
             }}
         >
             <Row className="m-0" style={{ height: "100%" }}>
                 {/* Left sidebar */}
                 <Col
-                    md={4}
+                    md={3}
                     className="p-0 d-flex flex-column"
                     style={{
                         height: "100%",
@@ -200,10 +209,9 @@ const FindJobs = () => {
                             e.preventDefault();
                             fetchSearchJobs();
                             setActiveTab("search");
-
                         }}>
                             <Form.Group className="mb-3 position-relative">
-                                <div className="position-absolute" style={{ left: "10px", top: "12px" }}>
+                                <div className="position-absolute" style={{ left: "10px", top: "50%", transform: "translateY(-50%)" }}>
                                     <FaSearch className="text-muted" />
                                 </div>
                                 <Form.Control
@@ -285,15 +293,19 @@ const FindJobs = () => {
                                 </Nav.Link>
                             </Nav.Item>
                         </Nav>
-
-
                     </div>
 
                     {/* Job listings */}
                     <div className="overflow-auto flex-grow-1">
                         {error && <div className="p-3 text-danger">{error}</div>}
 
-                        {displayJobs.length === 0 ? (
+                        {loading ? (
+                            <div className="d-flex justify-content-center align-items-center py-5">
+                                <Spinner animation="border" role="status">
+                                    <span className="visually-hidden">Loading...</span>
+                                </Spinner>
+                            </div>
+                        ) : displayJobs.length === 0 ? (
                             <div className="p-3 text-muted">No jobs found</div>
                         ) : (
                             <div className="job-list">
@@ -313,10 +325,15 @@ const FindJobs = () => {
                         color: "var(--text6)"
                     }}
                 >
-                    {selectedJob ? (
+                    {loading ? (
+                        <div className="h-100 d-flex align-items-center justify-content-center">
+                            <Spinner animation="border" role="status">
+                                <span className="visually-hidden">Loading...</span>
+                            </Spinner>
+                        </div>
+                    ) : selectedJob ? (
                         <div className="h-100 overflow-auto" style={{ backgroundColor: "var(--contentbg)", color: "var(--contenttxt)" }}>
                             <div className="p-4 border-bottom" style={{ borderBottom: "1px solid var(--contentborder)" }}>
-
 
                                 {/* Header Section */}
                                 <div className="d-flex justify-content-between align-items-start mb-3">
@@ -361,8 +378,8 @@ const FindJobs = () => {
                                                     <span>{selectedJob.datePosted || "N/A"}</span>
                                                 </div>
                                                 <div className="d-flex align-items-center">
-                                                    <FaBriefcase size={14} className="me-1" />
-                                                    <span>{"N/A"}</span> {/* need to implement job type in backend */}
+                                                    <FaMoneyBill size={14} className="me-1" />
+                                                    <span>{selectedJob.salary || "Not Posted"}</span>
                                                 </div>
                                             </div>
                                         </div>
@@ -453,7 +470,6 @@ const FindJobs = () => {
                                         )}
                                     </Card.Body>
                                 </Card>
-
                             </div>
                         </div>
                     ) : (
@@ -469,6 +485,5 @@ const FindJobs = () => {
         </Container>
     );
 };
-
 
 export default FindJobs;
