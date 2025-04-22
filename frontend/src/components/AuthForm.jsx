@@ -4,6 +4,7 @@ import { Container, Card, Row, Col, Form, Button, Alert } from 'react-bootstrap'
 import InputField from './InputField';
 //import "./AuthForm.css";
 import api from '../api.js';
+import backgroundImage from "../assets/background1.png";
 
 const AuthForm = ({ isLogin }) => {
     const navigate = useNavigate();
@@ -112,17 +113,28 @@ const AuthForm = ({ isLogin }) => {
                 display: "flex",
                 alignItems: "center",
                 justifyContent: "center",
-                backgroundColor: "var(--bg5)"
+                backgroundImage: `url(${backgroundImage})`,
+                backgroundSize: "cover",
+                backgroundPosition: "center",
+                backgroundRepeat: "no-repeat",
+                overflow: "hidden",
             }}
         >
+
             <Card
                 style={{
                     width: "100%",
                     maxWidth: "750px",
-                    backgroundColor: "var(--bg5)",
-                    border: "2px solid var(--border)"
+                    backgroundColor: "rgba(255, 255, 255, 0.05)",   // ultra light glassy feel
+                    backdropFilter: "blur(15px)",
+                    WebkitBackdropFilter: "blur(15px)",
+                    border: "1px solid rgba(255, 255, 255, 0.2)",
+                    borderRadius: "20px",                           // optional for smoother edges
+                    boxShadow: "0 0 20px rgba(0, 0, 0, 0.2)",        // optional soft glow
+                    padding: "30px"                                  // optional inner spacing
                 }}
             >
+
                 <Row className="justify-content-center">
                     <Col>
                         <div
@@ -137,32 +149,34 @@ const AuthForm = ({ isLogin }) => {
                             <Button
                                 onClick={() => navigate("/")}
                                 style={{
-                                    backgroundColor: "var(--backbg1)",
-                                    color: "var(--backtxt1)",
-                                    border: "none",
+                                    backgroundColor: "rgba(0, 173, 181, 0.3)", // translucent #00ADB5
+                                    color: "var(--text)",
+                                    border: "2px solid var(--border)",
                                     borderRadius: "8px",
-                                    paddingTop: "8px 16px",
+                                    padding: "8px 16px",
                                     fontWeight: "bold",
                                     marginBottom: "20px",
-                                    transition: "0.2s ease"
+                                    backdropFilter: "blur(6px)",
+                                    WebkitBackdropFilter: "blur(6px)",
+                                    transition: "0.3s ease",
                                 }}
                                 onMouseEnter={(e) => {
-                                    e.target.style.backgroundColor = "var(--hover4)";
-                                    e.target.style.color = "var(--textonhover4)";
+                                    e.target.style.backgroundColor = "#00ADB5"; // solid on hover
+                                    e.target.style.color = "#fff";
                                 }}
                                 onMouseLeave={(e) => {
-                                    e.target.style.backgroundColor = "var(--backbg1)";
-                                    e.target.style.color = "var(--backtxt1)";
+                                    e.target.style.backgroundColor = "rgba(0, 173, 181, 0.3)";
+                                    e.target.style.color = "var(--text)";
                                 }}
-
                             >
                                 ← Back to Home
                             </Button>
+
                         </div>
                         <h1 className="text-center mb-4"
-                         style={{
-                            color: "var(--title1)",
-                        }}
+                            style={{
+                                color: "var(--border)",
+                            }}
                         >{isLogin ? "Login" : "Register"}</h1>
                         {message && <Alert variant="success">{message}</Alert>}
                         {error && <Alert variant="danger">{error}</Alert>}
@@ -223,33 +237,37 @@ const AuthForm = ({ isLogin }) => {
                             <Button
                                 type="submit"
                                 style={{
-                                    backgroundColor: "var(--backbg1)",
+                                    backgroundColor: "rgba(0, 173, 181, 0.3)", // translucent #00ADB5
                                     width: "50%",
                                     fontSize: "0.9rem",
                                     padding: "8px 16px",
-                                    color: "var(--backtxt1)",
+                                    color: "var(--text)",
                                     borderRadius: "8px",
+                                    border: "2px solid var(--border)",
+                                    backdropFilter: "blur(6px)",
+                                    WebkitBackdropFilter: "blur(6px)",
                                     transition: "all 0.3s ease",
                                     margin: "0 auto",
-                                    display: "block"
+                                    display: "block",
                                 }}
                                 onMouseEnter={(e) => {
-                                    e.target.style.backgroundColor = "var(--hover4)";
-                                    e.target.style.color = "var(--textonhover4)";
+                                    e.target.style.backgroundColor = "#00ADB5"; // solid hover
+                                    e.target.style.color = "#fff";
                                 }}
                                 onMouseLeave={(e) => {
-                                    e.target.style.backgroundColor = "var(--backbg1)";
-                                    e.target.style.color = "var(--backtxt1)";
+                                    e.target.style.backgroundColor = "rgba(0, 173, 181, 0.3)";
+                                    e.target.style.color = "var(--text)";
                                 }}
                             >
                                 {isLogin ? "Login" : "Register"}
                             </Button>
 
 
+
                             <div className="text-center mt-3"
-                             style={{
-                                color: "var(--text1)",                         
-                            }}
+                                style={{
+                                    color: "var(--text1)",
+                                }}
                             >
                                 {isLogin ? (
                                     <p>Don't have an account? <Link to="/register">Register</Link></p>

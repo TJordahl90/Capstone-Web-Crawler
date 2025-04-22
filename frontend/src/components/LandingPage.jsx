@@ -2,6 +2,7 @@ import React from "react";
 import { useNavigate } from "react-router-dom";
 import { Container, Row, Col, Button, Navbar, Nav, Image } from "react-bootstrap";
 import logo from "../assets/logo3.png";
+import backgroundImage from "../assets/background1.png";
 import "bootstrap/dist/css/bootstrap.min.css";
 
 const LandingPage = () => {
@@ -13,12 +14,15 @@ const LandingPage = () => {
     <div
       className="landing-page"
       style={{
-        height: "100vh", // set fixed height to allow scroll INSIDE
+        height: "100vh",
         width: "100%",
-        backgroundColor: "var(--bg)",
+        backgroundImage: `url(${backgroundImage})`,
+        backgroundSize: "cover",
+        backgroundPosition: "center",
+        backgroundRepeat: "no-repeat",
         color: "var(--text)",
         overflowX: "hidden",
-        overflowY: "auto", // enable vertical scrolling
+        overflowY: "auto",
         position: "relative",
       }}
     >
@@ -63,69 +67,77 @@ const LandingPage = () => {
           display: "flex",
           justifyContent: "space-between",
           alignItems: "center",
-          background: "var(--aandl)",
+          backgroundColor: "rgba(255, 255, 255, 0.03)",
+          backdropFilter: "blur(20px)",
+          WebkitBackdropFilter: "blur(20px)",
           borderRadius: "24px",
-          zIndex: 20
+          border: "1px solid rgba(255, 255, 255, 0.1)",
+          zIndex: 20,
+          padding: "4px",
+          boxShadow: "0 0 12px rgba(0, 0, 0, 0.1)",
         }}
       >
-        {/*Register and login button */}
+
+        {/* Register Button */}
         <button
           className="register-btn"
           onClick={() => navigate("/register")}
           style={{
             width: "45%",
             height: "100%",
-            border: "none",
             borderRadius: "24px",
             fontSize: "1rem",
             fontWeight: "bold",
             cursor: "pointer",
             color: "var(--text)",
-            transition: "0.3s",
-            opacity: 0.8,
-            background: "var(--button1)"
+            backgroundColor: "rgba(0, 173, 181, 0.3)",
+            border: "2px solid var(--border)",
+            backdropFilter: "blur(6px)",
+            transition: "0.3s ease",
           }}
           onMouseEnter={(e) => {
-            e.currentTarget.style.background = "var(--hover)";
-            e.currentTarget.style.color = "var(--textonhover)";
+            e.currentTarget.style.backgroundColor = "#00ADB5";
+            e.currentTarget.style.color = "#fff";
           }}
           onMouseLeave={(e) => {
-            e.currentTarget.style.background = "var(--button1)";
+            e.currentTarget.style.backgroundColor = "rgba(0, 173, 181, 0.3)";
             e.currentTarget.style.color = "var(--text)";
           }}
         >
           Register
         </button>
 
+        {/* Login Button */}
         <button
           className="login-btn"
           onClick={() => navigate("/login")}
           style={{
             width: "45%",
             height: "100%",
-            border: "none",
             borderRadius: "24px",
             fontSize: "1rem",
             fontWeight: "bold",
             cursor: "pointer",
             color: "var(--text)",
-            transition: "0.3s",
-            opacity: 0.8,
-            background: "var(--button1)"
+            backgroundColor: "rgba(0, 173, 181, 0.3)",
+            border: "2px solid var(--border)",
+            backdropFilter: "blur(6px)",
+            transition: "0.3s ease",
           }}
           onMouseEnter={(e) => {
-            e.currentTarget.style.background = "var(--hover)";
-            e.currentTarget.style.color = "var(--textonhover)";
+            e.currentTarget.style.backgroundColor = "#00ADB5";
+            e.currentTarget.style.color = "#fff";
           }}
           onMouseLeave={(e) => {
-            e.currentTarget.style.background = "var(--button1)";
+            e.currentTarget.style.backgroundColor = "rgba(0, 173, 181, 0.3)";
             e.currentTarget.style.color = "var(--text)";
           }}
         >
           Login
         </button>
       </div>
-      <Container className="d-flex flex-column justify-content-center align-items-center text-center py-3" style={{ minHeight: "80vh" }}>
+
+      <Container className="d-flex flex-column justify-content-center align-items-center text-center py-5" style={{ minHeight: "100vh" }}>
         <Row className="justify-content-center">
           <Col md={8} lg={6}>
             {/*Title Web */}
@@ -140,7 +152,7 @@ const LandingPage = () => {
             >
               Northstar
             </h1>
-            <p className="lead mb-5">
+            <p className="lead mb-5 text-white">
               Find your dream job or the perfect candidate with our cutting-edge job matching platform
             </p>
             {/*Find Job button */}
@@ -148,34 +160,46 @@ const LandingPage = () => {
               className="find-jobs-btn"
               onClick={() => navigate("/find-jobs")}
               style={{
-                backgroundColor: "var(--button1)",
+                backgroundColor: "rgba(0, 173, 181, 0.3)",
                 color: "var(--text)",
                 fontSize: "18px",
                 fontWeight: "bold",
-                border: "none",
+                border: "2px solid var(--border)",
                 borderRadius: "25px",
                 padding: "12px 30px",
                 cursor: "pointer",
-                transition: "0.3s"
+                transition: "0.3s ease",
+                backdropFilter: "blur(6px)",
+                WebkitBackdropFilter: "blur(6px)",
               }}
               onMouseEnter={(e) => {
-                e.currentTarget.style.backgroundColor = "var(--hover)";
-                e.currentTarget.style.color = "var(--textonhover)";
+                e.currentTarget.style.backgroundColor = "#00ADB5";
+                e.currentTarget.style.color = "#fff";
               }}
               onMouseLeave={(e) => {
-                e.currentTarget.style.backgroundColor = "var(--button1)";
+                e.currentTarget.style.backgroundColor = "rgba(0, 173, 181, 0.3)";
                 e.currentTarget.style.color = "var(--text)";
               }}
             >
               Find Jobs
             </button>
+
           </Col>
         </Row>
       </Container>
       {/* Features Section (Added) */}
 
-      <Container className="py-5 bg-white">
-        <Row className="text-center mb-5">
+      <Container
+        className="py-5"
+        style={{
+          backgroundColor: "rgba(255, 255, 255, 0.2)", // more translucent
+          backdropFilter: "blur(10px)",                // adds frosted-glass effect
+          WebkitBackdropFilter: "blur(10px)",          // Safari support
+          borderTopLeftRadius: "24px",
+          borderTopRightRadius: "24px",
+        }}
+      >
+        <Row className="text-center mb-5 text-white">
           <Col>
             <h2 className="fw-bold">Why Choose Northstar?</h2>
           </Col>
@@ -187,8 +211,9 @@ const LandingPage = () => {
                 style={{ backgroundColor: "var(--border)" }}>
                 <i className="bi bi-search fs-3 text-primary"></i>
               </div>
-              <h4 className="mb-3">Smart Job Matching</h4>
-              <p className="text-muted">Our job matching algorithms connect you with the perfect opportunities based on your skills and preferences.</p>
+              <h4 className="mb-3"
+                style={{ color: "#00ADB5" }}>Smart Job Matching</h4>
+              <p className="text-gray">Our job matching algorithms connect you with the perfect opportunities based on your skills and preferences.</p>
             </div>
           </Col>
           <Col md={4}>
@@ -197,8 +222,10 @@ const LandingPage = () => {
                 style={{ backgroundColor: "var(--border)" }}>
                 <i className="bi bi-graph-up fs-3 text-primary"></i>
               </div>
-              <h4 className="mb-3">Career Growth</h4>
-              <p className="text-muted">Access resources and tools designed to help you advance in your professional journey.</p>
+              <h4 className="mb-3"
+                style={{ color: "#00ADB5" }}>Career Growth</h4>
+              <p
+                className="text-gray">Access resources and tools designed to help you advance in your professional journey.</p>
             </div>
           </Col>
           <Col md={4}>
@@ -207,8 +234,9 @@ const LandingPage = () => {
                 style={{ backgroundColor: "var(--border)" }}>
                 <i className="bi bi-building fs-3 text-primary"></i>
               </div>
-              <h4 className="mb-3">Top Companies</h4>
-              <p className="text-muted">Connect with industry-leading companies looking for talent like yours.</p>
+              <h4 className="mb-3"
+                style={{ color: "#00ADB5" }}>Top Companies</h4>
+              <p className="text-gray">Connect with industry-leading companies looking for talent like yours.</p>
             </div>
           </Col>
         </Row>
@@ -218,32 +246,43 @@ const LandingPage = () => {
       <Container
         fluid
         className="py-5 text-white text-center"
-        style={{ backgroundColor: "var(--border)" }}
+        style={{
+          backgroundColor: "rgba( var(--border), 0.2 )", 
+          backdropFilter: "blur(10px)",
+          WebkitBackdropFilter: "blur(10px)",
+          borderRadius: "24px",
+          border: "1px solid rgba(255, 255, 255, 0.2)",
+        }}
       >
         <Row className="justify-content-center">
           <Col md={8} lg={6}>
             <h2 className="fw-bold mb-4">Ready to Start Your Journey?</h2>
-            <p className="mb-4">Join thousands of professionals who found their dream job through Northstar</p>
+            <p className="mb-4">
+              Join thousands of professionals who found their dream job through Northstar
+            </p>
             <Button
               size="lg"
               className="rounded-pill px-5 py-3 fw-bold"
               style={{
-                backgroundColor: "var(--button1)",
-                color: "var(--text)",
-                border: "none",
+                backgroundColor: "rgba(0, 173, 181, 0.3)",
+                color: "white",
+                border: "2px solid var(--border)",
+                backdropFilter: "blur(6px)",
+                transition: "0.3s ease",
               }}
               onMouseEnter={(e) => {
-                e.currentTarget.style.backgroundColor = "var(--hover)";
-                e.currentTarget.style.color = "var(--textonhover)";
+                e.currentTarget.style.backgroundColor = "#00ADB5";
+                e.currentTarget.style.color = "#fff";
               }}
               onMouseLeave={(e) => {
-                e.currentTarget.style.backgroundColor = "var(--button1)";
-                e.currentTarget.style.color = "var(--text)";
+                e.currentTarget.style.backgroundColor = "rgba(0, 173, 181, 0.3)";
+                e.currentTarget.style.color = "white";
               }}
               onClick={() => navigate("/register")}
             >
               Get Started Now
             </Button>
+
           </Col>
         </Row>
       </Container>

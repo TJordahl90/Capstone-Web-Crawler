@@ -6,7 +6,7 @@ const themes = {
         background: "#EEEEEE", // landing page
         webname: "#00ADB5",     // web name color
         aandl: "white",     // register and login box
-        text: "gray",  // text : register, login, findjob
+        text: "white",  // text : register, login, findjob
         textonhover: "white",  // text on hover
         border: "#00ADB5",   // border color
         hover: "#00ADB5",      // button on hover
