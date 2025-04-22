@@ -2,7 +2,7 @@ import React, { useState } from "react";
 import { useNavigate, useLocation } from "react-router-dom";
 import { FaBriefcase, FaBookmark, FaChartBar, FaUser } from "react-icons/fa";
 import logo from "../assets/logo3.png";
-import logoClicked from "../assets/logo4.png";
+import logoClicked from "../assets/logo3.png";
 //import "./MobileNavBar.css";
 
 const MobileNavBar = () => {

@@ -138,7 +138,7 @@ const LandingPage = () => {
                 color: "var(--webname)"
               }}
             >
-              DFWork
+              NorthStar
             </h1>
             <p className="lead mb-5">
               Find your dream job or the perfect candidate with our cutting-edge job matching platform

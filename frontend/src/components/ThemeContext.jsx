@@ -4,10 +4,10 @@ const themes = {
     light: {
         // landing page
         background: "#EEEEEE", // landing page
-        webname: "#393E46",     // web name color
+        webname: "#00ADB5",     // web name color
         aandl: "white",     // register and login box
         text: "gray",  // text : register, login, findjob
-        textonhover: "gray",  // text on hover
+        textonhover: "white",  // text on hover
         border: "#00ADB5",   // border color
         hover: "#00ADB5",      // button on hover
         lightbackground: "white",
@@ -72,9 +72,9 @@ const themes = {
         // Register and Login page
         background5: "#EEEEEE", // bg
         backbg1: "#00ADB5", // back button, register, login bg color
-        backtxt1: "gray", // back button text color
+        backtxt1: "white", // back button text color
         hover4: "#00ADB5",  // button on hover
-        textonhover4: "gray",  // text on hover
+        textonhover4: "white",  // text on hover
         title1: "gray", // title
         text4: "#393E46",  // text and placeholder color
 
@@ -82,7 +82,7 @@ const themes = {
         background6: "#EEEEEE", // bg
         text5: "#00ADB5",  // login or username text
         textonhover5: "gray",  // login or username text hover
-        hambuger: "393E46",  // hambuger button
+        hambuger: "#393E46",  // hambuger button
         hamhover: "#00ADB5",
         hover4: "#00ADB5",  // button on hover
         button2: "white",   // loginbutton
