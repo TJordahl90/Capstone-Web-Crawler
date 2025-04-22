@@ -63,11 +63,16 @@ const Navbar = ({ setCollapsed, collapsed }) => {
     // Top Nav bar container
     <NavBar
       className="nav-bar"
-      expand="lg"
       style={{
-        backgroundColor: "var(--lbg)",
-        paddingBottom: "0px"
-      }}>
+        backgroundColor: "var(--bg6)",
+        margin: 0,
+        padding: 0,
+        border: "none",
+        boxShadow: "none",
+        borderTop: "1px solid var(--border)",
+      }}
+    >
+
 
       <Container
         fluid
@@ -90,11 +95,11 @@ const Navbar = ({ setCollapsed, collapsed }) => {
                 height: "35px",
                 width: "auto",
                 cursor: "pointer",
-                color: "var(--text)",
+                color: "var(--hambuger)",
                 transition: "color 0.3s ease"
               }}
-              onMouseEnter={(e) => (e.currentTarget.style.color = "var(--hovertext)")}
-              onMouseLeave={(e) => (e.currentTarget.style.color = "var(--text)")}
+              onMouseEnter={(e) => (e.currentTarget.style.color = "var(--hamhover)")}
+              onMouseLeave={(e) => (e.currentTarget.style.color = "var(--hambuger)")}
             />
           )}
 
@@ -122,12 +127,16 @@ const Navbar = ({ setCollapsed, collapsed }) => {
 
         {/*Wing Pannel */}
         {!isMobile && (
-          <Offcanvas show={show} onHide={() => setShow(false)} className="navbar-canvas-container" placement="start">
+          <Offcanvas show={show} onHide={() => setShow(false)}
+            className="navbar-canvas-container"
+            style={{
+              width: "200px"
+            }}>
             <Offcanvas.Body
               className="wingpannel"
               style={{
-                backgroundColor: "var(--lbg)",
-                color: "var(--text)",
+                backgroundColor: "var(--bg3)",
+                color: "var(--text2)",
                 height: "100%",
                 padding: "1rem 0"
               }}
@@ -146,12 +155,12 @@ const Navbar = ({ setCollapsed, collapsed }) => {
                     height: "35px",
                     width: "auto",
                     cursor: "pointer",
-                    color: "var(--text)",
+                    color: "var(--hambuger)",
                     transition: "color 0.3s ease",
                     paddingLeft: "15px"
                   }}
-                  onMouseEnter={(e) => (e.target.style.color = "var(--hovertext)")}
-                  onMouseLeave={(e) => (e.target.style.color = "var(--text)")}
+                  onMouseEnter={(e) => (e.target.style.color = "var(--hambuger)")}
+                  onMouseLeave={(e) => (e.target.style.color = "var(--hamhover)")}
                 />
                 {/*Logo button */}
                 <NavBar.Brand href="/find-jobs" style={{ display: "flex", alignItems: "center" }}>
@@ -173,7 +182,7 @@ const Navbar = ({ setCollapsed, collapsed }) => {
                 </NavBar.Brand>
               </div>
 
-              {/* All button */}
+              {/* All other button */}
               <a
                 href="/find-jobs"
                 onMouseEnter={() => setHoveredItem("jobs")}
@@ -186,8 +195,8 @@ const Navbar = ({ setCollapsed, collapsed }) => {
                   fontSize: "1rem",
                   cursor: "pointer",
                   transition: "background 0.3s ease",
-                  color: hoveredItem === "jobs" ? "var(--hovertext)" : "var(--text-color)",
-                  backgroundColor: hoveredItem === "jobs" ? "var(--hover)" : "transparent",
+                  color: hoveredItem === "jobs" ? "var(--textonhover2)" : "var(--text2)",
+                  backgroundColor: hoveredItem === "jobs" ? "var(--hover2)" : "transparent",
                   borderRadius: hoveredItem === "jobs" ? "5px" : "0",
                   maxWidth: "40vw",
                 }}
@@ -206,8 +215,8 @@ const Navbar = ({ setCollapsed, collapsed }) => {
                   fontSize: "1rem",
                   cursor: "pointer",
                   transition: "background 0.3s ease",
-                  color: hoveredItem === "saved" ? "var(--hovertext)" : "var(--text-color)",
-                  backgroundColor: hoveredItem === "saved" ? "var(--hover)" : "transparent",
+                  color: hoveredItem === "saved" ? "var(--textonhover2)" : "var(--text2)",
+                  backgroundColor: hoveredItem === "saved" ? "var(--hover2)" : "transparent",
                   borderRadius: hoveredItem === "saved" ? "5px" : "0",
                   maxWidth: "40vw",
                 }}>
@@ -234,8 +243,8 @@ const Navbar = ({ setCollapsed, collapsed }) => {
                   fontSize: "1rem",
                   cursor: "pointer",
                   transition: "background 0.3s ease",
-                  color: hoveredItem === "trends" ? "var(--hovertext)" : "var(--text-color)",
-                  backgroundColor: hoveredItem === "trends" ? "var(--hover)" : "transparent",
+                  color: hoveredItem === "trends" ? "var(--textonhover2)" : "var(--text2)",
+                  backgroundColor: hoveredItem === "trends" ? "var(--hover2)" : "transparent",
                   borderRadius: hoveredItem === "trends" ? "5px" : "0",
                   maxWidth: "40vw",
                 }}>
@@ -253,8 +262,8 @@ const Navbar = ({ setCollapsed, collapsed }) => {
                   fontSize: "1rem",
                   cursor: "pointer",
                   transition: "background 0.3s ease",
-                  color: hoveredItem === "people" ? "var(--hovertext)" : "var(--text-color)",
-                  backgroundColor: hoveredItem === "people" ? "var(--hover)" : "transparent",
+                  color: hoveredItem === "people" ? "var(--textonhover2)" : "var(--text2)",
+                  backgroundColor: hoveredItem === "people" ? "var(--hover2)" : "transparent",
                   borderRadius: hoveredItem === "people" ? "5px" : "0",
                   maxWidth: "40vw",
                 }}>
@@ -265,7 +274,7 @@ const Navbar = ({ setCollapsed, collapsed }) => {
           </Offcanvas>
         )}
 
-        {/* Top right side */}
+        {/* Top right side - Login, avatar, username*/}
         <div className="navbar-right">
           <div className="d-flex align-items-center">
             {user ? (
@@ -277,9 +286,9 @@ const Navbar = ({ setCollapsed, collapsed }) => {
 
                   <Dropdown.Menu
                     style={{
-                      backgroundColor: "var(--text)",
+                      backgroundColor: "var(--editbg)",
                       border: "2px solid var(--border)",
-                      color: "var(--hovertext)",
+                      color: "var(--edittxt)",
                       transform: "none",
                       minWidth: "125px",
                       maxWidth: "125px",
@@ -295,12 +304,12 @@ const Navbar = ({ setCollapsed, collapsed }) => {
                         fontWeight: "500",
                       }}
                       onMouseEnter={(e) => {
-                        e.target.style.backgroundColor = "var(--hover)";
-                        e.target.style.color = "var(--text)";
+                        e.target.style.backgroundColor = "var(--edithover)";
+                        e.target.style.color = "var(--edittxt)";
                       }}
                       onMouseLeave={(e) => {
                         e.target.style.backgroundColor = "transparent";
-                        e.target.style.color = "var(--text2)";
+                        e.target.style.color = "var(--edittxt)";
                       }}
                     >
                       Profile
@@ -329,12 +338,12 @@ const Navbar = ({ setCollapsed, collapsed }) => {
                         fontWeight: "500",
                       }}
                       onMouseEnter={(e) => {
-                        e.target.style.backgroundColor = "var(--hover)";
-                        e.target.style.color = "var(--text)";
+                        e.target.style.backgroundColor = "var(--edithover)";
+                        e.target.style.color = "var(--edittxt)";
                       }}
                       onMouseLeave={(e) => {
                         e.target.style.backgroundColor = "transparent";
-                        e.target.style.color = "var(--text2)";
+                        e.target.style.color = "var(--edittxt)";
                       }}
                     >
                       Log Out
@@ -351,7 +360,7 @@ const Navbar = ({ setCollapsed, collapsed }) => {
                   padding: "8px 20px",
                   border: "2px solid var(--border)",
                   backgroundColor: "transparent",
-                  color: "var(--text)",
+                  color: "var(--text5)",
                   transition: "all 0.3s ease",
                   borderRadius: "0",
                   height: "45px",
@@ -362,12 +371,12 @@ const Navbar = ({ setCollapsed, collapsed }) => {
                   textDecoration: "none"
                 }}
                 onMouseEnter={(e) => {
-                  e.target.style.backgroundColor = "var(--hover)";
-                  e.target.style.color = "var(--hovertext)";
+                  e.target.style.backgroundColor = "var(--hover4)";
+                  e.target.style.color = "var(--textonhover5)";
                 }}
                 onMouseLeave={(e) => {
                   e.target.style.backgroundColor = "transparent";
-                  e.target.style.color = "var(--text)";
+                  e.target.style.color = "var(--text5)";
                 }}
               >
                 Login

@@ -12,10 +12,7 @@ const SidePanel = ({ children, collapsed }) => {
             className="Bottom Page"
             style={{
                 display: "flex",
-                height: "100vh",
-                backgroundColor: "var(--lbg)",
-                borderTop: "1px solid var(--border)",
-                paddingTop: "2px"
+                backgroundColor: "var(--bg2)",
             }}
         >
             <div
@@ -23,16 +20,14 @@ const SidePanel = ({ children, collapsed }) => {
                 style={{
                     width: collapsed ? "60px" : "200px",
                     height: "100vh",
-                    color: "var(--hovertext)",
+                    color: "var(--text2)",
                     position: "fixed",
                     left: 0,
-                    top: "81px",
                     transition: "transform 0.3s ease, width 0.3s ease",
                     borderRight: "1px solid var(--border)",
                     borderTop: "1px solid var(--border)",
-                    backgroundColor: "var(--lbg)",
+                    backgroundColor: "var(--bg3)",
                     display: window.innerWidth <= 770 ? "none" : "block",
-                    paddingTop: "4px"
                 }}
             >
                 <a
@@ -135,12 +130,14 @@ const SidePanel = ({ children, collapsed }) => {
                     overflowX: "hidden",
                     width: window.innerWidth <= 770 ? "100vw" : (collapsed ? "calc(100vw - 60px)" : "calc(100vw - 200px)"),
                     transition: "margin-left 0.3s ease, width 0.3s ease",
-                    overflowY: "auto",
-                    paddingBottom: "81px"
+                    borderTop: "1px solid var(--border)",
+                    background: "var(--bg2)",
+                    height: "calc(100vh - 81px)",
                 }}
             >
-                {children}
+                <div style={{ overflowY: "auto", flex: 1 }}>{children}</div>
             </div>
+
         </div>
     );
 };

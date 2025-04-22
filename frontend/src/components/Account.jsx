@@ -238,8 +238,7 @@ const Account = () => {
         <>
             <Container
                 style={{
-                    backgroundColor: "var(--bg)",
-                    color: "var(--text)",
+                    backgroundColor: "var(--bg4)",
                     minHeight: "100vh",
                     padding: "20px",
                     boxSizing: "border-box",
@@ -273,8 +272,8 @@ const Account = () => {
                                 fontWeight: "bold",
                                 transition: "background-color 0.3s ease"
                             }}
-                            onMouseEnter={(e) => e.currentTarget.style.backgroundColor = "var(--hover)"}
-                            onMouseLeave={(e) => e.currentTarget.style.backgroundColor = "var(--hover2)"}
+                            onMouseEnter={(e) => e.currentTarget.style.backgroundColor = "var(--hover3)"}
+                            onMouseLeave={(e) => e.currentTarget.style.backgroundColor = "var(--backbg)"}
                         >
                             ← Back to Jobs
                         </button>
@@ -288,8 +287,8 @@ const Account = () => {
                     <Card
                         className="mb-4"
                         style={{
-                            backgroundColor: "var(--bg2)",
-                            color: "var(--text)",
+                            backgroundColor: "var(--cardbg)",
+                            color: "var(--text3)",
                             border: "2px solid var(--border)",
                             borderRadius: "12px"
                         }}
@@ -341,7 +340,7 @@ const Account = () => {
                                         right: "15px",
                                         cursor: "pointer",
                                         fontSize: "1.25rem",
-                                        color: "var(--hover)",
+                                        color: "var(--pen)",
                                     }}
                                 />
 
@@ -378,9 +377,9 @@ const Account = () => {
                                     <Button
                                         type="submit"
                                         style={{
-                                            backgroundColor: isHovered ? "var(--hover2)" : "var(--hover)",
+                                            backgroundColor: isHovered ? "var(--hover3)" : "var(--button3)",
                                             border: "none",
-                                            color: "var(--text)",
+                                            color: "var(--submittxt)",
                                             padding: "10px 20px",
                                             marginTop: "10px",
                                             borderRadius: "8px",
@@ -400,8 +399,8 @@ const Account = () => {
                     <Card
                         className="mb-4"
                         style={{
-                            backgroundColor: "var(--bg2)",
-                            color: "var(--text)",
+                            backgroundColor: "var(--cardbg)",
+                            color: "var(--text3)",
                             border: "2px solid var(--border)",
                             borderRadius: "12px"
                         }}
@@ -423,7 +422,7 @@ const Account = () => {
                                         right: "15px",
                                         cursor: "pointer",
                                         fontSize: "1.25rem",
-                                        color: "var(--hover)",
+                                        color: "var(--pen)",
                                     }}
                                 />
                             </Card.Link>
@@ -443,9 +442,9 @@ const Account = () => {
                                     <Button
                                         type="submit"
                                         style={{
-                                            backgroundColor: isHovered ? "var(--hover2)" : "var(--hover)",
+                                            backgroundColor: isHovered ? "var(--hover3)" : "var(--button3)",
                                             border: "none",
-                                            color: "var(--text)",
+                                            color: "var(--submittxt)",
                                             padding: "10px 20px",
                                             marginTop: "10px",
                                             borderRadius: "8px",
@@ -465,8 +464,8 @@ const Account = () => {
                     <Card
                         className="mb-4"
                         style={{
-                            backgroundColor: "var(--bg2)",
-                            color: "var(--text)",
+                            backgroundColor: "var(--cardbg)",
+                            color: "var(--text3)",
                             border: "2px solid var(--border)",
                             borderRadius: "12px"
                         }}
@@ -483,8 +482,8 @@ const Account = () => {
                                                 margin: "5px",
                                                 cursor: "pointer",
                                                 fontSize: "1rem",
-                                                color: "var(--text2)",
-                                                backgroundColor: "var(--hover)",
+                                                color: "var(--badgetxt)",
+                                                backgroundColor: "var(--badgebg)",
                                             }}
                                         >
                                             {cleanName(preference.name || preference)}
@@ -503,7 +502,7 @@ const Account = () => {
                                         right: "15px",
                                         cursor: "pointer",
                                         fontSize: "1.25rem",
-                                        color: "var(--hover)",
+                                        color: "var(--pen)",
                                     }}
                                 />
                             </Card.Link>
@@ -527,9 +526,9 @@ const Account = () => {
                                         <Button
                                             type="submit"
                                             style={{
-                                                backgroundColor: isHovered ? "var(--hover2)" : "var(--hover)",
+                                                backgroundColor: isHovered ? "var(--hover3)" : "var(--button3)",
                                                 border: "none",
-                                                color: "var(--text)",
+                                                color: "var(--submittxt)",
                                                 padding: "10px 20px",
                                                 marginTop: "10px",
                                                 borderRadius: "8px",
@@ -550,8 +549,8 @@ const Account = () => {
                     <Card
                         className="mb-4"
                         style={{
-                            backgroundColor: "var(--bg2)",
-                            color: "var(--text)",
+                            backgroundColor: "var(--cardbg)",
+                            color: "var(--text3)",
                             border: "2px solid var(--border)",
                             borderRadius: "12px"
                         }}
@@ -568,8 +567,8 @@ const Account = () => {
                                                 margin: "5px",
                                                 cursor: "pointer",
                                                 fontSize: "1rem",
-                                                color: "var(--text2)",
-                                                backgroundColor: "var(--hover)",
+                                                color: "var(--badgetxt)",
+                                                backgroundColor: "var(--badgebg)",
                                             }}
                                         >
                                             {cleanName(skill.name || skill)}
@@ -588,7 +587,7 @@ const Account = () => {
                                         right: "15px",
                                         cursor: "pointer",
                                         fontSize: "1.25rem",
-                                        color: "var(--hover)",
+                                        color: "var(--pen)",
                                     }}
                                 />
                             </Card.Link>
@@ -612,9 +611,9 @@ const Account = () => {
                                         <Button
                                             type="submit"
                                             style={{
-                                                backgroundColor: isHovered ? "var(--hover2)" : "var(--hover)",
+                                                backgroundColor: isHovered ? "var(--hover3)" : "var(--button3)",
                                                 border: "none",
-                                                color: "var(--text)",
+                                                color: "var(--submittxt)",
                                                 padding: "10px 20px",
                                                 marginTop: "10px",
                                                 borderRadius: "8px",
@@ -635,8 +634,8 @@ const Account = () => {
                     <Card
                         className="mb-4"
                         style={{
-                            backgroundColor: "var(--bg2)",
-                            color: "var(--text)",
+                            backgroundColor: "var(--cardbg)",
+                            color: "var(--text3)",
                             border: "2px solid var(--border)",
                             borderRadius: "12px"
                         }}
@@ -688,7 +687,7 @@ const Account = () => {
                                         right: "15px",
                                         cursor: "pointer",
                                         fontSize: "1.25rem",
-                                        color: "var(--hover)",
+                                        color: "var(--pen)",
                                     }}
                                 />
                             </Card.Link>
@@ -732,9 +731,9 @@ const Account = () => {
                                     <Button
                                         type="submit"
                                         style={{
-                                            backgroundColor: isHovered ? "var(--hover2)" : "var(--hover)",
+                                            backgroundColor: isHovered ? "var(--hover3)" : "var(--button3)",
                                             border: "none",
-                                            color: "var(--text)",
+                                            color: "var(--submittxt)",
                                             padding: "10px 20px",
                                             marginTop: "10px",
                                             borderRadius: "8px",
@@ -754,8 +753,8 @@ const Account = () => {
                     <Card
                         className="mb-4"
                         style={{
-                            backgroundColor: "var(--bg2)",
-                            color: "var(--text)",
+                            backgroundColor: "var(--cardbg)",
+                            color: "var(--text3)",
                             border: "2px solid var(--border)",
                             borderRadius: "12px"
                         }}
@@ -797,7 +796,7 @@ const Account = () => {
                                         right: "15px",
                                         cursor: "pointer",
                                         fontSize: "1.25rem",
-                                        color: "var(--hover)",
+                                        color: "var(--pen)",
                                     }}
                                 />
                             </Card.Link>
@@ -833,9 +832,9 @@ const Account = () => {
                                     <Button
                                         type="submit"
                                         style={{
-                                            backgroundColor: isHovered ? "var(--hover2)" : "var(--hover)",
+                                            backgroundColor: isHovered ? "var(--hover3)" : "var(--button3)",
                                             border: "none",
-                                            color: "var(--text)",
+                                            color: "var(--submittxt)",
                                             padding: "10px 20px",
                                             marginTop: "10px",
                                             borderRadius: "8px",

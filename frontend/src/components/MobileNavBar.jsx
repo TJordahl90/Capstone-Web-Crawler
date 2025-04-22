@@ -21,7 +21,7 @@ const MobileNavBar = () => {
                 bottom: 0,
                 width: "100%",
                 height: "65px",
-                backgroundColor: "var(--lbg)",
+                backgroundColor: "var(--bg3)",
                 borderTop: "5px solid var(--border)",
                 display: "flex",
                 justifyContent: "space-around",
@@ -38,7 +38,7 @@ const MobileNavBar = () => {
                     flexDirection: "column",
                     alignItems: "center",
                     fontSize: "12px",
-                    color: location.pathname === "/find-jobs" ? "var(--hover)" : "var(--text)"
+                    color: location.pathname === "/find-jobs" ? "var(--hover2)" : "var(--text2)"
                 }}
             >
                 <FaBriefcase style={{ fontSize: "20px", marginBottom: "2px" }} />
@@ -53,7 +53,7 @@ const MobileNavBar = () => {
                     flexDirection: "column",
                     alignItems: "center",
                     fontSize: "12px",
-                    color: location.pathname === "/saved-jobs" ? "var(--hover)" : "var(--text)"
+                    color: location.pathname === "/saved-jobs" ? "var(--hover2)" : "var(--text2)"
                 }}
             >
                 <FaBookmark style={{ fontSize: "20px", marginBottom: "2px" }} />
@@ -96,7 +96,7 @@ const MobileNavBar = () => {
                     flexDirection: "column",
                     alignItems: "center",
                     fontSize: "12px",
-                    color: location.pathname === "" ? "var(--hover)" : "var(--text)"
+                    color: location.pathname === "" ? "var(--hover2)" : "var(--text2)"
                 }}
             >
                 <FaChartBar style={{ fontSize: "20px", marginBottom: "2px" }} />
@@ -111,7 +111,7 @@ const MobileNavBar = () => {
                     flexDirection: "column",
                     alignItems: "center",
                     fontSize: "12px",
-                    color: location.pathname === "" ? "var(--hover)" : "var(--text)"
+                    color: location.pathname === "" ? "var(--hover2)" : "var(--text2)"
                 }}
             >
                 <FaUser style={{ fontSize: "20px", marginBottom: "2px" }} />

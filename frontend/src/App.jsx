@@ -42,26 +42,15 @@ function App() {
 			{showNavMenus ? (
 				<>
 					<Navbar collapsed={collapsed} setCollapsed={setCollapsed} />
-					{!isSmallWidth ? (
-						<SidePanel collapsed={collapsed}>
-							<>
-								<Routes>
-									<Route path="/find-jobs" element={<FindJobs />} />
-									<Route path="/saved-jobs" element={<SavedJobs />} />
-									<Route path="/account" element={<Account />} />
-									<Route path="/documents" element={<Documents />} />
-								</Routes>
-								{isMobile && showNavMenus && <MobileNavBar />}
-							</>
-						</SidePanel>
-					) : (
+					<SidePanel collapsed={collapsed}>
 						<Routes>
 							<Route path="/find-jobs" element={<FindJobs />} />
 							<Route path="/saved-jobs" element={<SavedJobs />} />
 							<Route path="/account" element={<Account />} />
 							<Route path="/documents" element={<Documents />} />
 						</Routes>
-					)}
+						{isMobile && <MobileNavBar />}
+					</SidePanel>
 				</>
 			) : (
 				<Routes>
@@ -74,6 +63,7 @@ function App() {
 			)}
 		</>
 	);
+
 }
 
 export default App;
