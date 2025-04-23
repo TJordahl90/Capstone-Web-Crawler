@@ -238,7 +238,7 @@ const Account = () => {
         <>
             <Container
                 style={{
-                    backgroundColor: "var(--bg4)",
+                    backgroundColor: "rgba(255, 255, 255, 0.03)",
                     minHeight: "100vh",
                     padding: "20px",
                     boxSizing: "border-box",
@@ -263,20 +263,29 @@ const Account = () => {
                         <button
                             onClick={() => navigate("/find-jobs")}
                             style={{
-                                backgroundColor: "var(--backbg)",
+                                backgroundColor: "rgba(0, 173, 181, 0.3)", // translucent teal
                                 color: "var(--badgetxt)",
-                                border: "var(--border)",
+                                border: "2px solid var(--border)",
                                 borderRadius: "8px",
                                 padding: "8px 16px",
                                 cursor: "pointer",
                                 fontWeight: "bold",
-                                transition: "background-color 0.3s ease"
+                                backdropFilter: "blur(6px)",
+                                WebkitBackdropFilter: "blur(6px)",
+                                transition: "all 0.3s ease",
                             }}
-                            onMouseEnter={(e) => e.currentTarget.style.backgroundColor = "var(--hover)"}
-                            onMouseLeave={(e) => e.currentTarget.style.backgroundColor = "var(--backbg)"}
+                            onMouseEnter={(e) => {
+                                e.currentTarget.style.backgroundColor = "#00ADB5";
+                                e.currentTarget.style.color = "#fff";
+                            }}
+                            onMouseLeave={(e) => {
+                                e.currentTarget.style.backgroundColor = "rgba(0, 173, 181, 0.3)";
+                                e.currentTarget.style.color = "var(--badgetxt)";
+                            }}
                         >
                             ← Back to Jobs
                         </button>
+
                     </div>
 
                     {/* Alert Messages */}
@@ -287,7 +296,9 @@ const Account = () => {
                     <Card
                         className="mb-4"
                         style={{
-                            backgroundColor: "var(--cardbg)",
+                            backgroundColor: "rgba(255, 255, 255, 0.2)", // more translucent
+                            backdropFilter: "blur(10px)",                // adds frosted-glass effect
+                            WebkitBackdropFilter: "blur(10px)",
                             color: "var(--text3)",
                             border: "2px solid var(--border)",
                             borderRadius: "12px"
@@ -307,7 +318,7 @@ const Account = () => {
                                     marginBottom: "1rem"
                                 }}
                             />
-                            <Card.Title>
+                            <Card.Title  style={{ color: "#05e3ed" }}>
                                 {(accountData.firstName || accountData.lastName)
                                     ? `${accountData.firstName} ${accountData.lastName}`
                                     : "Please enter your name."
@@ -351,7 +362,7 @@ const Account = () => {
                     {/* Edit Personal Info */}
                     {editPersonalInfo && (
                         <Modal show={editPersonalInfo} onHide={() => setEditPersonalInfo(false)}>
-                            <Modal.Header closeButton><Modal.Title>Edit Personal Info</Modal.Title></Modal.Header>
+                            <Modal.Header closeButton><Modal.Title style={{ color: "#05e3ed" }}>Edit Personal Info</Modal.Title></Modal.Header>
                             <Modal.Body>
                                 <Form onSubmit={handlePersonalInfo}>
                                     <InputField label="First Name" type="text" value={accountData.firstName}
@@ -399,14 +410,16 @@ const Account = () => {
                     <Card
                         className="mb-4"
                         style={{
-                            backgroundColor: "var(--cardbg)",
+                            backgroundColor: "rgba(255, 255, 255, 0.2)", // more translucent
+                            backdropFilter: "blur(10px)",                // adds frosted-glass effect
+                            WebkitBackdropFilter: "blur(10px)",
                             color: "var(--text3)",
                             border: "2px solid var(--border)",
                             borderRadius: "12px"
                         }}
                     >
                         <Card.Body className="text-start">
-                            <Card.Title>Summary</Card.Title>
+                            <Card.Title style={{ color: "#05e3ed" }}>Summary</Card.Title>
                             <Card.Text>
                                 {(accountData.summary)
                                     ? `${accountData.summary}`
@@ -432,7 +445,7 @@ const Account = () => {
                     {/* Edit Summary */}
                     {editSummary && (
                         <Modal show={editSummary} onHide={() => setEditSummary(false)}>
-                            <Modal.Header closeButton><Modal.Title>Edit Profile Summary</Modal.Title></Modal.Header>
+                            <Modal.Header closeButton><Modal.Title style={{ color: "#05e3ed" }}>Edit Profile Summary</Modal.Title></Modal.Header>
                             <Modal.Body>
                                 <Form onSubmit={handleSummary}>
                                     <InputField label="Summary" type="text" value={accountData.summary}
@@ -464,20 +477,22 @@ const Account = () => {
                     <Card
                         className="mb-4"
                         style={{
-                            backgroundColor: "var(--cardbg)",
+                            backgroundColor: "rgba(255, 255, 255, 0.2)", // more translucent
+                            backdropFilter: "blur(10px)",                // adds frosted-glass effect
+                            WebkitBackdropFilter: "blur(10px)",
                             color: "var(--text3)",
                             border: "2px solid var(--border)",
                             borderRadius: "12px"
                         }}
                     >
                         <Card.Body className="text-start">
-                            <Card.Title>Your Job Preferences</Card.Title>
+                            <Card.Title  style={{ color: "#05e3ed" }}>Your Job Preferences</Card.Title>
                             <Card.Text>
                                 {accountData.preferences.length > 0 ? (
                                     accountData.preferences.map((preference, index) => (
                                         <Badge
                                             key={index}
-                                            className="badge-selected"
+                                            className=""
                                             style={{
                                                 margin: "5px",
                                                 cursor: "pointer",
@@ -512,7 +527,7 @@ const Account = () => {
                     {/* Edit Job Preference Selections */}
                     {editPreferences && (
                         <Modal show={editPreferences} onHide={() => setEditPreferences(false)}>
-                            <Modal.Header closeButton><Modal.Title>Edit Job Preferences</Modal.Title></Modal.Header>
+                            <Modal.Header closeButton><Modal.Title  style={{ color: "#05e3ed" }}>Edit Job Preferences</Modal.Title></Modal.Header>
                             <Modal.Body>
                                 <Form onSubmit={handlePreferences}>
                                     <InputField label="Job Preferences" type="text" value={tempPreferencesText}
@@ -549,14 +564,16 @@ const Account = () => {
                     <Card
                         className="mb-4"
                         style={{
-                            backgroundColor: "var(--cardbg)",
+                            backgroundColor: "rgba(255, 255, 255, 0.2)", // more translucent
+                            backdropFilter: "blur(10px)",                // adds frosted-glass effect
+                            WebkitBackdropFilter: "blur(10px)",
                             color: "var(--text3)",
                             border: "2px solid var(--border)",
                             borderRadius: "12px"
                         }}
                     >
                         <Card.Body className="text-start">
-                            <Card.Title>Your Skills</Card.Title>
+                            <Card.Title style={{ color: "#05e3ed" }}>Your Skills</Card.Title>
                             <Card.Text>
                                 {accountData.skills.length > 0 ? (
                                     accountData.skills.map((skill, index) => (
@@ -597,7 +614,7 @@ const Account = () => {
                     {/* Edit Skill Selections */}
                     {editSkills && (
                         <Modal show={editSkills} onHide={() => setEditSkills(false)}>
-                            <Modal.Header closeButton><Modal.Title>Edit Skills</Modal.Title></Modal.Header>
+                            <Modal.Header closeButton><Modal.Title style={{ color: "#05e3ed" }}>Edit Skills</Modal.Title></Modal.Header>
                             <Modal.Body>
                                 <Form onSubmit={handleSkills}>
                                     <InputField label="Skills" type="text" value={tempSkillsText}
@@ -634,14 +651,16 @@ const Account = () => {
                     <Card
                         className="mb-4"
                         style={{
-                            backgroundColor: "var(--cardbg)",
+                            backgroundColor: "rgba(255, 255, 255, 0.2)", // more translucent
+                            backdropFilter: "blur(10px)",                // adds frosted-glass effect
+                            WebkitBackdropFilter: "blur(10px)",
                             color: "var(--text3)",
                             border: "2px solid var(--border)",
                             borderRadius: "12px"
                         }}
                     >
                         <Card.Body className="text-start">
-                            <Card.Title>Education</Card.Title>
+                            <Card.Title style={{ color: "#05e3ed" }}>Education</Card.Title>
                             <Card.Text>
                                 {(accountData.grade)
                                     ? `${accountData.grade}`
@@ -697,7 +716,7 @@ const Account = () => {
                     {/* Edit Education */}
                     {editEducation && (
                         <Modal show={editEducation} onHide={() => setEditEducation(false)}>
-                            <Modal.Header closeButton><Modal.Title>Edit Education</Modal.Title></Modal.Header>
+                            <Modal.Header closeButton><Modal.Title style={{ color: "#05e3ed" }}>Edit Education</Modal.Title></Modal.Header>
                             <Modal.Body>
                                 <Form onSubmit={handleEducation}>
                                     <InputField label="Class" type="text" value={accountData.grade}
@@ -753,14 +772,16 @@ const Account = () => {
                     <Card
                         className="mb-4"
                         style={{
-                            backgroundColor: "var(--cardbg)",
+                            backgroundColor: "rgba(255, 255, 255, 0.2)", // more translucent
+                            backdropFilter: "blur(10px)",                // adds frosted-glass effect
+                            WebkitBackdropFilter: "blur(10px)",
                             color: "var(--text3)",
                             border: "2px solid var(--border)",
                             borderRadius: "12px"
                         }}
                     >
                         <Card.Body className="text-start">
-                            <Card.Title>Work Experience</Card.Title>
+                            <Card.Title style={{ color: "#05e3ed" }}>Work Experience</Card.Title>
                             <Card.Text>
                                 {(accountData.company)
                                     ? `${accountData.company}`
@@ -806,7 +827,7 @@ const Account = () => {
                     {/* Edit Experience */}
                     {editExperience && (
                         <Modal show={editExperience} onHide={() => setEditExperience(false)}>
-                            <Modal.Header closeButton><Modal.Title>Edit Work Experience</Modal.Title></Modal.Header>
+                            <Modal.Header closeButton><Modal.Title style={{ color: "#05e3ed" }}>Edit Work Experience</Modal.Title></Modal.Header>
                             <Modal.Body>
                                 <Form onSubmit={handleExperience}>
                                     <InputField label="Company" type="text" value={accountData.company}

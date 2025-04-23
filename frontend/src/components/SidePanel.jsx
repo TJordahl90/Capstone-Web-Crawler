@@ -2,7 +2,7 @@ import React, { useState } from "react";
 import { FaBriefcase, FaBookmark, FaUser, FaChartBar } from "react-icons/fa";
 // import "./SidePanel.css";
 import { useTheme } from './ThemeContext';
-
+import backgroundImage from "../assets/background4.png";
 
 const SidePanel = ({ children, collapsed }) => {
     const [hoveredItem, setHoveredItem] = useState(null);
@@ -12,7 +12,10 @@ const SidePanel = ({ children, collapsed }) => {
             className="Bottom Page"
             style={{
                 display: "flex",
-                backgroundColor: "var(--bg2)",
+                backgroundColor: "rgba(255, 255, 255, 0.03)",
+                backdropFilter: "blur(15px)",
+                WebkitBackdropFilter: "blur(15px)",
+                zIndex: 1,
             }}
         >
             <div
@@ -26,8 +29,8 @@ const SidePanel = ({ children, collapsed }) => {
                     transition: "transform 0.3s ease, width 0.3s ease",
                     borderRight: "1px solid var(--border)",
                     borderTop: "1px solid var(--border)",
-                    backgroundColor: "var(--bg3)",
                     display: window.innerWidth <= 770 ? "none" : "block",
+                    zIndex: 10,
                 }}
             >
                 <a
@@ -73,7 +76,7 @@ const SidePanel = ({ children, collapsed }) => {
                 <div
                     style={{
                         height: "1px",
-                        backgroundColor: "var(--text)",
+                        backgroundColor: "var(--border)",
                         width: collapsed ? "30px" : "180px",
                         margin: "10px auto",
                         transition: "width 0.3s ease"
@@ -131,7 +134,6 @@ const SidePanel = ({ children, collapsed }) => {
                     width: window.innerWidth <= 770 ? "100vw" : (collapsed ? "calc(100vw - 60px)" : "calc(100vw - 200px)"),
                     transition: "margin-left 0.3s ease, width 0.3s ease",
                     borderTop: "1px solid var(--border)",
-                    background: "var(--bg2)",
                     height: "calc(100vh - 81px)",
                 }}
             >

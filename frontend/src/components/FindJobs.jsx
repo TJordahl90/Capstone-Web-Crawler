@@ -39,10 +39,10 @@ const FindJobs = () => {
     const fetchJobsByTab = async (tab) => {
         setLoading(true);
         setError("");
-        
+
         try {
             let response;
-            
+
             if (tab === "matched") {
                 response = await api.get("/job_matching/");
                 if (response.data && response.data.length > 0) {
@@ -75,7 +75,7 @@ const FindJobs = () => {
     const fetchSearchJobs = async () => {
         setLoading(true);
         setError("");
-        
+
         try {
             const response = await api.get(`/job_searching/?search=${searchTerm}`);
             if (response.data && response.data.length > 0) {
@@ -156,13 +156,13 @@ const FindJobs = () => {
                     </div>
                 </div>
                 <div className="d-flex justify-content-between align-items-center mt-2">
-                    <small className="text-muted">
+                    <small className="text-white">
                         <FaMapMarkerAlt size={12} className="me-1" />
                         <span>{job.location}</span>
                     </small>
                 </div>
                 <div className="d-flex justify-content-between align-items-center mt-2">
-                    <small className="text-muted">
+                    <small className="text-white">
                         <FaClock size={10} className="me-1" />
                         <span>{job.datePosted || "N/A"}</span>
                     </small>
@@ -182,7 +182,8 @@ const FindJobs = () => {
                 height: "100%",
                 width: "100%",
                 flex: 1,
-                backgroundColor: "var(--bg7)",
+                backgroundColor: "rgba(255, 255, 255, 0.03)",
+                zIndex: 5,
                 color: "var(--text6)",
                 padding: 0,
                 margin: 0,
@@ -196,13 +197,16 @@ const FindJobs = () => {
                     className="p-0 d-flex flex-column"
                     style={{
                         height: "100%",
-                        backgroundColor: "var(--bg7)",
+
                         color: "var(--text6)",
                         borderRight: "1px solid var(--border)"
                     }}
                 >
                     <div className="p-3 border-bottom">
-                        <h1 className="h4 mb-3">Find Jobs</h1>
+                        <h1 className="h4 mb-3"
+                            style={{
+                                color: "var(--text6)",
+                            }}>Find Jobs</h1>
 
                         {/* Search bar */}
                         <Form onSubmit={e => {
@@ -238,7 +242,8 @@ const FindJobs = () => {
                                 display: "flex",
                                 flexWrap: "wrap",
                                 width: "100%",
-                                backgroundColor: "var(--tabsbg)",
+                                backgroundColor: "rgba(255, 255, 255, 0.03)",
+                                zIndex: 5,
                                 borderBottom: "2px solid var(--border)",
                             }}
                         >
@@ -306,7 +311,7 @@ const FindJobs = () => {
                                 </Spinner>
                             </div>
                         ) : displayJobs.length === 0 ? (
-                            <div className="p-3 text-muted">No jobs found</div>
+                            <div className="p-3 text-white">No jobs found</div>
                         ) : (
                             <div className="job-list">
                                 {displayJobs.map(job => renderJobItem(job))}
@@ -321,7 +326,7 @@ const FindJobs = () => {
                     className="p-0"
                     style={{
                         height: "100%",
-                        backgroundColor: "var(--bg7)",
+                        backgroundColor: "rgba(255, 255, 255, 0.03)",
                         color: "var(--text6)"
                     }}
                 >
@@ -332,9 +337,19 @@ const FindJobs = () => {
                             </Spinner>
                         </div>
                     ) : selectedJob ? (
-                        <div className="h-100 overflow-auto" style={{ backgroundColor: "var(--contentbg)", color: "var(--contenttxt)" }}>
-                            <div className="p-4 border-bottom" style={{ borderBottom: "1px solid var(--contentborder)" }}>
+                        <div
+                            className="h-100 overflow-auto"
+                            style={{
 
+                                color: "var(--contenttxt)",
+                            }}
+                        >
+                            <div
+                                className="p-4 "
+                                style={{
+
+                                }}
+                            >
                                 {/* Header Section */}
                                 <div className="d-flex justify-content-between align-items-start mb-3">
                                     <div className="d-flex">
@@ -350,7 +365,7 @@ const FindJobs = () => {
                                                     justifyContent: "center",
                                                     width: "82px",
                                                     height: "82px",
-                                                    backgroundColor: "var(--lbg)" 
+                                                    backgroundColor: "var(--lbg)"
                                                 }}
                                             >
                                                 <img
@@ -366,9 +381,11 @@ const FindJobs = () => {
 
                                         )}
                                         <div>
-                                            <h2 className="mb-1">{selectedJob.title}</h2>
-                                            <h5 className="text-muted mb-2">{selectedJob.company}</h5>
-                                            <div className="d-flex flex-column text-muted">
+                                            <h2 className="mb-1" style={{ color: "var(--text6)" }}>
+                                                {selectedJob.title}
+                                            </h2>
+                                            <h5 className="text-white mb-2">{selectedJob.company}</h5>
+                                            <div className="d-flex flex-column text-white">
                                                 <div className="d-flex align-items-center mb-1">
                                                     <FaMapMarkerAlt size={14} className="me-1" />
                                                     <span>{selectedJob.location}</span>
@@ -436,8 +453,10 @@ const FindJobs = () => {
                                 <Card
                                     className="mb-4"
                                     style={{
-                                        backgroundColor: "var(--cardbg2)",
-                                        color: "var(--cardtext2)",
+                                        backgroundColor: "rgba(255, 255, 255, 0.2)", // more translucent
+                                        backdropFilter: "blur(10px)",                // adds frosted-glass effect
+                                        WebkitBackdropFilter: "blur(10px)",      
+                                        color: "var(--text2)",
                                         border: "2px solid var(--cardborder2)",
                                         borderRadius: "12px"
                                     }}
@@ -451,8 +470,10 @@ const FindJobs = () => {
                                 <Card
                                     className="mb-4"
                                     style={{
-                                        backgroundColor: "var(--cardbg2)",
-                                        color: "var(--cardtext2)",
+                                        backgroundColor: "rgba(255, 255, 255, 0.2)", // more translucent
+                                        backdropFilter: "blur(10px)",                // adds frosted-glass effect
+                                        WebkitBackdropFilter: "blur(10px)",      
+                                        color: "var(--text2)",
                                         border: "2px solid var(--cardborder2)",
                                         borderRadius: "12px"
                                     }}
@@ -473,7 +494,7 @@ const FindJobs = () => {
                             </div>
                         </div>
                     ) : (
-                        <div className="h-100 d-flex align-items-center justify-content-center text-muted">
+                        <div className="h-100 d-flex align-items-center justify-content-center text-white">
                             <div className="text-center">
                                 <FaBriefcase size={48} className="mb-3 text-secondary" />
                                 <p>Select a job to view details</p>

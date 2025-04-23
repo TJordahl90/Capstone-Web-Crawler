@@ -2,9 +2,9 @@ import React from "react";
 import { useNavigate } from "react-router-dom";
 import { Container, Row, Col, Button, Navbar, Nav, Image } from "react-bootstrap";
 import logo from "../assets/logo3.png";
-import backgroundImage from "../assets/background1.png";
+import backgroundImage from "../assets/background4.png";
 import "bootstrap/dist/css/bootstrap.min.css";
-
+import videobg from "../assets/sky.mp4";
 const LandingPage = () => {
   const navigate = useNavigate();
 
@@ -190,11 +190,12 @@ const LandingPage = () => {
       {/* Features Section (Added) */}
 
       <Container
+      fluid
         className="py-5"
         style={{
-          backgroundColor: "rgba(255, 255, 255, 0.2)", // more translucent
-          backdropFilter: "blur(10px)",                // adds frosted-glass effect
-          WebkitBackdropFilter: "blur(10px)",          // Safari support
+          backgroundColor: "rgba( var(--border), 0.2 )", 
+          backdropFilter: "blur(10px)",
+          WebkitBackdropFilter: "blur(10px)",
           borderTopLeftRadius: "24px",
           borderTopRightRadius: "24px",
         }}
@@ -247,11 +248,9 @@ const LandingPage = () => {
         fluid
         className="py-5 text-white text-center"
         style={{
-          backgroundColor: "rgba( var(--border), 0.2 )", 
-          backdropFilter: "blur(10px)",
-          WebkitBackdropFilter: "blur(10px)",
-          borderRadius: "24px",
-          border: "1px solid rgba(255, 255, 255, 0.2)",
+          backgroundColor: "rgba(255, 255, 255, 0.2)",
+          backdropFilter: "blur(10px)",              
+          WebkitBackdropFilter: "blur(10px)",       
         }}
       >
         <Row className="justify-content-center">
