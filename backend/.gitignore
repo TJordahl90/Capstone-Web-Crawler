@@ -4,3 +4,4 @@ __pycache__/
 *venv
 job_scraper.log
 api/uploads/
+media/api/uploads/
