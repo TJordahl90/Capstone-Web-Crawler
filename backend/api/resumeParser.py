@@ -1,5 +1,5 @@
 import re
-import fitz  # uses PyMuPDF to accept pdf
+import fitz  # PyMuPDF
 
 def extract_text_from_pdf(pdf_file):
     text = ""
@@ -18,35 +18,66 @@ def parser(text):
         "experience": []
     }
 
-    # Gets name assuming the first line of the resume has the name
+    # Split into lines
     lines = text.strip().split('\n')
+
+    # Name (first non-empty line)
     for line in lines:
         if line.strip():
             parsed["name"] = line.strip()
             break
 
-    # Gets email
-    emailSearch = re.search(r"[\w\.-]+@[\w\.-]+", text)
-    if emailSearch:
-        parsed["email"] = emailSearch.group(0)
+    # Email and phone
+    email_search = re.search(r"[\w\.-]+@[\w\.-]+", text)
+    if email_search:
+        parsed["email"] = email_search.group(0)
 
-    # Gets phone number
-    phoneSearch = re.search(r"(\+?\d{1,3})?[\s.-]?\(?\d{3}\)?[\s.-]?\d{3}[\s.-]?\d{4}", text)
-    if phoneSearch:
-        parsed["phone"] = phoneSearch.group(0)
+    phone_search = re.search(r"(\+?\d{1,3})?[\s\.-]?\(?\d{3}\)?[\s\.-]?\d{3}[\s\.-]?\d{4}", text)
+    if phone_search:
+        parsed["phone"] = phone_search.group(0)
 
-    # Gets skills 
-    skills_section = re.search(r"(?i)(skills|technical skills)\s*[:\n]+(.+?)(\n\n|$)", text, re.DOTALL)
-    if skills_section:
-        skills_text = skills_section.group(2)
-        parsed["skills"] = [skill.strip() for skill in re.split(r",|\n", skills_text) if skill.strip()]
+    # Section headers to identify sections
+    section_headers = {
+        "skills": ["skills", "technical skills", "core competency"],
+        "education": ["education", "academic background"],
+        "experience": ["experience", "work experience", "professional experience", "internship"],
+        "projects": ["projects", "engineering projects"],
+        "awards": ["awards", "scholarships", "grants"]
+    }
 
-    # Gets education 
-    educationSearch = re.findall(r"(?i)(Bachelor|Master|PhD|B\.Sc|M\.Sc|B.A|M.A)[^\n]*", text)
-    parsed["education"] = educationSearch
+    def detect_section(line):
+        line_lower = line.lower()
+        for section, keywords in section_headers.items():
+            if any(keyword in line_lower for keyword in keywords):
+                return section
+        if line.isupper() and len(line.split()) < 5:
+            return "misc"  # All caps, probably a section
+        return None
 
-    # Gets experience 
-    experienceSearch = re.findall(r"(?i)(?:\d{4}\s*-\s*\d{4}|experience|internship|project)[^\n]*", text)
-    parsed["experience"] = experienceSearch
+    current_section = None
+
+    for line in lines:
+        line = line.strip()
+        if not line:
+            continue
+
+        section = detect_section(line)
+        if section and section != current_section:
+            current_section = section
+            continue
+
+        if current_section == "skills":
+            skills = [s.strip() for s in re.split(r"[,:•|\-]", line) if s.strip()]
+            parsed["skills"].extend(skills)
+        elif current_section == "education":
+            parsed["education"].append(line)
+        elif current_section == "experience":
+            parsed["experience"].append(line)
+        elif current_section == "projects":
+            parsed.setdefault("projects", []).append(line)
+        elif current_section == "awards":
+            parsed.setdefault("awards", []).append(line)
+        elif current_section == "misc":
+            parsed.setdefault("other", []).append(line)
 
     return parsed
