@@ -134,7 +134,7 @@ const SidePanel = ({ children, collapsed }) => {
                     width: window.innerWidth <= 770 ? "100vw" : (collapsed ? "calc(100vw - 60px)" : "calc(100vw - 200px)"),
                     transition: "margin-left 0.3s ease, width 0.3s ease",
                     borderTop: "1px solid var(--border)",
-                    height: "calc(100vh - 81px)",
+                    height: "calc(100vh - 52px)",
                 }}
             >
                 <div style={{ overflowY: "auto", flex: 1 }}>{children}</div>
