@@ -73,7 +73,7 @@ const AuthForm = ({ isLogin }) => {
                     }
                 });
                 console.log("Verification code created for: ", formData.email);
-                navigate("/verification", { state: { formData } });
+                navigate("/verification", { state: { formDataPayload } });
             }
             catch (err) {
                 setError(err.response?.data?.message || "Sometg went wrong.");
@@ -221,7 +221,7 @@ const AuthForm = ({ isLogin }) => {
                                         />
                                         <InputField label="Resume" type="file"
                                             onChange={handleFileChange} accept=".pdf" inputRef={fileInputRef}
-                                            helpText="Upload your resume (PDF format, max 5MB)"
+                                            helpText="Upload your resume (PDF format, max 5MB)" required={false}
                                         />
                                     </>
                                 )}

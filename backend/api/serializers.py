@@ -9,11 +9,12 @@ from .models import *
 
 class CreateUserSerializer(serializers.ModelSerializer): 
     """Serializer for new user registering"""
+    resume = serializers.FileField(required=False)
 
     class Meta:
         """Deserialize the user model fields below"""
         model = User
-        fields = ['email', 'username', 'password', 'first_name', 'last_name']
+        fields = ['email', 'username', 'password', 'first_name', 'last_name', 'resume']
         extra_kwargs = {'password': {'write_only': True}}
 
     def create(self, validated_data):
@@ -26,13 +27,15 @@ class CreateUserSerializer(serializers.ModelSerializer):
             first_name = validated_data['first_name'],
             last_name = validated_data['last_name']
         )
+        resume = validated_data.pop('resume', None)
 
         # set_password() and save() are built-in functions
         user.set_password(validated_data['password']) # hashes the password- security measure
         user.save() # saves user object to database
-    
+
         account = Account (
-            user = user
+            user = user,
+            resume = resume,
         )
 
         account.save()

@@ -1,7 +1,7 @@
 import React from 'react';
 import { Form } from 'react-bootstrap';
 
-const InputField = ({ label, type, value, onChange, placeholder }) => {
+const InputField = ({ label, type, value, onChange, placeholder, required = true }) => {
   return (
     <Form.Group className="mb-3">
       <Form.Label>{label}</Form.Label>
@@ -10,7 +10,7 @@ const InputField = ({ label, type, value, onChange, placeholder }) => {
         value={value}
         onChange={onChange}
         placeholder={placeholder}
-        required
+        required={required}
       />
     </Form.Group>
   );
