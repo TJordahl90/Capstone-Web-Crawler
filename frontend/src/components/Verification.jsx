@@ -16,10 +16,14 @@ const Verification = () => {
         e.preventDefault();
         try {
             //console.log(data.email);
-            const response = await api.get("/verification/", {params: { email: data.formData.email, code: code } });
+            const response = await api.get("/verification/", { params: { email: data.formDataPayload.get('email'), code: code } });
             if(response.status == 200){
                 try{
-                    const response = await api.post('/register/', data.formData);
+                    const response = await api.post('/register/', data.formDataPayload, {
+                        headers: {
+                            'Content-Type': 'multipart/form-data'
+                        }
+                    });
                     setMessage("Registration successful!");
                     setTimeout(() => navigate("/login"), 1000);
                 }
