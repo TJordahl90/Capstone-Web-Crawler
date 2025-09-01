@@ -11,6 +11,8 @@ import Verification from "./components/Verification";
 import MobileNavBar from "./components/MobileNavBar";
 import PasswordReset from "./components/PasswordReset";
 import Documents from "./components/Documents";
+import TrendAnalysis from "./components/TrendAnalysis";
+import InterviewChatbot from "./components/InterviewChatbot";
 import "bootstrap/dist/css/bootstrap.min.css";
 import backgroundImage from "./assets/background4.png";
 
@@ -58,6 +60,8 @@ function App() {
 							<Route path="/saved-jobs" element={<SavedJobs />} />
 							<Route path="/account" element={<Account />} />
 							<Route path="/documents" element={<Documents />} />
+							<Route path="/trend-analysis" element={<TrendAnalysis />} />
+							<Route path="/interview-chatbot" element={<InterviewChatbot />} />
 						</Routes>
 						{isMobile && <MobileNavBar />}
 					</SidePanel>
