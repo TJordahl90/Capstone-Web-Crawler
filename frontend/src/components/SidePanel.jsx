@@ -82,7 +82,7 @@ const SidePanel = ({ children, collapsed }) => {
                         transition: "width 0.3s ease"
                     }}
                 ></div>
-                <a href="/#"
+                <a href="/trend-analysis"
                     onMouseEnter={() => setHoveredItem("trends")}
                     onMouseLeave={() => setHoveredItem(null)}
                     style={{
@@ -101,7 +101,7 @@ const SidePanel = ({ children, collapsed }) => {
                     <FaChartBar className="icon" />
                     {!collapsed && <span>Trends</span>}
                 </a>
-                <a href="/#"
+                <a href="/interview-chatbot"
                     onMouseEnter={() => setHoveredItem("people")}
                     onMouseLeave={() => setHoveredItem(null)}
                     style={{
@@ -118,7 +118,7 @@ const SidePanel = ({ children, collapsed }) => {
                         maxWidth: "40vw",
                     }}>
                     <FaUser className="icon" />
-                    {!collapsed && <span>People</span>}
+                    {!collapsed && <span>PrepMate</span>}
                 </a>
             </div>
 
