@@ -84,7 +84,7 @@ const themes = {
         textonhover5: "gray",  // login or username text hover
         hambuger: "#393E46",  // hambuger button
         hamhover: "#00ADB5",
-        hover4: "#00ADB5",  // button on hover
+        hover5: "#00ADB5",  // button on hover
         button2: "white",   // loginbutton
         editbg: "#393E46",  // edit bg
         edithover: "#00ADB5", // hover
@@ -174,7 +174,7 @@ const themes = {
         textonhover5: "gray",  // login or username text hover
         hambuger: "white",  // hambuger button
         hamhover: "#00ADB5",
-        hover4: "#00ADB5",  // button on hover
+        hover5: "#00ADB5",  // button on hover
         button2: "white",   // loginbutton
         editbg: "#393E46",  // edit bg
         edithover: "#00ADB5", // hover
