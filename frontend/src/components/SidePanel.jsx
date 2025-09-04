@@ -22,7 +22,7 @@ const SidePanel = ({ children, collapsed }) => {
                 className="side-panel"
                 style={{
                     width: collapsed ? "60px" : "200px",
-                    height: "100vh",
+                    height: "100%",
                     color: "var(--text2)",
                     position: "fixed",
                     left: 0,
@@ -134,7 +134,7 @@ const SidePanel = ({ children, collapsed }) => {
                     width: window.innerWidth <= 770 ? "100vw" : (collapsed ? "calc(100vw - 60px)" : "calc(100vw - 200px)"),
                     transition: "margin-left 0.3s ease, width 0.3s ease",
                     borderTop: "1px solid var(--border)",
-                    height: "calc(100vh - 52px)",
+                    height: "calc(100vh - 60px)", // prev 100vh - 52px
                 }}
             >
                 <div style={{ overflowY: "auto", flex: 1 }}>{children}</div>
