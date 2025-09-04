@@ -1,11 +1,11 @@
 import React, { useState, useRef, useEffect } from "react";
-import { Button, Form } from "react-bootstrap";
+import { Button, Form, Card } from "react-bootstrap";
 import axios from "axios";
 
 const InterviewChatbot = () => {
     const [input, setInput] = useState("");
     const [messages, setMessages] = useState([]);
-    const [loading, setLoading] = useState(false); // ✅ typing indicator state
+    const [loading, setLoading] = useState(false);
     const chatEndRef = useRef(null);
 
     const handleSend = async () => {
@@ -14,7 +14,7 @@ const InterviewChatbot = () => {
         const newMessages = [...messages, { sender: "user", text: input }];
         setMessages(newMessages);
         setInput("");
-        setLoading(true); // ✅ show indicator
+        setLoading(true);
 
         try {
             const res = await axios.post("http://localhost:5002/chat", {
@@ -32,99 +32,90 @@ const InterviewChatbot = () => {
                 { sender: "ai", text: "⚠️ Something went wrong, please try again." },
             ]);
         } finally {
-            setLoading(false); // ✅ hide indicator
+            setLoading(false);
         }
     };
 
-    // auto-scroll
     useEffect(() => {
         chatEndRef.current?.scrollIntoView({ behavior: "smooth" });
     }, [messages, loading]);
 
     return (
         <div
+            className="prepmate-container"
             style={{
+                height: "calc(100vh - 52px)",
                 display: "flex",
                 justifyContent: "center",
                 alignItems: "center",
-                padding: "40px",
-                height: "calc(100vh - 80px)", // ✅ fit inside viewport minus nav height
-                width: "100%",
-                boxSizing: "border-box",     // ✅ ensures padding doesn’t add overflow
-                background: "transparent",
-                overflow: "hidden",          // ✅ prevent white line
+                padding: "20px",
             }}
         >
-            <div
+            <Card
                 style={{
-                    width: "80%",
-                    maxWidth: "900px",
                     backgroundColor: "rgba(255, 255, 255, 0.05)",
                     backdropFilter: "blur(20px)",
                     WebkitBackdropFilter: "blur(20px)",
                     borderRadius: "24px",
                     border: "1px solid rgba(255, 255, 255, 0.1)",
-                    padding: "20px",
-                    boxShadow: "0 0 25px rgba(0,0,0,0.3)",
                     color: "white",
+                    boxShadow: "0 0 25px rgba(0,0,0,0.3)",
+                    height: "100%",
+                    width: "100%",
+                    display: "flex",
+                    flexDirection: "column",
                 }}
             >
-                <h3
-                    className="text-center mb-4"
-                    style={{ color: "#00ADB5", fontWeight: "bold" }}
-                >
-                     AI Interview Chatbot
-                </h3>
+                <Card.Body style={{ display: "flex", flexDirection: "column", flex: 1 }}>
+                    <Card.Title
+                        className="text-center mb-4"
+                        style={{ color: "#00ADB5", fontWeight: "bold" }}
+                    >
+                        AI Interview Chatbot
+                    </Card.Title>
 
-                {/* Chat window */}
-                <div
-                    style={{
-                        height: "400px",
-                        overflowY: "auto",
-                        padding: "15px",
-                        backgroundColor: "rgba(0, 0, 0, 0.3)",
-                        borderRadius: "16px",
-                        marginBottom: "15px",
-                    }}
-                >
-                    {messages.map((msg, idx) => (
-                        <div
-                            key={idx}
-                            style={{
-                                display: "flex",
-                                justifyContent:
-                                    msg.sender === "user" ? "flex-end" : "flex-start",
-                                marginBottom: "12px",
-                            }}
-                        >
+                    {/* Chat window */}
+                    <div
+                        style={{
+                            flex: 1,
+                            overflowY: "auto",
+                            padding: "15px",
+                            backgroundColor: "rgba(0, 0, 0, 0.3)",
+                            borderRadius: "16px",
+                            marginBottom: "15px",
+                        }}
+                    >
+                        {messages.map((msg, idx) => (
                             <div
+                                key={idx}
                                 style={{
-                                    maxWidth: "70%",
-                                    padding: "12px 16px",
-                                    borderRadius: "18px",
-                                    backgroundColor:
-                                        msg.sender === "user"
-                                            ? "rgba(0, 173, 181, 0.8)"
-                                            : "rgba(255, 255, 255, 0.1)",
-                                    color: "white",
-                                    whiteSpace: "pre-wrap",
-                                    fontSize: "0.95rem",
+                                    display: "flex",
+                                    justifyContent:
+                                        msg.sender === "user" ? "flex-end" : "flex-start",
+                                    marginBottom: "12px",
                                 }}
                             >
-                                {msg.text}
+                                <div
+                                    style={{
+                                        maxWidth: "70%",
+                                        padding: "12px 16px",
+                                        borderRadius: "18px",
+                                        backgroundColor:
+                                            msg.sender === "user"
+                                                ? "rgba(0, 173, 181, 0.8)"
+                                                : "rgba(255, 255, 255, 0.1)",
+                                        color: "white",
+                                        whiteSpace: "pre-wrap",
+                                        fontSize: "0.95rem",
+                                    }}
+                                >
+                                    {msg.text}
+                                </div>
                             </div>
-                        </div>
-                    ))}
+                        ))}
 
-                    {/* Typing indicator */}
-                    {loading && (
-                        <div
-                            style={{
-                                display: "flex",
-                                justifyContent: "flex-start",
-                                marginBottom: "12px",
-                            }}
-                        >
+                        {/* Typing indicator */}
+                        {loading && (
                             <div
                                 style={{
                                     padding: "10px 15px",
@@ -136,51 +127,58 @@ const InterviewChatbot = () => {
                             >
                                 AI is typing...
                             </div>
-                        </div>
-                    )}
+                        )}
+                        <div ref={chatEndRef} />
+                    </div>
 
-                    <div ref={chatEndRef} />
-                </div>
+                    {/* Input + Send button */}
+                    <div style={{ display: "flex", gap: "10px" }}><style>
+                        {`
+                         .prepmate-container input::placeholder {
+                           color: white;
+                        opacity: 0.8; /* make it slightly dimmer than typed text */
+                        }
+                      `}
+                    </style>
 
-                {/* Input + button */}
-                <div style={{ display: "flex", gap: "10px" }}>
-                    <Form.Control
-                        type="text"
-                        placeholder="Ask something..."
-                        value={input}
-                        onChange={(e) => setInput(e.target.value)}
-                        onKeyDown={(e) => e.key === "Enter" && handleSend()}
-                        style={{
-                            borderRadius: "24px",
-                            padding: "12px 16px",
-                            border: "1px solid rgba(255,255,255,0.2)",
-                            backgroundColor: "rgba(255,255,255,0.05)",
-                            color: "white",
-                        }}
-                    />
-                    <Button
-                        onClick={handleSend}
-                        style={{
-                            borderRadius: "24px",
-                            padding: "0 25px",
-                            backgroundColor: "rgba(0, 173, 181, 0.6)",
-                            border: "1px solid #00ADB5",
-                            fontWeight: "bold",
-                            transition: "0.3s ease",
-                        }}
-                        onMouseEnter={(e) => {
-                            e.currentTarget.style.backgroundColor = "#00ADB5";
-                        }}
-                        onMouseLeave={(e) => {
-                            e.currentTarget.style.backgroundColor =
-                                "rgba(0, 173, 181, 0.6)";
-                        }}
-                    >
-                        Send
-                    </Button>
-                </div>
-            </div>
+                        <Form.Control
+                            type="text"
+                            placeholder="Ask something..."
+                            value={input}
+                            onChange={(e) => setInput(e.target.value)}
+                            onKeyDown={(e) => e.key === "Enter" && handleSend()}
+                            style={{
+                                borderRadius: "24px",
+                                padding: "12px 16px",
+                                border: "1px solid rgba(255,255,255,0.2)",
+                                backgroundColor: "rgba(255,255,255,0.05)",
+                                color: "white",
+                            }}
+                        />
+                        <Button
+                            onClick={handleSend}
+                            style={{
+                                borderRadius: "24px",
+                                padding: "0 25px",
+                                backgroundColor: "rgba(0, 173, 181, 0.6)",
+                                border: "1px solid #00ADB5",
+                                fontWeight: "bold",
+                            }}
+                            onMouseEnter={(e) => {
+                                e.currentTarget.style.backgroundColor = "#00ADB5";
+                            }}
+                            onMouseLeave={(e) => {
+                                e.currentTarget.style.backgroundColor =
+                                    "rgba(0, 173, 181, 0.6)";
+                            }}
+                        >
+                            Send
+                        </Button>
+                    </div>
+                </Card.Body>
+            </Card>
         </div>
+
     );
 };
 
