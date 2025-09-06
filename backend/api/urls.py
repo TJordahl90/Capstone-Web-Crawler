@@ -1,7 +1,7 @@
 from django.urls import path
 from .views import (
     CreateUserView, UserProfileView, CreateVerificationView, LoginView, LogoutView,
-    CsrfTokenView, AccountView, JobMatchingView, JobSearchingView, AllJobsView, DocumentView
+    CsrfTokenView, AccountView, JobMatchingView, JobSearchingView, AllJobsView, DocumentView, InterviewPrepChatBotView
 )
 
 urlpatterns = [
@@ -16,4 +16,5 @@ urlpatterns = [
     path('job_searching/', JobSearchingView, name='job_searching'),
     path("all_jobs/", AllJobsView, name='all_jobs'),
     path("documents/", DocumentView.as_view(), name="documents"),
+    path("ai_chatbot/", InterviewPrepChatBotView.as_view(), name="ai_chatbot")
 ]
