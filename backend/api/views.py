@@ -19,6 +19,7 @@ from rest_framework.parsers import MultiPartParser
 from .models import ResumeParser
 from .resumeParser import extract_text_from_pdf, parser
 import os
+from openai import OpenAI
 
 @permission_classes([AllowAny])
 @ensure_csrf_cookie
@@ -278,3 +279,87 @@ class DocumentView(APIView):
         account.save()
         
         return Response({"message": "Resume uploaded successfully"}, status=201)
+
+client = OpenAI(api_key=os.getenv("ai_api_key")) # Initialize OpenAI client
+
+class InterviewPrepChatBotView(APIView):
+    """Handles Interview chatbot AI"""
+    permission_classes = [IsAuthenticated]
+
+    def get(self, request):
+        user = request.user
+        account = Account.objects.get(user=user)
+
+        skill_list = []
+        for s in account.skills.all():
+            skill_list.append(s.name)
+        skills = ", ".join(skill_list)
+
+        preference_list = []
+        for p in account.preferences.all():
+            preference_list.append(p.name)
+        preferences = ", ".join(preference_list)
+        
+        education = str(account.education) if account.education else "No education data"
+        experience = str(account.experience) if account.experience else "No experience data"
+        headline = str(account.headline) if account.headline else "No headline data"
+        
+        # todo - implement the job data to the prompt - may need the job analysis feature first
+        # todo - generate different question types (technical, behavioral, situational, general) randomizer?
+        # todo - figure out how to limit to 3 questions a day
+
+        prompt = (
+            f"Generate a job interview question made for a job seeker based on their background."
+            f"Here is their background:\n"
+            F"Headline: {headline}\n"
+            f"Skills: {skills}\n"
+            f"Preferences: {preferences}\n"
+            f"Education: {education}\n"
+            f"Experience: {experience}\n"
+            f"Only output the interview question."
+        )
+
+        try:
+            response = client.chat.completions.create(
+                model="gpt-3.5-turbo", # not sure what model yet using for now
+                messages=[
+                    {"role": "system", "content": "You are an AI interview coach."},
+                    {"role": "user", "content": prompt},
+                ],
+            )
+
+            question = response.choices[0].message.content.strip()
+            return Response({"message": question})
+
+        except Exception as e:
+            return Response({"error": str(e)}, status=500)
+    
+
+    def post(self, request):
+        user = request.user
+        account = Account.objects.get(user=user)
+        user_response = request.data.get("message")
+
+        # need to figure out how to save previous question and include here or ai chat memory because it asks the same question
+        prompt = (
+            f"This is a response to an mock job interview question."
+            f"Can you analyze their response and provide feedback with strengths, weakness, and an improved response."
+            f"Only output the response."
+            f"Answer: {user_response}"
+        )
+
+        try:
+            response = client.chat.completions.create(
+                model="gpt-3.5-turbo",
+                messages=[
+                    {"role": "system", "content": "You are an AI interview coach."},
+                    {"role": "user", "content": prompt},
+                ],
+            )
+
+            response = response.choices[0].message.content.strip()
+            return Response({"message": response})
+
+        except Exception as e:
+            return Response({"error": str(e)}, status=500)
+    

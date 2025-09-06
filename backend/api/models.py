@@ -9,6 +9,7 @@ class CommonSkills(models.Model):
         return self.name
     
 class CommonPreferences(models.Model):
+    # IMPLEMENT OR ONLY USE SKILLS
     name = models.CharField(max_length=100, unique=True)
 
     def __str__(self):
@@ -38,6 +39,7 @@ class Experience(models.Model):
     
 class Account(models.Model):
     user = models.OneToOneField(User, on_delete=models.CASCADE) # each account is linked to a user
+    # POTENTIALLY DELETE UNNECESSARY DATA BECAUSE WE ARE NO LONGER MAKING RECRUITER/EMPLOYEER SYSTEM
     photo = models.ImageField(upload_to='api/uploads', blank=True, null=True)
     resume = models.FileField(upload_to='api/uploads', blank=True, null=True)
     headline = models.CharField(max_length=50, blank=True, null=True)
@@ -75,6 +77,7 @@ class SavedJob(models.Model):
         return self.jobPosting.title
 
 class JobTrend(models.Model):
+    # ADD MORE TRENDS (TOP TRENDING SKILLS, IN DEMAND JOBS, ETC)
     industry = models.CharField(max_length=255)
     totalPostings = models.IntegerField()
     averageSalary = models.DecimalField(decimal_places=2, max_digits=10)
@@ -92,6 +95,7 @@ class Verification(models.Model):
         return self.email
     
 class ResumeParser(models.Model):
+    # MAY NOT BE NECESSARY
     name = models.CharField(max_length=255, blank=True)
     email = models.EmailField(blank=True)
     phone = models.CharField(max_length=50, blank=True)
