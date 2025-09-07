@@ -9,7 +9,6 @@ class CommonSkills(models.Model):
         return self.name
     
 class CommonPreferences(models.Model):
-    # IMPLEMENT OR ONLY USE SKILLS
     name = models.CharField(max_length=100, unique=True)
 
     def __str__(self):
@@ -39,18 +38,13 @@ class Experience(models.Model):
     
 class Account(models.Model):
     user = models.OneToOneField(User, on_delete=models.CASCADE) # each account is linked to a user
-    # POTENTIALLY DELETE UNNECESSARY DATA BECAUSE WE ARE NO LONGER MAKING RECRUITER/EMPLOYEER SYSTEM
-    photo = models.ImageField(upload_to='api/uploads', blank=True, null=True)
     resume = models.FileField(upload_to='api/uploads', blank=True, null=True)
     headline = models.CharField(max_length=50, blank=True, null=True)
-    pronouns = models.CharField(max_length=25, blank=True, null=True)
     hometown = models.CharField(max_length=50, blank=True, null=True)
-    summary = models.TextField(blank=True, null=True)
     skills = models.ManyToManyField(CommonSkills, blank=True)
     preferences = models.ManyToManyField(CommonPreferences, blank=True)
     education = models.OneToOneField(Education, blank=True, null=True, on_delete=models.SET_NULL)
     experience = models.OneToOneField(Experience, blank=True, null=True, on_delete=models.SET_NULL)
-    accountStatus = models.BooleanField(default=False)
 
     def __str__(self):
         return self.user.username
