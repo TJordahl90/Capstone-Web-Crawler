@@ -25,12 +25,9 @@ const Account = () => {
     const [accountData, setaccountData] = useState({
         firstName: "",
         lastName: "",
-        photo: null,
         resume: null,
         headline: "",
-        pronouns: "",
         hometown: "",
-        summary: "",
         preferences: [],
         skills: [],
         grade: "",
@@ -54,12 +51,9 @@ const Account = () => {
         setaccountData({
             firstName: user.first_name || "",
             lastName: user.last_name || "",
-            photo: account.photo || null,
             resume: account.resume || null,
             headline: account.headline || "",
-            pronouns: account.pronouns || "",
             hometown: account.hometown || "",
-            summary: account.summary || "",
             skills: skills || [],
             preferences: preferences || [],
             grade: education.grade || "",
@@ -122,10 +116,8 @@ const Account = () => {
                 last_name: accountData.lastName,
             },
             account: {
-                photo: accountData.photo,
                 resume: accountData.resume,
                 headline: accountData.headline,
-                pronouns: accountData.pronouns,
                 hometown: accountData.hometown,
             },
         };
@@ -330,11 +322,6 @@ const Account = () => {
                                     : "Please enter your headline."
                                 }
                                 <br />
-                                {(accountData.pronouns)
-                                    ? `${accountData.pronouns}`
-                                    : "Please enter your pronouns."
-                                }
-                                <br />
                                 {(accountData.hometown)
                                     ? `${accountData.hometown}`
                                     : "Please enter your location."
@@ -377,10 +364,6 @@ const Account = () => {
                                         onChange={(e) => setaccountData({ ...accountData, headline: e.target.value })}
                                         placeholder="Enter your headline..."
                                     />
-                                    <InputField label="Pronouns" type="text" value={accountData.pronouns}
-                                        onChange={(e) => setaccountData({ ...accountData, pronouns: e.target.value })}
-                                        placeholder="Enter your pronouns..."
-                                    />
                                     <InputField label="Location" type="text" value={accountData.hometown}
                                         onChange={(e) => setaccountData({ ...accountData, hometown: e.target.value })}
                                         placeholder="Enter your City, State..."
@@ -406,72 +389,6 @@ const Account = () => {
                         </Modal>
                     )}
 
-                    {/* Summary */}
-                    <Card
-                        className="mb-4"
-                        style={{
-                            backgroundColor: "rgba(255, 255, 255, 0.2)", // more translucent
-                            backdropFilter: "blur(10px)",                // adds frosted-glass effect
-                            WebkitBackdropFilter: "blur(10px)",
-                            color: "var(--text3)",
-                            border: "2px solid var(--border)",
-                            borderRadius: "12px"
-                        }}
-                    >
-                        <Card.Body className="text-start">
-                            <Card.Title style={{ color: "#05e3ed" }}>Summary</Card.Title>
-                            <Card.Text>
-                                {(accountData.summary)
-                                    ? `${accountData.summary}`
-                                    : "No summary yet."
-                                }
-                            </Card.Text>
-                            <Card.Link onClick={() => setEditSummary(true)}>
-                                <FaPencilAlt
-                                    className="account-icon"
-                                    style={{
-                                        position: "absolute",
-                                        top: "15px",
-                                        right: "15px",
-                                        cursor: "pointer",
-                                        fontSize: "1.25rem",
-                                        color: "var(--pen)",
-                                    }}
-                                />
-                            </Card.Link>
-                        </Card.Body>
-                    </Card>
-
-                    {/* Edit Summary */}
-                    {editSummary && (
-                        <Modal show={editSummary} onHide={() => setEditSummary(false)}>
-                            <Modal.Header closeButton><Modal.Title style={{ color: "#05e3ed" }}>Edit Profile Summary</Modal.Title></Modal.Header>
-                            <Modal.Body>
-                                <Form onSubmit={handleSummary}>
-                                    <InputField label="Summary" type="text" value={accountData.summary}
-                                        onChange={(e) => setaccountData({ ...accountData, summary: e.target.value })}
-                                        placeholder="Enter 2-3 sentences about yourself..."
-                                    />
-                                    <Button
-                                        type="submit"
-                                        style={{
-                                            backgroundColor: isHovered ? "var(--hover3)" : "var(--button3)",
-                                            border: "none",
-                                            color: "var(--submittxt)",
-                                            padding: "10px 20px",
-                                            marginTop: "10px",
-                                            borderRadius: "8px",
-                                            fontWeight: "bold"
-                                        }}
-                                        onMouseEnter={() => setIsHovered(true)}
-                                        onMouseLeave={() => setIsHovered(false)}
-                                    >
-                                        Submit
-                                    </Button>
-                                </Form>
-                            </Modal.Body>
-                        </Modal>
-                    )}
 
                     {/* Display Job Preference Selections */}
                     <Card
