@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { Container, Row, Col, Form, Nav, ListGroup, Card, Button, Badge, ProgressBar, Spinner } from "react-bootstrap";
+import { Container, Row, Col, Form, Nav, ListGroup, Card, Button, Badge, ProgressBar, Spinner, Offcanvas } from "react-bootstrap";
 import { FaSearch, FaBriefcase, FaMapMarkerAlt, FaClock, FaStar, FaRegStar, FaFilter, FaMoneyBill } from "react-icons/fa";
 import fugetec from "../assets/FugeTechnologies.jpg";
 import texasIns from "../assets/TexasInstruments.jpg";
@@ -15,6 +15,33 @@ const FindJobs = () => {
     const [activeTab, setActiveTab] = useState("matched");
     const [searchTerm, setSearchTerm] = useState("");
     const [loading, setLoading] = useState(false);
+    const [showCanvas, setShowCanvas] = useState(false);
+	const [filters, setFilters] = useState({
+		employmentType: [],
+		experienceLevel: [],
+		location: [],
+		datePosted: []
+	});
+
+	// handle filter changes - not working yet
+	const handleFilterChange = () => {
+		const selected = {
+			employmentType: [],
+			experienceLevel: [],
+			location: [],
+			datePosted: []
+		};
+
+		document.querySelectorAll("input[type=checkbox]:checked").forEach((checkbox) => {
+			const { name, value } = checkbox;
+			if (selected[name]) {
+				selected[name].push(value);
+			}
+		});
+
+		setFilters(selected);
+		setShowCanvas(false);
+	}
 
     // Get company logo
     const getCompanyLogo = (companyName) => {
@@ -203,10 +230,10 @@ const FindJobs = () => {
                     }}
                 >
                     <div className="p-3 border-bottom">
-                        <h1 className="h4 mb-3"
+                        {/* <h1 className="h4 mb-3"
                             style={{
                                 color: "var(--text6)",
-                            }}>Find Jobs</h1>
+                            }}>Find Jobs</h1> */}
 
                         {/* Search bar */}
                         <Form onSubmit={e => {
@@ -214,7 +241,7 @@ const FindJobs = () => {
                             fetchSearchJobs();
                             setActiveTab("search");
                         }}>
-                            <Form.Group className="mb-3 position-relative">
+                            <Form.Group className="mb-3 position-relative" style={{ display: "flex", gap: "10px" }}>
                                 <div className="position-absolute" style={{ left: "10px", top: "50%", transform: "translateY(-50%)" }}>
                                     <FaSearch className="text-muted" />
                                 </div>
@@ -231,6 +258,7 @@ const FindJobs = () => {
                                         borderRadius: "8px",
                                     }}
                                 />
+                                <Button onClick={() => {setShowCanvas(true)}}>Filters</Button>
                             </Form.Group>
                         </Form>
 
@@ -503,6 +531,42 @@ const FindJobs = () => {
                     )}
                 </Col>
             </Row>
+
+			{/* Displays job filtering options */}
+            <Offcanvas show={showCanvas} onHide={() => {setShowCanvas(false)}} placement="end">
+				<Offcanvas.Header closeButton>
+					<Offcanvas.Title>Filters</Offcanvas.Title>
+				</Offcanvas.Header>
+
+				<Offcanvas.Body>
+    				<h6 className="mb-2">Employment Type</h6>
+    				<Form.Check type="checkbox" label="Full-Time" value="full-time" name="employmentType"/>
+    				<Form.Check type="checkbox" label="Part-Time" value="part-time" name="employmentType"/>
+    				<Form.Check type="checkbox" label="Internship" value="internship" name="employmentType"/>
+    				<Form.Check type="checkbox" label="Contract" value="contract" name="employmentType"/>
+    				<hr />
+
+    				<h6 className="mb-2">Experience Level</h6>
+    				<Form.Check type="checkbox" label="Entry Level" value="entry" name="experienceLevel"/>
+    				<Form.Check type="checkbox" label="Mid Level" value="mid" name="experienceLevel"/>
+    				<Form.Check type="checkbox" label="Senior Level" value="senior" name="experienceLevel"/>
+    				<hr />
+
+    				<h6 className="mb-2">Location</h6>
+    				<Form.Check type="checkbox" label="Remote" value="remote" name="location"/>
+    				<Form.Check type="checkbox" label="On-Site" value="on-site" name="location"/>
+    				<Form.Check type="checkbox" label="Hybrid" value="hybrid" name="location"/>
+    				<hr />
+
+					<h6 className="mb-2">Posted Date</h6>
+    				<Form.Check type="checkbox" label="Last 24 hours" value="24-hours" name="datePosted"/>
+    				<Form.Check type="checkbox" label="Last 7 days" value="7-days" name="datePosted"/>
+    				<Form.Check type="checkbox" label="Last 30 days" value="30-days" name="datePosted"/>
+
+					<Button onClick={handleFilterChange}>Apply</Button>
+				</Offcanvas.Body>
+            </Offcanvas>
+
         </Container>
     );
 };
