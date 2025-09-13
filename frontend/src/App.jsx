@@ -5,6 +5,7 @@ import SidePanel from "./components/SidePanel";
 import LandingPage from "./components/LandingPage";
 import AuthForm from "./components/AuthForm";
 import FindJobs from "./components/FindJobs";
+import MatchJobs from "./components/MatchJobs"
 import Account from "./components/Account";
 import SavedJobs from "./components/SavedJobs";
 import Verification from "./components/Verification";
@@ -57,6 +58,7 @@ function App() {
 					<SidePanel collapsed={collapsed}>
 						<Routes>
 							<Route path="/find-jobs" element={<FindJobs />} />
+							<Route path="/matched-jobs" element={<MatchJobs />} />
 							<Route path="/saved-jobs" element={<SavedJobs />} />
 							<Route path="/account" element={<Account />} />
 							<Route path="/documents" element={<Documents />} />

@@ -6,36 +6,11 @@ import texasIns from "../assets/TexasInstruments.jpg";
 import lockheed from "../assets/LockheedMartin.jpg";
 import api from "../api.js";
 
-const FindJobs = () => {
+const MatchJobs = () => {
     const [error, setError] = useState("");
-    const [allJobs, setAllJobs] = useState([]);
-    const [searchedJobs, setSearchedJobs] = useState([]);
+    const [matchedJobs, setMatchedJobs] = useState([]);
     const [selectedJob, setSelectedJob] = useState(null);
-    const [activeJobs, setActiveJobs] = useState("all");
-    const [searchTerm, setSearchTerm] = useState("");
     const [loading, setLoading] = useState(false);
-    const [showCanvas, setShowCanvas] = useState(false);
-	const [filters, setFilters] = useState({
-		employmentType: [],
-		experienceLevel: [],
-		location: [],
-		datePosted: []
-	});
-
-	// handle filter changes - not working yet
-	const handleFilterChange = () => {
-		const selected = {
-			employmentType: [],
-			experienceLevel: [],
-			location: [],
-			datePosted: []
-		};
-
-        //filter logic here
-
-		setFilters(selected);
-		setShowCanvas(false);
-	}
 
     // Get company logo
     const getCompanyLogo = (companyName) => {
@@ -53,60 +28,36 @@ const FindJobs = () => {
     };
 
     useEffect(() => {
-        fetchJobsByActiveJobs(activeJobs);
-    }, [activeJobs]);
-
-    const fetchJobsByActiveJobs = async (activeJobs) => {
-        setLoading(true);
-        setError("");
-
-        try {
-            let response;
-
-            if (activeJobs === "search") {
-                response = await api.get(`/job_searching/?search=${searchTerm}`);
+        // Fetch matched jobs
+        const fetchMatchedJobs = async () => {
+            setLoading(true);
+            setError("");
+            
+            try {
+                const response = await api.get("/job_matching/");
                 if (response.data && response.data.length > 0) {
-                    setSearchedJobs(response.data);
+                    setMatchedJobs(response.data);
                     setSelectedJob(response.data[0]);
                 } else {
-                    setSearchedJobs([]);
+                    setMatchedJobs([]);
                     setSelectedJob(null);
-                    setError("No matching jobs found. Try different search terms.");
+                    setError("No matched jobs found. Expand your account skills/preferences selections.");
                 }
-            } else if (activeJobs === "all") {
-                response = await api.get("/all_jobs/");
-                if (response.data && response.data.length > 0) {
-                    setAllJobs(response.data);
-                    setSelectedJob(response.data[0]);
-                } else {
-                    setAllJobs([]);
-                    setSelectedJob(null);
-                    setError("No jobs found. Please try again later.");
-                }
-            }
-        } catch (err) {
-            console.error(err);
-            setError("Error retrieving job data.");
-        } finally {
-            setLoading(false);
-        }
-    };
+            } catch (err) {
+                console.error(err);
+                setError("Error retrieving job data.");
+            } finally {
+                setLoading(false);
+            }   
+        };
+        fetchMatchedJobs();
+    },[]);
 
 
     const toggleSaveJob = (e) => {
         // implement save jobs in backend
     };
 
-    // Determines which jobs to display
-    const getJobs = () => {
-        if (activeJobs === "search") {
-            return searchedJobs;
-        } else {
-            return allJobs;
-        }
-    };
-
-    const displayJobs = getJobs();
 
     // Renders each of the job listings in the left sidebar
     const renderJobItem = (job) => {
@@ -163,6 +114,7 @@ const FindJobs = () => {
                         <FaClock size={10} className="me-1" />
                         <span>{job.datePosted || "N/A"}</span>
                     </small>
+                    <Badge>{job.matchPercent}%</Badge>
                 </div>
             </div>
         );
@@ -191,41 +143,14 @@ const FindJobs = () => {
                     className="p-0 d-flex flex-column"
                     style={{
                         height: "100%",
+
                         color: "var(--text6)",
                         borderRight: "1px solid var(--border)"
                     }}
                 >
-                    {/* Search bar and buttons */}
-                    <div className="p-3 border-bottom">
-                        <Form onSubmit={e => {
-                            e.preventDefault();
-                            setActiveJobs("search");
-                            fetchJobsByActiveJobs("search");
-                        }}>
-                            <Form.Group className="mb-1 d-flex align-items-center" style={{ gap: "10px" }}>
-                                <div className="position-relative flex-grow-1">
-                                    <div className="position-absolute" style={{ left: "10px", top: "45%", transform: "translateY(-50%)" }}>
-                                        <FaSearch className="text-muted" />
-                                    </div>
-                                    <Form.Control
-                                        type="text"
-                                        placeholder="Search jobs by title, company or location"
-                                        value={searchTerm}
-                                        onChange={(e) => setSearchTerm(e.target.value)}
-                                        style={{
-                                            paddingLeft: "30px",
-                                            backgroundColor: "var(--searchbg)",
-                                            color: "var(--searchtxt)",
-                                            border: "1px solid var(--border)",
-                                            borderRadius: "8px",
-                                        }}
-                                    />
-                                </div>
-                                <Button onClick={() => {setActiveJobs("all")}}>Browse</Button>
-                                <Button onClick={() => {setShowCanvas(true)}}>Filters</Button>
-                            </Form.Group>
-                        </Form>
-                    </div>
+                    {/* <div className="p-3 border-bottom">
+                        <h6 className="mb-2" style={{ color: "var(--text6)" }}># Job Matches Found (to implement)</h6>
+                    </div> */}
 
                     {/* Job listings */}
                     <div className="overflow-auto flex-grow-1">
@@ -237,11 +162,11 @@ const FindJobs = () => {
                                     <span className="visually-hidden">Loading...</span>
                                 </Spinner>
                             </div>
-                        ) : displayJobs.length === 0 ? (
+                        ) : matchedJobs.length === 0 ? (
                             <div className="p-3 text-white">No jobs found</div>
                         ) : (
                             <div className="job-list">
-                                {displayJobs.map(job => renderJobItem(job))}
+                                {matchedJobs.map(job => renderJobItem(job))}
                             </div>
                         )}
                     </div>
@@ -431,43 +356,8 @@ const FindJobs = () => {
                 </Col>
             </Row>
 
-			{/* Displays job filtering options */}
-            <Offcanvas show={showCanvas} onHide={() => {setShowCanvas(false)}} placement="end">
-				<Offcanvas.Header closeButton>
-					<Offcanvas.Title>Filters</Offcanvas.Title>
-				</Offcanvas.Header>
-
-				<Offcanvas.Body>
-    				<h6 className="mb-2">Employment Type</h6>
-    				<Form.Check type="checkbox" label="Full-Time" value="full-time" name="employmentType"/>
-    				<Form.Check type="checkbox" label="Part-Time" value="part-time" name="employmentType"/>
-    				<Form.Check type="checkbox" label="Internship" value="internship" name="employmentType"/>
-    				<Form.Check type="checkbox" label="Contract" value="contract" name="employmentType"/>
-    				<hr />
-
-    				<h6 className="mb-2">Experience Level</h6>
-    				<Form.Check type="checkbox" label="Entry Level" value="entry" name="experienceLevel"/>
-    				<Form.Check type="checkbox" label="Mid Level" value="mid" name="experienceLevel"/>
-    				<Form.Check type="checkbox" label="Senior Level" value="senior" name="experienceLevel"/>
-    				<hr />
-
-    				<h6 className="mb-2">Location</h6>
-    				<Form.Check type="checkbox" label="Remote" value="remote" name="location"/>
-    				<Form.Check type="checkbox" label="On-Site" value="on-site" name="location"/>
-    				<Form.Check type="checkbox" label="Hybrid" value="hybrid" name="location"/>
-    				<hr />
-
-					<h6 className="mb-2">Posted Date</h6>
-    				<Form.Check type="checkbox" label="Last 24 hours" value="24-hours" name="datePosted"/>
-    				<Form.Check type="checkbox" label="Last 7 days" value="7-days" name="datePosted"/>
-    				<Form.Check type="checkbox" label="Last 30 days" value="30-days" name="datePosted"/>
-
-					<Button onClick={handleFilterChange}>Apply</Button>
-				</Offcanvas.Body>
-            </Offcanvas>
-
         </Container>
     );
 };
 
-export default FindJobs;
+export default MatchJobs;

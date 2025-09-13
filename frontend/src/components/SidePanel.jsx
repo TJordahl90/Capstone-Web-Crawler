@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { FaBriefcase, FaBookmark, FaUser, FaChartBar } from "react-icons/fa";
+import { FaBriefcase, FaBookmark, FaUser, FaChartBar, FaRobot } from "react-icons/fa";
 // import "./SidePanel.css";
 import { useTheme } from './ThemeContext';
 import backgroundImage from "../assets/background4.png";
@@ -53,6 +53,27 @@ const SidePanel = ({ children, collapsed }) => {
                 >
                     <FaBriefcase className="icon" />
                     {!collapsed && <span>Jobs</span>}
+                </a>
+                <a
+                    href="/matched-jobs"
+                    onMouseEnter={() => setHoveredItem("matches")}
+                    onMouseLeave={() => setHoveredItem(null)}
+                    style={{
+                        display: "flex",
+                        alignItems: "center",
+                        gap: "10px",
+                        padding: "10px 10px 10px 20px",
+                        fontSize: "1rem",
+                        cursor: "pointer",
+                        transition: "background 0.3s ease",
+                        color: hoveredItem === "matches" ? "var(--textonhover2)" : "var(--text2)",
+                        backgroundColor: hoveredItem === "matches" ? "var(--hover)" : "transparent",
+                        borderRadius: hoveredItem === "matches" ? "5px" : "0",
+                        maxWidth: "40vw",
+                    }}
+                >
+                    <FaUser className="icon" />
+                    {!collapsed && <span>For You</span>}
                 </a>
                 <a href="/saved-jobs"
                     onMouseEnter={() => setHoveredItem("saved")}
@@ -117,7 +138,7 @@ const SidePanel = ({ children, collapsed }) => {
                         borderRadius: hoveredItem === "people" ? "5px" : "0",
                         maxWidth: "40vw",
                     }}>
-                    <FaUser className="icon" />
+                    <FaRobot className="icon" />
                     {!collapsed && <span>PrepMate</span>}
                 </a>
             </div>
