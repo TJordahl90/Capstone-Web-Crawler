@@ -239,10 +239,13 @@ def JobSearchingView(request):
     serializedJobs = JobPostingSerializer(foundJobs, many=True).data # Serialize job postings for frontend
     return Response(serializedJobs, status=200) # Send jobs to frontend
 
-@api_view(['GET'])
+@api_view(['POST'])
 @permission_classes([AllowAny])
 def AllJobsView(request):
     """Returns all available jobs"""
+    filters = request.data.get("filters", {})
+    # print("filters: ", filters)
+    # IMPLEMENT FILTERING - will probably need to expand job posting model to include experience, type, etc
     all_jobs = JobPosting.objects.all()
     serialized = JobPostingSerializer(all_jobs, many=True)
     return Response(serialized.data, status=200)

@@ -22,20 +22,30 @@ const FindJobs = () => {
 		datePosted: []
 	});
 
-	// handle filter changes - not working yet
-	const handleFilterChange = () => {
-		const selected = {
-			employmentType: [],
-			experienceLevel: [],
-			location: [],
-			datePosted: []
-		};
+    // helper functions below for job filtering system
+    const toggleFilter = (category, value) => {
+        setFilters(prev => {
+            const current = prev[category];
+            const updated = current.includes(value) 
+                ? current.filter(v => v !== value) 
+                : [...current, value];
+            return { ...prev, [category]: updated };
+        });
+    };
 
-        //filter logic here
-
-		setFilters(selected);
+	const handleFilterChange = async () => {
 		setShowCanvas(false);
-	}
+        setActiveJobs("all");
+        await fetchJobsByActiveJobs("all");
+	};
+
+    const clearAllFilters = () => {
+        setFilters({employmentType: [], 
+            experienceLevel: [], 
+            location: [], 
+            datePosted: []
+        })
+    };
 
     // Get company logo
     const getCompanyLogo = (companyName) => {
@@ -61,7 +71,7 @@ const FindJobs = () => {
         setError("");
 
         try {
-            let response;
+            let response = null;
 
             if (activeJobs === "search") {
                 response = await api.get(`/job_searching/?search=${searchTerm}`);
@@ -74,7 +84,7 @@ const FindJobs = () => {
                     setError("No matching jobs found. Try different search terms.");
                 }
             } else if (activeJobs === "all") {
-                response = await api.get("/all_jobs/");
+                response = await api.post("/all_jobs/", {"filters": filters || {}});
                 if (response.data && response.data.length > 0) {
                     setAllJobs(response.data);
                     setSelectedJob(response.data[0]);
@@ -201,6 +211,7 @@ const FindJobs = () => {
                             e.preventDefault();
                             setActiveJobs("search");
                             fetchJobsByActiveJobs("search");
+                            clearAllFilters();
                         }}>
                             <Form.Group className="mb-1 d-flex align-items-center" style={{ gap: "10px" }}>
                                 <div className="position-relative flex-grow-1">
@@ -222,7 +233,12 @@ const FindJobs = () => {
                                     />
                                 </div>
                                 <Button onClick={() => {setActiveJobs("all")}}>Browse</Button>
-                                <Button onClick={() => {setShowCanvas(true)}}>Filters</Button>
+                                <Button 
+                                    onClick={() => {setShowCanvas(true)}}
+                                    variant={Object.values(filters).flat().length > 0 ? "secondary" : "primary"}
+                                >
+                                    Filters
+                                </Button>
                             </Form.Group>
                         </Form>
                     </div>
@@ -439,30 +455,72 @@ const FindJobs = () => {
 
 				<Offcanvas.Body>
     				<h6 className="mb-2">Employment Type</h6>
-    				<Form.Check type="checkbox" label="Full-Time" value="full-time" name="employmentType"/>
-    				<Form.Check type="checkbox" label="Part-Time" value="part-time" name="employmentType"/>
-    				<Form.Check type="checkbox" label="Internship" value="internship" name="employmentType"/>
-    				<Form.Check type="checkbox" label="Contract" value="contract" name="employmentType"/>
+    				<Form.Check type="checkbox" label="Full-Time" value="full-time"
+                        checked={filters.employmentType.includes("full-time")} 
+                        onChange={() => toggleFilter("employmentType", "full-time")}
+                    />
+    				<Form.Check type="checkbox" label="Part-Time" value="part-time" 
+                        checked={filters.employmentType.includes("part-time")} 
+                        onChange={() => toggleFilter("employmentType", "part-time")}
+                    />
+    				<Form.Check type="checkbox" label="Internship" value="internship" 
+                        checked={filters.employmentType.includes("internship")} 
+                        onChange={() => toggleFilter("employmentType", "internship")}
+                    />
+    				<Form.Check type="checkbox" label="Contract" value="contract" 
+                        checked={filters.employmentType.includes("contract")} 
+                        onChange={() => toggleFilter("employmentType", "contract")}
+                    />
     				<hr />
 
     				<h6 className="mb-2">Experience Level</h6>
-    				<Form.Check type="checkbox" label="Entry Level" value="entry" name="experienceLevel"/>
-    				<Form.Check type="checkbox" label="Mid Level" value="mid" name="experienceLevel"/>
-    				<Form.Check type="checkbox" label="Senior Level" value="senior" name="experienceLevel"/>
+    				<Form.Check type="checkbox" label="Entry Level" value="entry"
+                        checked={filters.experienceLevel.includes("entry")} 
+                        onChange={() => toggleFilter("experienceLevel", "entry")}
+                    />
+    				<Form.Check type="checkbox" label="Mid Level" value="mid"
+                        checked={filters.experienceLevel.includes("mid")} 
+                        onChange={() => toggleFilter("experienceLevel", "mid")}
+                    />
+    				<Form.Check type="checkbox" label="Senior Level" value="senior"
+                        checked={filters.experienceLevel.includes("senior")} 
+                        onChange={() => toggleFilter("experienceLevel", "senior")}
+                    />
     				<hr />
 
     				<h6 className="mb-2">Location</h6>
-    				<Form.Check type="checkbox" label="Remote" value="remote" name="location"/>
-    				<Form.Check type="checkbox" label="On-Site" value="on-site" name="location"/>
-    				<Form.Check type="checkbox" label="Hybrid" value="hybrid" name="location"/>
+    				<Form.Check type="checkbox" label="Remote" value="remote"
+                        checked={filters.location.includes("remote")} 
+                        onChange={() => toggleFilter("location", "remote")}
+                    />
+    				<Form.Check type="checkbox" label="On-Site" value="on-site"
+                        checked={filters.location.includes("on-site")} 
+                        onChange={() => toggleFilter("location", "on-site")}
+                    />
+    				<Form.Check type="checkbox" label="Hybrid" value="hybrid"
+                        checked={filters.location.includes("hybrid")} 
+                        onChange={() => toggleFilter("location", "hybrid")}
+                    />
     				<hr />
 
 					<h6 className="mb-2">Posted Date</h6>
-    				<Form.Check type="checkbox" label="Last 24 hours" value="24-hours" name="datePosted"/>
-    				<Form.Check type="checkbox" label="Last 7 days" value="7-days" name="datePosted"/>
-    				<Form.Check type="checkbox" label="Last 30 days" value="30-days" name="datePosted"/>
+    				<Form.Check type="checkbox" label="Last 24 hours" value="24-hours"
+                        checked={filters.datePosted.includes("24-hours")} 
+                        onChange={() => toggleFilter("datePosted", "24-hours")}
+                    />
+    				<Form.Check type="checkbox" label="Last 7 days" value="7-days"
+                        checked={filters.datePosted.includes("7-days")} 
+                        onChange={() => toggleFilter("datePosted", "7-days")}
+                    />
+    				<Form.Check type="checkbox" label="Last 30 days" value="30-days"
+                        checked={filters.datePosted.includes("30-days")} 
+                        onChange={() => toggleFilter("datePosted", "30-days")}
+                    />
+    				<hr />
+                    {/* can add more filters in the future */}
 
 					<Button onClick={handleFilterChange}>Apply</Button>
+					<Button onClick={clearAllFilters}>Clear</Button>
 				</Offcanvas.Body>
             </Offcanvas>
 
