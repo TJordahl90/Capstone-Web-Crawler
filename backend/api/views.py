@@ -280,8 +280,14 @@ class DocumentView(APIView):
         
         account.resume = resume_file
         account.save()
+
+        text = extract_text_from_pdf(resume_file) #run the resume parser and stores data in pasrsed_data
+        parsed_datas = parser(text)
         
-        return Response({"message": "Resume uploaded successfully"}, status=201)
+        return Response({
+        "message": "Resume uploaded and parsed successfully",
+        "parsed_data": parsed_datas
+        }, status=201)
 
 client = OpenAI(api_key=os.getenv("ai_api_key")) # Initialize OpenAI client
 
