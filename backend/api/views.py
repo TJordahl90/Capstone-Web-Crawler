@@ -282,11 +282,31 @@ class DocumentView(APIView):
         account.save()
 
         text = extract_text_from_pdf(resume_file) #run the resume parser and stores data in pasrsed_data
-        parsed_datas = parser(text)
+        parsed_data = parser(text)
         
+        #Automatically adds it to the profile
+        if parsed_data.get("skills"):
+            skills_list = []
+            for skill in parsed_data["skills"]:
+                new_skill, created = CommonSkills.objects.get_or_create(name=skill)
+                skills_list.append(new_skill)
+            account.skills.set(skills_list)
+        
+        if parsed_data.get("education"):
+            edu_serializer = EducationSerializer(data=parsed_data["education"], many=True)
+            if edu_serializer.is_valid():
+                for edu in edu_serializer.save():
+                    account.education = edu
+
+        if parsed_data.get("experience"):
+            exp_serializer = ExperienceSerializer(data=parsed_data["experience"], many=True)
+            if exp_serializer.is_valid():
+                for exp in exp_serializer.save():
+                    account.experience = exp
+
         return Response({
         "message": "Resume uploaded and parsed successfully",
-        "parsed_data": parsed_datas
+        "parsed_data": parsed_data
         }, status=201)
 
 client = OpenAI(api_key=os.getenv("ai_api_key")) # Initialize OpenAI client
