@@ -13,6 +13,7 @@ const FindJobs = () => {
     const [selectedJob, setSelectedJob] = useState(null);
     const [activeJobs, setActiveJobs] = useState("all");
     const [searchTerm, setSearchTerm] = useState("");
+    const [isJobSaved, setIsJobSaved] = useState(false);
     const [loading, setLoading] = useState(false);
     const [showCanvas, setShowCanvas] = useState(false);
 	const [filters, setFilters] = useState({
@@ -103,8 +104,26 @@ const FindJobs = () => {
     };
 
 
-    const toggleSaveJob = (e) => {
-        // implement save jobs in backend
+    const toggleSaveJob = async (jobId, isJobSaved) => {
+        try {
+            let response;
+            if (isJobSaved) {
+                response = await api.delete(`/bookmark_jobs/${jobId}/`);
+                console.log(response.data);
+            }
+            else {
+                response = await api.post(`/bookmark_jobs/${jobId}/`);
+                console.log(response.data);
+            }
+
+            setSelectedJob(prev => ({
+                ...prev,
+                is_saved: !prev.is_saved
+            }));
+        }
+        catch (err) {
+            console.error(err);
+        }
     };
 
     // Determines which jobs to display
@@ -345,7 +364,6 @@ const FindJobs = () => {
                                         </div>
                                     </div>
                                     <div className="d-flex">
-                                        {/* implement saved jobs in backend*/}
                                         <Button
                                             style={{
                                                 backgroundColor: "var(--savebtnbg)",
@@ -362,9 +380,9 @@ const FindJobs = () => {
                                                 e.currentTarget.style.color = "var(--savebtntxt)";
                                             }}
                                             className="me-2 d-flex align-items-center"
-                                            onClick={(e) => toggleSaveJob(e)}
+                                            onClick={() => toggleSaveJob(selectedJob.id, selectedJob.is_saved)}
                                         >
-                                            Save Job
+                                            {selectedJob.is_saved ? "Unsave" : "Save Job"}
                                         </Button>
 
                                         <Button
