@@ -244,11 +244,42 @@ def JobSearchingView(request):
 def AllJobsView(request):
     """Returns all available jobs"""
     filters = request.data.get("filters", {})
-    # print("filters: ", filters)
     # IMPLEMENT FILTERING - will probably need to expand job posting model to include experience, type, etc
     all_jobs = JobPosting.objects.all()
+
+    if request.user.is_authenticated:
+        saved_job_ids = set(SavedJob.objects.filter(account=request.user.account).values_list('jobPosting_id', flat=True))
+
     serialized = JobPostingSerializer(all_jobs, many=True)
+    job_list = serialized.data
+
+    for job in job_list:
+        job['is_saved'] = job['id'] in saved_job_ids
+
     return Response(serialized.data, status=200)
+
+class BookmarkJobView(APIView):
+    """Saves a job to account, deletes a saved job, and lists all saved jobs"""
+    permission_classes = [IsAuthenticated]
+
+    def get(self, request):
+        account = Account.objects.get(user=request.user)
+        saved_jobs = SavedJob.objects.filter(account=account)
+        job_postings = [saved_job.jobPosting for saved_job in saved_jobs]
+        serialized = JobPostingSerializer(job_postings, many=True)
+        return Response(serialized.data, status=200)
+
+    def post(self, request, job_id):
+        account = Account.objects.get(user=request.user)
+        job_posting = JobPosting.objects.get(id=job_id)
+        SavedJob.objects.get_or_create(jobPosting=job_posting, account=account)
+        return Response({"message": "successfully saved "}, status=201)
+    
+    def delete(self, request, job_id):
+        account = Account.objects.get(user=request.user)
+        job_posting = JobPosting.objects.get(id=job_id)
+        SavedJob.objects.filter(jobPosting=job_posting, account=account).delete()
+        return Response({"message": "successfully deleted saved job"}, status=200)
 
 class DocumentView(APIView):
     permission_classes = [IsAuthenticated]
