@@ -52,7 +52,7 @@ const SidePanel = ({ children, collapsed }) => {
                     }}
                 >
                     <FaBriefcase className="icon" />
-                    {!collapsed && <span>Jobs</span>}
+                    {!collapsed && <span>Explore</span>}
                 </a>
                 <a
                     href="/matched-jobs"
