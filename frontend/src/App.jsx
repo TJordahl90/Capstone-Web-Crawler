@@ -5,9 +5,7 @@ import SidePanel from "./components/SidePanel";
 import LandingPage from "./components/LandingPage";
 import AuthForm from "./components/AuthForm";
 import FindJobs from "./components/FindJobs";
-import MatchJobs from "./components/MatchJobs"
 import Account from "./components/Account";
-import SavedJobs from "./components/SavedJobs";
 import Verification from "./components/Verification";
 import MobileNavBar from "./components/MobileNavBar";
 import PasswordReset from "./components/PasswordReset";
@@ -57,9 +55,9 @@ function App() {
 					<Navbar collapsed={collapsed} setCollapsed={setCollapsed} />
 					<SidePanel collapsed={collapsed}>
 						<Routes>
-							<Route path="/find-jobs" element={<FindJobs />} />
-							<Route path="/matched-jobs" element={<MatchJobs />} />
-							<Route path="/saved-jobs" element={<SavedJobs />} />
+							<Route path="/find-jobs" element={<FindJobs jobPostTypeProp="all" />} />
+							<Route path="/matched-jobs" element={<FindJobs jobPostTypeProp="matched" />} />
+							<Route path="/saved-jobs" element={<FindJobs jobPostTypeProp="saved" />} />
 							<Route path="/account" element={<Account />} />
 							<Route path="/documents" element={<Documents />} />
 							<Route path="/trend-analysis" element={<TrendAnalysis />} />

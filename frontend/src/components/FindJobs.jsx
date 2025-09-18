@@ -6,14 +6,15 @@ import texasIns from "../assets/TexasInstruments.jpg";
 import lockheed from "../assets/LockheedMartin.jpg";
 import api from "../api.js";
 
-const FindJobs = () => {
+const FindJobs = ({ jobPostTypeProp }) => {
+    const [jobPostType, setJobPostType] = useState(jobPostTypeProp);
     const [error, setError] = useState("");
     const [allJobs, setAllJobs] = useState([]);
     const [searchedJobs, setSearchedJobs] = useState([]);
+    const [matchedJobs, setMatchedJobs] = useState([]);
+    const [savedJobs, setSavedJobs] = useState([]);
     const [selectedJob, setSelectedJob] = useState(null);
-    const [activeJobs, setActiveJobs] = useState("all");
     const [searchTerm, setSearchTerm] = useState("");
-    const [isJobSaved, setIsJobSaved] = useState(false);
     const [loading, setLoading] = useState(false);
     const [showCanvas, setShowCanvas] = useState(false);
 	const [filters, setFilters] = useState({
@@ -36,8 +37,8 @@ const FindJobs = () => {
 
 	const handleFilterChange = async () => {
 		setShowCanvas(false);
-        setActiveJobs("all");
-        await fetchJobsByActiveJobs("all");
+        setJobPostType("all");
+        await fetchJobPostings("all");
 	};
 
     const clearAllFilters = () => {
@@ -63,18 +64,18 @@ const FindJobs = () => {
         return null;
     };
 
+    // calls fetchJobPosting function when page is loaded
     useEffect(() => {
-        fetchJobsByActiveJobs(activeJobs);
-    }, [activeJobs]);
+        fetchJobPostings();
+    }, [jobPostType]);
 
-    const fetchJobsByActiveJobs = async (activeJobs) => {
+    // function to retrieve job postings depending on JobPostType variable
+    const fetchJobPostings = async (type = jobPostType) => {
         setLoading(true);
         setError("");
-
         try {
-            let response = null;
-
-            if (activeJobs === "search") {
+            let response;
+            if (type === "search") {
                 response = await api.get(`/job_searching/?search=${searchTerm}`);
                 if (response.data && response.data.length > 0) {
                     setSearchedJobs(response.data);
@@ -84,7 +85,8 @@ const FindJobs = () => {
                     setSelectedJob(null);
                     setError("No matching jobs found. Try different search terms.");
                 }
-            } else if (activeJobs === "all") {
+            } 
+            else if (type === "all") {
                 response = await api.post("/all_jobs/", {"filters": filters || {}});
                 if (response.data && response.data.length > 0) {
                     setAllJobs(response.data);
@@ -95,7 +97,30 @@ const FindJobs = () => {
                     setError("No jobs found. Please try again later.");
                 }
             }
-        } catch (err) {
+            else if (type === "matched") {
+                response = await api.get("/job_matching/");
+                if (response.data && response.data.length > 0) {
+                    setMatchedJobs(response.data);
+                    setSelectedJob(response.data[0]);
+                } else {
+                    setMatchedJobs([]);
+                    setSelectedJob(null);
+                    setError("No matched jobs found. Expand your account skills/preferences selections.");
+                }
+            }
+            else if (type === "saved") {
+                response = await api.get("/bookmark_jobs/");
+                if (response.data && response.data.length > 0) {
+                    setSavedJobs(response.data);
+                    setSelectedJob(response.data[0]);
+                } else {
+                    setSavedJobs([]);
+                    setSelectedJob(null);
+                    setError("No jobs saved. Bookmark a job to save for later.");
+                }
+            }
+        } 
+        catch (err) {
             console.error(err);
             setError("Error retrieving job data.");
         } finally {
@@ -103,17 +128,15 @@ const FindJobs = () => {
         }
     };
 
-
+    // helper function for bookmarking job - DOES NOT WORK WHEN ON SAVED JOBS PAGE NEED TO FIX BUG
     const toggleSaveJob = async (jobId, isJobSaved) => {
         try {
-            let response;
             if (isJobSaved) {
                 response = await api.delete(`/bookmark_jobs/${jobId}/`);
                 console.log(response.data);
             }
             else {
-                response = await api.post(`/bookmark_jobs/${jobId}/`);
-                console.log(response.data);
+                await api.post(`/bookmark_jobs/${jobId}/`);
             }
 
             setSelectedJob(prev => ({
@@ -128,10 +151,17 @@ const FindJobs = () => {
 
     // Determines which jobs to display
     const getJobs = () => {
-        if (activeJobs === "search") {
+        if (jobPostType === "search") {
             return searchedJobs;
-        } else {
+        } else if (jobPostType === "all") {
             return allJobs;
+        } else if (jobPostType === "matched") {
+            return matchedJobs;
+        } else if (jobPostType === "saved") {
+            return savedJobs;
+        }
+        else {
+            return [];
         }
     };
 
@@ -192,6 +222,9 @@ const FindJobs = () => {
                         <FaClock size={10} className="me-1" />
                         <span>{job.datePosted || "N/A"}</span>
                     </small>
+                    {(jobPostType === "matched") && (
+                        <Badge>{job.matchPercent}%</Badge>
+                    )}
                 </div>
             </div>
         );
@@ -224,45 +257,48 @@ const FindJobs = () => {
                         borderRight: "1px solid var(--border)"
                     }}
                 >
-                    {/* Search bar and buttons */}
-                    <div className="p-3 border-bottom">
-                        <Form onSubmit={e => {
-                            e.preventDefault();
-                            setActiveJobs("search");
-                            fetchJobsByActiveJobs("search");
-                            clearAllFilters();
-                        }}>
-                            <Form.Group className="mb-1 d-flex align-items-center" style={{ gap: "10px" }}>
-                                <div className="position-relative flex-grow-1">
-                                    <div className="position-absolute" style={{ left: "10px", top: "45%", transform: "translateY(-50%)" }}>
-                                        <FaSearch className="text-muted" />
+                    {/* Search bar and buttons - only displays when jobPostType is all or search */}
+                    {(jobPostType === "all" || jobPostType === "search") && (
+                        <div className="p-3 border-bottom">
+                            <Form onSubmit={e => {
+                                e.preventDefault();
+                                setJobPostType("search");
+                                fetchJobPostings("search");
+                                clearAllFilters();
+                            }}>
+                                <Form.Group className="mb-1 d-flex align-items-center" style={{ gap: "10px" }}>
+                                    <div className="position-relative flex-grow-1">
+                                        <div className="position-absolute" style={{ left: "10px", top: "45%", transform: "translateY(-50%)" }}>
+                                            <FaSearch className="text-muted" />
+                                        </div>
+                                        <Form.Control
+                                            type="text"
+                                            placeholder="Search jobs by title, company or location"
+                                            value={searchTerm}
+                                            onChange={(e) => setSearchTerm(e.target.value)} 
+                                            style={{
+                                                paddingLeft: "30px",
+                                                backgroundColor: "var(--searchbg)",
+                                                color: "var(--searchtxt)",
+                                                border: "1px solid var(--border)",
+                                                borderRadius: "8px",
+                                            }}
+                                        />
                                     </div>
-                                    <Form.Control
-                                        type="text"
-                                        placeholder="Search jobs by title, company or location"
-                                        value={searchTerm}
-                                        onChange={(e) => setSearchTerm(e.target.value)}
-                                        style={{
-                                            paddingLeft: "30px",
-                                            backgroundColor: "var(--searchbg)",
-                                            color: "var(--searchtxt)",
-                                            border: "1px solid var(--border)",
-                                            borderRadius: "8px",
-                                        }}
-                                    />
-                                </div>
-                                <Button onClick={() => {setActiveJobs("all")}}>Browse</Button>
-                                <Button 
-                                    onClick={() => {setShowCanvas(true)}}
-                                    variant={Object.values(filters).flat().length > 0 ? "secondary" : "primary"}
-                                >
-                                    Filters
-                                </Button>
-                            </Form.Group>
-                        </Form>
-                    </div>
+                                    <Button onClick={() => {setJobPostType("all")}}>Browse</Button>
+                                    <Button 
+                                        onClick={() => {setShowCanvas(true)}}
+                                        variant={Object.values(filters).flat().length > 0 ? "secondary" : "primary"}
+                                    >
+                                        Filters
+                                    </Button>
+                                </Form.Group>
+                            </Form>
+                        </div>
+                    )}
+                    
 
-                    {/* Job listings */}
+                    {/* Job Posting listings */}
                     <div className="overflow-auto flex-grow-1">
                         {error && <div className="p-3 text-danger">{error}</div>}
 
