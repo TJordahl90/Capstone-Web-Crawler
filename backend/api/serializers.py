@@ -92,4 +92,4 @@ class JobPostingSerializer(serializers.ModelSerializer):
 class ChatBotSerializer(serializers.ModelSerializer):
     class Meta:
         model = ChatBotHistory
-        fields = ['id', 'question', 'time']
+        fields = ['id', 'question', 'time', 'speficJob', 'account']
