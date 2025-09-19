@@ -36,6 +36,13 @@ class Experience(models.Model):
     def __str__(self):
         return self.company
     
+class ChatBotHistory(models.Model):
+    question = models.TextField(blank=True, null=True)
+    time = models.TimeField()
+
+    def __str__(self):
+        return self.question
+
 class Account(models.Model):
     user = models.OneToOneField(User, on_delete=models.CASCADE) # each account is linked to a user
     resume = models.FileField(upload_to='api/uploads', blank=True, null=True)
@@ -45,10 +52,11 @@ class Account(models.Model):
     preferences = models.ManyToManyField(CommonPreferences, blank=True)
     education = models.OneToOneField(Education, blank=True, null=True, on_delete=models.SET_NULL)
     experience = models.OneToOneField(Experience, blank=True, null=True, on_delete=models.SET_NULL)
+    chatHistory = models.ForeignKey(ChatBotHistory, on_delete=models.CASCADE, null=True, blank=True)
 
     def __str__(self):
         return self.user.username
-
+    
 class JobPosting(models.Model):
     company = models.CharField(max_length=150)
     title = models.CharField(max_length=200)

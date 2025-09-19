@@ -88,3 +88,8 @@ class JobPostingSerializer(serializers.ModelSerializer):
     class Meta:
         model = JobPosting
         fields = ['id', 'company', 'title', 'description', 'requirements', 'location', 'datePosted', 'salary', 'jobURL']
+
+class ChatBotSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = ChatBotHistory
+        fields = ['id', 'question', 'time']
