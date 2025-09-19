@@ -20,6 +20,7 @@ from .models import ResumeParser
 from .resumeParser import extract_text_from_pdf, parser
 import os
 from openai import OpenAI
+from datetime import datetime
 
 @permission_classes([AllowAny])
 @ensure_csrf_cookie
@@ -363,6 +364,25 @@ class InterviewPrepChatBotView(APIView):
         education = str(account.education) if account.education else "No education data"
         experience = str(account.experience) if account.experience else "No experience data"
         headline = str(account.headline) if account.headline else "No headline data"
+
+        # These values are place holders for the real data
+        # We can update the code to dynamically fill these once we implemnt it on the frontend
+        jobPostingInstance = JobPosting.objects.get(id=1)
+        jobTitle = 'Network Engineer'
+        jobID = 1
+        company = 'Fugetec'
+        description = 'Analyze, design and configure network architecture and layout strategies. ' \
+                        'Configure and assist service deployment and document network issues. Detect, ' \
+                        'and mitigate DDOS attacks on the network. Install, maintain and monitor LAN servers, ' \
+                        'LAN systems. Troubleshoot and resolve all types of production network outages. ' \
+                        'Implement test plans and find bugs. Skills required: VLAN, BGP, OSPF, Cisco, ' \
+                        'Python, Juniper, Arista, DNS, and Wireshark. Bachelor’s degree in Science, ' \
+                        'Technology or Engineering (any) with 5 years of experience in the job offered' \
+                        ' or related occupation is required. Work location: Irving, TX and various unanticipated ' \
+                        'locations throughout the U.S. Send Resume to HR Dept., Fuge Technologies, Inc.,' \
+                        ' 5005 West Royal Lane, Suite 228, Irving, TX 75063. Should the candidate accept e' \
+                        'mployment with Fuge Technologies, Inc., the referring employee will be eligible to' \
+                        ' receive an award of $1,000.00 for the successful referral.'
         
         # todo - implement the job data to the prompt - may need the job analysis feature first
         # todo - generate different question types (technical, behavioral, situational, general) randomizer?
@@ -370,6 +390,10 @@ class InterviewPrepChatBotView(APIView):
 
         prompt = (
             f"Generate a job interview question made for a job seeker based on their background."
+            f'Here is the job description:'
+            f'Job Title: {jobTitle}\n'
+            f'Company: {company}\n'
+            f'Description: {description}\n'
             f"Here is their background:\n"
             F"Headline: {headline}\n"
             f"Skills: {skills}\n"
@@ -389,6 +413,13 @@ class InterviewPrepChatBotView(APIView):
             )
 
             question = response.choices[0].message.content.strip()
+
+            try:
+                chatBotHistoryInput = ChatBotHistory.objects.create(question=question, time=datetime.now().time(), specificJob=jobPostingInstance, account=account)
+                chatBotHistoryInput.save()
+            except Exception as e:
+                print(e)
+
             return Response({"message": question})
 
         except Exception as e:
