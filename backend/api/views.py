@@ -214,19 +214,16 @@ class CreateVerificationView(APIView):
 def JobMatchingView(request):
     userAccount = Account.objects.get(user=request.user) # Get user account
     matchedJobIds = matchUsersToJobs(userAccount) # Call job matching function
-    matchedJobs = JobPosting.objects.filter(id__in=matchedJobIds)
+    matchedJobs = list(JobPosting.objects.filter(id__in=matchedJobIds.keys()))
     
-    jobList = []
     for job in matchedJobs:
-        serializedJob = JobPostingSerializer(job).data
         count = matchedJobIds.get(job.id, 0)
         total = job.requirements.count() or 1
-        percentage = round(count / total * 100)
-        serializedJob['matchPercent'] = percentage
-        jobList.append(serializedJob)
+        job.matchPercent = round(count / total * 100)
 
-    jobList.sort(key=lambda x: x['matchPercent'], reverse=True) # this sorts the job list by percentage
-    return Response(jobList, status=200)
+    matchedJobs.sort(key=lambda x: x.matchPercent, reverse=True) # this sorts the job list by percentage
+    serializedJobs = JobPostingSerializer(matchedJobs, many=True, context={'request': request}).data
+    return Response(serializedJobs, status=200)
 
 @api_view(['GET'])
 @permission_classes([IsAuthenticated])
@@ -237,7 +234,7 @@ def JobSearchingView(request):
     
     searchedJobsIds = searchForJobs(search_term) # Call function
     foundJobs = JobPosting.objects.filter(id__in=searchedJobsIds) # Get jobs based on returned IDs
-    serializedJobs = JobPostingSerializer(foundJobs, many=True).data # Serialize job postings for frontend
+    serializedJobs = JobPostingSerializer(foundJobs, many=True, context={'request': request}).data # Serialize job postings for frontend
     return Response(serializedJobs, status=200) # Send jobs to frontend
 
 @api_view(['POST'])
@@ -247,17 +244,8 @@ def AllJobsView(request):
     filters = request.data.get("filters", {})
     # IMPLEMENT FILTERING - will probably need to expand job posting model to include experience, type, etc
     all_jobs = JobPosting.objects.all()
-
-    if request.user.is_authenticated:
-        saved_job_ids = set(SavedJob.objects.filter(account=request.user.account).values_list('jobPosting_id', flat=True))
-
-    serialized = JobPostingSerializer(all_jobs, many=True)
-    job_list = serialized.data
-
-    for job in job_list:
-        job['is_saved'] = job['id'] in saved_job_ids
-
-    return Response(serialized.data, status=200)
+    serializedJobs = JobPostingSerializer(all_jobs, many=True, context={'request': request}).data
+    return Response(serializedJobs, status=200)
 
 class BookmarkJobView(APIView):
     """Saves a job to account, deletes a saved job, and lists all saved jobs"""
@@ -267,8 +255,10 @@ class BookmarkJobView(APIView):
         account = Account.objects.get(user=request.user)
         saved_jobs = SavedJob.objects.filter(account=account)
         job_postings = [saved_job.jobPosting for saved_job in saved_jobs]
-        serialized = JobPostingSerializer(job_postings, many=True)
-        return Response(serialized.data, status=200)
+        serializedJobs = JobPostingSerializer(job_postings, many=True, context={'request': request}).data
+        for job in serializedJobs:
+            job['is_saved'] = True
+        return Response(serializedJobs, status=200)
 
     def post(self, request, job_id):
         account = Account.objects.get(user=request.user)

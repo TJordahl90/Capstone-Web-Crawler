@@ -128,21 +128,41 @@ const FindJobs = ({ jobPostTypeProp }) => {
         }
     };
 
-    // helper function for bookmarking job - DOES NOT WORK WHEN ON SAVED JOBS PAGE NEED TO FIX BUG
+    // helper function for bookmarking job
     const toggleSaveJob = async (jobId, isJobSaved) => {
         try {
             if (isJobSaved) {
-                response = await api.delete(`/bookmark_jobs/${jobId}/`);
-                console.log(response.data);
+                await api.delete(`/bookmark_jobs/${jobId}/`);
             }
             else {
                 await api.post(`/bookmark_jobs/${jobId}/`);
             }
 
-            setSelectedJob(prev => ({
-                ...prev,
-                is_saved: !prev.is_saved
-            }));
+            const updateJobsArray = (jobs) => {
+                const updatedJobs = jobs.map(job => {
+                    if (job.id === jobId) return { ...job, is_saved: !isJobSaved };
+                    else return job;
+                });
+                return updatedJobs;
+            };
+
+            if (jobPostType === "saved") {
+                const updatedSavedJobs = savedJobs.filter(job => job.id !== jobId);
+                setSavedJobs(updatedSavedJobs);
+
+                if (selectedJob && selectedJob.id === jobId) {
+                    setSelectedJob(updatedSavedJobs.length > 0 ? updatedSavedJobs[0] : null);
+                }
+            }
+            else {
+                if (jobPostType === "all") setAllJobs(updateJobsArray(allJobs));
+                if (jobPostType === "search") setSearchedJobs(updateJobsArray(searchedJobs));
+                if (jobPostType === "matched") setMatchedJobs(updateJobsArray(matchedJobs));
+
+                if (selectedJob && selectedJob.id === jobId) {
+                    setSelectedJob(prev => ({ ...prev, is_saved: !isJobSaved }));
+                }
+            }
         }
         catch (err) {
             console.error(err);
