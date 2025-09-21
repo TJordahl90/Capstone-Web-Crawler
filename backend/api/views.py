@@ -338,75 +338,70 @@ class InterviewPrepChatBotView(APIView):
     permission_classes = [IsAuthenticated]
 
     def get(self, request):
-        user = request.user
-        account = Account.objects.get(user=user)
-
-        skill_list = []
-        for s in account.skills.all():
-            skill_list.append(s.name)
-        skills = ", ".join(skill_list)
-
-        preference_list = []
-        for p in account.preferences.all():
-            preference_list.append(p.name)
-        preferences = ", ".join(preference_list)
-        
+        account = Account.objects.get(user=request.user)
+        skills = ", ".join([s.name for s in account.skills.all()])
+        preferences = ", ".join([p.name for p in account.preferences.all()])
         education = str(account.education) if account.education else "No education data"
         experience = str(account.experience) if account.experience else "No experience data"
         headline = str(account.headline) if account.headline else "No headline data"
 
-        # These values are place holders for the real data
-        # We can update the code to dynamically fill these once we implemnt it on the frontend
-        jobPostingInstance = JobPosting.objects.get(id=1)
-        jobTitle = 'Network Engineer'
-        jobID = 1
-        company = 'Fugetec'
-        description = 'Analyze, design and configure network architecture and layout strategies. ' \
-                        'Configure and assist service deployment and document network issues. Detect, ' \
-                        'and mitigate DDOS attacks on the network. Install, maintain and monitor LAN servers, ' \
-                        'LAN systems. Troubleshoot and resolve all types of production network outages. ' \
-                        'Implement test plans and find bugs. Skills required: VLAN, BGP, OSPF, Cisco, ' \
-                        'Python, Juniper, Arista, DNS, and Wireshark. Bachelor’s degree in Science, ' \
-                        'Technology or Engineering (any) with 5 years of experience in the job offered' \
-                        ' or related occupation is required. Work location: Irving, TX and various unanticipated ' \
-                        'locations throughout the U.S. Send Resume to HR Dept., Fuge Technologies, Inc.,' \
-                        ' 5005 West Royal Lane, Suite 228, Irving, TX 75063. Should the candidate accept e' \
-                        'mployment with Fuge Technologies, Inc., the referring employee will be eligible to' \
-                        ' receive an award of $1,000.00 for the successful referral.'
+        past_questions_list = list(ChatBotHistory.objects.filter(account=account).values_list('question', flat=True))
+        past_questions = ", ".join(past_questions_list)
+        job_id = request.GET.get('job_id')
+        prompt = ""
         
-        # todo - implement the job data to the prompt - may need the job analysis feature first
         # todo - generate different question types (technical, behavioral, situational, general) randomizer?
         # todo - figure out how to limit to 3 questions a day
 
-        prompt = (
-            f"Generate a job interview question made for a job seeker based on their background."
-            f'Here is the job description:'
-            f'Job Title: {jobTitle}\n'
-            f'Company: {company}\n'
-            f'Description: {description}\n'
-            f"Here is their background:\n"
-            F"Headline: {headline}\n"
-            f"Skills: {skills}\n"
-            f"Preferences: {preferences}\n"
-            f"Education: {education}\n"
-            f"Experience: {experience}\n"
-            f"Only output the interview question."
-        )
+        if job_id:
+            try:
+                job_posting = JobPosting.objects.get(id=job_id)
+                prompt = (
+                    f"You are an AI job interview coach. Generate a job interview question based on the company details.\n" # i think we need better prompt
+                    f'Here is the details for the job the applicant is applying for:\n'
+                    f'Job Title: {job_posting.title}\n'
+                    f'Company: {job_posting.company}\n'
+                    f'Description: {job_posting.description}\n'
+                    # f"Here is the applicant background:\n"
+                    # F"Headline: {headline}\n"
+                    # f"Skills: {skills}\n"
+                    # f"Preferences: {preferences}\n"
+                    # f"Education: {education}\n"
+                    # f"Experience: {experience}\n"
+                    f"IMPORTANT: This is the applicants chat history, avoid asking the same question\n"
+                    f"History: {past_questions}\n" 
+                    f"Only output the interview question."
+                )
+            except JobPosting.DoesNotExist:
+                return Response({"error": "Job posting not found."}, status=404)
+        else:
+            prompt = (
+                    f"You are an AI job interview coach. Generate a job interview question based on the applicant details and general behavioral/situational questions.\n"
+                    f"Here is the applicant background:\n"
+                    F"Headline: {headline}\n"
+                    f"Skills: {skills}\n"
+                    f"Preferences: {preferences}\n"
+                    f"Education: {education}\n"
+                    f"Experience: {experience}\n"
+                    f"IMPORTANT: This is the applicants chat history, avoid asking the same question\n"
+                    f"History: {past_questions}\n" 
+                    f"Only output the interview question."
+                )
 
         try:
             response = client.chat.completions.create(
                 model="gpt-3.5-turbo", # not sure what model yet using for now
-                messages=[
-                    {"role": "system", "content": "You are an AI interview coach."},
-                    {"role": "user", "content": prompt},
-                ],
+                messages=[{"role": "user", "content": prompt}],
             )
 
             question = response.choices[0].message.content.strip()
 
             try:
-                chatBotHistoryInput = ChatBotHistory.objects.create(question=question, time=datetime.now().time(), specificJob=jobPostingInstance, account=account)
-                chatBotHistoryInput.save()
+                if job_id:
+                    chatBotHistoryInput = ChatBotHistory.objects.create(question=question, time=datetime.now().time(), specificJob=job_posting, account=account)
+                else:
+                    chatBotHistoryInput = ChatBotHistory.objects.create(question=question, time=datetime.now().time(), account=account)
+                # chatBotHistoryInput.save() not needed i think
             except Exception as e:
                 print(e)
 
@@ -417,25 +412,22 @@ class InterviewPrepChatBotView(APIView):
     
 
     def post(self, request):
-        user = request.user
-        account = Account.objects.get(user=user)
-        user_response = request.data.get("message")
+        user_response = request.data.get("response")
+        bot_question = request.data.get("question")
 
-        # need to figure out how to save previous question and include here or ai chat memory because it asks the same question
         prompt = (
-            f"This is a response to an mock job interview question."
+            f"You are an AI job interview coach. An applicant was asked the following question.\n"
+            f"Question: {bot_question}"
+            f"The applicant provided this response\n"
+            f"Response: {user_response}"
             f"Can you analyze their response and provide feedback with strengths, weakness, and an improved response."
             f"Only output the response."
-            f"Answer: {user_response}"
         )
 
         try:
             response = client.chat.completions.create(
                 model="gpt-3.5-turbo",
-                messages=[
-                    {"role": "system", "content": "You are an AI interview coach."},
-                    {"role": "user", "content": prompt},
-                ],
+                messages=[{"role": "user", "content": prompt}],
             )
 
             response = response.choices[0].message.content.strip()
