@@ -18,35 +18,36 @@ const FindJobs = ({ jobPostTypeProp }) => {
     const [searchTerm, setSearchTerm] = useState("");
     const [loading, setLoading] = useState(false);
     const [showCanvas, setShowCanvas] = useState(false);
-	const [filters, setFilters] = useState({
-		employmentType: [],
-		experienceLevel: [],
-		location: [],
-		datePosted: []
-	});
+    const [filters, setFilters] = useState({
+        employmentType: [],
+        experienceLevel: [],
+        location: [],
+        datePosted: []
+    });
     const navigate = useNavigate();
 
     // helper functions below for job filtering system
     const toggleFilter = (category, value) => {
         setFilters(prev => {
             const current = prev[category];
-            const updated = current.includes(value) 
-                ? current.filter(v => v !== value) 
+            const updated = current.includes(value)
+                ? current.filter(v => v !== value)
                 : [...current, value];
             return { ...prev, [category]: updated };
         });
     };
 
-	const handleFilterChange = async () => {
-		setShowCanvas(false);
+    const handleFilterChange = async () => {
+        setShowCanvas(false);
         setJobPostType("all");
         await fetchJobPostings("all");
-	};
+    };
 
     const clearAllFilters = () => {
-        setFilters({employmentType: [], 
-            experienceLevel: [], 
-            location: [], 
+        setFilters({
+            employmentType: [],
+            experienceLevel: [],
+            location: [],
             datePosted: []
         })
     };
@@ -87,9 +88,9 @@ const FindJobs = ({ jobPostTypeProp }) => {
                     setSelectedJob(null);
                     setError("No matching jobs found. Try different search terms.");
                 }
-            } 
+            }
             else if (type === "all") {
-                response = await api.post("/all_jobs/", {"filters": filters || {}});
+                response = await api.post("/all_jobs/", { "filters": filters || {} });
                 if (response.data && response.data.length > 0) {
                     setAllJobs(response.data);
                     setSelectedJob(response.data[0]);
@@ -121,7 +122,7 @@ const FindJobs = ({ jobPostTypeProp }) => {
                     setError("No jobs saved. Bookmark a job to save for later.");
                 }
             }
-        } 
+        }
         catch (err) {
             console.error(err);
             setError("Error retrieving job data.");
@@ -282,22 +283,29 @@ const FindJobs = ({ jobPostTypeProp }) => {
                     {/* Search bar and buttons - only displays when jobPostType is all or search */}
                     {(jobPostType === "all" || jobPostType === "search") && (
                         <div className="p-3 border-bottom">
-                            <Form onSubmit={e => {
-                                e.preventDefault();
-                                setJobPostType("search");
-                                fetchJobPostings("search");
-                                clearAllFilters();
-                            }}>
-                                <Form.Group className="mb-1 d-flex align-items-center" style={{ gap: "10px" }}>
+                            <Form
+                                onSubmit={(e) => {
+                                    e.preventDefault();
+                                    setJobPostType("search");
+                                    fetchJobPostings("search");
+                                    clearAllFilters();
+                                }}
+                            >
+                                {/* Wrapper switches layout: row on small, column on md+ */}
+                                <div className="d-flex flex-row flex-md-column align-items-stretch" style={{ gap: "10px" }}>
+                                    {/* Search input */}
                                     <div className="position-relative flex-grow-1">
-                                        <div className="position-absolute" style={{ left: "10px", top: "45%", transform: "translateY(-50%)" }}>
+                                        <div
+                                            className="position-absolute"
+                                            style={{ left: "10px", top: "50%", transform: "translateY(-50%)" }}
+                                        >
                                             <FaSearch className="text-muted" />
                                         </div>
                                         <Form.Control
                                             type="text"
                                             placeholder="Search jobs by title, company or location"
                                             value={searchTerm}
-                                            onChange={(e) => setSearchTerm(e.target.value)} 
+                                            onChange={(e) => setSearchTerm(e.target.value)}
                                             style={{
                                                 paddingLeft: "30px",
                                                 backgroundColor: "var(--searchbg)",
@@ -307,18 +315,57 @@ const FindJobs = ({ jobPostTypeProp }) => {
                                             }}
                                         />
                                     </div>
-                                    <Button onClick={() => {setJobPostType("all")}}>Browse</Button>
-                                    <Button 
-                                        onClick={() => {setShowCanvas(true)}}
-                                        variant={Object.values(filters).flat().length > 0 ? "secondary" : "primary"}
-                                    >
-                                        Filters
-                                    </Button>
-                                </Form.Group>
+
+                                    {/* Buttons: inline on small, stacked below on md+ */}
+                                    <div className="d-flex justify-content-start ms-2 ms-md-0 mt-md-2" style={{ gap: "10px" }}>
+                                        <Button
+                                            style={{
+                                                backgroundColor: "var(--savebtnbg)",
+                                                color: "var(--savebtntxt)",
+                                                border: "1px solid var(--savebtntxt)",
+                                                transition: "all 0.3s ease",
+                                            }}
+                                            onMouseEnter={(e) => {
+                                                e.currentTarget.style.backgroundColor = "var(--savebtnhover)";
+                                                e.currentTarget.style.color = "var(--savebtnhovertxt)";
+                                            }}
+                                            onMouseLeave={(e) => {
+                                                e.currentTarget.style.backgroundColor = "var(--savebtnbg)";
+                                                e.currentTarget.style.color = "var(--savebtntxt)";
+                                            }}
+                                            onClick={() => setJobPostType("all")}
+                                        >
+                                            Browse
+                                        </Button>
+
+                                        <Button
+                                            style={{
+                                                backgroundColor: "var(--savebtnbg)",
+                                                color: "var(--savebtntxt)",
+                                                border: "1px solid var(--savebtntxt)",
+                                                transition: "all 0.3s ease",
+                                            }}
+                                            onMouseEnter={(e) => {
+                                                e.currentTarget.style.backgroundColor = "var(--savebtnhover)";
+                                                e.currentTarget.style.color = "var(--savebtnhovertxt)";
+                                            }}
+                                            onMouseLeave={(e) => {
+                                                e.currentTarget.style.backgroundColor = "var(--savebtnbg)";
+                                                e.currentTarget.style.color = "var(--savebtntxt)";
+                                            }}
+                                            onClick={() => setShowCanvas(true)}
+                                        >
+                                            Filters
+                                        </Button>
+                                    </div>
+
+
+                                </div>
                             </Form>
                         </div>
                     )}
-                    
+
+
 
                     {/* Job Posting listings */}
                     <div className="overflow-auto flex-grow-1">
@@ -480,7 +527,7 @@ const FindJobs = ({ jobPostTypeProp }) => {
                                                 e.currentTarget.style.backgroundColor = "var(--applybtnbg)";
                                                 e.currentTarget.style.color = "var(--applybtntxt)";
                                             }}
-                                            onClick={() => { navigate("/interview-chatbot"), { state: { job: selectedJob } } } }
+                                            onClick={() => { navigate("/interview-chatbot"), { state: { job: selectedJob } } }}
                                         >
                                             Interview Prep
                                         </Button>
@@ -495,7 +542,7 @@ const FindJobs = ({ jobPostTypeProp }) => {
                                     style={{
                                         backgroundColor: "rgba(255, 255, 255, 0.2)", // more translucent
                                         backdropFilter: "blur(10px)",                // adds frosted-glass effect
-                                        WebkitBackdropFilter: "blur(10px)",      
+                                        WebkitBackdropFilter: "blur(10px)",
                                         color: "var(--text2)",
                                         border: "2px solid var(--cardborder2)",
                                         borderRadius: "12px"
@@ -512,7 +559,7 @@ const FindJobs = ({ jobPostTypeProp }) => {
                                     style={{
                                         backgroundColor: "rgba(255, 255, 255, 0.2)", // more translucent
                                         backdropFilter: "blur(10px)",                // adds frosted-glass effect
-                                        WebkitBackdropFilter: "blur(10px)",      
+                                        WebkitBackdropFilter: "blur(10px)",
                                         color: "var(--text2)",
                                         border: "2px solid var(--cardborder2)",
                                         borderRadius: "12px"
@@ -544,83 +591,171 @@ const FindJobs = ({ jobPostTypeProp }) => {
                 </Col>
             </Row>
 
-			{/* Displays job filtering options */}
-            <Offcanvas show={showCanvas} onHide={() => {setShowCanvas(false)}} placement="end">
-				<Offcanvas.Header closeButton>
-					<Offcanvas.Title>Filters</Offcanvas.Title>
-				</Offcanvas.Header>
+            {/* Displays job filtering options */}
+            {/* Themed Filters Offcanvas */}
+            <Offcanvas
+                show={showCanvas}
+                onHide={() => setShowCanvas(false)}
+                placement="end"
+                className="filters-canvas"
+            >
+                {/* Inline styles to keep it self-contained */}
+                <style>{`
+    /* Panel background */
+    .filters-canvas .offcanvas {
+      background: rgba(20, 20, 20, 0.6); /* darker translucent base */
+      backdrop-filter: blur(14px);
+      -webkit-backdrop-filter: blur(14px);
+      border-left: 1px solid var(--border);
+      color: var(--text6);
+    }
 
-				<Offcanvas.Body>
-    				<h6 className="mb-2">Employment Type</h6>
-    				<Form.Check type="checkbox" label="Full-Time" value="full-time"
-                        checked={filters.employmentType.includes("full-time")} 
+    /* Header */
+    .filters-canvas .offcanvas-header {
+      border-bottom: 1px solid var(--border);
+      color: var(--text6);
+    }
+    .filters-canvas .offcanvas-title {
+      color: var(--text6);
+      font-weight: 700;
+    }
+
+    /* Labels */
+    .filters-canvas .form-check-label {
+      color: var(--text6);
+    }
+
+    /* Checkboxes */
+    .filters-canvas .form-check-input {
+      background-color: transparent;
+      border: 2px solid var(--border);
+      border-radius: 4px;
+      width: 1.2em;
+      height: 1.2em;
+      cursor: pointer;
+      transition: all 0.2s ease;
+    }
+    .filters-canvas .form-check-input:checked {
+      background-color: var(--applybtnbg);  /* ✅ use your theme color */
+      border-color: var(--applybtnbg);
+      box-shadow: 0 0 6px var(--applybtnbg);
+    }
+
+    .filters-canvas hr {
+      border-top: 1px solid var(--border);
+      opacity: 1;
+    }
+
+    /* Sticky footer buttons */
+    .filters-canvas .filters-actions {
+      position: sticky;
+      bottom: 0;
+      background: rgba(20,20,20,0.7);
+      backdrop-filter: blur(10px);
+      -webkit-backdrop-filter: blur(10px);
+      border-top: 1px solid var(--border);
+      padding: 12px;
+      display: flex;
+      gap: 10px;
+      justify-content: flex-end;
+    }
+
+    .filters-canvas .btn-theme {
+      background-color: var(--applybtnbg);
+      color: var(--applybtntxt);
+      border: none;
+      transition: all 0.3s ease;
+    }
+    .filters-canvas .btn-theme:hover {
+      background-color: var(--applybtnhover);
+      color: var(--applybtnhovertxt);
+    }
+
+    .filters-canvas .btn-outline-theme {
+      background: transparent;
+      color: var(--savebtntxt);
+      border: 1px solid var(--savebtntxt);
+      transition: all 0.3s ease;
+    }
+    .filters-canvas .btn-outline-theme:hover {
+      background-color: var(--savebtnhover);
+      color: var(--savebtntxt);
+    }
+  `}</style>
+                <Offcanvas.Header closeButton>
+                    <Offcanvas.Title>Filters</Offcanvas.Title>
+                </Offcanvas.Header>
+
+                <Offcanvas.Body>
+                    <h6 className="mb-2">Employment Type</h6>
+                    <Form.Check type="checkbox" label="Full-Time" value="full-time"
+                        checked={filters.employmentType.includes("full-time")}
                         onChange={() => toggleFilter("employmentType", "full-time")}
                     />
-    				<Form.Check type="checkbox" label="Part-Time" value="part-time" 
-                        checked={filters.employmentType.includes("part-time")} 
+                    <Form.Check type="checkbox" label="Part-Time" value="part-time"
+                        checked={filters.employmentType.includes("part-time")}
                         onChange={() => toggleFilter("employmentType", "part-time")}
                     />
-    				<Form.Check type="checkbox" label="Internship" value="internship" 
-                        checked={filters.employmentType.includes("internship")} 
+                    <Form.Check type="checkbox" label="Internship" value="internship"
+                        checked={filters.employmentType.includes("internship")}
                         onChange={() => toggleFilter("employmentType", "internship")}
                     />
-    				<Form.Check type="checkbox" label="Contract" value="contract" 
-                        checked={filters.employmentType.includes("contract")} 
+                    <Form.Check type="checkbox" label="Contract" value="contract"
+                        checked={filters.employmentType.includes("contract")}
                         onChange={() => toggleFilter("employmentType", "contract")}
                     />
-    				<hr />
+                    <hr />
 
-    				<h6 className="mb-2">Experience Level</h6>
-    				<Form.Check type="checkbox" label="Entry Level" value="entry"
-                        checked={filters.experienceLevel.includes("entry")} 
+                    <h6 className="mb-2">Experience Level</h6>
+                    <Form.Check type="checkbox" label="Entry Level" value="entry"
+                        checked={filters.experienceLevel.includes("entry")}
                         onChange={() => toggleFilter("experienceLevel", "entry")}
                     />
-    				<Form.Check type="checkbox" label="Mid Level" value="mid"
-                        checked={filters.experienceLevel.includes("mid")} 
+                    <Form.Check type="checkbox" label="Mid Level" value="mid"
+                        checked={filters.experienceLevel.includes("mid")}
                         onChange={() => toggleFilter("experienceLevel", "mid")}
                     />
-    				<Form.Check type="checkbox" label="Senior Level" value="senior"
-                        checked={filters.experienceLevel.includes("senior")} 
+                    <Form.Check type="checkbox" label="Senior Level" value="senior"
+                        checked={filters.experienceLevel.includes("senior")}
                         onChange={() => toggleFilter("experienceLevel", "senior")}
                     />
-    				<hr />
+                    <hr />
 
-    				<h6 className="mb-2">Location</h6>
-    				<Form.Check type="checkbox" label="Remote" value="remote"
-                        checked={filters.location.includes("remote")} 
+                    <h6 className="mb-2">Location</h6>
+                    <Form.Check type="checkbox" label="Remote" value="remote"
+                        checked={filters.location.includes("remote")}
                         onChange={() => toggleFilter("location", "remote")}
                     />
-    				<Form.Check type="checkbox" label="On-Site" value="on-site"
-                        checked={filters.location.includes("on-site")} 
+                    <Form.Check type="checkbox" label="On-Site" value="on-site"
+                        checked={filters.location.includes("on-site")}
                         onChange={() => toggleFilter("location", "on-site")}
                     />
-    				<Form.Check type="checkbox" label="Hybrid" value="hybrid"
-                        checked={filters.location.includes("hybrid")} 
+                    <Form.Check type="checkbox" label="Hybrid" value="hybrid"
+                        checked={filters.location.includes("hybrid")}
                         onChange={() => toggleFilter("location", "hybrid")}
                     />
-    				<hr />
+                    <hr />
 
-					<h6 className="mb-2">Posted Date</h6>
-    				<Form.Check type="checkbox" label="Last 24 hours" value="24-hours"
-                        checked={filters.datePosted.includes("24-hours")} 
+                    <h6 className="mb-2">Posted Date</h6>
+                    <Form.Check type="checkbox" label="Last 24 hours" value="24-hours"
+                        checked={filters.datePosted.includes("24-hours")}
                         onChange={() => toggleFilter("datePosted", "24-hours")}
                     />
-    				<Form.Check type="checkbox" label="Last 7 days" value="7-days"
-                        checked={filters.datePosted.includes("7-days")} 
+                    <Form.Check type="checkbox" label="Last 7 days" value="7-days"
+                        checked={filters.datePosted.includes("7-days")}
                         onChange={() => toggleFilter("datePosted", "7-days")}
                     />
-    				<Form.Check type="checkbox" label="Last 30 days" value="30-days"
-                        checked={filters.datePosted.includes("30-days")} 
+                    <Form.Check type="checkbox" label="Last 30 days" value="30-days"
+                        checked={filters.datePosted.includes("30-days")}
                         onChange={() => toggleFilter("datePosted", "30-days")}
                     />
-    				<hr />
-                    {/* can add more filters in the future */}
+                </Offcanvas.Body>
 
-					<Button onClick={handleFilterChange}>Apply</Button>
-					<Button onClick={clearAllFilters}>Clear</Button>
-				</Offcanvas.Body>
+                <div className="filters-actions">
+                    <Button className="btn-outline-theme" onClick={clearAllFilters}>Clear</Button>
+                    <Button className="btn-theme" onClick={handleFilterChange}>Apply</Button>
+                </div>
             </Offcanvas>
-
         </Container>
     );
 };
