@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from "react";
+import { useNavigate } from 'react-router-dom';
 import { Container, Row, Col, Form, Nav, ListGroup, Card, Button, Badge, ProgressBar, Spinner, Offcanvas } from "react-bootstrap";
 import { FaSearch, FaBriefcase, FaMapMarkerAlt, FaClock, FaStar, FaRegStar, FaFilter, FaMoneyBill } from "react-icons/fa";
 import fugetec from "../assets/FugeTechnologies.jpg";
@@ -23,6 +24,7 @@ const FindJobs = ({ jobPostTypeProp }) => {
 		location: [],
 		datePosted: []
 	});
+    const navigate = useNavigate();
 
     // helper functions below for job filtering system
     const toggleFilter = (category, value) => {
@@ -438,7 +440,7 @@ const FindJobs = ({ jobPostTypeProp }) => {
                                             className="me-2 d-flex align-items-center"
                                             onClick={() => toggleSaveJob(selectedJob.id, selectedJob.is_saved)}
                                         >
-                                            {selectedJob.is_saved ? "Unsave" : "Save Job"}
+                                            {selectedJob.is_saved ? "Unsave" : "Save"}
                                         </Button>
 
                                         <Button
@@ -459,7 +461,28 @@ const FindJobs = ({ jobPostTypeProp }) => {
                                             as="a"
                                             href={selectedJob.jobURL}
                                         >
-                                            Apply Now
+                                            Apply
+                                        </Button>
+
+                                        <Button
+                                            style={{
+                                                backgroundColor: "var(--applybtnbg)",
+                                                color: "var(--applybtntxt)",
+                                                border: "none",
+                                                transition: "all 0.3s ease",
+                                                marginLeft: "8px",
+                                            }}
+                                            onMouseEnter={(e) => {
+                                                e.currentTarget.style.backgroundColor = "var(--applybtnhover)";
+                                                e.currentTarget.style.color = "var(--applybtnhovertxt)";
+                                            }}
+                                            onMouseLeave={(e) => {
+                                                e.currentTarget.style.backgroundColor = "var(--applybtnbg)";
+                                                e.currentTarget.style.color = "var(--applybtntxt)";
+                                            }}
+                                            onClick={() => { navigate("/interview-chatbot"), { state: { job: selectedJob } } } }
+                                        >
+                                            Interview Prep
                                         </Button>
                                     </div>
                                 </div>

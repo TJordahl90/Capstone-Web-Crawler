@@ -6,11 +6,13 @@ import "./App.css"
 import { ThemeProvider } from './components/ThemeContext.jsx'
 
 createRoot(document.getElementById('root')).render(
-  <StrictMode>
+  // strictmode is causing the duplicate questions for interview prep 
+  // apparently strictmode will not duplicate when the website is hosted
+  // <StrictMode>
     <BrowserRouter>
       <ThemeProvider>
         <App />
       </ThemeProvider>
     </BrowserRouter>
-  </StrictMode>
+  // </StrictMode>
 )
