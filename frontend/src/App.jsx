@@ -22,7 +22,7 @@ function App() {
 
 	const [collapsed, setCollapsed] = useState(false);
 	const [isSmallWidth, setIsSmallWidth] = useState(
-		window.innerWidth > 480 && window.innerWidth <= 770
+		window.innerWidth > 480 && window.innerWidth <= 910
 	);
 	const [isMobile, setIsMobile] = useState(window.innerWidth <= 480);
 
@@ -30,7 +30,7 @@ function App() {
 		const handleResize = () => {
 			const width = window.innerWidth;
 			setIsMobile(width <= 480);
-			setIsSmallWidth(width > 480 && width <= 770);
+			setIsSmallWidth(width > 480 && width <= 910);
 			setCollapsed(width < 1000);
 		};
 		handleResize();

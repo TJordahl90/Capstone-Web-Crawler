@@ -426,7 +426,7 @@ const FindJobs = ({ jobPostTypeProp }) => {
 
                 {/* Job Posting Details */}
                 <Col
-                    md={8}
+                    md={9}
                     className="p-0"
                     style={{
                         height: "100%",
@@ -638,7 +638,7 @@ const FindJobs = ({ jobPostTypeProp }) => {
             >
                 {/* Inline styles to keep it self-contained */}
                 <style>{`
-    /* Panel background */
+      /* Panel background */
     .filters-canvas .offcanvas {
       background: rgba(20, 20, 20, 0.6); /* darker translucent base */
       backdrop-filter: blur(14px);
