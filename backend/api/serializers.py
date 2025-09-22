@@ -86,15 +86,26 @@ class JobPostingSerializer(serializers.ModelSerializer):
     requirements = CommonSkillsSerializer(many=True, read_only=True)
     matchPercent = serializers.IntegerField(read_only=True)
     is_saved = serializers.SerializerMethodField()
+    applied_status = serializers.SerializerMethodField()
 
     class Meta:
         model = JobPosting
-        fields = ['id', 'company', 'title', 'description', 'requirements', 'location', 'datePosted', 'salary', 'jobURL', 'matchPercent', 'is_saved']
+        fields = ['id', 'company', 'title', 'description', 'requirements', 'location', 'datePosted', 'salary', 'jobURL', 'matchPercent', 'is_saved', 'applied_status']
 
     def get_is_saved(self, job):
         request = self.context.get('request')
         if request and hasattr(request, 'user') and request.user.is_authenticated:
             return SavedJob.objects.filter(account=request.user.account, jobPosting=job).exists()
+        return False
+    
+    def get_applied_status(self, job):
+        request = self.context.get('request')
+        if request and hasattr(request, 'user') and request.user.is_authenticated:
+            try:
+                saved_job = SavedJob.objects.get(account=request.user.account, jobPosting=job)
+                return saved_job.applied
+            except SavedJob.DoesNotExist:
+                return False
         return False
 
 class ChatBotSerializer(serializers.ModelSerializer):

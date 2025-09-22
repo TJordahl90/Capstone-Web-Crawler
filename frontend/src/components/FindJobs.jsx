@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { useNavigate } from 'react-router-dom';
-import { Container, Row, Col, Form, Nav, ListGroup, Card, Button, Badge, ProgressBar, Spinner, Offcanvas } from "react-bootstrap";
+import { Container, Row, Col, Form, Nav, ListGroup, Card, Button, Badge, ProgressBar, Spinner, Offcanvas, Modal } from "react-bootstrap";
 import { FaSearch, FaBriefcase, FaMapMarkerAlt, FaClock, FaStar, FaRegStar, FaFilter, FaMoneyBill } from "react-icons/fa";
 import fugetec from "../assets/FugeTechnologies.jpg";
 import texasIns from "../assets/TexasInstruments.jpg";
@@ -17,6 +17,7 @@ const FindJobs = ({ jobPostTypeProp }) => {
     const [selectedJob, setSelectedJob] = useState(null);
     const [searchTerm, setSearchTerm] = useState("");
     const [loading, setLoading] = useState(false);
+    const [showModal, setShowModal] = useState(false);
     const [showCanvas, setShowCanvas] = useState(false);
     const [filters, setFilters] = useState({
         employmentType: [],
@@ -24,6 +25,7 @@ const FindJobs = ({ jobPostTypeProp }) => {
         location: [],
         datePosted: []
     });
+
     const navigate = useNavigate();
 
     // helper functions below for job filtering system
@@ -171,6 +173,41 @@ const FindJobs = ({ jobPostTypeProp }) => {
             console.error(err);
         }
     };
+
+    // helper function for the job posting application confirmation
+    const handleApplyClick = () => {
+        window.open(selectedJob.jobURL, '_blank', 'noopener,noreferrer');
+        setShowModal(true);
+    }
+
+    // Sets the job posting to "applied to" when button clicked
+    const handleConfirmApply = async () => {
+        if (!selectedJob) return;
+
+        try {
+            await api.post(`/application_status/${selectedJob.id}/`)
+
+            const updateJobsArray = (jobs) => {
+                const updatedJobs = jobs.map(job => {
+                    if (job.id === selectedJob.id) return { ...job, applied_status: true, is_saved: true };
+                    else return job;
+                });
+                return updatedJobs;
+            };
+
+            if (jobPostType === "all") setAllJobs(updateJobsArray(allJobs));
+            if (jobPostType === "search") setSearchedJobs(updateJobsArray(searchedJobs));
+            if (jobPostType === "matched") setMatchedJobs(updateJobsArray(matchedJobs));
+            if (jobPostType === "saved") setSavedJobs(updateJobsArray(savedJobs));
+            setSelectedJob(prev => ({ ...prev, applied_status: true, is_saved: true }));
+        }
+        catch (err) {
+            console.error(err);
+        }
+        finally {
+            setShowModal(false);
+        }
+    }
 
     // Determines which jobs to display
     const getJobs = () => {
@@ -505,10 +542,10 @@ const FindJobs = ({ jobPostTypeProp }) => {
                                                 e.currentTarget.style.backgroundColor = "var(--applybtnbg)";
                                                 e.currentTarget.style.color = "var(--applybtntxt)";
                                             }}
-                                            as="a"
-                                            href={selectedJob.jobURL}
+                                            onClick={handleApplyClick}
+                                            disabled={selectedJob.applied_status}
                                         >
-                                            Apply
+                                            {selectedJob.applied_status ? "Applied" : "Apply"}
                                         </Button>
 
                                         <Button
@@ -756,6 +793,18 @@ const FindJobs = ({ jobPostTypeProp }) => {
                     <Button className="btn-theme" onClick={handleFilterChange}>Apply</Button>
                 </div>
             </Offcanvas>
+
+            {/* Pop-up that asks user if they applied to job */}
+            <Modal show={showModal} onHide={() => setShowModal(false)} centered>
+                <Modal.Header closeButton>
+                    <Modal.Title>Did you apply?</Modal.Title>
+                </Modal.Header>
+                <Modal.Body>
+                    <Button onClick={() => setShowModal(false)}>No</Button>
+                    <Button onClick={handleConfirmApply}>Yes</Button>
+                </Modal.Body>
+            </Modal>
+
         </Container>
     );
 };

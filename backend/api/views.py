@@ -436,3 +436,19 @@ class InterviewPrepChatBotView(APIView):
         except Exception as e:
             return Response({"error": str(e)}, status=500)
     
+class ApplicationStatusView(APIView):
+    """Sets a job posting to already applied to"""
+    permission_classes = [IsAuthenticated]
+
+    def post(self, request, job_id):
+        try:
+            account = Account.objects.get(user=request.user)
+            job_posting = JobPosting.objects.get(id=job_id)
+            saved_job, created = SavedJob.objects.get_or_create(jobPosting=job_posting, account=account)
+            saved_job.applied = True
+            saved_job.save()
+            return Response({"message": "successfully applied to job"}, status=200)
+
+        except Exception as e:
+            return Response({"error": str(e)}, status=500)
+    
