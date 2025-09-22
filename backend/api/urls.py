@@ -1,7 +1,8 @@
 from django.urls import path
 from .views import (
     CreateUserView, UserProfileView, CreateVerificationView, LoginView, LogoutView,
-    CsrfTokenView, AccountView, JobMatchingView, JobSearchingView, AllJobsView, DocumentView, InterviewPrepChatBotView, BookmarkJobView
+    CsrfTokenView, AccountView, JobMatchingView, JobSearchingView, AllJobsView, DocumentView, 
+    InterviewPrepChatBotView, BookmarkJobView, ApplicationStatusView
 )
 
 urlpatterns = [
@@ -18,5 +19,6 @@ urlpatterns = [
     path("bookmark_jobs/", BookmarkJobView.as_view(), name="bookmark_jobs_list"),
     path("bookmark_jobs/<int:job_id>/", BookmarkJobView.as_view(), name="bookmark_jobs"),
     path("documents/", DocumentView.as_view(), name="documents"),
-    path("ai_chatbot/", InterviewPrepChatBotView.as_view(), name="ai_chatbot")
+    path("ai_chatbot/", InterviewPrepChatBotView.as_view(), name="ai_chatbot"),
+    path("application_status/<int:job_id>/", ApplicationStatusView.as_view(), name="apply")
 ]

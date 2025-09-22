@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { Container, Form, Nav, Navbar as NavBar, Offcanvas, Dropdown } from "react-bootstrap";
-import { FaBriefcase, FaBookmark, FaUser, FaBars, FaChartBar, FaUserCircle, FaBell } from "react-icons/fa";
+import { FaBriefcase, FaBookmark, FaUser, FaBars, FaChartBar, FaUserCircle, FaBell, FaRobot } from "react-icons/fa";
 import { useNavigate } from 'react-router-dom';
 import api from '../api.js';
 import logo from "../assets/logo3.png";
@@ -10,7 +10,7 @@ const Navbar = ({ setCollapsed, collapsed }) => {
   const navigate = useNavigate();
   const [isMobile, setIsMobile] = useState(window.innerWidth <= 480);
   const [isSmallWidth, setIsSmallWidth] = useState(
-    window.innerWidth > 480 && window.innerWidth <= 770
+    window.innerWidth > 480 && window.innerWidth <= 910
   );
   const [show, setShow] = useState(false);
   const storedUser = localStorage.getItem("user");
@@ -22,10 +22,10 @@ const Navbar = ({ setCollapsed, collapsed }) => {
       const width = window.innerWidth;
 
       setIsMobile(width <= 480);
-      setIsSmallWidth(width > 480 && width <= 770);
+      setIsSmallWidth(width > 480 && width <= 910);
 
       // Always hide Offcanvas if not in small screen mode
-      if (!(width <= 770)) {
+      if (!(width <= 910)) {
         setShow(false);
       }
     };
@@ -139,7 +139,7 @@ const Navbar = ({ setCollapsed, collapsed }) => {
           <Offcanvas show={show} onHide={() => setShow(false)}
             className="navbar-canvas-container"
             style={{
-              width: "200px",
+              width: "220px",
               backgroundColor: "rgba(255, 255, 255, 0.2)", // more translucent
               backdropFilter: "blur(10px)",                // adds frosted-glass effect
               WebkitBackdropFilter: "blur(10px)",
@@ -149,7 +149,8 @@ const Navbar = ({ setCollapsed, collapsed }) => {
               style={{
                 color: "var(--text2)",
                 height: "100%",
-                padding: "1rem 0"
+                padding: "0rem 0",
+                paddingTop: 3,
               }}
             >
               <div
@@ -175,55 +176,73 @@ const Navbar = ({ setCollapsed, collapsed }) => {
                   onMouseLeave={(e) => (e.target.style.color = "var(--hambuge)")}
                 />
                 {/*Logo button */}
-                <NavBar.Brand href="/find-jobs" style={{ display: "flex", alignItems: "center" }}>
-                  <img
-                    src={logo}
-                    alt="website logo"
-                    style={{
-                      height: "60px",
-                      width: "auto",
-                      paddingLeft: "1px",
-                      transition: "filter 0.3s ease"
-                    }}
-                    onMouseEnter={(e) =>
-                    (e.currentTarget.style.filter =
-                      "brightness(0) saturate(100%) invert(46%) sepia(21%) saturate(1549%) hue-rotate(7deg) brightness(89%) contrast(85%)")
-                    }
-                    onMouseLeave={(e) => (e.currentTarget.style.filter = "none")}
-                  />
-                </NavBar.Brand>
+                <span
+                  style={{
+                    fontSize: "2rem",
+                    fontWeight: "bold",
+                    paddingLeft: "15px",
+                    paddingTop: "6px",
+                    color: "#00ADB5",
+                  }}
+                >
+                  Northstar
+                </span>
               </div>
 
               {/* All other button */}
               <a
                 href="/find-jobs"
-                onMouseEnter={() => setHoveredItem("jobs")}
+                onMouseEnter={() => setHoveredItem("explore")}
                 onMouseLeave={() => setHoveredItem(null)}
                 style={{
                   display: "flex",
                   alignItems: "center",
                   gap: "10px",
-                  padding: "10px 10px 10px 20px",
+                  padding: "20px 10px 10px 20px",
                   fontSize: "1rem",
                   cursor: "pointer",
                   transition: "background 0.3s ease",
-                  color: hoveredItem === "jobs" ? "var(--textonhover2)" : "var(--text2)",
-                  backgroundColor: hoveredItem === "jobs" ? "var(--hover2)" : "transparent",
-                  borderRadius: hoveredItem === "jobs" ? "5px" : "0",
+                  color: hoveredItem === "explore" ? "var(--textonhover2)" : "var(--text2)",
+                  backgroundColor: hoveredItem === "explore" ? "var(--hover2)" : "transparent",
+                  borderRadius: hoveredItem === "explore" ? "5px" : "0",
                   maxWidth: "40vw",
                 }}
               >
                 <FaBriefcase className="icon" />
-                {<span>Jobs</span>}
+                <span>Explore</span>
               </a>
-              <a href="/saved-jobs"
+
+              <a
+                href="/matched-jobs"
+                onMouseEnter={() => setHoveredItem("foryou")}
+                onMouseLeave={() => setHoveredItem(null)}
+                style={{
+                  display: "flex",
+                  alignItems: "center",
+                  gap: "10px",
+                  padding: "20px 10px 10px 20px",
+                  fontSize: "1rem",
+                  cursor: "pointer",
+                  transition: "background 0.3s ease",
+                  color: hoveredItem === "foryou" ? "var(--textonhover2)" : "var(--text2)",
+                  backgroundColor: hoveredItem === "foryou" ? "var(--hover2)" : "transparent",
+                  borderRadius: hoveredItem === "foryou" ? "5px" : "0",
+                  maxWidth: "40vw",
+                }}
+              >
+                <FaUser className="icon" />
+                <span>For You</span>
+              </a>
+
+              <a
+                href="/saved-jobs"
                 onMouseEnter={() => setHoveredItem("saved")}
                 onMouseLeave={() => setHoveredItem(null)}
                 style={{
                   display: "flex",
                   alignItems: "center",
                   gap: "10px",
-                  padding: "10px 10px 10px 20px",
+                  padding: "20px 10px 10px 20px",
                   fontSize: "1rem",
                   cursor: "pointer",
                   transition: "background 0.3s ease",
@@ -231,57 +250,56 @@ const Navbar = ({ setCollapsed, collapsed }) => {
                   backgroundColor: hoveredItem === "saved" ? "var(--hover2)" : "transparent",
                   borderRadius: hoveredItem === "saved" ? "5px" : "0",
                   maxWidth: "40vw",
-                }}>
-                <FaBookmark className="icon" />
-                {<span>Saved</span>}
-              </a>
-              <div
-                style={{
-                  height: "1px",
-                  backgroundColor: "var(--text)",
-                  width: "180px",
-                  margin: "10px auto",
-                  transition: "width 0.3s ease"
                 }}
-              ></div>
-              <a href="/#"
-                onMouseEnter={() => setHoveredItem("trends")}
+              >
+                <FaBookmark className="icon" />
+                <span>Saved</span>
+              </a>
+
+              <a
+                href="/trend-analysis"
+                onMouseEnter={() => setHoveredItem("trend")}
                 onMouseLeave={() => setHoveredItem(null)}
                 style={{
                   display: "flex",
                   alignItems: "center",
                   gap: "10px",
-                  padding: "10px 10px 10px 20px",
+                  padding: "20px 10px 10px 20px",
                   fontSize: "1rem",
                   cursor: "pointer",
                   transition: "background 0.3s ease",
-                  color: hoveredItem === "trends" ? "var(--textonhover2)" : "var(--text2)",
-                  backgroundColor: hoveredItem === "trends" ? "var(--hover2)" : "transparent",
-                  borderRadius: hoveredItem === "trends" ? "5px" : "0",
+                  color: hoveredItem === "trend" ? "var(--textonhover2)" : "var(--text2)",
+                  backgroundColor: hoveredItem === "trend" ? "var(--hover2)" : "transparent",
+                  borderRadius: hoveredItem === "trend" ? "5px" : "0",
                   maxWidth: "40vw",
-                }}>
+                }}
+              >
                 <FaChartBar className="icon" />
-                {<span>Trends</span>}
+                <span>Trend</span>
               </a>
-              <a href="/#"
-                onMouseEnter={() => setHoveredItem("people")}
+
+              <a
+                href="/interview-chatbot"
+                onMouseEnter={() => setHoveredItem("prepmate")}
                 onMouseLeave={() => setHoveredItem(null)}
                 style={{
                   display: "flex",
                   alignItems: "center",
                   gap: "10px",
-                  padding: "10px 10px 10px 20px",
+                  padding: "20px 10px 10px 20px",
                   fontSize: "1rem",
                   cursor: "pointer",
                   transition: "background 0.3s ease",
-                  color: hoveredItem === "people" ? "var(--textonhover2)" : "var(--text2)",
-                  backgroundColor: hoveredItem === "people" ? "var(--hover2)" : "transparent",
-                  borderRadius: hoveredItem === "people" ? "5px" : "0",
+                  color: hoveredItem === "prepmate" ? "var(--textonhover2)" : "var(--text2)",
+                  backgroundColor: hoveredItem === "prepmate" ? "var(--hover2)" : "transparent",
+                  borderRadius: hoveredItem === "prepmate" ? "5px" : "0",
                   maxWidth: "40vw",
-                }}>
-                <FaUser className="icon" />
-                {<span>People</span>}
+                }}
+              >
+                <FaRobot className="icon" />
+                <span>PrepMate</span>
               </a>
+
             </Offcanvas.Body>
           </Offcanvas>
         )}
@@ -409,7 +427,7 @@ const Navbar = ({ setCollapsed, collapsed }) => {
         </div>
 
       </Container>
-    </NavBar>
+    </NavBar >
   );
 };
 

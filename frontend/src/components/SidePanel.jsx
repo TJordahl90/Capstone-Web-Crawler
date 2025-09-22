@@ -1,4 +1,5 @@
 import React, { useState } from "react";
+import { motion, AnimatePresence } from "framer-motion";
 import { FaBriefcase, FaBookmark, FaUser, FaChartBar, FaRobot } from "react-icons/fa";
 // import "./SidePanel.css";
 import { useTheme } from './ThemeContext';
@@ -29,7 +30,7 @@ const SidePanel = ({ children, collapsed }) => {
                     transition: "transform 0.3s ease, width 0.3s ease",
                     borderRight: "1px solid var(--border)",
                     borderTop: "1px solid var(--border)",
-                    display: window.innerWidth <= 770 ? "none" : "block",
+                    display: window.innerWidth <= 910 ? "none" : "block",
                     zIndex: 10,
                 }}
             >
@@ -41,7 +42,7 @@ const SidePanel = ({ children, collapsed }) => {
                         display: "flex",
                         alignItems: "center",
                         gap: "10px",
-                        padding: "10px 10px 10px 20px",
+                        padding: "20px 10px 10px 20px",
                         fontSize: "1rem",
                         cursor: "pointer",
                         transition: "background 0.3s ease",
@@ -49,10 +50,23 @@ const SidePanel = ({ children, collapsed }) => {
                         backgroundColor: hoveredItem === "jobs" ? "var(--hover)" : "transparent",
                         borderRadius: hoveredItem === "jobs" ? "5px" : "0",
                         maxWidth: "40vw",
+                        minHeight: "54px",
                     }}
                 >
                     <FaBriefcase className="icon" />
-                    {!collapsed && <span>Explore</span>}
+                    <AnimatePresence initial={false}>
+                        {!collapsed && (
+                            <motion.span
+                                key="label"
+                                initial={{ opacity: 0 }}
+                                animate={{ opacity: 1, transition: { delay: 0.2 } }} // Delay on enter
+                                exit={{ opacity: 0, transition: { duration: 0 } }}    // Instant disappear on exit
+                                className="ml-2"
+                            >
+                                Explore
+                            </motion.span>
+                        )}
+                    </AnimatePresence>
                 </a>
                 <a
                     href="/matched-jobs"
@@ -62,7 +76,7 @@ const SidePanel = ({ children, collapsed }) => {
                         display: "flex",
                         alignItems: "center",
                         gap: "10px",
-                        padding: "10px 10px 10px 20px",
+                        padding: "20px 10px 10px 20px",
                         fontSize: "1rem",
                         cursor: "pointer",
                         transition: "background 0.3s ease",
@@ -70,10 +84,23 @@ const SidePanel = ({ children, collapsed }) => {
                         backgroundColor: hoveredItem === "matches" ? "var(--hover)" : "transparent",
                         borderRadius: hoveredItem === "matches" ? "5px" : "0",
                         maxWidth: "40vw",
+                        minHeight: "54px",
                     }}
                 >
                     <FaUser className="icon" />
-                    {!collapsed && <span>For You</span>}
+                    <AnimatePresence initial={false}>
+                        {!collapsed && (
+                            <motion.span
+                                key="label"
+                                initial={{ opacity: 0 }}
+                                animate={{ opacity: 1, transition: { delay: 0.2 } }} // Delay on enter
+                                exit={{ opacity: 0, transition: { duration: 0 } }}    // Instant disappear on exit
+                                className="ml-2"
+                            >
+                                For You
+                            </motion.span>
+                        )}
+                    </AnimatePresence>
                 </a>
                 <a href="/saved-jobs"
                     onMouseEnter={() => setHoveredItem("saved")}
@@ -82,7 +109,7 @@ const SidePanel = ({ children, collapsed }) => {
                         display: "flex",
                         alignItems: "center",
                         gap: "10px",
-                        padding: "10px 10px 10px 20px",
+                        padding: "20px 10px 10px 20px",
                         fontSize: "1rem",
                         cursor: "pointer",
                         transition: "background 0.3s ease",
@@ -90,10 +117,25 @@ const SidePanel = ({ children, collapsed }) => {
                         backgroundColor: hoveredItem === "saved" ? "var(--hover)" : "transparent",
                         borderRadius: hoveredItem === "saved" ? "5px" : "0",
                         maxWidth: "40vw",
+                        minHeight: "54px",
                     }}>
                     <FaBookmark className="icon" />
-                    {!collapsed && <span>Saved</span>}
+                    <AnimatePresence initial={false}>
+                        {!collapsed && (
+                            <motion.span
+                                key="label"
+                                initial={{ opacity: 0 }}
+                                animate={{ opacity: 1, transition: { delay: 0.2 } }} // Delay on enter
+                                exit={{ opacity: 0, transition: { duration: 0 } }}    // Instant disappear on exit
+                                className="ml-2"
+                            >
+                                Saved
+                            </motion.span>
+                        )}
+                    </AnimatePresence>
+
                 </a>
+                {/*
                 <div
                     style={{
                         height: "1px",
@@ -103,6 +145,7 @@ const SidePanel = ({ children, collapsed }) => {
                         transition: "width 0.3s ease"
                     }}
                 ></div>
+                */}
                 <a href="/trend-analysis"
                     onMouseEnter={() => setHoveredItem("trends")}
                     onMouseLeave={() => setHoveredItem(null)}
@@ -110,7 +153,7 @@ const SidePanel = ({ children, collapsed }) => {
                         display: "flex",
                         alignItems: "center",
                         gap: "10px",
-                        padding: "10px 10px 10px 20px",
+                        padding: "20px 10px 10px 20px",
                         fontSize: "1rem",
                         cursor: "pointer",
                         transition: "background 0.3s ease",
@@ -118,9 +161,23 @@ const SidePanel = ({ children, collapsed }) => {
                         backgroundColor: hoveredItem === "trends" ? "var(--hover)" : "transparent",
                         borderRadius: hoveredItem === "trends" ? "5px" : "0",
                         maxWidth: "40vw",
+                        minHeight: "54px",
                     }}>
                     <FaChartBar className="icon" />
-                    {!collapsed && <span>Trends</span>}
+                    <AnimatePresence initial={false}>
+                        {!collapsed && (
+                            <motion.span
+                                key="label"
+                                initial={{ opacity: 0 }}
+                                animate={{ opacity: 1, transition: { delay: 0.2 } }} // Delay on enter
+                                exit={{ opacity: 0, transition: { duration: 0 } }}    // Instant disappear on exit
+                                className="ml-2"
+                            >
+                                Trends
+                            </motion.span>
+                        )}
+                    </AnimatePresence>
+
                 </a>
                 <a href="/interview-chatbot"
                     onMouseEnter={() => setHoveredItem("people")}
@@ -129,7 +186,7 @@ const SidePanel = ({ children, collapsed }) => {
                         display: "flex",
                         alignItems: "center",
                         gap: "10px",
-                        padding: "10px 10px 10px 20px",
+                        padding: "20px 10px 10px 20px",
                         fontSize: "1rem",
                         cursor: "pointer",
                         transition: "background 0.3s ease",
@@ -137,9 +194,23 @@ const SidePanel = ({ children, collapsed }) => {
                         backgroundColor: hoveredItem === "people" ? "var(--hover)" : "transparent",
                         borderRadius: hoveredItem === "people" ? "5px" : "0",
                         maxWidth: "40vw",
+                        minHeight: "54px",
                     }}>
                     <FaRobot className="icon" />
-                    {!collapsed && <span>PrepMate</span>}
+                    <AnimatePresence initial={false}>
+                        {!collapsed && (
+                            <motion.span
+                                key="label"
+                                initial={{ opacity: 0 }}
+                                animate={{ opacity: 1, transition: { delay: 0.2 } }} // Delay on enter
+                                exit={{ opacity: 0, transition: { duration: 0 } }}    // Instant disappear on exit
+                                className="ml-2"
+                            >
+                                PrepMate
+                            </motion.span>
+                        )}
+                    </AnimatePresence>
+
                 </a>
             </div>
 
@@ -148,14 +219,15 @@ const SidePanel = ({ children, collapsed }) => {
                 className="main-area"
                 style={{
                     flexGrow: 1,
-                    marginLeft: window.innerWidth <= 770 ? "0px" : (collapsed ? "60px" : "200px"),
+                    marginLeft: window.innerWidth <= 910 ? "0px" : (collapsed ? "60px" : "200px"),
                     display: "flex",
                     flexDirection: "column",
                     overflowX: "hidden",
-                    width: window.innerWidth <= 770 ? "100vw" : (collapsed ? "calc(100vw - 60px)" : "calc(100vw - 200px)"),
+                    width: window.innerWidth <= 910 ? "100vw" : (collapsed ? "calc(100vw - 60px)" : "calc(100vw - 200px)"),
                     transition: "margin-left 0.3s ease, width 0.3s ease",
                     borderTop: "1px solid var(--border)",
                     height: "calc(100vh - 60px)", // prev 100vh - 52px
+                    
                 }}
             >
                 <div style={{ overflowY: "auto", flex: 1 }}>{children}</div>
