@@ -227,6 +227,7 @@ const SidePanel = ({ children, collapsed }) => {
                     transition: "margin-left 0.3s ease, width 0.3s ease",
                     borderTop: "1px solid var(--border)",
                     height: "calc(100vh - 60px)", // prev 100vh - 52px
+                    
                 }}
             >
                 <div style={{ overflowY: "auto", flex: 1 }}>{children}</div>

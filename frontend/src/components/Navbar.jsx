@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { Container, Form, Nav, Navbar as NavBar, Offcanvas, Dropdown } from "react-bootstrap";
-import { FaBriefcase, FaBookmark, FaUser, FaBars, FaChartBar, FaUserCircle, FaBell } from "react-icons/fa";
+import { FaBriefcase, FaBookmark, FaUser, FaBars, FaChartBar, FaUserCircle, FaBell, FaRobot } from "react-icons/fa";
 import { useNavigate } from 'react-router-dom';
 import api from '../api.js';
 import logo from "../assets/logo3.png";
@@ -181,7 +181,7 @@ const Navbar = ({ setCollapsed, collapsed }) => {
                     fontSize: "2rem",
                     fontWeight: "bold",
                     paddingLeft: "15px",
-                    paddingTop: "7px",
+                    paddingTop: "6px",
                     color: "#00ADB5",
                   }}
                 >
@@ -198,7 +198,7 @@ const Navbar = ({ setCollapsed, collapsed }) => {
                   display: "flex",
                   alignItems: "center",
                   gap: "10px",
-                  padding: "10px 10px 10px 20px",
+                  padding: "20px 10px 10px 20px",
                   fontSize: "1rem",
                   cursor: "pointer",
                   transition: "background 0.3s ease",
@@ -213,14 +213,14 @@ const Navbar = ({ setCollapsed, collapsed }) => {
               </a>
 
               <a
-                href="/saved-jobs"
+                href="/matched-jobs"
                 onMouseEnter={() => setHoveredItem("foryou")}
                 onMouseLeave={() => setHoveredItem(null)}
                 style={{
                   display: "flex",
                   alignItems: "center",
                   gap: "10px",
-                  padding: "10px 10px 10px 20px",
+                  padding: "20px 10px 10px 20px",
                   fontSize: "1rem",
                   cursor: "pointer",
                   transition: "background 0.3s ease",
@@ -230,7 +230,7 @@ const Navbar = ({ setCollapsed, collapsed }) => {
                   maxWidth: "40vw",
                 }}
               >
-                <FaBookmark className="icon" />
+                <FaUser className="icon" />
                 <span>For You</span>
               </a>
 
@@ -242,7 +242,7 @@ const Navbar = ({ setCollapsed, collapsed }) => {
                   display: "flex",
                   alignItems: "center",
                   gap: "10px",
-                  padding: "10px 10px 10px 20px",
+                  padding: "20px 10px 10px 20px",
                   fontSize: "1rem",
                   cursor: "pointer",
                   transition: "background 0.3s ease",
@@ -257,14 +257,14 @@ const Navbar = ({ setCollapsed, collapsed }) => {
               </a>
 
               <a
-                href="/#"
+                href="/trend-analysis"
                 onMouseEnter={() => setHoveredItem("trend")}
                 onMouseLeave={() => setHoveredItem(null)}
                 style={{
                   display: "flex",
                   alignItems: "center",
                   gap: "10px",
-                  padding: "10px 10px 10px 20px",
+                  padding: "20px 10px 10px 20px",
                   fontSize: "1rem",
                   cursor: "pointer",
                   transition: "background 0.3s ease",
@@ -279,14 +279,14 @@ const Navbar = ({ setCollapsed, collapsed }) => {
               </a>
 
               <a
-                href="/#"
+                href="/interview-chatbot"
                 onMouseEnter={() => setHoveredItem("prepmate")}
                 onMouseLeave={() => setHoveredItem(null)}
                 style={{
                   display: "flex",
                   alignItems: "center",
                   gap: "10px",
-                  padding: "10px 10px 10px 20px",
+                  padding: "20px 10px 10px 20px",
                   fontSize: "1rem",
                   cursor: "pointer",
                   transition: "background 0.3s ease",
@@ -296,7 +296,7 @@ const Navbar = ({ setCollapsed, collapsed }) => {
                   maxWidth: "40vw",
                 }}
               >
-                <FaUser className="icon" />
+                <FaRobot className="icon" />
                 <span>PrepMate</span>
               </a>
 

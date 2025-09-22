@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import { useNavigate, useLocation } from "react-router-dom";
-import { FaBriefcase, FaBookmark, FaChartBar, FaUser } from "react-icons/fa";
+import { FaBriefcase, FaBookmark, FaUser, FaChartBar, FaRobot } from "react-icons/fa";
 import logo from "../assets/logo3.png";
 import logoClicked from "../assets/logo3.png";
 //import "./MobileNavBar.css";
@@ -42,8 +42,24 @@ const MobileNavBar = () => {
                 }}
             >
                 <FaBriefcase style={{ fontSize: "20px", marginBottom: "2px" }} />
-                <span>Jobs</span>
+                <span>Explore</span>
             </button>
+            <button
+                onClick={() => navigate("/matched-jobs")}
+                style={{
+                    background: "none",
+                    border: "none",
+                    display: "flex",
+                    flexDirection: "column",
+                    alignItems: "center",
+                    fontSize: "12px",
+                    color: location.pathname === "/matched-jobs" ? "var(--hover2)" : "var(--text2)"
+                }}
+            >
+                <FaUser style={{ fontSize: "20px", marginBottom: "2px" }} />
+                <span>For You</span>
+            </button>
+
             <button
                 onClick={() => navigate("/saved-jobs")}
                 style={{
@@ -61,34 +77,7 @@ const MobileNavBar = () => {
             </button>
 
             <button
-                onClick={handleLogoClick}
-                style={{
-                    position: "relative",
-                    top: "-20px",
-                    background: "var(--lbg)",
-                    border: "5px solid var(--border)",
-                    borderRadius: "50%",
-                    width: "70px",
-                    height: "70px",
-                    padding: 0,
-                    display: "flex",
-                    alignItems: "center",
-                    justifyContent: "center"
-                }}
-            >
-                <img
-                    src={location.pathname === "/find-jobs" ? logoClicked : logo}
-                    alt="Logo"
-                    style={{
-                        width: "50px",
-                        height: "50px",
-                        objectFit: "contain"
-                    }}
-                />
-            </button>
-
-            <button
-                onClick={() => navigate("")}
+                onClick={() => navigate("/trend-analysis")}
                 style={{
                     background: "none",
                     border: "none",
@@ -96,14 +85,14 @@ const MobileNavBar = () => {
                     flexDirection: "column",
                     alignItems: "center",
                     fontSize: "12px",
-                    color: location.pathname === "" ? "var(--hover2)" : "var(--text2)"
+                    color: location.pathname === "/trend-analysis" ? "var(--hover2)" : "var(--text2)"
                 }}
             >
                 <FaChartBar style={{ fontSize: "20px", marginBottom: "2px" }} />
                 <span>Trends</span>
             </button>
             <button
-                onClick={() => navigate("")}
+                onClick={() => navigate("/interview-chatbot")}
                 style={{
                     background: "none",
                     border: "none",
@@ -111,11 +100,11 @@ const MobileNavBar = () => {
                     flexDirection: "column",
                     alignItems: "center",
                     fontSize: "12px",
-                    color: location.pathname === "" ? "var(--hover2)" : "var(--text2)"
+                    color: location.pathname === "/interview-chatbot" ? "var(--hover2)" : "var(--text2)"
                 }}
             >
-                <FaUser style={{ fontSize: "20px", marginBottom: "2px" }} />
-                <span>People</span>
+                <FaRobot style={{ fontSize: "20px", marginBottom: "2px" }} />
+                <span>PrepMate</span>
             </button>
 
         </div>

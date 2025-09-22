@@ -11,7 +11,7 @@ const InterviewChatbot = () => {
 
   const location = useLocation();
   const job = location.state?.job;
-
+  const [screenWidth, setScreenWidth] = useState(window.innerWidth);
   // auto-scroll
   useEffect(() => {
     chatEndRef.current?.scrollIntoView({ behavior: "smooth" });
@@ -22,24 +22,24 @@ const InterviewChatbot = () => {
       setLoading(true);
       let url = "/ai_chatbot/"
       if (job) {
-          url = `/ai_chatbot/?job_id=${job.id}`;
+        url = `/ai_chatbot/?job_id=${job.id}`;
       }
 
       try {
-          const response = await api.get(url);
-          const aiMessage = response.data.message || "No question received, please try again later.";
-          setMessages((prev) => [...prev, { sender: "ai", text: aiMessage }]);
-          console.log(response);
+        const response = await api.get(url);
+        const aiMessage = response.data.message || "No question received, please try again later.";
+        setMessages((prev) => [...prev, { sender: "ai", text: aiMessage }]);
+        console.log(response);
       }
       catch (err) {
-          console.error(err.response?.data?.message || "Server Error");
+        console.error(err.response?.data?.message || "Server Error");
       }
       finally {
-          setLoading(false);
+        setLoading(false);
       }
     }
     getInterviewQuestion();
-  },[job]);
+  }, [job]);
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -52,18 +52,23 @@ const InterviewChatbot = () => {
     setLoading(true);
 
     try {
-        const response = await api.post("/ai_chatbot/", { question: prevQuestion, response: userMessage.text });
-        const aiMessage = response.data.message || "No response, please try again later.";
-        console.log(response);
-        setMessages((prev) => [...prev, { sender: "ai", text: aiMessage }]);
+      const response = await api.post("/ai_chatbot/", { question: prevQuestion, response: userMessage.text });
+      const aiMessage = response.data.message || "No response, please try again later.";
+      console.log(response);
+      setMessages((prev) => [...prev, { sender: "ai", text: aiMessage }]);
     }
     catch (err) {
-        console.error(err.response?.data?.message || "Server Error");
+      console.error(err.response?.data?.message || "Server Error");
     }
     finally {
-        setLoading(false);
+      setLoading(false);
     }
   }
+  useEffect(() => {
+    const handleResize = () => setScreenWidth(window.innerWidth);
+    window.addEventListener("resize", handleResize);
+    return () => window.removeEventListener("resize", handleResize);
+  }, []);
 
 
   return (
@@ -73,9 +78,10 @@ const InterviewChatbot = () => {
         height: "calc(100vh - 52px)",
         display: "flex",
         justifyContent: "center",
-        alignItems: "flex-start",
-        padding: "20px",
-        overflowY: "auto",
+         alignItems: "flex-start",
+        overflow: "hidden",
+        padding: screenWidth <= 480 ? "10px 10px 70px 10px" : "20px",
+
       }}
     >
       <Card
@@ -88,7 +94,7 @@ const InterviewChatbot = () => {
           color: "white",
           boxShadow: "0 0 25px rgba(0,0,0,0.3)",
           width: "100%",
-          minHeight: "calc(100vh - 52px)", // ✅ full screen min
+          height: "100%",
           display: "flex",
           flexDirection: "column",
         }}
@@ -188,7 +194,7 @@ const InterviewChatbot = () => {
                 padding: "0 25px",
                 backgroundColor:
                   "rgba(0, 173, 181, 0.6)",
-                  // : "gray",
+                // : "gray",
                 border: "1px solid #00ADB5",
                 fontWeight: "bold",
               }}
