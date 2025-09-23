@@ -97,6 +97,7 @@ class Verification(models.Model):
     def __str__(self):
         return self.email
     
+'''
 class ResumeParser(models.Model):
     # MAY NOT BE NECESSARY
     name = models.CharField(max_length=255, blank=True)
@@ -106,3 +107,12 @@ class ResumeParser(models.Model):
     education = models.TextField(blank=True)
     experience = models.TextField(blank=True)
     uploaded_at = models.DateTimeField(auto_now_add=True)
+'''
+
+class JobStatistics(models.Model):
+    category = models.CharField(max_length=15, blank=False, null=False)
+    numberOfJobs = models.IntegerField()
+    date = models.DateField()
+
+    def __str__(self):
+        return f'{self.category} jobs: {self.numberOfJobs}'

@@ -16,7 +16,7 @@ from django.http import JsonResponse, HttpResponse
 from .jobMatching import matchUsersToJobs, searchForJobs
 from rest_framework.decorators import api_view
 from rest_framework.parsers import MultiPartParser
-from .models import ResumeParser
+#from .models import ResumeParser
 from .resumeParser import extract_text_from_pdf, parser
 import os
 from openai import OpenAI
