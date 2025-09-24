@@ -2,7 +2,7 @@ from django.urls import path
 from .views import (
     CreateUserView, UserProfileView, CreateVerificationView, LoginView, LogoutView,
     CsrfTokenView, AccountView, JobMatchingView, JobSearchingView, AllJobsView, DocumentView, 
-    InterviewPrepChatBotView, BookmarkJobView, ApplicationStatusView
+    InterviewPrepChatBotView, BookmarkJobView, ApplicationStatusView, JobStatisticsView
 )
 
 urlpatterns = [
@@ -20,5 +20,6 @@ urlpatterns = [
     path("bookmark_jobs/<int:job_id>/", BookmarkJobView.as_view(), name="bookmark_jobs"),
     path("documents/", DocumentView.as_view(), name="documents"),
     path("ai_chatbot/", InterviewPrepChatBotView.as_view(), name="ai_chatbot"),
-    path("application_status/<int:job_id>/", ApplicationStatusView.as_view(), name="apply")
+    path("application_status/<int:job_id>/", ApplicationStatusView.as_view(), name="apply"),
+    path('job_statistics/', JobStatisticsView.as_view(), name='job_statistics')
 ]

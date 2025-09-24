@@ -21,6 +21,8 @@ from .resumeParser import extract_text_from_pdf, parser
 import os
 from openai import OpenAI
 from datetime import datetime
+from django.db.models import Sum
+from django.db.models.functions import TruncMonth, TruncWeek, TruncDay, TruncYear
 
 @permission_classes([AllowAny])
 @ensure_csrf_cookie
@@ -464,3 +466,15 @@ def updateJobStatistics():
 class JobDataVisualization(APIView):
     permission_classes = [IsAuthenticated]
 
+class JobStatisticsView(APIView):
+    permission_classes = [IsAuthenticated]
+
+    def get(self, request): # We need to have an option on the frotnend for what we want to filter by. Week, month, year, etc then we can complete this simply.
+        print('hit the get function')
+        stats = (JobStatistics.objects.annotate(month=TruncMonth('date'))
+                                .values('month', 'category')
+                                .annotate(totalJobs=Sum('numberOfJobs'))
+                                .order_by('month')
+                ) # returns in this format: <QuerySet [{'category': 'IT', 'month': datetime.date(2025, 9, 1), 'totalJobs': 240}]> depending on filter option (TruncMonth, TruncWeek, TruncYear, etc)
+        
+        return Response(list(stats))
