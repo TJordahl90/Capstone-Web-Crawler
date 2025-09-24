@@ -401,7 +401,7 @@ class InterviewPrepChatBotView(APIView):
                     chatBotHistoryInput = ChatBotHistory.objects.create(question=question, time=datetime.now().time(), specificJob=job_posting, account=account)
                 else:
                     chatBotHistoryInput = ChatBotHistory.objects.create(question=question, time=datetime.now().time(), account=account)
-                # chatBotHistoryInput.save() not needed i think
+                
             except Exception as e:
                 print(e)
 
@@ -452,3 +452,15 @@ class ApplicationStatusView(APIView):
         except Exception as e:
             return Response({"error": str(e)}, status=500)
     
+@permission_classes([IsAuthenticated])
+def updateJobStatistics():
+    try:
+        count = int(JobPosting.objects.count())
+        jobDataInstance = JobStatistics.objects.create(category='IT', numberOfJobs=count, date=datetime.now().date())
+        print('Created new entry in DB')
+    except Exception as e:
+        print(str(e))
+
+class JobDataVisualization(APIView):
+    permission_classes = [IsAuthenticated]
+

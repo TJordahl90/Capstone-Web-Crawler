@@ -112,3 +112,8 @@ class ChatBotSerializer(serializers.ModelSerializer):
     class Meta:
         model = ChatBotHistory
         fields = ['id', 'question', 'time', 'speficJob', 'account']
+
+class JobStatisticsSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = JobStatistics
+        fields = ['id', 'category', 'numberOfJobs', 'date']
