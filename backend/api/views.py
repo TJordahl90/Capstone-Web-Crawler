@@ -341,12 +341,6 @@ class InterviewPrepChatBotView(APIView):
 
     def get(self, request):
         account = Account.objects.get(user=request.user)
-        skills = ", ".join([s.name for s in account.skills.all()])
-        preferences = ", ".join([p.name for p in account.preferences.all()])
-        education = str(account.education) if account.education else "No education data"
-        experience = str(account.experience) if account.experience else "No experience data"
-        headline = str(account.headline) if account.headline else "No headline data"
-
         past_questions_list = list(ChatBotHistory.objects.filter(account=account).values_list('question', flat=True))
         past_questions = ", ".join(past_questions_list)
         job_id = request.GET.get('job_id')
@@ -364,12 +358,6 @@ class InterviewPrepChatBotView(APIView):
                     f'Job Title: {job_posting.title}\n'
                     f'Company: {job_posting.company}\n'
                     f'Description: {job_posting.description}\n'
-                    # f"Here is the applicant background:\n"
-                    # F"Headline: {headline}\n"
-                    # f"Skills: {skills}\n"
-                    # f"Preferences: {preferences}\n"
-                    # f"Education: {education}\n"
-                    # f"Experience: {experience}\n"
                     f"IMPORTANT: This is the applicants chat history, avoid asking the same question\n"
                     f"History: {past_questions}\n" 
                     f"Only output the interview question."
@@ -377,19 +365,24 @@ class InterviewPrepChatBotView(APIView):
             except JobPosting.DoesNotExist:
                 return Response({"error": "Job posting not found."}, status=404)
         else:
-            prompt = (
-                    f"You are an AI job interview coach. Generate a job interview question based on the applicant details and general behavioral/situational questions.\n"
-                    f"Here is the applicant background:\n"
-                    F"Headline: {headline}\n"
-                    f"Skills: {skills}\n"
-                    f"Preferences: {preferences}\n"
-                    f"Education: {education}\n"
-                    f"Experience: {experience}\n"
-                    f"IMPORTANT: This is the applicants chat history, avoid asking the same question\n"
-                    f"History: {past_questions}\n" 
-                    f"Only output the interview question."
-                )
+            skills = ", ".join([s.name for s in account.skills.all()])
+            preferences = ", ".join([p.name for p in account.preferences.all()])
+            education = str(account.education) if account.education else "No education data"
+            experience = str(account.experience) if account.experience else "No experience data"
+            headline = str(account.headline) if account.headline else "No headline data"
 
+            prompt = (
+                f"You are an AI job interview coach. Generate a job interview question based on the applicant details.\n"
+                f"Here is the applicant background:\n"
+                F"Headline: {headline}\n"
+                f"Skills: {skills}\n"
+                f"Preferences: {preferences}\n"
+                f"Education: {education}\n"
+                f"Experience: {experience}\n"
+                f"IMPORTANT: This is the applicants chat history, avoid asking the same question\n"
+                f"History: {past_questions}\n" 
+                f"Only output the interview question."
+            )
         try:
             response = client.chat.completions.create(
                 model="gpt-3.5-turbo", # not sure what model yet using for now
@@ -425,7 +418,6 @@ class InterviewPrepChatBotView(APIView):
             f"Can you analyze their response and provide feedback with strengths, weakness, and an improved response."
             f"Only output the response."
         )
-
         try:
             response = client.chat.completions.create(
                 model="gpt-3.5-turbo",

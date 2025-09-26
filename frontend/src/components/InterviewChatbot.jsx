@@ -12,34 +12,37 @@ const InterviewChatbot = () => {
   const location = useLocation();
   const job = location.state?.job;
   const [screenWidth, setScreenWidth] = useState(window.innerWidth);
+
   // auto-scroll
   useEffect(() => {
     chatEndRef.current?.scrollIntoView({ behavior: "smooth" });
   }, [messages, loading]);
 
   useEffect(() => {
-    const getInterviewQuestion = async () => {
-      setLoading(true);
-      let url = "/ai_chatbot/"
-      if (job) {
-        url = `/ai_chatbot/?job_id=${job.id}`;
-      }
-
-      try {
-        const response = await api.get(url);
-        const aiMessage = response.data.message || "No question received, please try again later.";
-        setMessages((prev) => [...prev, { sender: "ai", text: aiMessage }]);
-        console.log(response);
-      }
-      catch (err) {
-        console.error(err.response?.data?.message || "Server Error");
-      }
-      finally {
-        setLoading(false);
-      }
-    }
     getInterviewQuestion();
   }, [job]);
+
+  const getInterviewQuestion = async () => {
+    setLoading(true);
+    let url = "/ai_chatbot/"
+    if (job) {
+      url = `/ai_chatbot/?job_id=${job.id}`;
+    }
+
+    try {
+      const response = await api.get(url);
+      const aiMessage = response.data.message || "No question received, please try again later.";
+      setMessages((prev) => [...prev, { sender: "ai", text: aiMessage }]);
+      console.log(response);
+    }
+    catch (err) {
+      console.error(err.response?.data?.message || "Server Error");
+    }
+    finally {
+      setLoading(false);
+    }
+}
+
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -200,6 +203,20 @@ const InterviewChatbot = () => {
               }}
             >
               Send
+            </Button>
+            <Button
+              onClick={getInterviewQuestion}
+              style={{
+                borderRadius: "24px",
+                padding: "0 25px",
+                backgroundColor:
+                  "rgba(0, 173, 181, 0.6)",
+                // : "gray",
+                border: "1px solid #00ADB5",
+                fontWeight: "bold",
+              }}
+            >
+              Next
             </Button>
           </div>
         </Card.Body>

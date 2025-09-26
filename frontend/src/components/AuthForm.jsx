@@ -76,7 +76,7 @@ const AuthForm = ({ isLogin }) => {
                 navigate("/verification", { state: { formDataPayload } });
             }
             catch (err) {
-                setError(err.response?.data?.message || "Sometg went wrong.");
+                setError(err.response?.data?.message || "Something went wrong.");
             }
         }
 

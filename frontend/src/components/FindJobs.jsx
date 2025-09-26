@@ -564,7 +564,7 @@ const FindJobs = ({ jobPostTypeProp }) => {
                                                 e.currentTarget.style.backgroundColor = "var(--applybtnbg)";
                                                 e.currentTarget.style.color = "var(--applybtntxt)";
                                             }}
-                                            onClick={() => { navigate("/interview-chatbot"), { state: { job: selectedJob } } }}
+                                            onClick={() => { navigate("/interview-chatbot", { state: { job: selectedJob } }) }}
                                         >
                                             Interview Prep
                                         </Button>
