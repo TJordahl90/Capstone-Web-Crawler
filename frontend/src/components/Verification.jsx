@@ -16,10 +16,11 @@ const Verification = () => {
         e.preventDefault();
         try {
             //console.log(data.email);
-            const response = await api.get("/verification/", { params: { email: data.formDataPayload.get('email'), code: code } });
+            const response = await api.get("/verification/", { params: { email: data.payloadObject.email, code: code } }); // Updated this line
             if(response.status == 200){
                 try{
-                    const response = await api.post('/register/', data.formDataPayload, {
+                    console.log(data)
+                    const response = await api.post('/register/', data.payloadObject, { // Updated this line
                         headers: {
                             'Content-Type': 'multipart/form-data'
                         }
@@ -28,7 +29,7 @@ const Verification = () => {
                     setTimeout(() => navigate("/login"), 1000);
                 }
                 catch(err){
-                    console.log(data)
+                    console.log("data" + data)
                     setError(err.response?.data?.message || "Invalid Verification Code.");
                 }
             }

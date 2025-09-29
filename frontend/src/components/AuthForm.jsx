@@ -73,10 +73,11 @@ const AuthForm = ({ isLogin }) => {
                     }
                 });
                 console.log("Verification code created for: ", formData.email);
-                navigate("/verification", { state: { formDataPayload } });
+                const payloadObject = Object.fromEntries(formDataPayload.entries()); // Added this line to make teh object serializable
+                navigate("/verification", { state: { payloadObject } }); // updated this line
             }
             catch (err) {
-                setError(err.response?.data?.message || "Something went wrong.");
+                setError(err.response?.data?.message || "Something went wrong. Cant navigate");
             }
         }
 
