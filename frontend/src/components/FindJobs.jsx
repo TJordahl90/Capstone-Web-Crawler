@@ -25,6 +25,8 @@ const FindJobs = ({ jobPostTypeProp }) => {
         location: [],
         datePosted: []
     });
+    const jobListContainerRef = useRef(null);
+    const [showLogo, setShowLogo] = useState(true);
 
     const navigate = useNavigate();
 
@@ -231,6 +233,30 @@ const FindJobs = ({ jobPostTypeProp }) => {
     const [windowWidth, setWindowWidth] = useState(window.innerWidth);
 
     useEffect(() => {
+        const handleResize = () => {
+            if (jobListContainerRef.current) {
+                const width = jobListContainerRef.current.offsetWidth;
+                setShowLogo(width >= 200); // Hide logo if sidebar width < 200
+            }
+        };
+
+        const resizeObserver = new ResizeObserver(handleResize);
+        if (jobListContainerRef.current) {
+            resizeObserver.observe(jobListContainerRef.current);
+        }
+
+        // Initial check
+        handleResize();
+
+        return () => {
+            if (jobListContainerRef.current) {
+                resizeObserver.disconnect();
+            }
+        };
+    }, []);
+
+
+    useEffect(() => {
         const handleResize = () => setWindowWidth(window.innerWidth);
         window.addEventListener("resize", handleResize);
         return () => window.removeEventListener("resize", handleResize);
@@ -249,8 +275,8 @@ const FindJobs = ({ jobPostTypeProp }) => {
         return (
             <div
                 key={job.id}
-         
-                className={`border-bottom p-3 job-list-item`}
+
+                className={`border-bottom p-2 job-list-item`}
                 onClick={() => setSelectedJob(job)}
                 style={{
                     cursor: 'pointer',
@@ -260,21 +286,23 @@ const FindJobs = ({ jobPostTypeProp }) => {
                 }}
             >
                 <div
-                    className="d-flex flex-wrap align-items-start"
+                    className="d-flex align-items-start gap-2"
                     style={{ width: "100%" }}
                 >
-                    {windowWidth >= 1000 && logo && (
-                        <div className="me-3"
+                    {/* LOGO BOX */}
+                    {showLogo && logo && (
+                        <div
                             style={{
-                                border: "2px solid var(--border)",
-                                borderRadius: "8px",
-                                padding: "4px",
+                                borderRadius: "12px",
+                                padding: "6px",
                                 display: "flex",
                                 alignItems: "center",
                                 justifyContent: "center",
-                                width: "58px",
-                                height: "58px",
+                                width: "65px",
+                                height: "65px",
                                 flexShrink: 0,
+                                backgroundColor: "rgba(255, 255, 255, 0.05)",
+                                backdropFilter: "blur(10px)",
                             }}
                         >
                             <img
@@ -282,20 +310,34 @@ const FindJobs = ({ jobPostTypeProp }) => {
                                 alt={`${job.company} logo`}
                                 className="company-logo"
                                 style={{
-                                    width: '50px',
-                                    height: '50px',
-                                    objectFit: 'contain',
+                                    width: "50px",
+                                    height: "50px",
+                                    objectFit: "contain",
                                 }}
                             />
                         </div>
                     )}
-                    <div style={{ flexGrow: 1, minWidth: 0 }}>
-                        <h5 className="mb-1">{job.title}</h5>
-                        <p className="mb-1">{job.company}</p>
+
+                    {/* TEXT BOX */}
+                    <div
+                        style={{
+                            flexGrow: 1,
+                            borderRadius: "12px",
+                            padding: "8px 12px",
+                            backgroundColor: "rgba(255, 255, 255, 0.05)",
+                            backdropFilter: "blur(10px)",
+                            minWidth: 0,
+                        }}
+                    >
+                        <h5 className="mb-1" style={{ fontSize: "1rem", color: "white" }}>
+                            {job.title}
+                        </h5>
+                        <p className="mb-0" style={{ fontSize: "0.9rem", color: "white" }}>
+                            {job.company}
+                        </p>
                     </div>
-
-
                 </div>
+
                 <div className="d-flex justify-content-between align-items-center mt-2">
                     <small className="text-white">
                         <FaMapMarkerAlt size={12} className="me-1" />
@@ -336,6 +378,7 @@ const FindJobs = ({ jobPostTypeProp }) => {
                 <Col
                     md={3}
                     className="p-0 d-flex flex-column"
+                    ref={jobListContainerRef}
                     style={{
                         height: "100%",
                         color: "var(--text6)",
