@@ -1,6 +1,7 @@
 from django.db import models
 from django.contrib.auth.models import User
 from django.contrib.postgres.fields import ArrayField
+from django.utils import timezone
 
 class CommonSkills(models.Model):
     name = models.CharField(max_length=100, unique=True)
@@ -64,7 +65,7 @@ class JobPosting(models.Model):
     
 class ChatBotHistory(models.Model):
     question = models.TextField(blank=True, null=True)
-    time = models.TimeField()
+    timestamp = models.DateTimeField(default=timezone.now)
     specificJob = models.ForeignKey(JobPosting, on_delete=models.CASCADE, null=True, blank=True)
     account = models.ForeignKey(Account, on_delete=models.CASCADE, null=True, blank=True)
 

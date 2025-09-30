@@ -20,7 +20,7 @@ from rest_framework.parsers import MultiPartParser
 from .resumeParser import extract_text_from_pdf, parser
 import os
 from openai import OpenAI
-from datetime import datetime
+from datetime import datetime, timedelta
 from django.db.models import Sum
 from django.db.models.functions import TruncMonth, TruncWeek, TruncDay, TruncYear
 
@@ -341,26 +341,31 @@ class InterviewPrepChatBotView(APIView):
 
     def get(self, request):
         account = Account.objects.get(user=request.user)
+
+        # one_day_ago = timezone.now() - timedelta(days=1)
+        # questions_today = ChatBotHistory.objects.filter(account=account, timestamp__gte=one_day_ago).count()
+        # if questions_today >= 3:
+        #     return Response({"error": "You have eached your limit of 3 questions per day. Please try again tommorow."}, status=429)
+
+
         past_questions_list = list(ChatBotHistory.objects.filter(account=account).values_list('question', flat=True))
         past_questions = ", ".join(past_questions_list)
         job_id = request.GET.get('job_id')
+        job_posting = None
         prompt = ""
         
-        # todo - generate different question types (technical, behavioral, situational, general) randomizer?
-        # todo - figure out how to limit to 3 questions a day
-
         if job_id:
             try:
                 job_posting = JobPosting.objects.get(id=job_id)
                 prompt = (
-                    f"You are an AI job interview coach. Generate a job interview question based on the company details.\n" # i think we need better prompt
+                    f"You are an AI job interview coach. Your task is to generate 3 unique and insightful interview questions based on the provided job application description.\n"
                     f'Here is the details for the job the applicant is applying for:\n'
                     f'Job Title: {job_posting.title}\n'
                     f'Company: {job_posting.company}\n'
                     f'Description: {job_posting.description}\n'
-                    f"IMPORTANT: This is the applicants chat history, avoid asking the same question\n"
+                    f"IMPORTANT: Do not ask any of the following previously asked questions:\n"
                     f"History: {past_questions}\n" 
-                    f"Only output the interview question."
+                    f"Format the output ONLY as a numbered list (e.g., '1. ...\\n2. ...\\n3. ...')."
                 )
             except JobPosting.DoesNotExist:
                 return Response({"error": "Job posting not found."}, status=404)
@@ -372,16 +377,16 @@ class InterviewPrepChatBotView(APIView):
             headline = str(account.headline) if account.headline else "No headline data"
 
             prompt = (
-                f"You are an AI job interview coach. Generate a job interview question based on the applicant details.\n"
+                f"You are an AI job interview coach. Your task is to generate 3 unique and insightful interview questions based on the applicant details.\n"
                 f"Here is the applicant background:\n"
                 F"Headline: {headline}\n"
                 f"Skills: {skills}\n"
                 f"Preferences: {preferences}\n"
                 f"Education: {education}\n"
                 f"Experience: {experience}\n"
-                f"IMPORTANT: This is the applicants chat history, avoid asking the same question\n"
+                f"IMPORTANT: Do not ask any of the following previously asked questions:\n"
                 f"History: {past_questions}\n" 
-                f"Only output the interview question."
+                f"Format the output ONLY as a numbered list (e.g., '1. ...\\n2. ...\\n3. ...')."
             )
         try:
             response = client.chat.completions.create(
@@ -389,25 +394,21 @@ class InterviewPrepChatBotView(APIView):
                 messages=[{"role": "user", "content": prompt}],
             )
 
-            question = response.choices[0].message.content.strip()
+            questions_text = response.choices[0].message.content.strip()
+            questions_list = [q.strip() for q in questions_text.split('\n') if q.strip()]
 
-            try:
-                if job_id:
-                    chatBotHistoryInput = ChatBotHistory.objects.create(question=question, time=datetime.now().time(), specificJob=job_posting, account=account)
-                else:
-                    chatBotHistoryInput = ChatBotHistory.objects.create(question=question, time=datetime.now().time(), account=account)
-                
-            except Exception as e:
-                print(e)
+            for q in questions_list:
+                cleaned_question = q.split('. ', 1)[-1]
+                ChatBotHistory.objects.create(question=cleaned_question, specificJob=job_posting, account=account)
 
-            return Response({"message": question})
+            return Response({"message": questions_list})
 
         except Exception as e:
             return Response({"error": str(e)}, status=500)
     
 
     def post(self, request):
-        user_response = request.data.get("response")
+        user_response = request.data.get("answer")
         bot_question = request.data.get("question")
 
         prompt = (
@@ -415,7 +416,7 @@ class InterviewPrepChatBotView(APIView):
             f"Question: {bot_question}"
             f"The applicant provided this response\n"
             f"Response: {user_response}"
-            f"Can you analyze their response and provide feedback with strengths, weakness, and an improved response."
+            f"Can you analyze their response and provide overall feedback, strengths, areas that need improvement, and an example response."
             f"Only output the response."
         )
         try:
