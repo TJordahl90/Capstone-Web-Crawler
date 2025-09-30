@@ -275,7 +275,7 @@ const FindJobs = ({ jobPostTypeProp }) => {
         return (
             <div
                 key={job.id}
-                className={`border-bottom p-2 pe-0 job-list-item`}
+                className={`border-bottom p-2  job-list-item`}
                 onClick={() => setSelectedJob(job)}
                 style={{
                     cursor: 'pointer',
@@ -532,7 +532,7 @@ const FindJobs = ({ jobPostTypeProp }) => {
                                             <div
                                                 className="me-3"
                                                 style={{
-                                                    border: "2px solid var(--border)",
+                                                    // border: "2px solid var(--border)",
                                                     borderRadius: "8px",
                                                     padding: "6px",
                                                     display: "flex",
@@ -652,7 +652,7 @@ const FindJobs = ({ jobPostTypeProp }) => {
                                         backdropFilter: "blur(10px)",                // adds frosted-glass effect
                                         WebkitBackdropFilter: "blur(10px)",
                                         color: "var(--text2)",
-                                        border: "2px solid var(--cardborder2)",
+                                        // border: "2px solid var(--cardborder2)",
                                         borderRadius: "12px"
                                     }}
                                 >
@@ -669,7 +669,7 @@ const FindJobs = ({ jobPostTypeProp }) => {
                                         backdropFilter: "blur(10px)",                // adds frosted-glass effect
                                         WebkitBackdropFilter: "blur(10px)",
                                         color: "var(--text2)",
-                                        border: "2px solid var(--cardborder2)",
+                                        // border: "2px solid var(--cardborder2)",
                                         borderRadius: "12px"
                                     }}
                                 >
