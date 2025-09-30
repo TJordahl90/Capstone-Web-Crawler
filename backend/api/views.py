@@ -200,7 +200,7 @@ class CreateVerificationView(APIView):
     def get(self, request):
         email = request.GET.get('email')
         code = request.GET.get('code')
-        #print(f'email: {email} code: {code}')
+        print(f'email: {email} code: {code}')
 
         #print(f'email: {email} type: {type(email)} code: {code} type: {type(code)}')
 

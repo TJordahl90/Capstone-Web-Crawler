@@ -6,7 +6,7 @@
 from rest_framework import serializers
 from django.contrib.auth.models import User
 from .models import *
-from .resumeParser import extract_text_from_pdf, parser
+from .resumeParser import extract_text_from_pdf, parser, extractSkills
 
 class CreateUserSerializer(serializers.ModelSerializer): 
     """Serializer for new user registering"""
@@ -38,18 +38,17 @@ class CreateUserSerializer(serializers.ModelSerializer):
         account.save()
 
         if resume:
-            resume.seek(0)
+            resume = account.resume
 
             text = extract_text_from_pdf(resume) 
             parsed_data = parser(text)
+
+            skills = extractSkills(text)
         
-            if parsed_data.get("skills"):
-                skills_list = []
-                for skill in parsed_data.get("skills"):
-                    # new_skill, created = CommonSkills.objects.get_or_create(name=skill)
-                    # skills_list.append(new_skill)
-                    print("\nNEW SKILL:", skill)
-                # account.skills.set(skills_list)
+            if skills:
+                for skill in skills:
+                    skillObject = CommonSkills.objects.get(name=skill)
+                    account.skills.add(skillObject)
 
             if parsed_data.get("education"):
                 edu_data = parsed_data.get("education")

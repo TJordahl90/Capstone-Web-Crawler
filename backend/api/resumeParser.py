@@ -1,12 +1,41 @@
 import re
 import fitz  # PyMuPDF
+import spacy
+from api.models import CommonSkills
 
 def extract_text_from_pdf(pdf_file):
     text = ""
-    with fitz.open(stream=pdf_file.read(), filetype="pdf") as doc:
+    pdf_file.open('rb')
+    fileBytes = pdf_file.read()
+    pdf_file.seek(0)
+
+    with fitz.open(stream=fileBytes, filetype='pdf') as doc:
         for page in doc:
-            text += page.get_text()
+            text += page.get_text() + '\n'
+
     return text
+
+def extractSkills(text):
+    # Filter all the text to get rid of needless characters
+    text = text.lower()
+    cleanText = text.encode("ascii", "ignore").decode()
+    cleanText = re.sub(r"\s+", " ", cleanText).strip()
+    words = re.findall(r"\w+", cleanText)
+    textSet = set(words)
+    #print(textSet)
+
+    # Get a set of all the common skills from the db
+    skills = CommonSkills.objects.values_list('name', flat=True)
+    skillSet = set(skill.lower() for skill in skills)
+    #print(skillSet)
+
+    # Find the intersection and save all the users skills
+    overlappedSkills = textSet & skillSet
+    #print(overlappedSkills)
+
+    return overlappedSkills
+
+
 
 def parser(text):
     parsed = {
