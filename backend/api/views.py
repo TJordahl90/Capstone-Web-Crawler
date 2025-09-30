@@ -342,6 +342,7 @@ class InterviewPrepChatBotView(APIView):
     def get(self, request):
         account = Account.objects.get(user=request.user)
 
+        # UNCOMMENT BELOW TO ACTIVATE THE CHATBOT DAILY LIMIT
         # one_day_ago = timezone.now() - timedelta(days=1)
         # questions_today = ChatBotHistory.objects.filter(account=account, timestamp__gte=one_day_ago).count()
         # if questions_today >= 3:

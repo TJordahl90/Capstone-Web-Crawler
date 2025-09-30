@@ -25,7 +25,7 @@ const Account = () => {
     const [accountData, setaccountData] = useState({
         firstName: "",
         lastName: "",
-        resume: null,
+        // resume: null,
         headline: "",
         hometown: "",
         preferences: [],
@@ -51,7 +51,7 @@ const Account = () => {
         setaccountData({
             firstName: user.first_name || "",
             lastName: user.last_name || "",
-            resume: account.resume || null,
+            // resume: account.resume || null,
             headline: account.headline || "",
             hometown: account.hometown || "",
             skills: skills || [],
@@ -116,7 +116,7 @@ const Account = () => {
                 last_name: accountData.lastName,
             },
             account: {
-                resume: accountData.resume,
+                // resume: accountData.resume,
                 headline: accountData.headline,
                 hometown: accountData.hometown,
             },
