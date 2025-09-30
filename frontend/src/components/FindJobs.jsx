@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useRef, useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { Container, Row, Col, Form, Nav, ListGroup, Card, Button, Badge, ProgressBar, Spinner, Offcanvas, Modal } from "react-bootstrap";
 import { FaSearch, FaBriefcase, FaMapMarkerAlt, FaClock, FaStar, FaRegStar, FaFilter, FaMoneyBill } from "react-icons/fa";
@@ -226,6 +226,21 @@ const FindJobs = ({ jobPostTypeProp }) => {
     };
 
     const displayJobs = getJobs();
+    // hidden job logo when width screen is small 
+
+    const [windowWidth, setWindowWidth] = useState(window.innerWidth);
+
+    useEffect(() => {
+        const handleResize = () => setWindowWidth(window.innerWidth);
+        window.addEventListener("resize", handleResize);
+        return () => window.removeEventListener("resize", handleResize);
+    }, []);
+
+    useEffect(() => {
+        const handleResize = () => setWindowWidth(window.innerWidth);
+        window.addEventListener("resize", handleResize);
+        return () => window.removeEventListener("resize", handleResize);
+    }, []);
 
     // Renders each of the job listings in the left sidebar
     const renderJobItem = (job) => {
@@ -234,42 +249,52 @@ const FindJobs = ({ jobPostTypeProp }) => {
         return (
             <div
                 key={job.id}
+         
                 className={`border-bottom p-3 job-list-item`}
                 onClick={() => setSelectedJob(job)}
-                style={{ cursor: 'pointer' }}
+                style={{
+                    cursor: 'pointer',
+                    width: "100%",
+                    minWidth: 0,
+                    overflow: "hidden",
+                }}
             >
-                <div className="d-flex justify-content-between align-items-start">
-                    <div className="d-flex">
-                        {logo && (
-                            <div className="me-3"
+                <div
+                    className="d-flex flex-wrap align-items-start"
+                    style={{ width: "100%" }}
+                >
+                    {windowWidth >= 1000 && logo && (
+                        <div className="me-3"
+                            style={{
+                                border: "2px solid var(--border)",
+                                borderRadius: "8px",
+                                padding: "4px",
+                                display: "flex",
+                                alignItems: "center",
+                                justifyContent: "center",
+                                width: "58px",
+                                height: "58px",
+                                flexShrink: 0,
+                            }}
+                        >
+                            <img
+                                src={logo}
+                                alt={`${job.company} logo`}
+                                className="company-logo"
                                 style={{
-                                    border: "2px solid var(--border)",
-                                    borderRadius: "8px",
-                                    padding: "4px",
-                                    display: "flex",
-                                    alignItems: "center",
-                                    justifyContent: "center",
-                                    width: "58px",
-                                    height: "58px",
+                                    width: '50px',
+                                    height: '50px',
+                                    objectFit: 'contain',
                                 }}
-                            >
-                                <img
-                                    src={logo}
-                                    alt={`${job.company} logo`}
-                                    className="company-logo"
-                                    style={{
-                                        width: '50px',
-                                        height: '50px',
-                                        objectFit: 'contain',
-                                    }}
-                                />
-                            </div>
-                        )}
-                        <div>
-                            <h5 className="mb-1">{job.title}</h5>
-                            <p className="mb-1">{job.company}</p>
+                            />
                         </div>
+                    )}
+                    <div style={{ flexGrow: 1, minWidth: 0 }}>
+                        <h5 className="mb-1">{job.title}</h5>
+                        <p className="mb-1">{job.company}</p>
                     </div>
+
+
                 </div>
                 <div className="d-flex justify-content-between align-items-center mt-2">
                     <small className="text-white">
