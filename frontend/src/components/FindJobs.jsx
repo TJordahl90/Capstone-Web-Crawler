@@ -236,7 +236,7 @@ const FindJobs = ({ jobPostTypeProp }) => {
         const handleResize = () => {
             if (jobListContainerRef.current) {
                 const width = jobListContainerRef.current.offsetWidth;
-                setShowLogo(width >= 200); // Hide logo if sidebar width < 200
+                setShowLogo(width >= 297); // Hide logo if sidebar width < 200
             }
         };
 
@@ -275,8 +275,7 @@ const FindJobs = ({ jobPostTypeProp }) => {
         return (
             <div
                 key={job.id}
-
-                className={`border-bottom p-2 job-list-item`}
+                className={`border-bottom p-2 pe-0 job-list-item`}
                 onClick={() => setSelectedJob(job)}
                 style={{
                     cursor: 'pointer',
@@ -329,7 +328,7 @@ const FindJobs = ({ jobPostTypeProp }) => {
                             minWidth: 0,
                         }}
                     >
-                        <h5 className="mb-1" style={{ fontSize: "1rem", color: "white" }}>
+                        <h5 className="mb-1" style={{ fontSize: "1rem", color: "var(--text6)" }}>
                             {job.title}
                         </h5>
                         <p className="mb-0" style={{ fontSize: "0.9rem", color: "white" }}>
@@ -387,7 +386,11 @@ const FindJobs = ({ jobPostTypeProp }) => {
                 >
                     {/* Search bar and buttons - only displays when jobPostType is all or search */}
                     {(jobPostType === "all" || jobPostType === "search") && (
-                        <div className="p-3 border-bottom">
+                        <div
+                            className="p-2"
+                            style={{ borderBottom: "1px solid var(--border)" }}
+                        >
+
                             <Form
                                 onSubmit={(e) => {
                                     e.preventDefault();
@@ -473,7 +476,7 @@ const FindJobs = ({ jobPostTypeProp }) => {
 
 
                     {/* Job Posting listings */}
-                    <div className="overflow-auto flex-grow-1">
+                    <div className="overflow-auto flex-grow-1 auto-hide-scroll">
                         {error && <div className="p-3 text-danger">{error}</div>}
 
                         {loading ? (
@@ -510,7 +513,7 @@ const FindJobs = ({ jobPostTypeProp }) => {
                         </div>
                     ) : selectedJob ? (
                         <div
-                            className="h-100 overflow-auto"
+                            className="h-100 overflow-auto auto-hide-scroll"
                             style={{
 
                                 color: "var(--contenttxt)",
@@ -708,7 +711,7 @@ const FindJobs = ({ jobPostTypeProp }) => {
                 <style>{`
       /* Panel background */
     .filters-canvas .offcanvas {
-      background: rgba(20, 20, 20, 0.6); /* darker translucent base */
+      background: rgba(20, 20, 20, 0.6);
       backdrop-filter: blur(14px);
       -webkit-backdrop-filter: blur(14px);
       border-left: 1px solid var(--border);
@@ -741,7 +744,7 @@ const FindJobs = ({ jobPostTypeProp }) => {
       transition: all 0.2s ease;
     }
     .filters-canvas .form-check-input:checked {
-      background-color: var(--applybtnbg);  /* ✅ use your theme color */
+      background-color: var(--applybtnbg);
       border-color: var(--applybtnbg);
       box-shadow: 0 0 6px var(--applybtnbg);
     }
@@ -872,6 +875,35 @@ const FindJobs = ({ jobPostTypeProp }) => {
                     <Button onClick={handleConfirmApply}>Yes</Button>
                 </Modal.Body>
             </Modal>
+
+
+            <style>{`
+  /* Reusable auto-hide scrollbar */
+  .auto-hide-scroll {
+     scrollbar-gutter: stable; 
+    overscroll-behavior: contain;
+
+    scrollbar-width: thin;
+    scrollbar-color: transparent transparent;
+  }
+  .auto-hide-scroll:hover {  
+    scrollbar-color: rgba(255,255,255,0.28) transparent;
+  }
+  .auto-hide-scroll::-webkit-scrollbar {
+    width: 4px;
+    height: 4px;
+  }
+  .auto-hide-scroll::-webkit-scrollbar-track {
+    background: transparent; 
+  }
+  .auto-hide-scroll::-webkit-scrollbar-thumb {
+    background: rgba(255,255,255,0.22); 
+    border-radius: 4px;
+  }
+  .auto-hide-scroll:hover::-webkit-scrollbar-thumb {
+    background: rgba(255,255,255,0.34); 
+  }
+`}</style>
 
         </Container>
     );
