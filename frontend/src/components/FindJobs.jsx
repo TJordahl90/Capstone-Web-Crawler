@@ -275,7 +275,7 @@ const FindJobs = ({ jobPostTypeProp }) => {
         return (
             <div
                 key={job.id}
-                className={`border-bottom p-2  job-list-item`}
+                className={`border-bottom p-2 pe-0 job-list-item`}
                 onClick={() => setSelectedJob(job)}
                 style={{
                     cursor: 'pointer',
@@ -528,50 +528,68 @@ const FindJobs = ({ jobPostTypeProp }) => {
                                 {/* Header Section */}
                                 <div className="d-flex justify-content-between align-items-start mb-3">
                                     <div className="d-flex">
-                                        {getCompanyLogo(selectedJob.company) && (
-                                            <div
-                                                className="me-3"
-                                                style={{
-                                                    // border: "2px solid var(--border)",
-                                                    borderRadius: "8px",
-                                                    padding: "6px",
-                                                    display: "flex",
-                                                    alignItems: "center",
-                                                    justifyContent: "center",
-                                                    width: "82px",
-                                                    height: "82px",
-                                                    backgroundColor: "var(--lbg)"
-                                                }}
-                                            >
-                                                <img
-                                                    src={getCompanyLogo(selectedJob.company)}
-                                                    alt={`${selectedJob.company} logo`}
-                                                    style={{
-                                                        width: '70px',
-                                                        height: '70px',
-                                                        objectFit: 'contain'
-                                                    }}
-                                                />
-                                            </div>
-
-                                        )}
                                         <div>
-                                            <h2 className="mb-1" style={{ color: "var(--text6)" }}>
-                                                {selectedJob.title}
-                                            </h2>
-                                            <h5 className="text-white mb-2">{selectedJob.company}</h5>
-                                            <div className="d-flex flex-column text-white">
-                                                <div className="d-flex align-items-center mb-1">
-                                                    <FaMapMarkerAlt size={14} className="me-1" />
-                                                    <span>{selectedJob.location}</span>
+                                            <div
+                                                className="d-flex align-items-start gap-2"
+                                                style={{ width: "100%" }}
+                                            >
+                                                {getCompanyLogo(selectedJob.company) && (
+                                                    <div
+                                                        className="me-3"
+                                                        style={{
+                                                            // border: "2px solid var(--border)",
+                                                            borderRadius: "8px",
+                                                            padding: "6px",
+                                                            display: "flex",
+                                                            alignItems: "center",
+                                                            justifyContent: "center",
+                                                            width: "82px",
+                                                            height: "82px",
+                                                            backgroundColor: "var(--lbg)"
+                                                        }}
+                                                    >
+                                                        <img
+                                                            src={getCompanyLogo(selectedJob.company)}
+                                                            alt={`${selectedJob.company} logo`}
+                                                            style={{
+                                                                width: '70px',
+                                                                height: '70px',
+                                                                objectFit: 'contain'
+                                                            }}
+                                                        />
+                                                    </div>
+
+                                                )}
+                                                <div className="job-title-company">
+                                                    <h2
+                                                        className="mb-0"
+                                                        style={{ color: "var(--text6)", lineHeight: "1.2" }}
+                                                    >
+                                                        {selectedJob.title}
+                                                    </h2>
+                                                    <h5
+                                                        className="text-white mt-1 mb-2"
+                                                        style={{ lineHeight: "1.2" }}
+                                                    >
+                                                        {selectedJob.company}
+                                                    </h5>
                                                 </div>
-                                                <div className="d-flex align-items-center mb-1">
-                                                    <FaClock size={14} className="me-1" />
-                                                    <span>{selectedJob.datePosted || "N/A"}</span>
-                                                </div>
-                                                <div className="d-flex align-items-center">
-                                                    <FaMoneyBill size={14} className="me-1" />
-                                                    <span>{selectedJob.salary || "Not Posted"}</span>
+
+                                            </div>
+                                            <div className="pt-3">
+                                                <div className="d-flex flex-column text-white">
+                                                    <div className="d-flex align-items-center mb-1">
+                                                        <FaMapMarkerAlt size={14} className="me-1" />
+                                                        <span>{selectedJob.location}</span>
+                                                    </div>
+                                                    <div className="d-flex align-items-center mb-1">
+                                                        <FaClock size={14} className="me-1" />
+                                                        <span>{selectedJob.datePosted || "N/A"}</span>
+                                                    </div>
+                                                    <div className="d-flex align-items-center">
+                                                        <FaMoneyBill size={14} className="me-1" />
+                                                        <span>{selectedJob.salary || "Not Posted"}</span>
+                                                    </div>
                                                 </div>
                                             </div>
                                         </div>
