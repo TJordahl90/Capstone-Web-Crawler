@@ -1,7 +1,7 @@
 import React, { useRef, useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { Container, Row, Col, Form, Nav, ListGroup, Card, Button, Badge, ProgressBar, Spinner, Offcanvas, Modal } from "react-bootstrap";
-import { FaSearch, FaBriefcase, FaMapMarkerAlt, FaClock, FaStar, FaRegStar, FaFilter, FaMoneyBill } from "react-icons/fa";
+import { FaBookmark, FaRegBookmark, FaPaperPlane, FaComments, FaSearch, FaRobot, FaBriefcase, FaMapMarkerAlt, FaClock, FaStar, FaRegStar, FaFilter, FaMoneyBill } from "react-icons/fa";
 import fugetec from "../assets/FugeTechnologies.jpg";
 import texasIns from "../assets/TexasInstruments.jpg";
 import lockheed from "../assets/LockheedMartin.jpg";
@@ -27,6 +27,7 @@ const FindJobs = ({ jobPostTypeProp }) => {
     });
     const jobListContainerRef = useRef(null);
     const [showLogo, setShowLogo] = useState(true);
+    const [showDetailsMobile, setShowDetailsMobile] = useState(false);
 
     const navigate = useNavigate();
 
@@ -276,7 +277,11 @@ const FindJobs = ({ jobPostTypeProp }) => {
             <div
                 key={job.id}
                 className={`border-bottom p-2 pe-0 job-list-item`}
-                onClick={() => setSelectedJob(job)}
+                onClick={() => {
+                    setSelectedJob(job);
+                    if (windowWidth <= 770) setShowDetailsMobile(true);
+                }}
+
                 style={{
                     cursor: 'pointer',
                     width: "100%",
@@ -374,347 +379,435 @@ const FindJobs = ({ jobPostTypeProp }) => {
         >
             <Row className="m-0" style={{ height: "100%" }}>
                 {/* Left sidebar */}
-                <Col
-                    md={3}
-                    className="p-0 d-flex flex-column"
-                    ref={jobListContainerRef}
-                    style={{
-                        height: "100%",
-                        color: "var(--text6)",
-                        borderRight: "1px solid var(--border)"
-                    }}
-                >
-                    {/* Search bar and buttons - only displays when jobPostType is all or search */}
-                    {(jobPostType === "all" || jobPostType === "search") && (
-                        <div
-                            className="p-2"
-                            style={{ borderBottom: "1px solid var(--border)" }}
-                        >
-
-                            <Form
-                                onSubmit={(e) => {
-                                    e.preventDefault();
-                                    setJobPostType("search");
-                                    fetchJobPostings("search");
-                                    clearAllFilters();
-                                }}
+                {(windowWidth > 770 || !showDetailsMobile) && (
+                    <Col
+                        md={3}
+                        className="p-0 d-flex flex-column"
+                        ref={jobListContainerRef}
+                        style={{
+                            height: "100%",
+                            color: "var(--text6)",
+                            borderRight: "1px solid var(--border)"
+                        }}
+                    >
+                        {/* Search bar and buttons - only displays when jobPostType is all or search */}
+                        {(jobPostType === "all" || jobPostType === "search") && (
+                            <div
+                                className="p-2"
+                                style={{ borderBottom: "1px solid var(--border)" }}
                             >
-                                {/* Wrapper switches layout: row on small, column on md+ */}
-                                <div className="d-flex flex-row flex-md-column align-items-stretch" style={{ gap: "10px" }}>
-                                    {/* Search input */}
-                                    <div className="position-relative flex-grow-1">
-                                        <div
-                                            className="position-absolute"
-                                            style={{ left: "10px", top: "50%", transform: "translateY(-50%)" }}
-                                        >
-                                            <FaSearch className="text-muted" />
+
+                                <Form
+                                    onSubmit={(e) => {
+                                        e.preventDefault();
+                                        setJobPostType("search");
+                                        fetchJobPostings("search");
+                                        clearAllFilters();
+                                    }}
+                                >
+                                    {/* Wrapper switches layout: row on small, column on md+ */}
+                                    <div className="d-flex flex-row flex-md-column align-items-stretch" style={{ gap: "10px" }}>
+                                        {/* Search input */}
+                                        <div className="position-relative flex-grow-1">
+                                            <div
+                                                className="position-absolute"
+                                                style={{ left: "10px", top: "50%", transform: "translateY(-50%)" }}
+                                            >
+                                                <FaSearch className="text-muted" />
+                                            </div>
+                                            <Form.Control
+                                                type="text"
+                                                placeholder="Search jobs by title, company or location"
+                                                value={searchTerm}
+                                                onChange={(e) => setSearchTerm(e.target.value)}
+                                                style={{
+                                                    paddingLeft: "30px",
+                                                    backgroundColor: "var(--searchbg)",
+                                                    color: "var(--searchtxt)",
+                                                    border: "1px solid var(--border)",
+                                                    borderRadius: "8px",
+                                                }}
+                                            />
                                         </div>
-                                        <Form.Control
-                                            type="text"
-                                            placeholder="Search jobs by title, company or location"
-                                            value={searchTerm}
-                                            onChange={(e) => setSearchTerm(e.target.value)}
-                                            style={{
-                                                paddingLeft: "30px",
-                                                backgroundColor: "var(--searchbg)",
-                                                color: "var(--searchtxt)",
-                                                border: "1px solid var(--border)",
-                                                borderRadius: "8px",
-                                            }}
-                                        />
+
+                                        {/* Buttons: inline on small, stacked below on md+ */}
+                                        <div className="d-flex justify-content-start ms-2 ms-md-0 mt-md-2" style={{ gap: "10px" }}>
+                                            <Button
+                                                style={{
+                                                    backgroundColor: "var(--savebtnhover)",
+                                                    color: "var(--savebtnhovertxt)",
+                                                    border: "1px solid var(--savebtntxt)",
+                                                    transition: "all 0.3s ease",
+                                                }}
+                                                onMouseEnter={(e) => {
+                                                    e.currentTarget.style.backgroundColor = "var(--savebtnbg)";
+                                                    e.currentTarget.style.color = "var(--savebtntxt)";
+                                                }}
+                                                onMouseLeave={(e) => {
+                                                    e.currentTarget.style.backgroundColor = "var(--savebtnhover)";
+                                                    e.currentTarget.style.color = "var(--savebtnhovertxt)";
+                                                }}
+                                                onClick={() => setJobPostType("all")}
+                                            >
+                                                Browse
+                                            </Button>
+
+                                            <Button
+                                                style={{
+                                                    backgroundColor: "var(--savebtnhover)",
+                                                    color: "var(--savebtnhovertxt)",
+                                                    border: "1px solid var(--avebtntxt)",
+                                                    transition: "all 0.3s ease",
+                                                }}
+                                                onMouseEnter={(e) => {
+                                                    e.currentTarget.style.backgroundColor = "var(--savebtnbg)";
+                                                    e.currentTarget.style.color = "var(--savebtntxt)";
+                                                }}
+                                                onMouseLeave={(e) => {
+                                                    e.currentTarget.style.backgroundColor = "var(--savebtnhover)";
+                                                    e.currentTarget.style.color = "var(--savebtnhovertxt)";
+                                                }}
+                                                onClick={() => setShowCanvas(true)}
+                                            >
+                                                Filters
+                                            </Button>
+                                        </div>
+
+
                                     </div>
-
-                                    {/* Buttons: inline on small, stacked below on md+ */}
-                                    <div className="d-flex justify-content-start ms-2 ms-md-0 mt-md-2" style={{ gap: "10px" }}>
-                                        <Button
-                                            style={{
-                                                backgroundColor: "var(--savebtnbg)",
-                                                color: "var(--savebtntxt)",
-                                                border: "1px solid var(--savebtntxt)",
-                                                transition: "all 0.3s ease",
-                                            }}
-                                            onMouseEnter={(e) => {
-                                                e.currentTarget.style.backgroundColor = "var(--savebtnhover)";
-                                                e.currentTarget.style.color = "var(--savebtnhovertxt)";
-                                            }}
-                                            onMouseLeave={(e) => {
-                                                e.currentTarget.style.backgroundColor = "var(--savebtnbg)";
-                                                e.currentTarget.style.color = "var(--savebtntxt)";
-                                            }}
-                                            onClick={() => setJobPostType("all")}
-                                        >
-                                            Browse
-                                        </Button>
-
-                                        <Button
-                                            style={{
-                                                backgroundColor: "var(--savebtnbg)",
-                                                color: "var(--savebtntxt)",
-                                                border: "1px solid var(--savebtntxt)",
-                                                transition: "all 0.3s ease",
-                                            }}
-                                            onMouseEnter={(e) => {
-                                                e.currentTarget.style.backgroundColor = "var(--savebtnhover)";
-                                                e.currentTarget.style.color = "var(--savebtnhovertxt)";
-                                            }}
-                                            onMouseLeave={(e) => {
-                                                e.currentTarget.style.backgroundColor = "var(--savebtnbg)";
-                                                e.currentTarget.style.color = "var(--savebtntxt)";
-                                            }}
-                                            onClick={() => setShowCanvas(true)}
-                                        >
-                                            Filters
-                                        </Button>
-                                    </div>
+                                </Form>
+                            </div>
+                        )}
 
 
+
+                        {/* Job Posting listings */}
+                        <div className="overflow-auto flex-grow-1 auto-hide-scroll">
+                            {error && <div className="p-3 text-danger">{error}</div>}
+
+                            {loading ? (
+                                <div className="d-flex justify-content-center align-items-center py-5">
+                                    <Spinner animation="border" role="status">
+                                        <span className="visually-hidden">Loading...</span>
+                                    </Spinner>
                                 </div>
-                            </Form>
+                            ) : displayJobs.length === 0 ? (
+                                <div className="p-3 text-white">No jobs found</div>
+                            ) : (
+                                <div className="job-list">
+                                    {displayJobs.map(job => renderJobItem(job))}
+                                </div>
+                            )}
                         </div>
-                    )}
+                    </Col>
+                )}
+                {/* Job Posting Details */}
+                {(windowWidth > 770 || showDetailsMobile) && (
+                    <Col
+                        md={9}
+                        className="p-0"
+                        style={{
+                            height: "100%",
+                            backgroundColor: "rgba(255, 255, 255, 0.03)",
+                            color: "var(--text6)"
+                        }}
+                    >
+                        {/* Back button only on mobile */}
+                        {windowWidth <= 770 && (
+                            <div className="d-flex align-items-center justify-content-between m-2">
+                                <Button
+                                    className=" px-2 py-2"
+                                    style={{
+                                        backgroundColor: "rgba(255, 255, 255, 0.15)",
+                                        color: "var(--savebtntxt)",
+                                        border: "1px solid var(--border)",
+                                        borderRadius: "8px",
+                                        backdropFilter: "blur(6px)",
+                                        WebkitBackdropFilter: "blur(6px)",
+                                    }}
+                                    onClick={() => setShowDetailsMobile(false)}
+                                >
+                                    ← Back
+                                </Button>
+                                <div className="d-flex align-items-center" style={{ gap: "10px" }}>
 
+                                    {/* Save */}
+                                    <Button
+                                        variant="link"
+                                        style={{
+                                            color: "var(--savebtnhovertxt)",
+                                            transition: "all 0.3s ease",
+                                            marginLeft: "8px",
+                                        }}
+                                        onMouseEnter={(e) => {
+                                            e.currentTarget.style.color = "var(--savebtntxt)";
+                                        }}
+                                        onMouseLeave={(e) => {
+                                            e.currentTarget.style.color = "var(--savebtnhovertxt)";
+                                        }}
+                                        onClick={() => toggleSaveJob(selectedJob.id, selectedJob.is_saved)}
+                                    >
+                                        {selectedJob.is_saved ? <FaBookmark size={18} /> : <FaRegBookmark size={26} />}
+                                    </Button>
 
+                                    {/* Apply */}
+                                    <Button
+                                        variant="link"
+                                        style={{
+                                            color: "var(--savebtnhovertxt)",
+                                            transition: "all 0.3s ease",
+                                            marginLeft: "8px",
+                                        }}
+                                        onMouseEnter={(e) => {
+                                            e.currentTarget.style.color = "var(--savebtntxt)";
+                                        }}
+                                        onMouseLeave={(e) => {
+                                            e.currentTarget.style.color = "var(--savebtnhovertxt)";
+                                        }}
+                                        onClick={handleApplyClick}
+                                        disabled={selectedJob.applied_status}
+                                    >
+                                        <FaPaperPlane size={26} />
+                                    </Button>
 
-                    {/* Job Posting listings */}
-                    <div className="overflow-auto flex-grow-1 auto-hide-scroll">
-                        {error && <div className="p-3 text-danger">{error}</div>}
+                                    {/* Interview Prep */}
+                                    <Button
+                                        variant="link"
+                                        style={{
+                                            color: "var(--savebtnhovertxt)",
+                                            transition: "all 0.3s ease",
+                                            marginLeft: "8px",
+                                        }}
+                                        onMouseEnter={(e) => {
+                                            e.currentTarget.style.color = "var(--savebtntxt)";
+                                        }}
+                                        onMouseLeave={(e) => {
+                                            e.currentTarget.style.color = "var(--savebtnhovertxt)";
+                                        }}
+                                        onClick={() => { navigate("/interview-chatbot", { state: { job: selectedJob } }) }}
+                                    >
+                                        <FaRobot size={26} />
+                                    </Button>
+                                </div>
+                            </div>
+                        )}
 
                         {loading ? (
-                            <div className="d-flex justify-content-center align-items-center py-5">
+                            <div className="h-100 d-flex align-items-center justify-content-center">
                                 <Spinner animation="border" role="status">
                                     <span className="visually-hidden">Loading...</span>
                                 </Spinner>
                             </div>
-                        ) : displayJobs.length === 0 ? (
-                            <div className="p-3 text-white">No jobs found</div>
-                        ) : (
-                            <div className="job-list">
-                                {displayJobs.map(job => renderJobItem(job))}
-                            </div>
-                        )}
-                    </div>
-                </Col>
-
-                {/* Job Posting Details */}
-                <Col
-                    md={9}
-                    className="p-0"
-                    style={{
-                        height: "100%",
-                        backgroundColor: "rgba(255, 255, 255, 0.03)",
-                        color: "var(--text6)"
-                    }}
-                >
-                    {loading ? (
-                        <div className="h-100 d-flex align-items-center justify-content-center">
-                            <Spinner animation="border" role="status">
-                                <span className="visually-hidden">Loading...</span>
-                            </Spinner>
-                        </div>
-                    ) : selectedJob ? (
-                        <div
-                            className="h-100 overflow-auto auto-hide-scroll"
-                            style={{
-
-                                color: "var(--contenttxt)",
-                            }}
-                        >
+                        ) : selectedJob ? (
                             <div
-                                className="p-4 "
+                                className="h-100 overflow-auto auto-hide-scroll"
                                 style={{
 
+                                    color: "var(--contenttxt)",
                                 }}
                             >
-                                {/* Header Section */}
-                                <div className="d-flex justify-content-between align-items-start mb-3">
-                                    <div className="d-flex">
-                                        <div>
-                                            <div
-                                                className="d-flex align-items-start gap-2"
-                                                style={{ width: "100%" }}
-                                            >
-                                                {getCompanyLogo(selectedJob.company) && (
-                                                    <div
-                                                        className="me-3"
-                                                        style={{
-                                                            // border: "2px solid var(--border)",
-                                                            borderRadius: "8px",
-                                                            padding: "6px",
-                                                            display: "flex",
-                                                            alignItems: "center",
-                                                            justifyContent: "center",
-                                                            width: "82px",
-                                                            height: "82px",
-                                                            backgroundColor: "var(--lbg)"
-                                                        }}
-                                                    >
-                                                        <img
-                                                            src={getCompanyLogo(selectedJob.company)}
-                                                            alt={`${selectedJob.company} logo`}
+                                <div
+                                    className={windowWidth <= 770 ? "pt-0 ps-2 pe-2 pb-2" : "p-4"}
+                                    style={{}}
+                                >
+
+                                    {/* Header Section */}
+                                    <div className="d-flex justify-content-between align-items-start mb-3">
+                                        <div className="d-flex">
+                                            <div>
+                                                <div
+                                                    className="d-flex align-items-start gap-2"
+                                                    style={{ width: "100%" }}
+                                                >
+                                                    {getCompanyLogo(selectedJob.company) && (
+                                                        <div
+                                                            className="me-3"
                                                             style={{
-                                                                width: '70px',
-                                                                height: '70px',
-                                                                objectFit: 'contain'
+                                                                // border: "2px solid var(--border)",
+                                                                borderRadius: "8px",
+                                                                padding: "6px",
+                                                                display: "flex",
+                                                                alignItems: "center",
+                                                                justifyContent: "center",
+                                                                width: "82px",
+                                                                height: "82px",
+                                                                backgroundColor: "var(--lbg)"
                                                             }}
-                                                        />
+                                                        >
+                                                            <img
+                                                                src={getCompanyLogo(selectedJob.company)}
+                                                                alt={`${selectedJob.company} logo`}
+                                                                style={{
+                                                                    width: '70px',
+                                                                    height: '70px',
+                                                                    objectFit: 'contain'
+                                                                }}
+                                                            />
+                                                        </div>
+
+                                                    )}
+                                                    <div className="job-title-company">
+                                                        <h2
+                                                            className="mb-0"
+                                                            style={{ color: "var(--text6)", lineHeight: "1.2" }}
+                                                        >
+                                                            {selectedJob.title}
+                                                        </h2>
+                                                        <h5
+                                                            className="text-white mt-1 mb-2"
+                                                            style={{ lineHeight: "1.2" }}
+                                                        >
+                                                            {selectedJob.company}
+                                                        </h5>
                                                     </div>
 
-                                                )}
-                                                <div className="job-title-company">
-                                                    <h2
-                                                        className="mb-0"
-                                                        style={{ color: "var(--text6)", lineHeight: "1.2" }}
-                                                    >
-                                                        {selectedJob.title}
-                                                    </h2>
-                                                    <h5
-                                                        className="text-white mt-1 mb-2"
-                                                        style={{ lineHeight: "1.2" }}
-                                                    >
-                                                        {selectedJob.company}
-                                                    </h5>
                                                 </div>
-
-                                            </div>
-                                            <div className="pt-3">
-                                                <div className="d-flex flex-column text-white">
-                                                    <div className="d-flex align-items-center mb-1">
-                                                        <FaMapMarkerAlt size={14} className="me-1" />
-                                                        <span>{selectedJob.location}</span>
-                                                    </div>
-                                                    <div className="d-flex align-items-center mb-1">
-                                                        <FaClock size={14} className="me-1" />
-                                                        <span>{selectedJob.datePosted || "N/A"}</span>
-                                                    </div>
-                                                    <div className="d-flex align-items-center">
-                                                        <FaMoneyBill size={14} className="me-1" />
-                                                        <span>{selectedJob.salary || "Not Posted"}</span>
+                                                <div className="pt-3">
+                                                    <div className="d-flex flex-column text-white">
+                                                        <div className="d-flex align-items-center mb-1">
+                                                            <FaMapMarkerAlt size={14} className="me-1" />
+                                                            <span>{selectedJob.location}</span>
+                                                        </div>
+                                                        <div className="d-flex align-items-center mb-1">
+                                                            <FaClock size={14} className="me-1" />
+                                                            <span>{selectedJob.datePosted || "N/A"}</span>
+                                                        </div>
+                                                        <div className="d-flex align-items-center">
+                                                            <FaMoneyBill size={14} className="me-1" />
+                                                            <span>{selectedJob.salary || "Not Posted"}</span>
+                                                        </div>
                                                     </div>
                                                 </div>
                                             </div>
                                         </div>
-                                    </div>
-                                    <div className="d-flex">
-                                        <Button
-                                            style={{
-                                                backgroundColor: "var(--savebtnbg)",
-                                                color: "var(--savebtntxt)",
-                                                border: "1px solid var(--savebtntxt)",
-                                                transition: "all 0.3s ease"
-                                            }}
-                                            onMouseEnter={(e) => {
-                                                e.currentTarget.style.backgroundColor = "var(--savebtnhover)";
-                                                e.currentTarget.style.color = "var(--savebtnhovertxt)";
-                                            }}
-                                            onMouseLeave={(e) => {
-                                                e.currentTarget.style.backgroundColor = "var(--savebtnbg)";
-                                                e.currentTarget.style.color = "var(--savebtntxt)";
-                                            }}
-                                            className="me-2 d-flex align-items-center"
-                                            onClick={() => toggleSaveJob(selectedJob.id, selectedJob.is_saved)}
-                                        >
-                                            {selectedJob.is_saved ? "Unsave" : "Save"}
-                                        </Button>
+                                        {windowWidth > 770 && (
+                                            <div className="d-flex">
+                                                <Button
+                                                    style={{
+                                                        backgroundColor: "var(--savebtnhover)",
+                                                        color: "var(--savebtnhovertxt)",
+                                                        border: "1px solid var(--savebtntxt)",
+                                                        transition: "all 0.3s ease"
+                                                    }}
+                                                    onMouseEnter={(e) => {
+                                                        e.currentTarget.style.backgroundColor = "var(--savebtnbg)";
+                                                        e.currentTarget.style.color = "var(--savebtntxt)";
+                                                    }}
+                                                    onMouseLeave={(e) => {
+                                                        e.currentTarget.style.backgroundColor = "var(--savebtnhover)";
+                                                        e.currentTarget.style.color = "var(--savebtnhovertxt)";
+                                                    }}
+                                                    className="me-2 d-flex align-items-center"
+                                                    onClick={() => toggleSaveJob(selectedJob.id, selectedJob.is_saved)}
+                                                >
+                                                    {selectedJob.is_saved ? "Unsave" : "Save"}
+                                                </Button>
 
-                                        <Button
-                                            style={{
-                                                backgroundColor: "var(--applybtnbg)",
-                                                color: "var(--applybtntxt)",
-                                                border: "none",
-                                                transition: "all 0.3s ease"
-                                            }}
-                                            onMouseEnter={(e) => {
-                                                e.currentTarget.style.backgroundColor = "var(--applybtnhover)";
-                                                e.currentTarget.style.color = "var(--applybtnhovertxt)";
-                                            }}
-                                            onMouseLeave={(e) => {
-                                                e.currentTarget.style.backgroundColor = "var(--applybtnbg)";
-                                                e.currentTarget.style.color = "var(--applybtntxt)";
-                                            }}
-                                            onClick={handleApplyClick}
-                                            disabled={selectedJob.applied_status}
-                                        >
-                                            {selectedJob.applied_status ? "Applied" : "Apply"}
-                                        </Button>
+                                                <Button
+                                                    style={{
+                                                        backgroundColor: "var(--savebtnhover)",
+                                                        color: "var(--savebtnhovertxt)",
+                                                        border: "1px solid var(--savebtntxt)",
+                                                        transition: "all 0.3s ease"
+                                                    }}
+                                                    onMouseEnter={(e) => {
+                                                        e.currentTarget.style.backgroundColor = "var(--savebtnbg)";
+                                                        e.currentTarget.style.color = "var(--savebtntxt)";
+                                                    }}
+                                                    onMouseLeave={(e) => {
+                                                        e.currentTarget.style.backgroundColor = "var(--savebtnhover)";
+                                                        e.currentTarget.style.color = "var(--savebtnhovertxt)";
+                                                    }}
+                                                    onClick={handleApplyClick}
+                                                    disabled={selectedJob.applied_status}
+                                                >
+                                                    {selectedJob.applied_status ? "Applied" : "Apply"}
+                                                </Button>
 
-                                        <Button
-                                            style={{
-                                                backgroundColor: "var(--applybtnbg)",
-                                                color: "var(--applybtntxt)",
-                                                border: "none",
-                                                transition: "all 0.3s ease",
-                                                marginLeft: "8px",
-                                            }}
-                                            onMouseEnter={(e) => {
-                                                e.currentTarget.style.backgroundColor = "var(--applybtnhover)";
-                                                e.currentTarget.style.color = "var(--applybtnhovertxt)";
-                                            }}
-                                            onMouseLeave={(e) => {
-                                                e.currentTarget.style.backgroundColor = "var(--applybtnbg)";
-                                                e.currentTarget.style.color = "var(--applybtntxt)";
-                                            }}
-                                            onClick={() => { navigate("/interview-chatbot", { state: { job: selectedJob } }) }}
-                                        >
-                                            Interview Prep
-                                        </Button>
+                                                <Button
+                                                    style={{
+                                                        backgroundColor: "var(--savebtnhover)",
+                                                        color: "var(--savebtnhovertxt)",
+                                                        border: "1px solid var(--savebtntxt)",
+                                                        transition: "all 0.3s ease",
+                                                        marginLeft: "8px",
+                                                    }}
+                                                    onMouseEnter={(e) => {
+                                                        e.currentTarget.style.backgroundColor = "var(--savebtnbg)";
+                                                        e.currentTarget.style.color = "var(--savebtntxt)";
+                                                    }}
+                                                    onMouseLeave={(e) => {
+                                                        e.currentTarget.style.backgroundColor = "var(--savebtnhover)";
+                                                        e.currentTarget.style.color = "var(--savebtnhovertxt)";
+                                                    }}
+                                                    onClick={() => { navigate("/interview-chatbot", { state: { job: selectedJob } }) }}
+                                                >
+                                                    Interview Prep
+                                                </Button>
+                                            </div>
+                                        )}
                                     </div>
                                 </div>
-                            </div>
 
-                            {/* Description and Requirements Section */}
-                            <div className="p-4">
-                                <Card
-                                    className="mb-4"
-                                    style={{
-                                        backgroundColor: "rgba(255, 255, 255, 0.2)", // more translucent
-                                        backdropFilter: "blur(10px)",                // adds frosted-glass effect
-                                        WebkitBackdropFilter: "blur(10px)",
-                                        color: "var(--text2)",
-                                        // border: "2px solid var(--cardborder2)",
-                                        borderRadius: "12px"
-                                    }}
+                                {/* Description and Requirements Section */}
+                                <div
+                                    className={windowWidth <= 770 ? "p-2" : "p-4"}
+                                    style={{}}
                                 >
-                                    <Card.Body>
-                                        <Card.Title>Job Description</Card.Title>
-                                        <Card.Text>{selectedJob.description || "No description available."}</Card.Text>
-                                    </Card.Body>
-                                </Card>
 
-                                <Card
-                                    className="mb-4"
-                                    style={{
-                                        backgroundColor: "rgba(255, 255, 255, 0.2)", // more translucent
-                                        backdropFilter: "blur(10px)",                // adds frosted-glass effect
-                                        WebkitBackdropFilter: "blur(10px)",
-                                        color: "var(--text2)",
-                                        // border: "2px solid var(--cardborder2)",
-                                        borderRadius: "12px"
-                                    }}
-                                >
-                                    <Card.Body>
-                                        <Card.Title>Requirements</Card.Title>
-                                        {selectedJob.requirements && selectedJob.requirements.length > 0 ? (
-                                            <ul className="ps-3">
-                                                {selectedJob.requirements.map(r => (
-                                                    <li key={r.id}>{r.name}</li>
-                                                ))}
-                                            </ul>
-                                        ) : (
-                                            <Card.Text>No specific requirements listed.</Card.Text>
-                                        )}
-                                    </Card.Body>
-                                </Card>
+                                    <Card
+                                        className="mb-4"
+                                        style={{
+                                            backgroundColor: "rgba(255, 255, 255, 0.2)", // more translucent
+                                            backdropFilter: "blur(10px)",                // adds frosted-glass effect
+                                            WebkitBackdropFilter: "blur(10px)",
+                                            color: "var(--text2)",
+                                            // border: "2px solid var(--cardborder2)",
+                                            borderRadius: "12px"
+                                        }}
+                                    >
+                                        <Card.Body>
+                                            <Card.Title>Job Description</Card.Title>
+                                            <Card.Text>{selectedJob.description || "No description available."}</Card.Text>
+                                        </Card.Body>
+                                    </Card>
+
+                                    <Card
+                                        className="mb-4"
+                                        style={{
+                                            backgroundColor: "rgba(255, 255, 255, 0.2)", // more translucent
+                                            backdropFilter: "blur(10px)",                // adds frosted-glass effect
+                                            WebkitBackdropFilter: "blur(10px)",
+                                            color: "var(--text2)",
+                                            // border: "2px solid var(--cardborder2)",
+                                            borderRadius: "12px"
+                                        }}
+                                    >
+                                        <Card.Body>
+                                            <Card.Title>Requirements</Card.Title>
+                                            {selectedJob.requirements && selectedJob.requirements.length > 0 ? (
+                                                <ul className="ps-3">
+                                                    {selectedJob.requirements.map(r => (
+                                                        <li key={r.id}>{r.name}</li>
+                                                    ))}
+                                                </ul>
+                                            ) : (
+                                                <Card.Text>No specific requirements listed.</Card.Text>
+                                            )}
+                                        </Card.Body>
+                                    </Card>
+                                </div>
                             </div>
-                        </div>
-                    ) : (
-                        <div className="h-100 d-flex align-items-center justify-content-center text-white">
-                            <div className="text-center">
-                                <FaBriefcase size={48} className="mb-3 text-secondary" />
-                                <p>Select a job to view details</p>
+                        ) : (
+                            <div className="h-100 d-flex align-items-center justify-content-center text-white">
+                                <div className="text-center">
+                                    <FaBriefcase size={48} className="mb-3 text-secondary" />
+                                    <p>Select a job to view details</p>
+                                </div>
                             </div>
-                        </div>
-                    )}
-                </Col>
+                        )}
+                    </Col>
+                )}
             </Row>
 
             {/* Displays job filtering options */}
