@@ -4,6 +4,7 @@ import Navbar from "./components/Navbar";
 import SidePanel from "./components/SidePanel";
 import LandingPage from "./components/LandingPage";
 import AuthForm from "./components/AuthForm";
+import AccountSetup from "./components/AccountSetup";
 import FindJobs from "./components/FindJobs";
 import Account from "./components/Account";
 import Verification from "./components/Verification";
@@ -12,12 +13,12 @@ import PasswordReset from "./components/PasswordReset";
 import Documents from "./components/Documents";
 import TrendAnalysis from "./components/TrendAnalysis";
 import InterviewChatbot from "./components/InterviewChatbot";
-import "bootstrap/dist/css/bootstrap.min.css";
 import backgroundImage from "./assets/background4.png";
+import "bootstrap/dist/css/bootstrap.min.css";
 
 function App() {
 	const location = useLocation();
-	const hideNavMenus = ["/", "/login", "/register", "/verification", "/password-reset"];
+	const hideNavMenus = ["/", "/login", "/register", "/verification", "/password-reset", "/account-setup"];
 	const showNavMenus = !hideNavMenus.includes(location.pathname);
 
 	const [collapsed, setCollapsed] = useState(false);
@@ -73,6 +74,7 @@ function App() {
 					<Route path="/register" element={<AuthForm isLogin={false} />} />
 					<Route path="/verification" element={<Verification />} />
 					<Route path="/password-reset" element={<PasswordReset />} />
+					<Route path="/account-setup" element={<AccountSetup />} />
 				</Routes>
 			)}
 		</div>

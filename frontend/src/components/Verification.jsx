@@ -8,23 +8,18 @@ const Verification = () => {
     const [code, setCode] = useState("");
     const [message, setMessage] = useState('');
     const [error, setError] = useState('');
+
     const navigate = useNavigate();
     const location = useLocation();
-    const data = location.state;
+    const email = location.state;
 
     const handleSubmit = async (e) => {
         e.preventDefault();
+
         try {
-            //console.log(data.email);
-            const response = await api.get("/verification/", { params: { email: data.payloadObject.email, code: code } }); // Updated this line
+            const response = await api.get("/verification/", { params: { email: email, code: code } });
             if(response.status == 200){
                 try{
-                    console.log(data)
-                    const response = await api.post('/register/', data.payloadObject, { // Updated this line
-                        headers: {
-                            'Content-Type': 'multipart/form-data'
-                        }
-                    });
                     setMessage("Registration successful!");
                     setTimeout(() => navigate("/login"), 1000);
                 }
