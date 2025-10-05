@@ -11,7 +11,7 @@ const Verification = () => {
 
     const navigate = useNavigate();
     const location = useLocation();
-    const email = location.state;
+    const email = location.state?.email;
 
     const handleSubmit = async (e) => {
         e.preventDefault();

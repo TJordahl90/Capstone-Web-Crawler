@@ -1,6 +1,6 @@
 import { useState, useEffect, useRef } from 'react';
 import { useNavigate, Link } from 'react-router-dom';
-import { Container, Card, Row, Col, Form, Button, Alert } from 'react-bootstrap';
+import { Container, Card, Row, Col, Form, Button, Alert, Spinner } from 'react-bootstrap';
 import InputField from './InputField';
 import api from '../api.js';
 import backgroundImage from "../assets/background4.png";
@@ -9,6 +9,7 @@ const AuthForm = ({ isLogin }) => {
     const navigate = useNavigate();
     const [message, setMessage] = useState('');
     const [error, setError] = useState('');
+    const [loading, setLoading] = useState(false);
     const [formData, setFormData] = useState({
         username: '',
         password: '',
@@ -32,33 +33,47 @@ const AuthForm = ({ isLogin }) => {
 
     const handleSubmit = async (e) => {
         e.preventDefault();
+        setLoading(true);
 
         if (!isLogin) {
             try {
                 await api.post('/register/', formData);
-                navigate("/verification", { state: {email} });
+                await api.post('/verification/', { email: formData.email });
+                navigate("/verification", { state: { email: formData.email } });
             }
             catch (err) {
-                setError(err.response?.data?.message || "Error registering acccount.");
+                setError(err.response?.data?.error || "Error registering acccount.");
+                setLoading(false);
             }
         }
 
         if (isLogin) {
             try {
                 const response = await api.post('/login/', formData);
-
-                const { skills, preferences, education, experience, ...otherAccountData } = response.data.account;
-                localStorage.setItem("user", JSON.stringify(response.data.user));
-                localStorage.setItem("account", JSON.stringify(otherAccountData));
-                localStorage.setItem("skills", JSON.stringify(skills));
-                localStorage.setItem("preferences", JSON.stringify(preferences));
-                localStorage.setItem("education", JSON.stringify(education));
-                localStorage.setItem("experience", JSON.stringify(experience));
-
-                setMessage("Login successful!");
-                setTimeout(() => navigate("/find-jobs"), 1000);
+                if (response.data.first_time_login) {
+                    localStorage.setItem("user", JSON.stringify(response.data.user));
+                    localStorage.setItem("account", JSON.stringify({}));
+                    localStorage.setItem("skills", JSON.stringify([]));
+                    localStorage.setItem("preferences", JSON.stringify([]));
+                    localStorage.setItem("education", JSON.stringify({}));
+                    localStorage.setItem("experience", JSON.stringify({}));
+                    setMessage("Login successful!");
+                    setTimeout(() => navigate("/account-setup"), 1000);
+                } 
+                else {
+                    const { skills, preferences, education, experience, ...otherAccountData } = response.data.account;
+                    localStorage.setItem("user", JSON.stringify(response.data.user));
+                    localStorage.setItem("account", JSON.stringify(otherAccountData));
+                    localStorage.setItem("skills", JSON.stringify(skills));
+                    localStorage.setItem("preferences", JSON.stringify(preferences));
+                    localStorage.setItem("education", JSON.stringify(education));
+                    localStorage.setItem("experience", JSON.stringify(experience));
+                    setMessage("Login successful!");
+                    setTimeout(() => navigate("/find-jobs"), 1000);
+                }
             } catch (err) {
-                setError(err.response?.data?.message || "Something went wrong.");
+                setError(err.response?.data?.error || "Something went wrong.");
+                setLoading(false);
             }
 
             setTimeout(() => {
@@ -202,6 +217,7 @@ const AuthForm = ({ isLogin }) => {
 
                                 <Button
                                     type="submit"
+                                    disabled={loading}
                                     style={{
                                         backgroundColor: "rgba(0, 173, 181, 0.3)",
                                         width: "50%",
@@ -225,7 +241,7 @@ const AuthForm = ({ isLogin }) => {
                                         e.target.style.color = "var(--text)";
                                     }}
                                 >
-                                    {isLogin ? "Login" : "Register"}
+                                    {loading ? <Spinner as="span" animation="border" size="sm" /> : (isLogin ? "Login" : "Register")}
                                 </Button>
 
                                 <div className="text-center mt-3"

@@ -39,12 +39,45 @@ class CreateUserView(APIView):
     permission_classes = [AllowAny]
 
     def post(self, request):
-        serializer = CreateUserSerializer(data=request.data) # deserialize registration data
-        if serializer.is_valid():  # built-in function that validates data
-            serializer.save() # saves serialized valid data
-            return Response(serializer.data, status=status.HTTP_201_CREATED) # sends response to frontend
-        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST) # or sends error msg
+        serializer = CreateUserSerializer(data=request.data)
+        if serializer.is_valid():
+            serializer.save()
+            return Response(serializer.data, status=status.HTTP_201_CREATED)
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
+class CreateVerificationView(APIView):
+    permission_classes = [AllowAny]
+
+    def post(self, request):
+        email = request.data.get('email')
+        try:
+            user = User.objects.get(email__iexact=email)
+        except User.DoesNotExist:
+            return Response({"error": "User with this email does not exist."}, status=status.HTTP_404_NOT_FOUND)
+        
+        Verification.objects.filter(email__iexact=email).delete()
+        code = str(random.randint(100000, 999999))
+        Verification.objects.create(email=email, code=code)
+
+        message = f'Your verification code is: {code}'
+        subject = 'Verification Code for Northstar Jobs'
+        recipient = [email]
+        sendMail(recipient, subject, message)
+        return Response({"message": "Verification code sent."}, status=status.HTTP_201_CREATED)
+    
+    def get(self, request):
+        email = request.GET.get('email')
+        code = request.GET.get('code')
+        try:
+            user = User.objects.get(email__iexact=email)
+            verificationEntry = Verification.objects.get(email__iexact=email, code=code)
+            verificationEntry.delete()
+            user.is_active = True
+            user.save()
+            return Response({'message': 'Verification successful'}, status=status.HTTP_200_OK)
+        except (User.DoesNotExist, Verification.DoesNotExist):
+            return Response({"error": "Invalid verification code or email."}, status=status.HTTP_404_NOT_FOUND)
+        
 class LoginView(APIView):
     """Handles user authentication and returns session id"""
     permission_classes = [AllowAny]
@@ -54,16 +87,17 @@ class LoginView(APIView):
         password = request.data.get("password")
         user = authenticate(username=username, password=password)
 
-        if user is not None:
+        if user:
+            first_time_login = user.last_login is None
             login(request, user)
-            account = Account.objects.get(user=user)
-            user_serialized_data = UserSerializer(user).data
-            account_serialized_data = AccountSerializer(account).data
+            user_serializer = UserSerializer(user).data
+            response = {'first_time_login': first_time_login, 'user': user_serializer, 'account': None}
 
-            response = {
-                'user': user_serialized_data,
-                'account': account_serialized_data
-            }
+            if not first_time_login:
+                account = Account.objects.get(user=user)
+                account_serializer = AccountSerializer(account).data
+                response['account'] = account_serializer
+
             return Response(response, status=200)
         return Response({"error": "Invalid credentials"}, status=400)
 
@@ -167,49 +201,6 @@ class AccountView(APIView):
         if errors:
             return Response(errors, status=400)
         return Response(response, status=200)
-
-class CreateVerificationView(APIView):
-    permission_classes = [AllowAny]
-
-    def post(self, request):
-        email = request.data.get('email')
-        serializer = CreateUserSerializer(data=request.data)
-
-
-        delInstance = Verification.objects.filter(email=email)
-        try:
-            delInstance.delete()
-        except(delInstance.DoesNotExist):
-            pass
-
-        if(serializer.is_valid()):
-            code = str(random.randint(100000, 999999))
-
-            message = f'Your verification code is: {code}'
-            subject = 'Verification Code for DFWork Account'
-            recipient = [email]
-
-            instance = Verification(email=email, code=code)
-            instance.save()
-            sendMail(recipient, subject, message)
-
-            serializer = VerificationSerializer(instance)
-            return(Response(serializer.data, status=status.HTTP_201_CREATED))
-        return(Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST))
-    
-    def get(self, request):
-        email = request.GET.get('email')
-        code = request.GET.get('code')
-        print(f'email: {email} code: {code}')
-
-        #print(f'email: {email} type: {type(email)} code: {code} type: {type(code)}')
-
-        verificationEntry = Verification.objects.get(email=email)
-        if(str(code) == str(verificationEntry.code)):
-            verificationEntry.delete()
-            return Response({'message': 'Verification successful'}, status=status.HTTP_200_OK)
-        
-        return Response({'error': 'Invalid code'}, status=status.HTTP_400_BAD_REQUEST)
 
 @api_view(['GET'])
 @permission_classes([IsAuthenticated])

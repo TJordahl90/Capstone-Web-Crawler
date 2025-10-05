@@ -9,75 +9,22 @@ from .models import *
 from .resumeParser import extract_text_from_pdf, parser
 
 class CreateUserSerializer(serializers.ModelSerializer): 
-    """Serializer for new user registering"""
-    resume = serializers.FileField(required=False)
-
     class Meta:
-        """Deserialize the user model fields below"""
         model = User
-        fields = ['email', 'username', 'password', 'first_name', 'last_name', 'resume']
+        fields = ['email', 'username', 'password', 'first_name', 'last_name']
         extra_kwargs = {'password': {'write_only': True}}
 
+    def validate_email(self, value):
+        """Check that the email is not already being used."""
+        if User.objects.filter(email__iexact=value).exists():
+            raise serializers.ValidationError("A user with this email already exists.")
+        return value
+    
     def create(self, validated_data):
         """Creates the user and account"""
-        
-        # user object created and data set
-        user = User(
-            email = validated_data['email'],
-            username = validated_data['username'],
-            first_name = validated_data['first_name'],
-            last_name = validated_data['last_name']
-        )
-        resume = validated_data.pop('resume', None)
-
-        # set_password() and save() are built-in functions
-        user.set_password(validated_data['password']) # hashes the password- security measure
-        user.save() # saves user object to database
-
-        account = Account(user = user, resume = resume)
-        account.save()
-
-        if resume:
-            resume.seek(0)
-
-            text = extract_text_from_pdf(resume) 
-            parsed_data = parser(text)
-        
-            if parsed_data.get("skills"):
-                skills_list = []
-                for skill in parsed_data.get("skills"):
-                    # new_skill, created = CommonSkills.objects.get_or_create(name=skill)
-                    # skills_list.append(new_skill)
-                    print("\nNEW SKILL:", skill)
-                # account.skills.set(skills_list)
-
-            if parsed_data.get("education"):
-                edu_data = parsed_data.get("education")
-                # new_education = Education.objects.create(
-                #     grade=edu_data.grade, 
-                #     institution=edu_data.institution, 
-                #     degree=edu_data.degree,
-                #     major=edu_data.major,
-                #     minor=edu_data.minor,
-                #     graduationData=edu_data.graduation_date,
-                #     gpa=edu_data.gpa
-                # )
-                # account.education.set(new_education)
-                print("\nNEW EDUCATION:", edu_data)
-
-            if parsed_data.get("experience"):
-                exp_data = parsed_data.get("experience")
-                # new_experience = Experience.objects.create(
-                #     company=exp_data.company,
-                #     title=exp_data.title,
-                #     location=exp_data.location,
-                #     startDate=exp_data.start_date,
-                #     description=exp_data.description
-                # )
-                # account.experience.set(new_experience)
-                print("\nNEW EXPERIENCE:", exp_data)
-
-        return user # returns user object to views.py function call
+        user = User.objects.create_user(**validated_data, is_active=False) # function to create user w/ data & hash password
+        Account.objects.create(user = user)
+        return user
 
 class VerificationSerializer(serializers.ModelSerializer):
     class Meta:

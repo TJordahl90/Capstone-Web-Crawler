@@ -1,12 +1,13 @@
-import { useState, useEffect, useRef } from 'react';
-import { useNavigate, useLocation, Link } from 'react-router-dom';
-import { Container, Card, Row, Col, Form, Button, Alert } from 'react-bootstrap';
+import { useState, useRef } from 'react';
+import { useNavigate } from 'react-router-dom';
+import { Container, Card, Form, Button, Alert, Spinner } from 'react-bootstrap';
+import api from '../api.js';
 
 const AccountSetup = () => {
-    const [message, setMessage] = useState('');
-    const [error, setError] = useState('');
+    const [view, setView] = useState('resume');
     const [resume, setResume] = useState(null);
-
+    const [loading, setLoading] = useState(false);
+    const [error, setError] = useState('');
     const navigate = useNavigate();
     const fileInputRef = useRef(null);
 
@@ -15,55 +16,81 @@ const AccountSetup = () => {
         if (file) {
             if (file.type !== 'application/pdf') {
                 setError('Please upload a PDF file.');
-                fileInputRef.current.value = null;
+                setResume(null);
+                if(fileInputRef.current) fileInputRef.current.value = null;
                 return;
             }
-
             if (file.size > 5 * 1024 * 1024) {
-                setError('File size should be less than 5MB.');
-                fileInputRef.current.value = null;
+                setError('File size must be less than 5MB.');
+                setResume(null);
+                if(fileInputRef.current) fileInputRef.current.value = null;
                 return;
             }
-
             setResume(file);
             setError('');
         }
     };
 
-    const handleSubmit = async (e) => {
+    const handleResumeSubmit = async (e) => {
         e.preventDefault();
+        // this should call the resume parser in the backend
+    };
 
-        if (!isLogin) {
-            const formDataPayload = new FormData();
-            Object.keys(formData).forEach(key => {
-                formDataPayload.append(key, formData[key]);
-            });
-
-            if (resume) {
-                formDataPayload.append('resume', resume);
-            }
-
-            try {
-                await api.post("//", formDataPayload, {
-                    headers: {
-                        'Content-Type': 'multipart/form-data'
-                    }
-                });
-                navigate("/");
-            }
-            catch (err) {
-                setError(err.response?.data?.message || "");
-            }
-        }
-
-    }
+    const handleSkip = () => {
+        navigate('/find-jobs');
+    };
 
     return (
-        <Container>
-            <InputField label="Resume" type="file"
-                onChange={handleFileChange} accept=".pdf" inputRef={fileInputRef}
-                helpText="Upload your resume (PDF format, max 5MB)" required={false}
-            />                 
+        <Container className="d-flex align-items-center justify-content-center" style={{ minHeight: '100vh', color: 'white' }}>
+            <Card style={{ width: '100%', maxWidth: '500px'}}>
+                <Card.Body className="p-4 p-md-5">
+                    <h2 className="text-center mb-3">Set Up Your Profile</h2>
+                    
+                    {error && <Alert variant="danger">{error}</Alert>}
+
+                    {view === 'resume' ? (
+                        <div>
+                            <p className="text-center mb-4">
+                                Speed up the process by uploading your resume. We'll parse it to fill in your profile.
+                            </p>
+                            <Form onSubmit={handleResumeSubmit}>
+                                <Form.Group controlId="formFile" className="mb-3">
+                                    <Form.Control 
+                                        type="file" 
+                                        accept=".pdf" 
+                                        ref={fileInputRef} 
+                                        onChange={handleFileChange} 
+                                    />
+                                </Form.Group>
+                                <Button variant="info" type="submit" className="w-100" disabled={loading}>
+                                    {loading ? <Spinner as="span" animation="border" size="sm"/> : 'Upload and Continue'}
+                                </Button>
+                            </Form>
+                            <hr />
+                            <Button variant="outline-secondary" className="w-100" onClick={() => setView('manual')}>
+                                Or, Enter Details Manually
+                            </Button>
+                        </div>
+                    ) : (
+                        <div>
+                            <p className="text-center mb-4">Fill in your professional details below.</p>
+                            <div className="text-center p-5 border border-dashed rounded">
+                                <p>need to implement.</p>
+                            </div>
+                            <hr />
+                            <Button variant="outline-secondary" className="w-100" onClick={() => setView('resume')}>
+                                Back to Resume Upload
+                            </Button>
+                        </div>
+                    )}
+
+                    <div className="text-center mt-4">
+                        <Button variant="link" onClick={handleSkip}>
+                            Skip for now
+                        </Button>
+                    </div>
+                </Card.Body>
+            </Card>
         </Container>
     );
 }
