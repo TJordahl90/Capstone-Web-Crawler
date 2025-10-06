@@ -49,6 +49,16 @@ class Experience(models.Model):
     def __str__(self):
         return self.company
     
+class Project(models.Model):
+    account = models.ForeignKey(Account, on_delete=models.CASCADE, related_name='projects')
+    title = models.CharField(max_length=100)
+    description = models.TextField(blank=True, null=True)
+    startDate = models.DateField(blank=True, null=True)
+    endDate = models.DateField(blank=True, null=True)
+
+    def __str__(self):
+        return self.title
+    
 class JobPosting(models.Model):
     company = models.CharField(max_length=150)
     title = models.CharField(max_length=200)
