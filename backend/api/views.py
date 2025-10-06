@@ -91,14 +91,7 @@ class LoginView(APIView):
             first_time_login = user.last_login is None
             login(request, user)
             user_serializer = UserSerializer(user).data
-            response = {'first_time_login': first_time_login, 'user': user_serializer, 'account': None}
-
-            if not first_time_login:
-                account = Account.objects.get(user=user)
-                account_serializer = AccountSerializer(account).data
-                response['account'] = account_serializer
-
-            return Response(response, status=200)
+            return Response({'first_time_login': first_time_login, 'user': user_serializer}, status=200)
         return Response({"error": "Invalid credentials"}, status=400)
 
 class LogoutView(APIView):
@@ -120,8 +113,13 @@ class UserProfileView(APIView):
         return Response(serializer.data)
     
 class AccountView(APIView): 
-    """Updates user account details"""
+    """Handles user account details"""
     permission_classes = [IsAuthenticated]
+
+    def get(self, request):
+        user_serializer = UserSerializer(request.user).data
+        account_serializer = AccountSerializer(request.user.account).data
+        return Response({'user': user_serializer, 'account': account_serializer}, status=200)
 
     def patch(self, request):
         user = request.user
@@ -149,58 +147,42 @@ class AccountView(APIView):
             else:
                 errors['account'] = account_serializer.errors
 
-        if skills_data is not None:
+        if skills_data:
             try:
-                skills_list = []
-                for skill in skills_data:
-                    new_skill, created_bool = CommonSkills.objects.get_or_create(name=skill)
-                    skills_list.append(new_skill)
+                skills_list = [CommonSkills.objects.get_or_create(name=skill)[0] for skill in skills_data]
                 account.skills.set(skills_list)
             except Exception as e:
                 errors['skills'] = str(e)
 
-        if preferences_data is not None:
+        if preferences_data:
             try:
-                preferences_list = []
-                for preference in preferences_data:
-                    new_preference, created_bool = CommonPreferences.objects.get_or_create(name=preference)
-                    preferences_list.append(new_preference)
+                preferences_list = [CommonPreferences.objects.get_or_create(name=pref)[0] for pref in preferences_data]
                 account.preferences.set(preferences_list)
             except Exception as e:
                 errors['preferences'] = str(e)
 
         if education_data:
-            education_serializer = EducationSerializer(data=education_data)
+            education_serializer = EducationSerializer(data=education_data, many=True)
             if education_serializer.is_valid():
-                if account.education:
-                    account.education.delete()
-                instance = education_serializer.save()
-                account.education = instance
+                account.education.all().delete()
+                education_serializer.save(account=account)
             else:
                 errors['education'] = education_serializer.errors
 
         if experience_data:
-            experience_serializer = ExperienceSerializer(data=experience_data)
+            experience_serializer = ExperienceSerializer(data=experience_data, many=True)
             if experience_serializer.is_valid():
-                if account.experience:
-                    account.experience.delete()
-                instance = experience_serializer.save()
-                account.experience = instance
+                account.experience.all().delete()
+                experience_serializer.save(account=account)
             else:
                 errors['experience'] = experience_serializer.errors
 
-        account.save()
         user_serialized_data = UserSerializer(user).data
         account_serialized_data = AccountSerializer(account).data
 
-        response = {
-            'user': user_serialized_data,
-            'account': account_serialized_data
-        }
-
         if errors:
             return Response(errors, status=400)
-        return Response(response, status=200)
+        return Response({'user': user_serialized_data, 'account': account_serialized_data}, status=200)
 
 @api_view(['GET'])
 @permission_classes([IsAuthenticated])

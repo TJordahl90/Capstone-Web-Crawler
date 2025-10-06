@@ -15,28 +15,6 @@ class CommonPreferences(models.Model):
     def __str__(self):
         return self.name
 
-class Education(models.Model):
-    grade = models.CharField(max_length=50)
-    institution = models.CharField(max_length=100)
-    degree = models.CharField(max_length=50)
-    major = models.CharField(max_length=50)
-    minor = models.CharField(max_length=50, blank=True, null=True)
-    graduationDate = models.DateField()
-    gpa = models.FloatField()
-
-    def __str__(self):
-        return self.institution
-    
-class Experience(models.Model):
-    company = models.CharField(max_length=50)
-    title = models.CharField(max_length=50)
-    location = models.CharField(max_length=50, blank=True, null=True)
-    startDate = models.DateField(blank=True, null=True)
-    description = models.TextField(blank=True, null=True)
-
-    def __str__(self):
-        return self.company
-
 class Account(models.Model):
     user = models.OneToOneField(User, on_delete=models.CASCADE) # each account is linked to a user
     resume = models.FileField(upload_to='api/uploads', blank=True, null=True)
@@ -44,11 +22,32 @@ class Account(models.Model):
     hometown = models.CharField(max_length=50, blank=True, null=True)
     skills = models.ManyToManyField(CommonSkills, blank=True)
     preferences = models.ManyToManyField(CommonPreferences, blank=True)
-    education = models.OneToOneField(Education, blank=True, null=True, on_delete=models.SET_NULL)
-    experience = models.OneToOneField(Experience, blank=True, null=True, on_delete=models.SET_NULL)
 
     def __str__(self):
         return self.user.username
+
+class Education(models.Model):
+    account = models.ForeignKey(Account, on_delete=models.CASCADE, related_name='education')
+    institution = models.CharField(max_length=100)
+    degree = models.CharField(max_length=50)
+    major = models.CharField(max_length=50)
+    minor = models.CharField(max_length=50, blank=True, null=True)
+    graduationDate = models.DateField()
+    gpa = models.FloatField(blank=True, null=True)
+
+    def __str__(self):
+        return self.institution
+    
+class Experience(models.Model):
+    account = models.ForeignKey(Account, on_delete=models.CASCADE, related_name='experience')
+    company = models.CharField(max_length=50)
+    title = models.CharField(max_length=50)
+    startDate = models.DateField(blank=True, null=True)
+    endDate = models.DateField(blank=True, null=True)
+    description = models.TextField(blank=True, null=True)
+
+    def __str__(self):
+        return self.company
     
 class JobPosting(models.Model):
     company = models.CharField(max_length=150)
@@ -97,18 +96,6 @@ class Verification(models.Model):
 
     def __str__(self):
         return self.email
-    
-'''
-class ResumeParser(models.Model):
-    # MAY NOT BE NECESSARY
-    name = models.CharField(max_length=255, blank=True)
-    email = models.EmailField(blank=True)
-    phone = models.CharField(max_length=50, blank=True)
-    skills = models.TextField(blank=True)
-    education = models.TextField(blank=True)
-    experience = models.TextField(blank=True)
-    uploaded_at = models.DateTimeField(auto_now_add=True)
-'''
 
 class JobStatistics(models.Model):
     category = models.CharField(max_length=15, blank=False, null=False)

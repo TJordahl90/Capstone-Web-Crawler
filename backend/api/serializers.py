@@ -49,18 +49,18 @@ class CommonPreferencesSerializer(serializers.ModelSerializer):
 class EducationSerializer(serializers.ModelSerializer):
     class Meta:
         model = Education
-        fields = ['id', 'grade', 'institution', 'degree', 'major', 'minor', 'graduationDate', 'gpa']
+        fields = ['id', 'institution', 'degree', 'major', 'minor', 'graduationDate', 'gpa']
 
 class ExperienceSerializer(serializers.ModelSerializer):
     class Meta:
         model = Experience
-        fields = ['id', 'company', 'title', 'location', 'startDate', 'description']
+        fields = ['id', 'company', 'title', 'startDate', 'endDate', 'description']
 
 class AccountSerializer(serializers.ModelSerializer):
-    skills = CommonSkillsSerializer(many=True, read_only=False)
-    preferences = CommonPreferencesSerializer(many=True, read_only=False)
-    education = EducationSerializer(many=False, read_only=False)
-    experience = ExperienceSerializer(many=False, read_only=False)
+    skills = CommonSkillsSerializer(many=True, read_only=True)
+    preferences = CommonPreferencesSerializer(many=True, read_only=True)
+    education = EducationSerializer(many=True, read_only=True)
+    experience = ExperienceSerializer(many=True, read_only=True)
 
     class Meta:
         model = Account

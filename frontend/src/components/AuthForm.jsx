@@ -50,24 +50,12 @@ const AuthForm = ({ isLogin }) => {
         if (isLogin) {
             try {
                 const response = await api.post('/login/', formData);
+                localStorage.setItem("user", JSON.stringify(response.data.user));
                 if (response.data.first_time_login) {
-                    localStorage.setItem("user", JSON.stringify(response.data.user));
-                    localStorage.setItem("account", JSON.stringify({}));
-                    localStorage.setItem("skills", JSON.stringify([]));
-                    localStorage.setItem("preferences", JSON.stringify([]));
-                    localStorage.setItem("education", JSON.stringify({}));
-                    localStorage.setItem("experience", JSON.stringify({}));
                     setMessage("Login successful!");
                     setTimeout(() => navigate("/account-setup"), 1000);
                 } 
                 else {
-                    const { skills, preferences, education, experience, ...otherAccountData } = response.data.account;
-                    localStorage.setItem("user", JSON.stringify(response.data.user));
-                    localStorage.setItem("account", JSON.stringify(otherAccountData));
-                    localStorage.setItem("skills", JSON.stringify(skills));
-                    localStorage.setItem("preferences", JSON.stringify(preferences));
-                    localStorage.setItem("education", JSON.stringify(education));
-                    localStorage.setItem("experience", JSON.stringify(experience));
                     setMessage("Login successful!");
                     setTimeout(() => navigate("/find-jobs"), 1000);
                 }
