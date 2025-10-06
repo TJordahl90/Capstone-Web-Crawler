@@ -217,8 +217,14 @@ def JobSearchingView(request):
 def AllJobsView(request):
     """Returns all available jobs"""
     filters = request.data.get("filters", {})
+    pageNumber = 1 # We need to update the frontend to pass which page the user is on so we dont pull too much at a time from the database
+
     # IMPLEMENT FILTERING - will probably need to expand job posting model to include experience, type, etc
-    all_jobs = JobPosting.objects.all()
+
+    start = (pageNumber - 1) * 15
+    end = start + 15
+    all_jobs = JobPosting.objects.order_by('-id')[start:end]
+    
     serializedJobs = JobPostingSerializer(all_jobs, many=True, context={'request': request}).data
     return Response(serializedJobs, status=200)
 
