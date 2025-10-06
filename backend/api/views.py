@@ -17,7 +17,7 @@ from .jobMatching import matchUsersToJobs, searchForJobs
 from rest_framework.decorators import api_view
 from rest_framework.parsers import MultiPartParser
 #from .models import ResumeParser
-from .resumeParser import extract_text_from_pdf, parser
+from .resumeParser import * # We need all the functions from this file
 import os
 from openai import OpenAI
 from datetime import datetime, timedelta
@@ -285,15 +285,15 @@ class DocumentView(APIView):
         account.save()
 
         text = extract_text_from_pdf(resume_file) #run the resume parser and stores data in pasrsed_data
+        skills = extractSkills(text)
         parsed_data = parser(text)
         
         #Automatically adds it to the profile
-        if parsed_data.get("skills"):
-            skills_list = []
-            for skill in parsed_data["skills"]:
-                new_skill, created = CommonSkills.objects.get_or_create(name=skill)
-                skills_list.append(new_skill)
-            account.skills.set(skills_list)
+        if skills:
+            skillObjects = []
+            for skill in skills:
+                skillObjects.append(CommonSkills.objects.get(name=skill))
+            account.skills.add(*skillObjects)
         
         if parsed_data.get("education"):
             edu_serializer = EducationSerializer(data=parsed_data["education"], many=True)

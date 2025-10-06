@@ -113,7 +113,7 @@ def parser(text):
     except Exception as e:
         return ('Error getting the response')
         
-    print(response.choices[0].message.content)
+    #print(response.choices[0].message.content)
         
     return response.choices[0].message.content
 
