@@ -1,6 +1,6 @@
 import re
 import fitz  # PyMuPDF
-import spacy
+#import spacy
 from api.models import CommonSkills
 from django.core.files.uploadedfile import SimpleUploadedFile
 from openai import OpenAI
