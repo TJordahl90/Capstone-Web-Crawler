@@ -5,6 +5,7 @@ from api.models import CommonSkills
 from django.core.files.uploadedfile import SimpleUploadedFile
 from openai import OpenAI
 import os
+import json
 
 def extract_text_from_pdf(pdf_file):
     text = ""
@@ -110,12 +111,18 @@ def parser(text):
             model="gpt-3.5-turbo", # not sure what model yet using for now
             messages=[{"role": "user", "content": prompt}],
         )
+        content = response.choices[0].message.content
+
+        # Convert to a dict
+        parsedJson = json.loads(content)
+        return parsedJson
+    except json.JSONDecodeError:
+        print("Model output was not valid JSON")
+        return {}
     except Exception as e:
-        return ('Error getting the response')
-        
-    #print(response.choices[0].message.content)
-        
-    return response.choices[0].message.content
+        print(f'Error getting the response: {e}')
+        return {}
+
 
 def testFunc():
     uploaded = SimpleUploadedFile("resume.pdf", open("api/JulianOndrey_Resume.pdf", "rb").read(), content_type="application/pdf")

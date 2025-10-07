@@ -32,7 +32,7 @@ class Education(models.Model):
     degree = models.CharField(max_length=50)
     major = models.CharField(max_length=50)
     minor = models.CharField(max_length=50, blank=True, null=True)
-    graduationDate = models.DateField()
+    graduationDate = models.DateField(null=True, blank=True)
     gpa = models.FloatField(blank=True, null=True)
 
     def __str__(self):
