@@ -34,6 +34,39 @@ const AccountSetup = () => {
     const handleResumeSubmit = async (e) => {
         e.preventDefault();
         // this should call the resume parser in the backend
+        e.preventDefault();
+    if (!resume) {
+        setError('Please upload a resume before continuing.');
+        return;
+    }
+
+    setLoading(true);
+    setError('');
+
+    try {
+        const formData = new FormData();
+        formData.append('resume', resume);
+
+        // Call backend resume parser
+        const response = await api.post('/documents/', formData, {
+            headers: {
+                'Content-Type': 'multipart/form-data',
+            },
+        });
+
+        const parsedData = response.data;
+
+        navigate('/Account', { state: { parsedData } });
+
+    } catch (err) {
+        console.error('Error uploading resume:', err);
+        setError(
+            err.response?.data?.error ||
+            'Something went wrong while uploading your resume. Please try again.'
+        );
+    } finally {
+        setLoading(false);
+    }
     };
 
     const handleSkip = () => {
