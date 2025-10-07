@@ -763,7 +763,7 @@ const FindJobs = ({ jobPostTypeProp }) => {
                                                     }}
                                                     onClick={() => { navigate("/interview-chatbot", { state: { job: selectedJob } }) }}
                                                 >
-                                                    Interview Prep
+                                                    Interview
                                                 </Button>
                                             </div>
                                         )}
