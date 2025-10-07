@@ -32,8 +32,8 @@ class Education(models.Model):
     degree = models.CharField(max_length=50)
     major = models.CharField(max_length=50)
     minor = models.CharField(max_length=50, blank=True, null=True)
-    graduationDate = models.DateField(null=True, blank=True)
-    gpa = models.FloatField(blank=True, null=True)
+    graduationDate = models.CharField(max_length=50, blank=True, null=True)
+    gpa = models.CharField(max_length=10, blank=True, null=True)
 
     def __str__(self):
         return self.institution
@@ -42,8 +42,8 @@ class Experience(models.Model):
     account = models.ForeignKey(Account, on_delete=models.CASCADE, related_name='experience')
     company = models.CharField(max_length=50)
     title = models.CharField(max_length=50)
-    startDate = models.DateField(blank=True, null=True)
-    endDate = models.DateField(blank=True, null=True)
+    startDate = models.CharField(max_length=50, blank=True, null=True)
+    endDate = models.CharField(max_length=50, blank=True, null=True)
     description = models.TextField(blank=True, null=True)
 
     def __str__(self):
@@ -53,8 +53,8 @@ class Project(models.Model):
     account = models.ForeignKey(Account, on_delete=models.CASCADE, related_name='projects')
     title = models.CharField(max_length=100)
     description = models.TextField(blank=True, null=True)
-    startDate = models.DateField(blank=True, null=True)
-    endDate = models.DateField(blank=True, null=True)
+    startDate = models.CharField(max_length=50, blank=True, null=True)
+    endDate = models.CharField(max_length=50, blank=True, null=True)
 
     def __str__(self):
         return self.title
