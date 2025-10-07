@@ -70,7 +70,7 @@ const FindJobs = ({ jobPostTypeProp }) => {
         return null;
     };
 
-    // function to retrieve job postings depending on JobPostType variable
+    // calls fetchJobPosting function when page is loaded
     useEffect(() => {
         fetchJobPostings();
     }, [jobPostType, currentPage]);
