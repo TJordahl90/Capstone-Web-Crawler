@@ -296,70 +296,70 @@ class DocumentView(APIView):
                 skillObjects.append(CommonSkills.objects.get(name=skill))
             account.skills.add(*skillObjects)
 
-        # Helper function to parse dates safely
+        # Helper function to parse dates
         def parse_date(date_str):
-            if not date_str or date_str.lower() in ["present", "current"]:
+            if not date_str or date_str.lower() in ['present', 'current']:
                 return None
             # Try to parse MM/YYYY or YYYY formats
-            for fmt in ("%m/%Y", "%Y-%m-%d", "%Y"):
+            for fmt in ('%m/%Y', '%Y-%m-%d', '%Y'):
                 try:
                     return datetime.strptime(date_str, fmt).date()
                 except ValueError:
                     continue
             return None
 
-        # --- EDUCATION ---
-        education_list = parsed_data.get("Education", [])
+        # Parse education data
+        education_list = parsed_data.get('Education', [])
         for edu in education_list:
             try:
                 Education.objects.create(
                     account=account,
-                    institution=edu.get("institution", ""),
-                    degree=edu.get("degree", ""),
-                    major=edu.get("major", ""),
-                    minor=edu.get("minor") or None,
-                    graduationDate=parse_date(edu.get("graduationDate")),
+                    institution=edu.get('institution', ''),
+                    degree=edu.get('degree', ''),
+                    major=edu.get('major', ''),
+                    minor=edu.get('minor', ''),
+                    graduationDate=parse_date(edu.get('graduationDate')),
                     gpa=edu.get('gpa')
                 )
             except Exception as e:
-                print(f"Error saving education: {e}")
+                print(f'Error saving education: {e}')
 
-        # --- EXPERIENCE ---
-        experience_list = parsed_data.get("Experience", [])
+        # Parse experience data
+        experience_list = parsed_data.get('Experience', [])
         for exp in experience_list:
             try:
                 Experience.objects.create(
                     account=account,
-                    company=exp.get("company", ""),
-                    title=exp.get("jobTitle", ""),
-                    startDate=parse_date(exp.get("startDate")),
-                    endDate=parse_date(exp.get("endDate")),
-                    description=exp.get("description", "")
+                    company=exp.get('company', ''),
+                    title=exp.get('jobTitle', ''),
+                    startDate=parse_date(exp.get('startDate')),
+                    endDate=parse_date(exp.get('endDate')),
+                    description=exp.get('description', '')
                 )
             except Exception as e:
-                print(f"Error saving experience: {e}")
+                print(f'Error saving experience: {e}')
 
-        # --- PROJECTS ---
-        project_list = parsed_data.get("Projects", [])
+        # Parse project data
+        project_list = parsed_data.get('Projects', [])
         for proj in project_list:
             try:
                 Project.objects.create(
                     account=account,
-                    title=proj.get("title", ""),
-                    description=proj.get("description", ""),
-                    startDate=parse_date(proj.get("startDate")),
-                    endDate=parse_date(proj.get("endDate"))
+                    title=proj.get('title', ''),
+                    description=proj.get('description', ''),
+                    startDate=parse_date(proj.get('startDate')),
+                    endDate=parse_date(proj.get('endDate'))
                 )
             except Exception as e:
-                print(f"Error saving project: {e}")
+                print(f'Error saving project: {e}')
 
 
         return Response({
-                    "message": "Resume uploaded and parsed successfully",
-                        "parsed_data": parsed_data
+                    'message': 'Resume uploaded and parsed successfully',
+                        'parsed_data': parsed_data
                     }, status=201)
 
-client = OpenAI(api_key=os.getenv("ai_api_key")) # Initialize OpenAI client
+client = OpenAI(api_key=os.getenv('ai_api_key')) # Initialize OpenAI client
 
 class InterviewPrepChatBotView(APIView):
     """Handles Interview chatbot AI"""
