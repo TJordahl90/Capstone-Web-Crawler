@@ -1,7 +1,7 @@
 import React, { useRef, useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { Container, Row, Col, Form, Nav, ListGroup, Card, Button, Badge, ProgressBar, Spinner, Offcanvas, Modal } from "react-bootstrap";
-import { FaBookmark, FaRegBookmark, FaPaperPlane, FaComments, FaSearch, FaRobot, FaBriefcase, FaMapMarkerAlt, FaClock, FaStar, FaRegStar, FaFilter, FaMoneyBill } from "react-icons/fa";
+import { FaBookmark, FaRegBookmark, FaPaperPlane, FaComments, FaSearch, FaRobot, FaBriefcase, FaMapMarkerAlt, FaClock, FaStar, FaRegStar, FaFilter, FaMoneyBill, FaChevronLeft, FaChevronRight } from "react-icons/fa";
 import fugetec from "../assets/FugeTechnologies.jpg";
 import texasIns from "../assets/TexasInstruments.jpg";
 import lockheed from "../assets/LockheedMartin.jpg";
@@ -19,16 +19,14 @@ const FindJobs = ({ jobPostTypeProp }) => {
     const [loading, setLoading] = useState(false);
     const [showModal, setShowModal] = useState(false);
     const [showCanvas, setShowCanvas] = useState(false);
-    const [filters, setFilters] = useState({
-        employmentType: [],
-        experienceLevel: [],
-        location: [],
-        datePosted: []
-    });
-    const jobListContainerRef = useRef(null);
+    const [filters, setFilters] = useState({employmentType: [], experienceLevel: [], location: [], datePosted: []});
     const [showLogo, setShowLogo] = useState(true);
     const [showDetailsMobile, setShowDetailsMobile] = useState(false);
-
+    const [currentPage, setCurrentPage] = useState(1);
+    const [hasNextPage, setHasNextPage] = useState(false);
+    const [hasPrevPage, setHasPrevPage] = useState(false);
+    const [jobCount, setJobCount] = useState();
+    const jobListContainerRef = useRef(null);
     const navigate = useNavigate();
 
     // helper functions below for job filtering system
@@ -72,10 +70,10 @@ const FindJobs = ({ jobPostTypeProp }) => {
         return null;
     };
 
-    // calls fetchJobPosting function when page is loaded
+    // function to retrieve job postings depending on JobPostType variable
     useEffect(() => {
         fetchJobPostings();
-    }, [jobPostType]);
+    }, [jobPostType, currentPage]);
 
     // function to retrieve job postings depending on JobPostType variable
     const fetchJobPostings = async (type = jobPostType) => {
@@ -95,14 +93,22 @@ const FindJobs = ({ jobPostTypeProp }) => {
                 }
             }
             else if (type === "all") {
-                response = await api.post("/all_jobs/", { "filters": filters || {} });
-                if (response.data && response.data.length > 0) {
-                    setAllJobs(response.data);
-                    setSelectedJob(response.data[0]);
+                response = await api.post("/all_jobs/", { "filters": filters || {}, "page": currentPage });
+                const jobs = response.data.jobs;
+                const count = response.data.count;
+
+                if (jobs && jobs.length > 0) {
+                    setAllJobs(jobs);
+                    setSelectedJob(jobs[0]);
+                    setJobCount(count);
+                    setHasNextPage(currentPage * 15 < count);
+                    setHasPrevPage(currentPage > 1);
                 } else {
                     setAllJobs([]);
                     setSelectedJob(null);
                     setError("No jobs found. Please try again later.");
+                    setHasNextPage(false);
+                    setHasPrevPage(false);
                 }
             }
             else if (type === "matched") {
@@ -498,6 +504,21 @@ const FindJobs = ({ jobPostTypeProp }) => {
                                     {displayJobs.map(job => renderJobItem(job))}
                                 </div>
                             )}
+                            <div className="d-flex justify-content-center align-items-center p-3 gap-3">
+                                {!loading && hasPrevPage && (
+                                <Button variant="primary" onClick={() => setCurrentPage(prev => prev - 1)} style={{background: "none", border: "none"}}>
+                                    <FaChevronLeft />
+                                </Button>
+                                )}
+                                {!loading && jobCount > 0 && (
+                                    <span>Page {currentPage}</span>
+                                )}
+                                {!loading && hasNextPage && (
+                                    <Button variant="primary" onClick={() => setCurrentPage(prev => prev + 1)} style={{background: "none", border: "none"}}>
+                                        <FaChevronRight />
+                                    </Button>
+                                )}
+                            </div>
                         </div>
                     </Col>
                 )}

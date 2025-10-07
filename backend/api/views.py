@@ -217,17 +217,17 @@ def JobSearchingView(request):
 @permission_classes([AllowAny])
 def AllJobsView(request):
     """Returns all available jobs"""
-    filters = request.data.get("filters", {})
-    pageNumber = 1 # We need to update the frontend to pass which page the user is on so we dont pull too much at a time from the database
+    filters = request.data.get("filters", {}) # need to implement
+    page_number = request.data.get("page", 1)
 
-    # IMPLEMENT FILTERING - will probably need to expand job posting model to include experience, type, etc
-
-    start = (pageNumber - 1) * 15
+    all_jobs = JobPosting.objects.order_by('-id')
+    total_count = all_jobs.count()
+    start = (page_number - 1) * 15
     end = start + 15
-    all_jobs = JobPosting.objects.order_by('-id')[start:end]
+    paginated_jobs = all_jobs[start:end]
     
-    serializedJobs = JobPostingSerializer(all_jobs, many=True, context={'request': request}).data
-    return Response(serializedJobs, status=200)
+    serializedJobs = JobPostingSerializer(paginated_jobs, many=True, context={'request': request}).data
+    return Response({'count': total_count, 'jobs': serializedJobs}, status=200)
 
 class BookmarkJobView(APIView):
     """Saves a job to account, deletes a saved job, and lists all saved jobs"""
