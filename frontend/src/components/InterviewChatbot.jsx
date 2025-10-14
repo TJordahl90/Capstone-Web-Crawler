@@ -215,10 +215,10 @@ const InterviewChatbot = () => {
             `}</style>
 
             <h2 className="text-center mb-2 text-white">{job ? `Mock Interview: ${job.title}` : 'General Interview Prep'}</h2>
-            <ProgressBar 
+            {/* <ProgressBar 
                 now={((currQuestionIndex) / questions.length) * 100} 
                 className="mb-4"
-            />
+            /> */}
             
             {error && <Alert variant="danger">{error}</Alert>}
             
