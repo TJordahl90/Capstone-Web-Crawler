@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import { useLocation } from 'react-router-dom';
 import { Button, Form, Card, Accordion, Container, Spinner, InputGroup, Alert, ProgressBar } from "react-bootstrap";
 import { FaKeyboard, FaMicrophone, FaChevronRight } from "react-icons/fa";
@@ -12,9 +12,15 @@ const InterviewChatbot = () => {
 	const [currQuestionIndex, setCurrQuestionIndex] = useState(0);
 	const [currAnswer, setCurrAnswer] = useState("");
 	const [inputType, setInputType] = useState("text");
+	const [isRecording, setIsRecording] = useState(false);
+	const [voiceTranscript, setVoiceTranscript] = useState("");
+	const [timer, setTimer] = useState(0);
   	const [loading, setLoading] = useState(false);
 	const [error, setError] = useState('');
   	const [screenWidth, setScreenWidth] = useState(window.innerWidth);
+
+	const timerRef = useRef(null);
+	const recognitionRef = useRef(null);
 
   	const location = useLocation();
   	const job = location.state?.job;
@@ -22,6 +28,7 @@ const InterviewChatbot = () => {
 	const currQuestion = questions[currQuestionIndex];
     const isAnswered = answers[currQuestion];
     const hasFeedback = feedback[currQuestion];
+	const isSpeechRecognitionSupported = !!(window.SpeechRecognition || window.webkitSpeechRecognition);
 
   	const getAIQuestions = async () => {
   	  	setLoading(true);
@@ -81,6 +88,69 @@ const InterviewChatbot = () => {
 			alert("Interview complete!");
 		}
 	};
+
+    useEffect(() => {
+        if (!isSpeechRecognitionSupported) return;
+
+        const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
+        const recognition = new SpeechRecognition();
+        
+        recognition.continuous = true;
+        recognition.interimResults = true;
+
+        recognition.onresult = (event) => {
+            let interimTranscript = "";
+            for (let i = event.resultIndex; i < event.results.length; ++i) {
+                if (event.results[i].isFinal) {
+                    setVoiceTranscript(prev => prev + event.results[i][0].transcript);
+                } 
+				else {
+                    interimTranscript += event.results[i][0].transcript;
+                }
+            }
+        };
+        
+        recognition.onend = () => {
+            setIsRecording(false);
+        };
+
+        recognitionRef.current = recognition;
+    }, []);
+
+    useEffect(() => {
+        if (isRecording) {
+            timerRef.current = setInterval(() => setTimer(prev => prev + 1), 1000);
+        } 
+		else {
+            clearInterval(timerRef.current);
+            setTimer(0);
+        }
+        return () => clearInterval(timerRef.current);
+    }, [isRecording]);
+
+    const handleToggleRecording = () => {
+        if (isRecording) {
+            recognitionRef.current?.stop();
+        } 
+		else {
+            setVoiceTranscript("");
+            recognitionRef.current?.start();
+        }
+        setIsRecording(!isRecording);
+    };
+
+    const handleVoiceSubmit = () => {
+        const currentQuestion = questions[currQuestionIndex];
+        setAnswers(prev => ({...prev, [currentQuestion]: voiceTranscript}));
+        getAIFeedback(currentQuestion, voiceTranscript);
+        setVoiceTranscript("");
+    };
+
+    const formatTime = (seconds) => {
+        const minutes = Math.floor(seconds / 60).toString().padStart(2, '0');
+        const secs = (seconds % 60).toString().padStart(2, '0');
+        return `${minutes}:${secs}`;
+    };
 
   	useEffect(() => {
   	  	const handleResize = () => setScreenWidth(window.innerWidth);
@@ -160,40 +230,36 @@ const InterviewChatbot = () => {
                         <p><strong>Your Answer:</strong><br/><i>{answers[currQuestion]}</i></p>
                     ) : (
                         <Form onSubmit={handleAnswerSubmit}>
-                            <InputGroup className="mb-3">
-                            	{inputType === 'text' ? (
-									<>
-                            		    <Button variant="outline-secondary" onClick={() => setInputType(inputType === 'voice')}>
-                            		        <FaMicrophone />
-                            		    </Button>
-
-                            		        <Form.Control 
-                            		            as="textarea" 
-                            		            rows={5} 
-                            		            placeholder="Type your answer here..."
-                            		            value={currAnswer}
-                            		            onChange={(e) => setCurrAnswer(e.target.value)}
-                            		        />
-										</>
-                            	) : (
-                            	    <>
-                            	        
-                            	        <div className="d-flex align-items-center justify-content-between w-100 border rounded p-3">
-											<Button variant="outline-secondary" onClick={() => setInputType('text')}>
-                            	            	<FaKeyboard />
-                            	        	</Button>
-											{/* need to implement this */}
-                                            <span style={{ fontFamily: 'monospace', fontSize: '1.2rem', color: '#9ca3af' }}>
-                                                00:00
-                                            </span>
-                                            <Button variant="outline-secondary" onClick={() => {}}>
-                                                <FaMicrophone />
-                                            </Button>
+                            {inputType === 'text' ? (
+                                <InputGroup className="mb-3">
+                                    <Button variant="outline-secondary" onClick={() => setInputType('voice')}> <FaMicrophone /> </Button>
+                                    <Form.Control as="textarea" rows={5} value={currAnswer} onChange={(e) => setCurrAnswer(e.target.value)} />
+                                </InputGroup>
+                            ) : (
+                                <InputGroup className="mb-3">
+                                    <Button variant="outline-secondary" onClick={() => setInputType('text')}> <FaKeyboard /> </Button>
+                                    {!isSpeechRecognitionSupported ? (
+                                        <div className="text-center p-3 border rounded text-white-50 w-100">Voice input is not supported in your browser.</div>
+                                    ) : (
+                                        <div className="d-flex flex-column align-items-center justify-content-center w-100 border rounded p-3">
+                                            <div className="w-100 d-flex justify-content-between align-items-center mb-3">
+                                                <span style={{ fontFamily: 'monospace', fontSize: '1.2rem', color: '#9ca3af' }}>{formatTime(timer)}</span>
+                                                <Button variant={isRecording ? "danger" : "primary"} onClick={handleToggleRecording}>
+                                                    <FaMicrophone className="me-2" />
+                                                    {isRecording ? "Stop" : "Record"}
+                                                </Button>
+                                            </div>
+                                            <p className="text-white-50 w-100" style={{ minHeight: '50px' }}><i>{voiceTranscript || "Your transcribed answer will appear here..."}</i></p>
                                         </div>
-                            	    </>
-                            	)}
-                            </InputGroup>
-                            <Button type="submit" disabled={loading}>Submit Answer</Button>
+                                    )}
+                                </InputGroup>
+                            )}
+
+                            {inputType === 'text' ? (
+                                <Button type="submit" disabled={loading}>Submit Answer</Button>
+                            ) : (
+                                <Button onClick={handleVoiceSubmit} disabled={loading || isRecording || !voiceTranscript.trim()}>Submit Voice Answer</Button>
+                            )}
                         </Form>
                     )}
                 </Card.Body>
