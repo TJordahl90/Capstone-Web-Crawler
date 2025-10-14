@@ -444,7 +444,7 @@ class InterviewPrepChatBotView(APIView):
             f"The applicant provided this response\n"
             f"Response: {user_response}"
             f"Can you analyze their response and provide overall feedback, strengths, areas that need improvement, and an example response."
-            f"Only output the response."
+            f"Only output your feedback to the user's response."
         )
         try:
             response = client.chat.completions.create(
