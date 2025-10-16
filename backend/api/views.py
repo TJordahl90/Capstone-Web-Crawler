@@ -104,6 +104,18 @@ class LogoutView(APIView):
         response.delete_cookie(settings.CSRF_COOKIE_NAME, path='/')
         return response
 
+class DeleteUserView(APIView):
+    """Handles deleting user account"""
+    permission_classes = [IsAuthenticated]
+    
+    def delete(self, request):
+        user = request.user
+        try:
+            user.delete()
+            return Response({"message": "Account successfully deleted"}, status=204)
+        except Exception as e:
+            return Response({"error": f"An error occurred: {str(e)}"}, status=500)
+
 class UserProfileView(APIView):
     """Fetches authenticated user details"""
     permission_classes = [IsAuthenticated]

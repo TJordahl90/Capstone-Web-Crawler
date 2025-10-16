@@ -13,6 +13,7 @@ import PasswordReset from "./components/PasswordReset";
 import Documents from "./components/Documents";
 import TrendAnalysis from "./components/TrendAnalysis";
 import InterviewChatbot from "./components/InterviewChatbot";
+import Settings from "./components/Settings";
 import backgroundImage from "./assets/background4.png";
 import "bootstrap/dist/css/bootstrap.min.css";
 
@@ -63,6 +64,7 @@ function App() {
 							<Route path="/documents" element={<Documents />} />
 							<Route path="/trend-analysis" element={<TrendAnalysis />} />
 							<Route path="/interview-chatbot" element={<InterviewChatbot />} />
+							<Route path="/settings" element={<Settings />} />
 						</Routes>
 						{isMobile && <MobileNavBar />}
 					</SidePanel>

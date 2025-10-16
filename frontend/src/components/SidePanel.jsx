@@ -1,7 +1,6 @@
 import React, { useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
-import { FaBriefcase, FaBookmark, FaUser, FaChartBar, FaRobot } from "react-icons/fa";
-// import "./SidePanel.css";
+import { FaBriefcase, FaBookmark, FaUser, FaChartBar, FaRobot, FaCog } from "react-icons/fa";
 import { useTheme } from './ThemeContext';
 import backgroundImage from "../assets/background4.png";
 
@@ -180,7 +179,7 @@ const SidePanel = ({ children, collapsed }) => {
 
                 </a>
                 <a href="/interview-chatbot"
-                    onMouseEnter={() => setHoveredItem("people")}
+                    onMouseEnter={() => setHoveredItem("chatbot")}
                     onMouseLeave={() => setHoveredItem(null)}
                     style={{
                         display: "flex",
@@ -210,7 +209,39 @@ const SidePanel = ({ children, collapsed }) => {
                             </motion.span>
                         )}
                     </AnimatePresence>
+                </a>
 
+                <a href="/settings"
+                    onMouseEnter={() => setHoveredItem("settings")}
+                    onMouseLeave={() => setHoveredItem(null)}
+                    style={{
+                        display: "flex",
+                        alignItems: "center",
+                        gap: "10px",
+                        padding: "20px 10px 10px 20px",
+                        fontSize: "1rem",
+                        cursor: "pointer",
+                        transition: "background 0.3s ease",
+                        color: hoveredItem === "people" ? "var(--textonhover2)" : "var(--text2)",
+                        backgroundColor: hoveredItem === "people" ? "var(--hover)" : "transparent",
+                        borderRadius: hoveredItem === "people" ? "5px" : "0",
+                        maxWidth: "40vw",
+                        minHeight: "54px",
+                    }}>
+                    <FaCog className="icon" />
+                    <AnimatePresence initial={false}>
+                        {!collapsed && (
+                            <motion.span
+                                key="label"
+                                initial={{ opacity: 0 }}
+                                animate={{ opacity: 1, transition: { delay: 0.2 } }} // Delay on enter
+                                exit={{ opacity: 0, transition: { duration: 0 } }}    // Instant disappear on exit
+                                className="ml-2"
+                            >
+                                Settings
+                            </motion.span>
+                        )}
+                    </AnimatePresence>
                 </a>
             </div>
 
