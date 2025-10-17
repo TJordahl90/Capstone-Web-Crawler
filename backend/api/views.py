@@ -374,7 +374,7 @@ class DocumentView(APIView):
 client = OpenAI(api_key=os.getenv('ai_api_key')) # Initialize OpenAI client
 
 class InterviewPrepChatBotView(APIView):
-    """Handles Interview chatbot AI"""
+    "Generates interview questions and provides feedback on user responses"""
     permission_classes = [IsAuthenticated]
 
     def get(self, request):
@@ -382,10 +382,12 @@ class InterviewPrepChatBotView(APIView):
 
         # UNCOMMENT BELOW TO ACTIVATE THE CHATBOT DAILY LIMIT
         # one_day_ago = timezone.now() - timedelta(days=1)
-        # questions_today = ChatBotHistory.objects.filter(account=account, timestamp__gte=one_day_ago).count()
-        # if questions_today >= 3:
-        #     return Response({"error": "You have eached your limit of 3 questions per day. Please try again tommorow."}, status=429)
+        # chat_today = ChatBotHistory.objects.filter(account=account, timestamp__gte=one_day_ago).count()
+        # if chat_today >= 3:
+        #     return Response({"error": "You have reached your limit of 3 questions per day. Please try again tommorow."}, status=429)
 
+        two_days_ago = timezone.now() - timedelta(days=2)
+        ChatBotHistory.objects.filter(account=account, timestamp__lt=two_days_ago).delete()
 
         past_questions_list = list(ChatBotHistory.objects.filter(account=account).values_list('question', flat=True))
         past_questions = ", ".join(past_questions_list)
@@ -427,6 +429,7 @@ class InterviewPrepChatBotView(APIView):
                 f"History: {past_questions}\n" 
                 f"Format the output ONLY as a numbered list (e.g., '1. ...\\n2. ...\\n3. ...')."
             )
+
         try:
             response = client.chat.completions.create(
                 model="gpt-3.5-turbo", # not sure what model yet using for now
@@ -444,11 +447,17 @@ class InterviewPrepChatBotView(APIView):
 
         except Exception as e:
             return Response({"error": str(e)}, status=500)
-    
 
     def post(self, request):
         user_response = request.data.get("answer")
         bot_question = request.data.get("question")
+
+        try:
+            chat = ChatBotHistory.objects.filter(account=request.user.account).latest('timestamp')
+            chat.response = user_response
+            chat.save()
+        except ChatBotHistory.DoesNotExist:
+            return Response({"error": "Chat history not found"}, status=404)
 
         prompt = (
             f"You are an AI job interview coach. An applicant was asked the following question.\n"
@@ -458,6 +467,7 @@ class InterviewPrepChatBotView(APIView):
             f"Can you analyze their response and provide overall feedback, strengths, areas that need improvement, and an example response."
             f"Only output your feedback to the user's response."
         )
+
         try:
             response = client.chat.completions.create(
                 model="gpt-3.5-turbo",
@@ -466,6 +476,44 @@ class InterviewPrepChatBotView(APIView):
 
             response = response.choices[0].message.content.strip()
             return Response({"message": response})
+
+        except Exception as e:
+            return Response({"error": str(e)}, status=500)
+        
+class InterviewGradeView(APIView):
+    """Gives user an overall grade on their interview chat"""
+    permission_classes = [IsAuthenticated]
+
+    def get(self, request):
+        account = request.user.account
+        
+        chat_history_pairs = list(ChatBotHistory.objects.filter(account=account).values_list('question', 'response'))
+
+        if not chat_history_pairs:
+            return Response({"error": "No chat history found to generate a grade."}, status=404)
+
+        conversation_history = ""
+        for question, response in chat_history_pairs:
+            conversation_history += f"Q: {question}\nA: {response}\n\n"
+
+        prompt = (
+            f"You are an expert career coach providing a final summary of a mock interview."
+            f"Based on the conversation below, provide an complete overview and a letter grade.\n\n"
+            f"CONVERSATION HISTORY:\n{conversation_history}"
+            f"YOUR TASK:\n"
+            f"1.Overall Analysis: Write a 3-4 sentence summary of the candidate's performance. Identify one key strength and one major area for improvement that was evident across all their answers.\n"
+            f"2.Letter Grade: Assign a single letter grade (A, B, C, D, or F). Briefly justify your grade based on the overall quality of the answers.\n\n"
+            f"Format your response using markdown headings for 'Overall Analysis' and 'Letter Grade'."
+        )
+
+        try:
+            response = client.chat.completions.create(
+                model="gpt-3.5-turbo",
+                messages=[{"role": "user", "content": prompt}],
+            )
+
+            feedback = response.choices[0].message.content.strip()
+            return Response({"message": feedback})
 
         except Exception as e:
             return Response({"error": str(e)}, status=500)

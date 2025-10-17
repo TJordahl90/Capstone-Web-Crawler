@@ -6,6 +6,7 @@ import api from "../api";
 
 const InterviewChatbot = () => {
 	const [sessionStarted, setSessionStarted] = useState(false);
+	// const [sessionEnded, setSessionEnded] = useState(false);
   	const [questions, setQuestions] = useState([]);
   	const [answers, setAnswers] = useState({});
 	const [feedback, setFeedback] = useState({});
@@ -33,9 +34,9 @@ const InterviewChatbot = () => {
   	const getAIQuestions = async () => {
   	  	setLoading(true);
 		setError("");
-  	  	let url = "/ai_chatbot/"
+  	  	let url = "/chatbot_interview/"
   	  	if (job) {
-  	  	  	url = `/ai_chatbot/?job_id=${job.id}`;
+  	  	  	url = `/chatbot_interview/?job_id=${job.id}`;
   	  	}
 
   	  	try {
@@ -58,7 +59,7 @@ const InterviewChatbot = () => {
 		setError("");
 
   	  	try {
-  	  	  	const response = await api.post("/ai_chatbot/", { question: question, answer: answer });
+  	  	  	const response = await api.post("/chatbot_interview/", { question: question, answer: answer });
 			console.log(response.data.message);
 			setFeedback(prev => ({...prev, [question]: response.data.message}))
 		}
@@ -69,6 +70,10 @@ const InterviewChatbot = () => {
   	  	finally {
   	  	  	setLoading(false);
   	  	}
+  	};
+
+    const getAIOverallGrade = async () => {
+  	  	// to implement
   	};
 
 	const handleAnswerSubmit = (e) => {
@@ -188,6 +193,14 @@ const InterviewChatbot = () => {
             </Container>
 		)
 	}
+
+    // to display overall grade and analysis
+    // if (sessionEnded) {
+    //     return (
+    //         <Container>
+    //         </Container>
+    //     );
+    // }
 
 	if (questions.length === 0) {
         return (

@@ -74,6 +74,7 @@ class JobPosting(models.Model):
     
 class ChatBotHistory(models.Model):
     question = models.TextField(blank=True, null=True)
+    response = models.TextField(blank=True, null=False)
     timestamp = models.DateTimeField(default=timezone.now)
     specificJob = models.ForeignKey(JobPosting, on_delete=models.CASCADE, null=True, blank=True)
     account = models.ForeignKey(Account, on_delete=models.CASCADE, null=True, blank=True)

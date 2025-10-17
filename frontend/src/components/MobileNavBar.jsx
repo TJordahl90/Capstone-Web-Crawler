@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import { useNavigate, useLocation } from "react-router-dom";
-import { FaBriefcase, FaBookmark, FaUser, FaChartBar, FaRobot } from "react-icons/fa";
+import { FaBriefcase, FaBookmark, FaUser, FaChartBar, FaRobot, FaCog } from "react-icons/fa";
 import logo from "../assets/logo3.png";
 import logoClicked from "../assets/logo3.png";
 //import "./MobileNavBar.css";
@@ -91,6 +91,7 @@ const MobileNavBar = () => {
                 <FaChartBar style={{ fontSize: "20px", marginBottom: "2px" }} />
                 <span>Trends</span>
             </button>
+
             <button
                 onClick={() => navigate("/interview-chatbot")}
                 style={{
@@ -105,6 +106,22 @@ const MobileNavBar = () => {
             >
                 <FaRobot style={{ fontSize: "20px", marginBottom: "2px" }} />
                 <span>PrepMate</span>
+            </button>
+
+            <button
+                onClick={() => navigate("/settings")}
+                style={{
+                    background: "none",
+                    border: "none",
+                    display: "flex",
+                    flexDirection: "column",
+                    alignItems: "center",
+                    fontSize: "12px",
+                    color: location.pathname === "/settings" ? "var(--hover2)" : "var(--text2)"
+                }}
+            >
+                <FaCog style={{ fontSize: "20px", marginBottom: "2px" }} />
+                <span>Settings</span>
             </button>
 
         </div>
