@@ -1,17 +1,20 @@
 import React, { useState, useEffect, useRef } from "react";
 import { useLocation } from 'react-router-dom';
-import { Button, Form, Card, Accordion, Container, Spinner, InputGroup, Alert, ProgressBar } from "react-bootstrap";
+import { Button, Form, Card, Accordion, Container, Spinner, InputGroup, Alert, ProgressBar, Row, Col } from "react-bootstrap";
 import { FaKeyboard, FaMicrophone, FaChevronRight } from "react-icons/fa";
 import api from "../api";
 
 const InterviewChatbot = () => {
 	const [sessionStarted, setSessionStarted] = useState(false);
-	// const [sessionEnded, setSessionEnded] = useState(false);
+	const [sessionEnded, setSessionEnded] = useState(false);
   	const [questions, setQuestions] = useState([]);
   	const [answers, setAnswers] = useState({});
 	const [feedback, setFeedback] = useState({});
 	const [currQuestionIndex, setCurrQuestionIndex] = useState(0);
 	const [currAnswer, setCurrAnswer] = useState("");
+    const [summaryGrade, setSummaryGrade] = useState('');
+    const [summaryAnalysis, setSummaryAnalysis] = useState("");
+    const [summaryHired, setSummaryHired] = useState(false);
 	const [inputType, setInputType] = useState("text");
 	const [isRecording, setIsRecording] = useState(false);
 	const [voiceTranscript, setVoiceTranscript] = useState("");
@@ -34,11 +37,11 @@ const InterviewChatbot = () => {
   	const getAIQuestions = async () => {
   	  	setLoading(true);
 		setError("");
+
   	  	let url = "/chatbot_interview/"
   	  	if (job) {
   	  	  	url = `/chatbot_interview/?job_id=${job.id}`;
   	  	}
-
   	  	try {
   	  	  	const response = await api.get(url);
 			console.log(response.data.message);
@@ -72,8 +75,24 @@ const InterviewChatbot = () => {
   	  	}
   	};
 
-    const getAIOverallGrade = async () => {
-  	  	// to implement
+    const getInterviewSummary = async () => {
+  	  	setLoading(true);
+		setError("");
+
+  	  	try {
+  	  	  	const response = await api.get("/chatbot_summary/");
+			console.log(response.data);
+			setSummaryGrade(response.data[0]);
+            setSummaryAnalysis(response.data[1]);
+            setSummaryHired(response.data[2]);
+		}
+  	  	catch (err) {
+  	  	  	console.error(err.response?.data?.error || "Failed to get feedback. Please try again later.");
+			setError(err.response?.data?.error || "Failed to get feedback. Please try again later.")
+  	  	}
+  	  	finally {
+  	  	  	setLoading(false);
+  	  	}
   	};
 
 	const handleAnswerSubmit = (e) => {
@@ -89,10 +108,14 @@ const InterviewChatbot = () => {
 			setCurrAnswer("");
 		}
 		else {
-			// display finally summary page - need to implement
-			alert("Interview complete!");
+            getInterviewSummary();
+			setSessionEnded(true);
 		}
 	};
+
+    const toggleInputType = () => {
+        setInputType(prev => (prev === 'text' ? 'voice' : 'text'));
+    };
 
     useEffect(() => {
         if (!isSpeechRecognitionSupported) return;
@@ -163,7 +186,8 @@ const InterviewChatbot = () => {
   	  	return () => window.removeEventListener("resize", handleResize);
   	}, []);
 
-	if (!sessionStarted) {
+    // This will display the instruction page
+	if (!sessionStarted && !sessionEnded) {
 		return (
 			<Container className="d-flex justify-content-center align-items-center text-center text-white" style={{ height: 'calc(100vh - 52px)' }}>
                 <div>
@@ -194,13 +218,34 @@ const InterviewChatbot = () => {
 		)
 	}
 
-    // to display overall grade and analysis
-    // if (sessionEnded) {
-    //     return (
-    //         <Container>
-    //         </Container>
-    //     );
-    // }
+    // This will display the overall summary page
+    if (sessionStarted && sessionEnded) {
+        return (
+            <Container>
+                <Card>
+                    <Card.Body>
+                        <p>grade: {summaryGrade}</p>
+                        <p>analysis: {summaryAnalysis}</p>
+                        <p>hired: {summaryHired}</p>
+                    </Card.Body>
+                </Card>
+            </Container>
+        );
+    }
+
+    // This will display an error message about the chat limit
+    if (!sessionStarted && sessionEnded) {
+        return (
+            <Container>
+                <Card>
+                    <Card.Body>
+                        <p>reached your limit of questions today. try again tommorow</p>
+                        <p>view results from todays mock interview [link]</p>
+                    </Card.Body>
+                </Card>
+            </Container>
+        );
+    }
 
 	if (questions.length === 0) {
         return (
@@ -210,95 +255,177 @@ const InterviewChatbot = () => {
         );
     }
 
-  	return (
-  	  	<Container className="py-5" style={{ maxWidth: '700px' }}>
+    return (
+        <Container className="py-5" style={{ maxWidth: '1000px' }}>
             <style>{`
-                .accordion-button {
-                    background-color: #222831 !important;
-                    color: #e2e8f0 !important;
-                    box-shadow: none !important;
-                }
-                .accordion-button::after {
-                    filter: brightness(0) invert(1);
-                }
-                .accordion-body {
-                    background-color: #222831 !important;
-                    color: #e2e8f0 !important;
+                .btn-outline-secondary:hover {
+                    color: #fff;
+                    background-color: var(--hover2, #4a5568);
                 }
             `}</style>
 
-            <h2 className="text-center mb-2 text-white">{job ? `Mock Interview: ${job.title}` : 'General Interview Prep'}</h2>
-            {/* <ProgressBar 
-                now={((currQuestionIndex) / questions.length) * 100} 
-                className="mb-4"
-            /> */}
-            
+            {/* Header & Progress Section */}
+            <Row>
+                <Col>
+                    <div className="text-center text-white mb-4">
+                        <h2 className="mb-2" style={{ color: 'var(--text2)' }}>{job ? `Mock Interview: ${job.title}` : 'General Interview Prep'}</h2>
+                        <p className="lead" style={{ color: 'var(--text6)', fontSize: '1.1rem' }}>
+                            Question {currQuestionIndex + 1} of {questions.length}
+                        </p>
+                        <ProgressBar 
+                            now={((currQuestionIndex + 1) / questions.length) * 100} 
+                            variant="info"
+                            style={{ height: '8px' }}
+                        />
+                    </div>
+                </Col>
+            </Row>
+
             {error && <Alert variant="danger">{error}</Alert>}
-            
-            <Card style={{ backgroundColor: '#2d3748', border: '1px solid #4a5568', color: '#e2e8f0', overflow: 'hidden' }}>
-                <Card.Body className="p-4">
-                    <Card.Title as="h5" className="mb-4">{currQuestion}</Card.Title>
 
-                    {isAnswered ? (
-                        <p><strong>Your Answer:</strong><br/><i>{answers[currQuestion]}</i></p>
-                    ) : (
-                        <Form onSubmit={handleAnswerSubmit}>
-                            {inputType === 'text' ? (
-                                <InputGroup className="mb-3">
-                                    <Button variant="outline-secondary" onClick={() => setInputType('voice')}> <FaMicrophone /> </Button>
-                                    <Form.Control as="textarea" rows={5} value={currAnswer} onChange={(e) => setCurrAnswer(e.target.value)} />
-                                </InputGroup>
-                            ) : (
-                                <InputGroup className="mb-3">
-                                    <Button variant="outline-secondary" onClick={() => setInputType('text')}> <FaKeyboard /> </Button>
-                                    {!isSpeechRecognitionSupported ? (
-                                        <div className="text-center p-3 border rounded text-white-50 w-100">Voice input is not supported in your browser.</div>
-                                    ) : (
-                                        <div className="d-flex flex-column align-items-center justify-content-center w-100 border rounded p-3">
-                                            <div className="w-100 d-flex justify-content-between align-items-center mb-3">
-                                                <span style={{ fontFamily: 'monospace', fontSize: '1.2rem', color: '#9ca3af' }}>{formatTime(timer)}</span>
-                                                <Button variant={isRecording ? "danger" : "primary"} onClick={handleToggleRecording}>
-                                                    <FaMicrophone className="me-2" />
-                                                    {isRecording ? "Stop" : "Record"}
-                                                </Button>
-                                            </div>
-                                            <p className="text-white-50 w-100" style={{ minHeight: '50px' }}><i>{voiceTranscript || "Your transcribed answer will appear here..."}</i></p>
+            {/* Question Section */}
+            <Row className="mb-4">
+                <Col>
+                    <div style={{ backgroundColor: 'var(--bg3)', border: '1px solid var(--border)', padding: '1.5rem', borderRadius: '0.375rem', color: 'var(--text2)' }}>
+                        <p className="lead" style={{ fontSize: '1.25rem', margin: 0 }}>
+                            {currQuestion}
+                        </p>
+                    </div>
+                </Col>
+            </Row>
+
+            {/* Answer Section */}
+            {isAnswered ? (
+                <Row className="mb-4">
+                    <Col>
+                        <div style={{ backgroundColor: 'var(--bg3)', border: '1px solid var(--border)', padding: '1.5rem', borderRadius: '0.375rem', color: 'var(--text2)' }}>
+                            <h5 style={{ fontSize: '1.25rem', fontWeight: 600, color: 'var(--text2)' }}>Your Answer</h5>
+                            <p style={{ color: 'var(--title)', fontSize: '1.1rem', margin: 0 }}>
+                                <i>{answers[currQuestion]}</i>
+                            </p>
+                        </div>
+                    </Col>
+                </Row>
+            ) : (
+                <Row className="mb-4">
+                    <Col>
+                        <div style={{ backgroundColor: 'var(--bg3)', border: '1px solid var(--border)', padding: '1.5rem', borderRadius: '0.375rem', color: 'var(--text2)' }}>
+                            {/* Input Toggle Button */}
+                            <Row className="mb-3" style={{ alignItems: 'center' }}>
+                                <Col>
+                                    <h5 style={{ fontSize: '1.25rem', fontWeight: 600, color: 'var(--text2)', margin: 0 }}>
+                                        Provide Your Answer
+                                    </h5>
+                                </Col>
+                                <Col xs="auto">
+                                    <Button 
+                                        variant="outline-secondary" 
+                                        size="sm" 
+                                        onClick={toggleInputType} 
+                                        style={{ fontSize: '0.9rem', display: 'flex', alignItems: 'center', color: 'var(--text2)', borderColor: 'var(--border)' }}
+                                        disabled={!isSpeechRecognitionSupported}
+                                    >
+                                        {inputType === 'text' ? 
+                                            <><FaMicrophone className="me-2" /> Use Voice</> : 
+                                            <><FaKeyboard className="me-2" /> Use Text</>
+                                        }
+                                    </Button>
+                                </Col>
+                            </Row>
+
+                            {/* Text Input */}
+                            {inputType === 'text' && (
+                                <Form onSubmit={handleAnswerSubmit}>
+                                    <Form.Control 
+                                        as="textarea" 
+                                        rows={5} 
+                                        value={currAnswer} 
+                                        onChange={(e) => setCurrAnswer(e.target.value)} 
+                                        placeholder="Type your answer here..."
+                                        style={{ borderColor: 'var(--border)', backgroundColor: 'var(--searchbg)', color: 'var(--searchtxt)' }}
+                                    />
+                                    <Button 
+                                        variant="outline-secondary" 
+                                        type="submit" 
+                                        disabled={loading} 
+                                        className="mt-3" 
+                                        style={{ display: 'flex', color: 'var(--text2)', borderColor: 'var(--border)' }}
+                                    >
+                                        Submit Answer
+                                    </Button>
+                                </Form>
+                            )}
+
+                            {/* Voice Input */}
+                            {inputType === 'voice' && (
+                                <>
+                                    <div 
+                                        className="d-flex flex-column align-items-center justify-content-center w-100" 
+                                        style={{ padding: '1.5rem', border: '1px solid var(--border)', borderRadius: '0.375rem' }}
+                                    >
+                                        <div className="w-100 d-flex justify-content-between align-items-center mb-3">
+                                            <span style={{ fontFamily: 'monospace', fontSize: '1.2rem', color: 'var(--title)' }}>{formatTime(timer)}</span>
+                                            <Button 
+                                                variant="outline-secondary"
+                                                onClick={handleToggleRecording}
+                                                style={isRecording ?
+                                                    { fontSize: '0.9rem', display: 'flex', alignItems: 'center', color: 'var(--text2)', borderColor: 'var(--border)', backgroundColor: 'var(--border)'}:
+                                                    { fontSize: '0.9rem', display: 'flex', alignItems: 'center', color: 'var(--text2)', borderColor: 'var(--border)' }
+                                                }
+                                            >
+                                                <FaMicrophone className="me-2" />
+                                                {isRecording ? "Stop" : "Record"}
+                                            </Button>
                                         </div>
-                                    )}
-                                </InputGroup>
+                                        <p className="w-100" style={{ minHeight: '50px', color: 'var(--title, gray)' }}>
+                                            <i>{voiceTranscript || "Your transcribed answer will appear here..."}</i>
+                                        </p>
+                                    </div>
+                                    <Button 
+                                        variant="outline-secondary"
+                                        onClick={handleVoiceSubmit} 
+                                        disabled={loading || isRecording || !voiceTranscript.trim()} 
+                                        className="mt-3"
+                                        style={{ display: 'flex', alignItems: 'center', color: 'var(--text2)', borderColor: 'var(--border)' }}
+                                    >
+                                        Submit Answer
+                                    </Button>
+                                </>
                             )}
+                        </div>
+                    </Col>
+                </Row>
+            )}
 
-                            {inputType === 'text' ? (
-                                <Button type="submit" disabled={loading}>Submit Answer</Button>
+            {/* Feedback Section */}
+            {isAnswered && (
+                <Row className="mb-4">
+                    <Col>
+                        <div style={{ backgroundColor: 'var(--bg3)', border: '1px solid var(--border)', padding: '1.5rem', borderRadius: '0.375rem', color: 'var(--text2)' }}>
+                            <h5 style={{ fontSize: '1.25rem', fontWeight: 600, color: 'var(--text2)' }}>AI Feedback</h5>
+                            {loading && !hasFeedback ? (
+                                <div className="text-center p-3">
+                                    <Spinner animation="border" variant="info" className="me-2" /> 
+                                    <span className="lead">Analyzing your answer...</span>
+                                </div>
                             ) : (
-                                <Button onClick={handleVoiceSubmit} disabled={loading || isRecording || !voiceTranscript.trim()}>Submit Voice Answer</Button>
-                            )}
-                        </Form>
-                    )}
-                </Card.Body>
-
-                <Accordion activeKey={hasFeedback ? "0" : null} >
-                    <Accordion.Item eventKey="0" style={{ border: 'none' }}>
-                        <Accordion.Header disabled={!isAnswered}>
-                            AI Feedback {loading && !hasFeedback && <Spinner size="sm" className="ms-2" />}
-                        </Accordion.Header>
-                        <Accordion.Collapse eventKey="0">
-                            <Accordion.Body>
-                                {hasFeedback && (
-                                    <>
-                                        <p style={{ whiteSpace: 'pre-wrap' }}>{feedback[currQuestion]}</p>
-                                        <Button variant="info" className="d-flex justify-content-end mt-3" onClick={handleNextQuestion}>
-                                            {currQuestionIndex === questions.length - 1 ? "Finish Interview" : "Next Question"} <FaChevronRight />
+                                <>
+                                    <p style={{ whiteSpace: 'pre-wrap' }}>{feedback[currQuestion]}</p>
+                                    <hr style={{ borderColor: 'var(--border)' }} />
+                                    <div className="d-flex justify-content-end">
+                                        <Button variant="info" onClick={handleNextQuestion}>
+                                            {currQuestionIndex === questions.length - 1 ? "Finish Interview" : "Next Question"}
+                                            <FaChevronRight className="ms-2" />
                                         </Button>
-                                    </>
-                                )}
-                            </Accordion.Body>
-                        </Accordion.Collapse>
-                    </Accordion.Item>
-                </Accordion>
-            </Card>
+                                    </div>
+                                </>
+                            )}
+                        </div>
+                    </Col>
+                </Row>
+            )}
         </Container>
-  	);
+    );
 };
 
 export default InterviewChatbot;

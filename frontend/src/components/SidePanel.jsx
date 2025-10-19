@@ -178,7 +178,8 @@ const SidePanel = ({ children, collapsed }) => {
                     </AnimatePresence>
 
                 </a>
-                <a href="/interview-chatbot"
+                {/* commented out for now - not being used */}
+                {/* <a href="/interview-chatbot"
                     onMouseEnter={() => setHoveredItem("chatbot")}
                     onMouseLeave={() => setHoveredItem(null)}
                     style={{
@@ -209,7 +210,7 @@ const SidePanel = ({ children, collapsed }) => {
                             </motion.span>
                         )}
                     </AnimatePresence>
-                </a>
+                </a> */}
 
                 <a href="/settings"
                     onMouseEnter={() => setHoveredItem("settings")}

@@ -378,117 +378,92 @@ class InterviewPrepChatBotView(APIView):
     permission_classes = [IsAuthenticated]
 
     def get(self, request):
-        account = Account.objects.get(user=request.user)
+        account = request.user.account
+        job_id = request.GET.get('job_id')
 
         # UNCOMMENT BELOW TO ACTIVATE THE CHATBOT DAILY LIMIT
         # one_day_ago = timezone.now() - timedelta(days=1)
         # chat_today = ChatBotHistory.objects.filter(account=account, timestamp__gte=one_day_ago).count()
-        # if chat_today >= 3:
-        #     return Response({"error": "You have reached your limit of 3 questions per day. Please try again tommorow."}, status=429)
-
-        two_days_ago = timezone.now() - timedelta(days=2)
-        ChatBotHistory.objects.filter(account=account, timestamp__lt=two_days_ago).delete()
-
-        past_questions_list = list(ChatBotHistory.objects.filter(account=account).values_list('question', flat=True))
-        past_questions = ", ".join(past_questions_list)
-        job_id = request.GET.get('job_id')
-        job_posting = None
-        prompt = ""
+        # if chat_today >= 4:
+        #     return Response({"error": "You have reached your limit of 4 questions per day. Please try again tommorow."}, status=429)
         
-        if job_id:
-            try:
-                job_posting = JobPosting.objects.get(id=job_id)
-                prompt = (
-                    f"You are an AI job interview coach. Your task is to generate 3 unique and insightful interview questions based on the provided job application description.\n"
-                    f'Here is the details for the job the applicant is applying for:\n'
-                    f'Job Title: {job_posting.title}\n'
-                    f'Company: {job_posting.company}\n'
-                    f'Description: {job_posting.description}\n'
-                    f"IMPORTANT: Do not ask any of the following previously asked questions:\n"
-                    f"History: {past_questions}\n" 
-                    f"Format the output ONLY as a numbered list (e.g., '1. ...\\n2. ...\\n3. ...')."
-                )
-            except JobPosting.DoesNotExist:
-                return Response({"error": "Job posting not found."}, status=404)
-        else:
-            skills = ", ".join([s.name for s in account.skills.all()])
-            preferences = ", ".join([p.name for p in account.preferences.all()])
-            education = str(account.education) if account.education else "No education data"
-            experience = str(account.experience) if account.experience else "No experience data"
-            headline = str(account.headline) if account.headline else "No headline data"
-
+        try:
+            job_posting = JobPosting.objects.get(id=job_id)
+            past_questions = ", ".join(list(ChatBotHistory.objects.filter(account=account).values_list('question', flat=True)))
             prompt = (
-                f"You are an AI job interview coach. Your task is to generate 3 unique and insightful interview questions based on the applicant details.\n"
-                f"Here is the applicant background:\n"
-                F"Headline: {headline}\n"
-                f"Skills: {skills}\n"
-                f"Preferences: {preferences}\n"
-                f"Education: {education}\n"
-                f"Experience: {experience}\n"
+                f"You are an AI job interview coach. Your task is to generate 4 unique and insightful interview questions based on the provided job application description.\n"
+                f'Here is the details for the job the applicant is applying for:\n'
+                f'Job Title: {job_posting.title}\n'
+                f'Company: {job_posting.company}\n'
+                f'Description: {job_posting.description}\n'
                 f"IMPORTANT: Do not ask any of the following previously asked questions:\n"
                 f"History: {past_questions}\n" 
-                f"Format the output ONLY as a numbered list (e.g., '1. ...\\n2. ...\\n3. ...')."
+                f"Format the output ONLY as a list, with each line starting with 'question: ' ('question: ...\nquestion: ...\nquestion: ...')."
             )
 
-        try:
-            response = client.chat.completions.create(
-                model="gpt-3.5-turbo", # not sure what model yet using for now
-                messages=[{"role": "user", "content": prompt}],
-            )
+            try:
+                ai_response = client.chat.completions.create(model="gpt-3.5-turbo", messages=[{"role": "user", "content": prompt}])
+                questions_text = ai_response.choices[0].message.content.strip()
+                questions_list = [q.strip() for q in questions_text.split('\n') if q.strip()]
+                formatted_questions = []
+                for q in questions_list:
+                    new_question = q.split('question: ', 1)[-1]
+                    ChatBotHistory.objects.create(question=new_question, specificJob=job_posting, account=account)
+                    formatted_questions.append(new_question)
+                
+                return Response({"message": formatted_questions}, status=201)
+            
+            except Exception as e:
+                return Response({"error": str(e)}, status=500)
+            
+        except JobPosting.DoesNotExist:
+            return Response({"error": "Job posting not found."}, status=404)
 
-            questions_text = response.choices[0].message.content.strip()
-            questions_list = [q.strip() for q in questions_text.split('\n') if q.strip()]
-
-            for q in questions_list:
-                cleaned_question = q.split('. ', 1)[-1]
-                ChatBotHistory.objects.create(question=cleaned_question, specificJob=job_posting, account=account)
-
-            return Response({"message": questions_list})
-
-        except Exception as e:
-            return Response({"error": str(e)}, status=500)
 
     def post(self, request):
         user_response = request.data.get("answer")
-        bot_question = request.data.get("question")
+        ai_question = request.data.get("question")
 
         try:
-            chat = ChatBotHistory.objects.filter(account=request.user.account).latest('timestamp')
+            chat = ChatBotHistory.objects.get(account=request.user.account, question=ai_question)
             chat.response = user_response
             chat.save()
-        except ChatBotHistory.DoesNotExist:
-            return Response({"error": "Chat history not found"}, status=404)
 
-        prompt = (
-            f"You are an AI job interview coach. An applicant was asked the following question.\n"
-            f"Question: {bot_question}"
-            f"The applicant provided this response\n"
-            f"Response: {user_response}"
-            f"Can you analyze their response and provide overall feedback, strengths, areas that need improvement, and an example response."
-            f"Only output your feedback to the user's response."
-        )
-
-        try:
-            response = client.chat.completions.create(
-                model="gpt-3.5-turbo",
-                messages=[{"role": "user", "content": prompt}],
+            prompt = (
+                f"You are an AI job interview coach. An applicant was asked the following question.\n"
+                f"Question: {ai_question}\n"
+                f"The applicant provided this response\n"
+                f"Response: {user_response}\n"
+                f"Analyze the applicant's response. Provide feedback ONLY in the following format, using these exact headings:\n\n"
+                f"**Overall Feedback:**\n"
+                f"[Provide a 2-3 sentence summary of the response's effectiveness.]\n\n"
+                f"**Strengths:**\n"
+                f"- [List 1-2 specific strengths of the answer.]\n\n"
+                f"**Areas for Improvement:**\n"
+                f"- [List 1-2 specific, actionable areas for improvement.]\n\n"
+                f"**Example Response:**\n"
+                f"[Provide an ideal, concise example response to the question.]"
             )
 
-            response = response.choices[0].message.content.strip()
-            return Response({"message": response})
+            try:
+                ai_response = client.chat.completions.create(model="gpt-3.5-turbo", messages=[{"role": "user", "content": prompt}]) 
+                feedback_text = ai_response.choices[0].message.content.strip()
+                return Response({"message": feedback_text})
 
-        except Exception as e:
-            return Response({"error": str(e)}, status=500)
+            except Exception as e:
+                return Response({"error": str(e)}, status=500)
+            
+        except ChatBotHistory.DoesNotExist:
+            return Response({"error": "Chat history not found"}, status=404)
         
-class InterviewGradeView(APIView):
-    """Gives user an overall grade on their interview chat"""
+class InterviewSummaryView(APIView):
+    """Gives user an overall summary on their interview chat"""
     permission_classes = [IsAuthenticated]
 
     def get(self, request):
         account = request.user.account
         
         chat_history_pairs = list(ChatBotHistory.objects.filter(account=account).values_list('question', 'response'))
-
         if not chat_history_pairs:
             return Response({"error": "No chat history found to generate a grade."}, status=404)
 
@@ -499,21 +474,23 @@ class InterviewGradeView(APIView):
         prompt = (
             f"You are an expert career coach providing a final summary of a mock interview."
             f"Based on the conversation below, provide an complete overview and a letter grade.\n\n"
-            f"CONVERSATION HISTORY:\n{conversation_history}"
+            f"CONVERSATION HISTORY:\n{conversation_history}\n"
             f"YOUR TASK:\n"
-            f"1.Overall Analysis: Write a 3-4 sentence summary of the candidate's performance. Identify one key strength and one major area for improvement that was evident across all their answers.\n"
-            f"2.Letter Grade: Assign a single letter grade (A, B, C, D, or F). Briefly justify your grade based on the overall quality of the answers.\n\n"
-            f"Format your response using markdown headings for 'Overall Analysis' and 'Letter Grade'."
+            f"1.Grade: Assign a single letter grade (A, B, C, D, or F).\n"
+            f"2.Analysis: Write a 4-6 sentence summary of the candidate's performance. Identify one key strength and one major area for improvement that was evident across all their answers.\n"
+            f"3.Hired: Determine whether you would employ the user to this job position based on the results of their mock interview. Answer with either 'yes' or 'no'.\n"
+            f"Format the output ONLY as a list, with each line starting with 'data: ' ('data: (letter grade)\ndata: (analysis)\ndata: (hired)')."
         )
 
         try:
-            response = client.chat.completions.create(
-                model="gpt-3.5-turbo",
-                messages=[{"role": "user", "content": prompt}],
-            )
+            ai_response = client.chat.completions.create(model="gpt-3.5-turbo", messages=[{"role": "user", "content": prompt}])
+            summary_text = ai_response.choices[0].message.content.strip()
+            summary_list = [s.strip() for s in summary_text.split('\n') if s.strip()]
+            formatted_summary = []
+            for s in summary_list:
+                formatted_summary.append(s.split('data: ', 1)[-1])
 
-            feedback = response.choices[0].message.content.strip()
-            return Response({"message": feedback})
+            return Response(formatted_summary, status=201)
 
         except Exception as e:
             return Response({"error": str(e)}, status=500)
