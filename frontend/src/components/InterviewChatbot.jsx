@@ -22,6 +22,9 @@ const InterviewChatbot = () => {
   	const [loading, setLoading] = useState(false);
 	const [error, setError] = useState('');
   	const [screenWidth, setScreenWidth] = useState(window.innerWidth);
+    const [limitReached, setLimitReached] = useState(
+        () => sessionStorage.getItem('chatLimitReached') === 'true'
+    );
 
 	const timerRef = useRef(null);
 	const recognitionRef = useRef(null);
@@ -38,19 +41,19 @@ const InterviewChatbot = () => {
   	  	setLoading(true);
 		setError("");
 
-  	  	let url = "/chatbot_interview/"
-  	  	if (job) {
-  	  	  	url = `/chatbot_interview/?job_id=${job.id}`;
-  	  	}
   	  	try {
-  	  	  	const response = await api.get(url);
-			console.log(response.data.message);
+  	  	  	const response = await api.get(`/chatbot_interview/?job_id=${job.id}`);
 			setQuestions(response.data.message || []);
 			setSessionStarted(true);
   	  	}
   	  	catch (err) {
-  	  	  	console.error(err.response?.data?.error || "Failed to get questions. Please try again later.");
-			setError(err.response?.data?.error || "Failed to get questions. Please try again later.")
+            if (err.response && err.response.status === 429) {
+                sessionStorage.setItem('chatLimitReached', 'true');
+                setLimitReached(true);
+            } 
+            else {
+			    setError(err.response?.data?.error || "Failed to get questions. Please try again later.");
+            }
   	  	}
   	  	finally {
   	  	  	setLoading(false);
@@ -63,11 +66,9 @@ const InterviewChatbot = () => {
 
   	  	try {
   	  	  	const response = await api.post("/chatbot_interview/", { question: question, answer: answer });
-			console.log(response.data.message);
 			setFeedback(prev => ({...prev, [question]: response.data.message}))
 		}
   	  	catch (err) {
-  	  	  	console.error(err.response?.data?.error || "Failed to get feedback. Please try again later.");
 			setError(err.response?.data?.error || "Failed to get feedback. Please try again later.")
   	  	}
   	  	finally {
@@ -81,13 +82,11 @@ const InterviewChatbot = () => {
 
   	  	try {
   	  	  	const response = await api.get("/chatbot_summary/");
-			console.log(response.data);
 			setSummaryGrade(response.data[0]);
             setSummaryAnalysis(response.data[1]);
             setSummaryHired(response.data[2]);
 		}
   	  	catch (err) {
-  	  	  	console.error(err.response?.data?.error || "Failed to get feedback. Please try again later.");
 			setError(err.response?.data?.error || "Failed to get feedback. Please try again later.")
   	  	}
   	  	finally {
@@ -110,6 +109,7 @@ const InterviewChatbot = () => {
 		else {
             getInterviewSummary();
 			setSessionEnded(true);
+            sessionStorage.setItem('chatLimitReached', 'true');
 		}
 	};
 
@@ -138,10 +138,7 @@ const InterviewChatbot = () => {
             }
         };
         
-        recognition.onend = () => {
-            setIsRecording(false);
-        };
-
+        recognition.onend = () => {setIsRecording(false)};
         recognitionRef.current = recognition;
     }, []);
 
@@ -186,8 +183,56 @@ const InterviewChatbot = () => {
   	  	return () => window.removeEventListener("resize", handleResize);
   	}, []);
 
+    // This will display the overall summary page
+    if (sessionEnded) {
+        return (
+            <Container className="py-5" style={{ maxWidth: '1000px' }}>
+                <Row>
+                    <Col>
+                        <div style={{ backgroundColor: 'var(--bg3)', border: '1px solid var(--border)', padding: '2rem', borderRadius: '0.375rem', color: 'var(--text2)' }}>
+                            
+                            <h3 style={{ fontSize: '1.75rem', fontWeight: 600, color: 'var(--text2)', textAlign: 'center', marginBottom: '1.5rem' }}>Your Mock Interview Report</h3>
+                            <Row className="mb-4 text-center">
+                                <Col md={6} className="mb-3 mb-md-0">
+                                    <h6 style={{ color: 'var(--title)', textTransform: 'uppercase', fontSize: '0.9rem', letterSpacing: '1px' }}>Overall Grade</h6>
+                                    <p style={{ fontSize: '3.5rem', fontWeight: 'bold', color: 'var(--webname)', margin: 0, lineHeight: 1.2 }}>{summaryGrade}</p>
+                                </Col>
+                                <Col md={6}>
+                                    <h6 style={{ color: 'var(--title)', textTransform: 'uppercase', fontSize: '0.9rem', letterSpacing: '1px' }}>Are you Hired?</h6>
+                                    <p style={{ fontSize: '3.5rem', fontWeight: 'bold', color: 'var(--text2)', margin: 0, textTransform: 'capitalize', lineHeight: 1.2 }}>{summaryHired}</p>
+                                </Col>
+                            </Row>
+                            
+                            <hr style={{ borderColor: 'var(--border' }} />
+                            <h5 style={{ fontSize: '1.25rem', fontWeight: 600, color: 'var(--text2)', marginTop: '1.5rem' }}>AI Analysis</h5>
+                            <p style={{ fontSize: '1.1rem', color: 'var(--text2)', whiteSpace: 'pre-wrap' }}>{summaryAnalysis}</p>
+                        </div>
+                    </Col>
+                </Row>
+            </Container>
+        );
+    }
+
+    // This will display an error message about the chat limit
+    if (limitReached) {
+        return (
+            <Container className="py-5" style={{ maxWidth: '1000px' }}>
+                <Row>
+                    <Col>
+                        <div style={{ backgroundColor: 'var(--bg3)', border: '1px solid var(--border)', padding: '2rem', borderRadius: '0.375rem', color: 'var(--text2)', textAlign: 'center' }}>
+                            <h3 style={{ fontSize: '1.75rem', fontWeight: 600, color: 'var(--text2)', marginBottom: '1.5rem' }}>Daily Limit Reached</h3>
+                            <p style={{ fontSize: '1.1rem', color: 'var(--text2)'}}>
+                                You have reached your limit of 4 questions per day. Please try again tomorrow.
+                            </p>
+                        </div>
+                    </Col>
+                </Row>
+            </Container>
+        );
+    }
+
     // This will display the instruction page
-	if (!sessionStarted && !sessionEnded) {
+	if (!sessionStarted) {
 		return (
 			<Container className="d-flex justify-content-center align-items-center text-center text-white" style={{ height: 'calc(100vh - 52px)' }}>
                 <div>
@@ -217,35 +262,6 @@ const InterviewChatbot = () => {
             </Container>
 		)
 	}
-
-    // This will display the overall summary page
-    if (sessionStarted && sessionEnded) {
-        return (
-            <Container>
-                <Card>
-                    <Card.Body>
-                        <p>grade: {summaryGrade}</p>
-                        <p>analysis: {summaryAnalysis}</p>
-                        <p>hired: {summaryHired}</p>
-                    </Card.Body>
-                </Card>
-            </Container>
-        );
-    }
-
-    // This will display an error message about the chat limit
-    if (!sessionStarted && sessionEnded) {
-        return (
-            <Container>
-                <Card>
-                    <Card.Body>
-                        <p>reached your limit of questions today. try again tommorow</p>
-                        <p>view results from todays mock interview [link]</p>
-                    </Card.Body>
-                </Card>
-            </Container>
-        );
-    }
 
 	if (questions.length === 0) {
         return (

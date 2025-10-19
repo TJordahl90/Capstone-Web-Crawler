@@ -381,11 +381,10 @@ class InterviewPrepChatBotView(APIView):
         account = request.user.account
         job_id = request.GET.get('job_id')
 
-        # UNCOMMENT BELOW TO ACTIVATE THE CHATBOT DAILY LIMIT
-        # one_day_ago = timezone.now() - timedelta(days=1)
-        # chat_today = ChatBotHistory.objects.filter(account=account, timestamp__gte=one_day_ago).count()
-        # if chat_today >= 4:
-        #     return Response({"error": "You have reached your limit of 4 questions per day. Please try again tommorow."}, status=429)
+        one_day_ago = timezone.now() - timedelta(days=1)
+        chat_today = ChatBotHistory.objects.filter(account=account, timestamp__gte=one_day_ago).count()
+        if chat_today >= 4:
+            return Response({"error": "You have reached your limit of 4 questions per day. Please try again tommorow."}, status=429)
         
         try:
             job_posting = JobPosting.objects.get(id=job_id)
