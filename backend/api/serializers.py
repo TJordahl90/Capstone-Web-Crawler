@@ -56,6 +56,11 @@ class ExperienceSerializer(serializers.ModelSerializer):
         model = Experience
         fields = ['id', 'company', 'title', 'startDate', 'endDate', 'description']
 
+class ProjectSerializer(serializers.ModelSerializer):
+    class meta:
+        model = Project
+        fields = ['id', 'account', 'title', 'description', 'startDate', 'endDate']
+
 class AccountSerializer(serializers.ModelSerializer):
     skills = CommonSkillsSerializer(many=True, read_only=True)
     preferences = CommonPreferencesSerializer(many=True, read_only=True)
