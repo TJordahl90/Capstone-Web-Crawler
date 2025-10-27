@@ -92,4 +92,8 @@ __Source Control:__ GitHub
 
 ## Appendices 
 
-
+Documentation for troubleshooting:
+- **PostgreSQL documentation:** https://www.postgresql.org/docs/current/index.html
+- **Django documentation:** https://docs.djangoproject.com/en/5.2/
+- **React documentation:** https://react.dev/learn
+- **Render documentation:** https://render.com/docs
