@@ -58,7 +58,7 @@ __Source Control:__ GitHub
 2. Stores in Github under /docs/.
 
 ## Troubleshooting Guide
-|# Issue | Possible Cause | Solution|
+| Issue | Possible Cause | Solution|
 | --- | --- | --- |
 | System Downtime   | Render service outage, deployment error  | Restart services on Render, roll back last deployment if necessary  |
 | Database Connection Failure  | Wrong credentials, network issue, PostgreSQL crash   | Check .env config, restart PostgreSQL, verify network   |
@@ -91,4 +91,5 @@ __Source Control:__ GitHub
 6. __Documentation:__ Update relevant manuals, logs, and user documentation.
 
 ## Appendices 
+
 
