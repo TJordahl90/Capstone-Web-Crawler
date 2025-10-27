@@ -6,7 +6,7 @@ The NorthStar system is a job-matching website that comprises multiple component
 ### _Hardware Requirements_
 __Frontend Server:__ 2 vCPUs, 2GB RAM, 20GB storage
 
-__Backend Server:__ Python (Flask/FastAPI), required libraries from requirements.txt
+__Backend Server:__ Python (Django), required libraries from requirements.txt
 
 __Database:__ PostgreSQL instance with 2 vCPUs, 4GB RAM, 50GB storage
 
@@ -91,3 +91,4 @@ __Source Control:__ GitHub
 6. __Documentation:__ Update relevant manuals, logs, and user documentation.
 
 ## Appendices 
+
