@@ -7,10 +7,10 @@ def matchUsersToJobs(account):
 
     matchedDict = {}
 
-    jobs = JobPosting.objects.prefetch_related('requirements').all() # Should be modified for specific roles but for now we can leave it like this
+    jobs = JobPosting.objects.prefetch_related('skills').all() # Should be modified for specific roles but for now we can leave it like this
 
     for job in jobs:
-        jobSkills = set(job.requirements.all()) # Get user skills as a set
+        jobSkills = set(job.skills.all()) # Get user skills as a set
 
         matchingSkills = skills & jobSkills # Use intersection for O(1) matching
         numOfMatchingSkills = len(matchingSkills)

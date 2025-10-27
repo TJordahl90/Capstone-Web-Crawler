@@ -73,14 +73,14 @@ class AccountSerializer(serializers.ModelSerializer):
         extra_kwargs = {"user": {"read_only": True}}
 
 class JobPostingSerializer(serializers.ModelSerializer):
-    requirements = CommonSkillsSerializer(many=True, read_only=True)
+    skills = CommonSkillsSerializer(many=True, read_only=True)
     matchPercent = serializers.IntegerField(read_only=True)
     is_saved = serializers.SerializerMethodField()
     applied_status = serializers.SerializerMethodField()
 
     class Meta:
         model = JobPosting
-        fields = ['id', 'company', 'title', 'description', 'requirements', 'location', 'datePosted', 'salary', 'jobURL', 'matchPercent', 'is_saved', 'applied_status']
+        fields = ['id', 'company', 'title', 'fullDescription', 'shortDescription', 'skills', 'requirements', 'fieldOfStudy', 'degreeType', 'location', 'datePosted', 'salary', 'jobURL', 'experienceLevel', 'employmentType', 'locationType', 'matchPercent', 'is_saved', 'applied_status']
 
     def get_is_saved(self, job):
         request = self.context.get('request')

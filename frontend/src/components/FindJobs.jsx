@@ -789,7 +789,7 @@ const FindJobs = ({ jobPostTypeProp }) => {
                                     >
                                         <Card.Body>
                                             <Card.Title>Job Description</Card.Title>
-                                            <Card.Text>{selectedJob.description || "No description available."}</Card.Text>
+                                            <Card.Text>{selectedJob.shortDescription || "No description available."}</Card.Text>
                                         </Card.Body>
                                     </Card>
 
@@ -805,10 +805,10 @@ const FindJobs = ({ jobPostTypeProp }) => {
                                         }}
                                     >
                                         <Card.Body>
-                                            <Card.Title>Requirements</Card.Title>
-                                            {selectedJob.requirements && selectedJob.requirements.length > 0 ? (
+                                            <Card.Title>Skills</Card.Title>
+                                            {selectedJob.skills && selectedJob.skills.length > 0 ? (
                                                 <ul className="ps-3">
-                                                    {selectedJob.requirements.map(r => (
+                                                    {selectedJob.skills.map(r => (
                                                         <li key={r.id}>{r.name}</li>
                                                     ))}
                                                 </ul>

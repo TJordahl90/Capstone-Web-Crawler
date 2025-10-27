@@ -206,7 +206,7 @@ def JobMatchingView(request):
     
     for job in matchedJobs:
         count = matchedJobIds.get(job.id, 0)
-        total = job.requirements.count() or 1
+        total = job.skills.count() or 1
         job.matchPercent = round(count / total * 100)
 
     matchedJobs.sort(key=lambda x: x.matchPercent, reverse=True) # this sorts the job list by percentage
