@@ -1,6 +1,6 @@
 # NorthStar Maintenance Manual
 ## Introduction
-The NorthStar system is a job-matching website that comprises multiple components, including a Web Scraper, Resume Parser, AI chatbot, Trend Analysis, and Job Search/Matcher. This manual offers comprehensive instructions for performing maintenance, troubleshooting issues, and long-term performance and stability.
+NorthStar is a job-matching website that comprises multiple components, including a Web Scraper, Resume Parser, AI chatbot, Trend Analysis, and Job Search/Matcher. This manual offers comprehensive instructions for performing maintenance, troubleshooting issues, and long-term performance and stability.
 
 ## System Requirements
 ### _Hardware Requirements_
@@ -97,3 +97,4 @@ Documentation for troubleshooting:
 - **Django documentation:** https://docs.djangoproject.com/en/5.2/
 - **React documentation:** https://react.dev/learn
 - **Render documentation:** https://render.com/docs
+
