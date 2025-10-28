@@ -5,9 +5,10 @@ from selenium.webdriver.chrome.options import Options
 from selenium.webdriver.common.by import By
 from selenium.webdriver.support.ui import WebDriverWait
 from selenium.webdriver.support import expected_conditions as EC
-from selenium.common.exceptions import ElementClickInterceptedException, TimeoutException, StaleElementReferenceException, NoSuchElementException
+from selenium.common.exceptions import TimeoutException, NoSuchElementException
 from webdriver_manager.chrome import ChromeDriverManager
 import time, csv, logging, re
+from datetime import datetime
 from .scraper_ai import extract_job_details_with_openai
 
 # Set up logging
@@ -15,99 +16,34 @@ logging.basicConfig(level=logging.INFO, format='%(asctime)s - %(levelname)s - %(
 
 def extract_short_description(soup):
     """Extracts the short description (important part of full description)"""
-    description_lines = []
-    start_tag = soup.find('b', string=re.compile(r'Description:?'))
+    start = soup.find("b", string=re.compile(r"Description", re.I))
+    end = soup.find("b", string=re.compile(r"Basic Qualifications", re.I))
+    if not start: return
 
-    if start_tag:
-        current_node = start_tag.find_parent('p') if start_tag.find_parent('p') else start_tag
-        current_node = current_node.next_sibling
-        current_line_text = ""
+    elements = [str(start)]
+    for node in start.next_siblings:
+        if node == end: break
+        elements.append(str(node))
 
-        while current_node:
-            is_stop_header = (current_node.name == 'b' and re.search(r'Basic Qualifications:?', current_node.get_text(strip=True)))
-            if is_stop_header:
-                if current_line_text.strip():
-                    cleaned_line = re.sub(r'\s+', ' ', current_line_text.strip())
-                    description_lines.append(cleaned_line)
-                break
-
-            if isinstance(current_node, NavigableString):
-                current_line_text += str(current_node)
-            elif current_node.name == 'br':
-                if current_line_text.strip():
-                    cleaned_line = re.sub(r'\s+', ' ', current_line_text.strip())
-                    description_lines.append(cleaned_line)
-                current_line_text = ""
-            elif current_node.name == 'p':
-                p_text = current_node.get_text(separator=' ', strip=True)
-                if p_text:
-                    if current_line_text.strip():
-                         cleaned_line = re.sub(r'\s+', ' ', current_line_text.strip())
-                         description_lines.append(cleaned_line)
-                    cleaned_p = re.sub(r'\s+', ' ', p_text)
-                    description_lines.append(cleaned_p)
-                    current_line_text = "" 
-            elif current_node.name == 'b':
-                 tag_text = current_node.get_text(separator=' ', strip=True)
-                 if tag_text:
-                     if current_line_text.strip():
-                          cleaned_line = re.sub(r'\s+', ' ', current_line_text.strip())
-                          description_lines.append(cleaned_line)
-                     description_lines.append('')
-                     description_lines.append(tag_text)
-                     current_line_text = ""
-
-            current_node = current_node.next_sibling
-
-        if current_line_text.strip():
-             cleaned_line = re.sub(r'\s+', ' ', current_line_text.strip())
-             description_lines.append(cleaned_line)
-
-    return '\n'.join(line for line in description_lines if line or line=='').strip()
+    section_html = "".join(elements)
+    section_soup = BeautifulSoup(section_html, "html.parser")
+    return section_soup.get_text(separator="\n", strip=True).strip()
+   
 
 def extract_requirements(soup):
     """Extracts requirements as  a block of text"""
-    requirements_lines = []
-    start_header = soup.find('b', string=re.compile(r'Basic Qualifications:?'))
+    start = soup.find("b", string=re.compile(r"Basic Qualifications", re.I))
+    end = soup.find("b", string=re.compile(r"(Security Clearance Statement|Clearance Statement|Clearance Level)", re.I))
+    if not start: return ""
 
-    if start_header:
-        current_node = start_header
-        current_line_text = ""
+    elements = [str(start)]
+    for node in start.next_siblings:
+        if node == end: break
+        elements.append(str(node))
 
-        while current_node:
-            is_stop_header = (current_node.name == 'b' and re.search(r'Security Clearance Statement:?', current_node.get_text(strip=True)))
-            if is_stop_header:
-                if current_line_text.strip():
-                    cleaned_line = re.sub(r'\s+', ' ', current_line_text.strip())
-                    requirements_lines.append(cleaned_line)
-                break
-
-            if isinstance(current_node, NavigableString):
-                current_line_text += str(current_node)
-
-            elif current_node.name == 'br':
-                if current_line_text.strip():
-                    cleaned_line = re.sub(r'\s+', ' ', current_line_text.strip())
-                    requirements_lines.append(cleaned_line)
-                current_line_text = ""
-
-            elif current_node.name:
-                tag_text = current_node.get_text(separator=' ', strip=True)
-                if tag_text:
-                     if current_line_text.strip():
-                          cleaned_line = re.sub(r'\s+', ' ', current_line_text.strip())
-                          requirements_lines.append(cleaned_line)
-                          current_line_text = ""
-                     requirements_lines.append(tag_text)
-
-            current_node = current_node.next_sibling
-
-        if current_line_text.strip():
-             cleaned_line = re.sub(r'\s+', ' ', current_line_text.strip())
-             if not requirements_lines or requirements_lines[-1] != cleaned_line:
-                requirements_lines.append(cleaned_line)
-
-    return '\n'.join(requirements_lines).strip()
+    section_html = "".join(elements)
+    section_soup = BeautifulSoup(section_html, "html.parser")
+    return section_soup.get_text(separator="\n", strip=True).strip()
 
 def lockheed_scraper():
     """Scrapes all the data"""
@@ -121,6 +57,7 @@ def lockheed_scraper():
     # driver = webdriver.Chrome(service=Service(ChromeDriverManager().install()), options=chrome_options)
     driver = webdriver.Chrome(service=Service(ChromeDriverManager(driver_version="141.0.7390.108").install()), options=chrome_options)
     wait = WebDriverWait(driver, 15)
+    date_format = '%b. %d, %Y'
 
     try:
         driver.get("https://www.lockheedmartinjobs.com/search-jobs")
@@ -141,29 +78,29 @@ def lockheed_scraper():
         driver.execute_script("arguments[0].click();", career_toggle)
         time.sleep(2)
 
-        # cyber_checkbox = wait.until(EC.presence_of_element_located((By.XPATH, "//input[@data-display='Cyber']")))
-        # driver.execute_script("arguments[0].click();", cyber_checkbox)
-        # time.sleep(3)
+        cyber_checkbox = wait.until(EC.presence_of_element_located((By.XPATH, "//input[@data-display='Cyber']")))
+        driver.execute_script("arguments[0].click();", cyber_checkbox)
+        time.sleep(3)
 
         data_checkbox = wait.until(EC.presence_of_element_located((By.XPATH, "//input[@data-display='Data Science']")))
         driver.execute_script("arguments[0].click();", data_checkbox)
         time.sleep(3)
 
-        # ai_checkbox = wait.until(EC.presence_of_element_located((By.XPATH, "//input[contains(@data-display, 'AI/Machine Learning')]")))
-        # driver.execute_script("arguments[0].click();", ai_checkbox)
-        # time.sleep(3)
+        ai_checkbox = wait.until(EC.presence_of_element_located((By.XPATH, "//input[contains(@data-display, 'AI/Machine Learning')]")))
+        driver.execute_script("arguments[0].click();", ai_checkbox)
+        time.sleep(3)
 
         it_checkbox = wait.until(EC.presence_of_element_located((By.XPATH, "//input[@data-display='Information Technology']")))
         driver.execute_script("arguments[0].click();", it_checkbox)
         time.sleep(3)
 
-        # software_checkbox = wait.until(EC.presence_of_element_located((By.XPATH, "//input[@data-display='Software Engineering']")))
-        # driver.execute_script("arguments[0].click();", software_checkbox)
-        # time.sleep(3)
+        software_checkbox = wait.until(EC.presence_of_element_located((By.XPATH, "//input[@data-display='Software Engineering']")))
+        driver.execute_script("arguments[0].click();", software_checkbox)
+        time.sleep(3)
         
-        # systems_checkbox = wait.until(EC.presence_of_element_located((By.XPATH, "//input[@data-display='Systems Engineering']")))
-        # driver.execute_script("arguments[0].click();", systems_checkbox)
-        # time.sleep(3)
+        systems_checkbox = wait.until(EC.presence_of_element_located((By.XPATH, "//input[@data-display='Systems Engineering']")))
+        driver.execute_script("arguments[0].click();", systems_checkbox)
+        time.sleep(3)
 
         state_toggle = wait.until(EC.presence_of_element_located((By.ID, "region-toggle")))
         driver.execute_script("arguments[0].click();", state_toggle)
@@ -178,6 +115,7 @@ def lockheed_scraper():
             show_all = wait.until(EC.presence_of_element_located((By.CLASS_NAME, "pagination-show-all")))
             driver.execute_script("arguments[0].click();", show_all)
             print("Clicked 'Show All' button")
+            time.sleep(3)
         except TimeoutException:
             print("No 'Show All' button found - likely too few results on page")
         except Exception as e:
@@ -190,89 +128,41 @@ def lockheed_scraper():
         except TimeoutException:
             print("Timeout waiting for job results to load. Proceeding anyway.")
 
+
+        # Extract the job links from the search results page
         job_links = []
-        final_job_elements = [] # To store elements found after potential scrolling
 
-        print("Starting scroll process to load all jobs...")
-        last_job_count = 0
-        scroll_attempts = 0
-        max_scroll_attempts = 15
-        final_job_elements = []
-
-        while scroll_attempts < max_scroll_attempts:
-            try:
-                # --- FIX: Re-find the container INSIDE the loop ---
-                results_container = driver.find_element(By.ID, "search-results-list")
-                # --- END FIX ---
-                
-                # Find current job elements using the precise selector inside the loop
-                current_job_elements = results_container.find_elements(By.CSS_SELECTOR, "ul > li")
-                current_job_count = len(current_job_elements)
-                print(f"Found {current_job_count} jobs so far...")
-
-                # Store the LATEST list found
-                final_job_elements = current_job_elements 
-
-                # If count hasn't increased after a scroll, assume done
-                if current_job_count == last_job_count and last_job_count > 0:
-                    print("Scrolling finished. No new jobs loaded.")
-                    break
-
-                last_job_count = current_job_count
-
-                # Scroll down
-                print("Scrolling down...")
-                driver.execute_script("window.scrollTo(0, document.body.scrollHeight);")
-
-                # Wait for new content to potentially load
-                time.sleep(4) # Increased wait slightly for loading
-
-            except StaleElementReferenceException:
-                # If the container itself goes stale *during* an iteration, 
-                # just print a warning and the loop will try to re-find it next time.
-                print("Warning: results_container became stale during scroll loop iteration. Retrying...")
-                time.sleep(1) # Small pause before retrying
-            except NoSuchElementException:
-                print("Error: Could not find results_container during scroll loop. Stopping scroll.")
-                break # Exit loop if container disappears
-            except Exception as scroll_e:
-                print(f"Error during scrolling loop: {scroll_e}")
-                break # Exit loop on other errors
-
-            scroll_attempts += 1
-            if scroll_attempts == max_scroll_attempts:
-                 print("Warning: Reached max scroll attempts. Might not have loaded all jobs.")
-
-
-        job_links = []
         try:
-            # Process the FINAL list of elements found AFTER scrolling
-            print(f"Processing {len(final_job_elements)} potentially loaded job elements for links...")
-            for job_element in final_job_elements:
+            results_container = driver.find_element(By.ID, "search-results-list")
+            job_elements = results_container.find_elements(By.CSS_SELECTOR, "ul > li > a[href*='/job/']")
+            print(f"Found {len(job_elements)} job postings so far...")
 
-                try:
-                    # Find the 'a' tag within this specific element
-                    link_element = job_element.find_element(By.CSS_SELECTOR, "a")
+            for job in job_elements:
+                link = job.get_attribute("href")
+                if link: job_links.append({"link": link})
+
+            print(f"Saved {len(job_links)} total links using primary method.")
+
+        except NoSuchElementException:
+            print("Job header not found, skipping job listing.")
+        except Exception as e:
+            print(f"Error obtaining the job links using primary method: {e}")
+
+        if len(job_links) == 0:
+            try:
+                print("No job links found using primary method. Trying backup method...")
+                link_elements = driver.find_elements(By.CSS_SELECTOR, "a[href*='/job/']")
+
+                for link_element in link_elements:
                     link = link_element.get_attribute("href")
-                    if link:
-                        # Add duplicate check
-                        if not any(d['link'] == link for d in job_links):
-                             job_links.append({"link": link})
-                except StaleElementReferenceException:
-                    print("Warning: Stale element encountered during final link extraction. Skipping.")
-                    continue
-                except NoSuchElementException:
-                    print("Warning: Found li element without direct 'a' tag in final processing, skipping.")
-                    continue
-                except Exception as e:
-                    print(f"Error processing one final job element for link: {e}")
+                    if link: job_links.append({"link": link})
 
-            print(f"Extracted {len(job_links)} unique job links from primary method.")
+                print(f"Saved {len(job_links)} total links using backup method.")
 
-        except Exception as final_find_e:
-            print(f"Error finding/processing final job elements after scroll: {final_find_e}")
-
-        print(f"\n>>> Final collected job_links count: {len(job_links)}")
+            except NoSuchElementException:
+                print("Job header not found, skipping job listing.")    
+            except Exception as e:
+                print(f"Error obtaining the job links using backup method: {e}")
 
         for i, job in enumerate(job_links):
             try:
@@ -280,18 +170,12 @@ def lockheed_scraper():
                 driver.get(job["link"])
 
                 job_details = {
-                    "company": "Lockheed Martin", "title": "", "fullDescription": "", "shortDescription": "", "requirements": [],
+                    "company": "Lockheed Martin", "title": "", "fullDescription": "", "shortDescription": "", "requirements": "",
                     "skills": [], "location": "", "datePosted": "", "salary": "", "jobURL": job["link"], 
-                    "experienceLevel": "", "employmentType": "", "locationType": "", "degreeType": [], "fieldOfStudy": [] 
+                    "experienceLevel": "", "employmentType": "", "locationType": "", "degreeType": [], "careerArea": [] 
                 } 
 
                 try:
-
-                    # temp fix to skip empty job links
-                    if i == 0:
-                        print("Skipped first job because its empty")
-                        continue
-
                     # Find the job header and extract title & location
                     job_header_container = wait.until(EC.presence_of_element_located((By.CLASS_NAME, "ajd_header__job-heading")))
 
@@ -307,34 +191,39 @@ def lockheed_scraper():
                     job_body_container = wait.until(EC.presence_of_element_located((By.CLASS_NAME, "ats-description")))
 
                     date_element = job_body_container.find_element(By.CSS_SELECTOR, ".job-date.job-info")
-                    job_details['datePosted'] = date_element.text.split(':')[-1].strip()
+                    date_string = date_element.text.split(':')[-1].strip()
+                    job_details['datePosted'] = datetime.strptime(date_string, date_format)
 
+                    # Format with soup
                     raw_html = job_body_container.get_attribute("innerHTML")
-                    soup = BeautifulSoup(raw_html, "html.parser")
+                    clean_soup = BeautifulSoup(raw_html, "html.parser")
+                    raw_soup = BeautifulSoup(raw_html, "html.parser")
 
-                    job_details['requirements'] = extract_requirements(soup)
-                    job_details['shortDescription'] = extract_short_description(soup)
-
-                    # Futher formatting and cleaning
-                    for br in soup.find_all("br"):
+                    for br in clean_soup.find_all("br"):
                         br.replace_with("\n")
 
-                    for bold in soup.find_all(["b", "strong"]):
+                    for bold in clean_soup.find_all(["b", "strong"]):
                         bold.insert_before("\n\n")
 
-                    cleaned_text = soup.get_text(separator="\n", strip=True)
+                    cleaned_text = clean_soup.get_text(separator="\n", strip=True)
                     full_description = f"{title}\n{location}\n{cleaned_text}"
                     job_details["fullDescription"] = full_description
 
+                    job_details['requirements'] = extract_requirements(raw_soup)
+                    job_details['shortDescription'] = extract_short_description(raw_soup)
+
                     extracted_details = extract_job_details_with_openai(full_description)
+
                     if extracted_details:
                         job_details['skills'] = extracted_details.get('skills', [])
-                        job_details["fieldOfStudy"] = extracted_details.get("fieldOfStudy", [])
+                        job_details["careerArea"] = extracted_details.get("careerArea", [])
                         job_details["degreeType"] = extracted_details.get("degreType", [])
                         job_details["salary"] = extracted_details.get("salary", None)
                         job_details["experienceLevel"] = extracted_details.get("experienceLevel", None)
                         job_details["employmentType"] = extracted_details.get("employmentType", None)
                         job_details["locationType"] = extracted_details.get("locationType", None)
+                    else:
+                        print("Error extracting job details using OpenAI API.")
 
                 except Exception as e:
                     print(f"Error extracting data: {e}")
@@ -353,19 +242,17 @@ def lockheed_scraper():
         if job_data:
             fieldnames = [
                 "company", "title", "fullDescription", "shortDescription", "requirements", "skills", "location", "datePosted", 
-                "salary", "jobURL", "experienceLevel", "employmentType", "locationType", "degreeType", "fieldOfStudy" 
+                "salary", "jobURL", "experienceLevel", "employmentType", "locationType", "degreeType", "careerArea" 
             ]
-            with open("lockheed_martin.csv", "w", newline="", encoding="utf-8") as file:
+            with open("lockheed_martin_data.csv", "w", newline="", encoding="utf-8") as file:
                 writer = csv.DictWriter(file, fieldnames=fieldnames, extrasaction='ignore')
                 writer.writeheader()
                 writer.writerows(job_data)
 
-
-            print(f"Successfully scraped details for {len(job_data)} jobs and saved to lockheed_martin.csv")
+            print(f"Successfully scraped details for {len(job_data)} jobs and saved to lockheed_martin_data.csv")
         else:
             print("No detailed job information was collected.")
 
-        print(f"Scraped {len(job_data)} jobs from Lockheed Martin")
         return job_data
 
     except Exception as e:

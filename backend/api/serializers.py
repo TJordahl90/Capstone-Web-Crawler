@@ -80,7 +80,7 @@ class JobPostingSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = JobPosting
-        fields = ['id', 'company', 'title', 'fullDescription', 'shortDescription', 'skills', 'requirements', 'fieldOfStudy', 'degreeType', 'location', 'datePosted', 'salary', 'jobURL', 'experienceLevel', 'employmentType', 'locationType', 'matchPercent', 'is_saved', 'applied_status']
+        fields = ['id', 'company', 'title', 'fullDescription', 'shortDescription', 'skills', 'requirements', 'careerArea', 'degreeType', 'location', 'datePosted', 'salary', 'jobURL', 'experienceLevel', 'employmentType', 'locationType', 'matchPercent', 'is_saved', 'applied_status']
 
     def get_is_saved(self, job):
         request = self.context.get('request')

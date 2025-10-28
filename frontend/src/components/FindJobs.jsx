@@ -788,8 +788,14 @@ const FindJobs = ({ jobPostTypeProp }) => {
                                         }}
                                     >
                                         <Card.Body>
-                                            <Card.Title>Job Description</Card.Title>
-                                            <Card.Text>{selectedJob.shortDescription || "No description available."}</Card.Text>
+                                            <Card.Title>Data below needs to be formatted/styled nicely</Card.Title>
+                                            <br />
+                                            <Card.Text><pre style={{ whiteSpace: "pre-wrap", wordBreak: "break-word" }}>{selectedJob.fullDescription}</pre></Card.Text>
+                                            <br />
+                                            <Card.Text><pre style={{ whiteSpace: "pre-wrap", wordBreak: "break-word" }}>{selectedJob.shortDescription}</pre></Card.Text>
+                                            <br />
+                                            <Card.Text><pre style={{ whiteSpace: "pre-wrap", wordBreak: "break-word" }}>{selectedJob.requirements}</pre></Card.Text>
+                                            <br />
                                         </Card.Body>
                                     </Card>
 
@@ -805,7 +811,7 @@ const FindJobs = ({ jobPostTypeProp }) => {
                                         }}
                                     >
                                         <Card.Body>
-                                            <Card.Title>Skills</Card.Title>
+                                            <Card.Title>Data below needs to be formatted/styled nicely</Card.Title>
                                             {selectedJob.skills && selectedJob.skills.length > 0 ? (
                                                 <ul className="ps-3">
                                                     {selectedJob.skills.map(r => (
@@ -815,6 +821,19 @@ const FindJobs = ({ jobPostTypeProp }) => {
                                             ) : (
                                                 <Card.Text>No specific requirements listed.</Card.Text>
                                             )}
+                                            <br />
+                                            <Card.Text>{selectedJob.careerArea}</Card.Text>
+                                            <br />
+                                            <Card.Text>{selectedJob.degreeyType}</Card.Text>
+                                            <br />
+                                            <Card.Text>{selectedJob.location}</Card.Text>
+                                            <br />
+                                            <Card.Text>{selectedJob.experienceLevel}</Card.Text>
+                                            <br />
+                                            <Card.Text>{selectedJob.employmentType}</Card.Text>
+                                            <br />
+                                            <Card.Text>{selectedJob.locationType}</Card.Text>
+
                                         </Card.Body>
                                     </Card>
                                 </div>

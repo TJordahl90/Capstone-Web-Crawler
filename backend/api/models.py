@@ -76,20 +76,20 @@ class Project(models.Model):
     
 class JobPosting(models.Model):
     company = models.CharField(max_length=100)
-    title = models.CharField(max_length=150)
+    title = models.CharField(max_length=200)
     fullDescription = models.TextField()
     shortDescription = models.TextField()
+    requirements = models.TextField(blank=True, null=True)
     skills = models.ManyToManyField(CommonSkills, related_name='job_posting', blank=True)
-    requirements = models.TextField(default=list, blank=True)
-    fieldOfStudy = models.JSONField(default=list, blank=True)
+    careerArea = models.JSONField(default=list, blank=True)
     degreeType = models.JSONField(default=list, blank=True)
-    location = models.CharField(max_length=150, blank=True, null=True)
+    location = models.CharField(max_length=200, blank=True, null=True)
     datePosted = models.DateField(null=True, blank=True)
     salary = models.CharField(max_length=100, blank=True, null=True)
     jobURL = models.URLField(max_length=500)
-    experienceLevel = models.CharField(max_length=25, blank=True, null=True)
-    employmentType = models.CharField(max_length=25, blank=True, null=True)
-    locationType = models.CharField(max_length=25, blank=True, null=True)
+    experienceLevel = models.CharField(max_length=50, blank=True, null=True)
+    employmentType = models.CharField(max_length=50, blank=True, null=True)
+    locationType = models.CharField(max_length=50, blank=True, null=True)
 
     def __str__(self):
         return f'{self.title} at {self.company}'

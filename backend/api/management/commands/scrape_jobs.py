@@ -38,12 +38,11 @@ class Command(BaseCommand):
                             title=job['title'],
                             fullDescription=job['fullDescription'],
                             shortDescription=job['shortDescription'],
-                            # skills=job['skills'],
                             requirements=job['requirements'],
-                            fieldOfStudy=job['fieldOfStudy'],
+                            careerArea=job['careerArea'],
                             degreeType=job['degreeType'],
                             location=job['location'],
-                            datePosted=None,
+                            datePosted=job['datePosted'],
                             salary=job['salary'],
                             jobURL=job['jobURL'],
                             experienceLevel=job['experienceLevel'],
@@ -55,7 +54,7 @@ class Command(BaseCommand):
                         for skill in job['skills']:
                             obj, _ = CommonSkills.objects.get_or_create(name=skill)
                             skill_objs.append(obj)
-                            print(skill)
+                            # print(skill)
 
                         job_post.skills.set(skill_objs)
                         jobs_saved += 1
