@@ -93,6 +93,31 @@ class LoginView(APIView):
             user_serializer = UserSerializer(user).data
             return Response({'first_time_login': first_time_login, 'user': user_serializer}, status=200)
         return Response({"error": "Invalid credentials"}, status=400)
+    
+class ResetPasswordView(APIView):
+    permission_classes = [AllowAny]
+
+    def post(self, request):
+        email = request.data.get('email')
+        userCode = str(request.data.get('verificationCode'))
+        newPassword = request.data.get('newPassword')
+        # Get user account
+        try:
+            user = User.objects.get(email__iexact=email)
+            verificationEntry = Verification.objects.get(email__iexact=email)
+            verificationCode = str(verificationEntry.code)
+        except User.DoesNotExist:
+            return Response({"error": "User with this email does not exist."}, status=status.HTTP_404_NOT_FOUND)
+            
+        print(f'user: {user} \nreal code: {verificationCode} \nUser code: {userCode}') 
+
+        if(verificationCode == userCode):
+            user.set_password(newPassword)
+            user.save()
+            verificationEntry.delete()
+            return Response({'message': 'Password reset successful!'}, status=200)        
+        else:
+            return Response({'error': 'Invalid code.'}, status=400)
 
 class LogoutView(APIView):
     permission_classes = [IsAuthenticated]
