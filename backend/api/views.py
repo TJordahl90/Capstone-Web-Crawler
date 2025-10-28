@@ -21,8 +21,9 @@ from .resumeParser import * # We need all the functions from this file
 import os
 from openai import OpenAI
 from datetime import datetime, timedelta
-from django.db.models import Sum
+from django.db.models import Sum, Count
 from django.db.models.functions import TruncMonth, TruncWeek, TruncDay, TruncYear
+from collections import Counter
 
 @permission_classes([AllowAny])
 @ensure_csrf_cookie
@@ -550,12 +551,25 @@ class JobDataVisualization(APIView):
 class JobStatisticsView(APIView):
     permission_classes = [IsAuthenticated]
 
-    def get(self, request): # We need to have an option on the frotnend for what we want to filter by. Week, month, year, etc then we can complete this simply.
-        print('hit the get function')
-        stats = (JobStatistics.objects.annotate(month=TruncMonth('date'))
-                                .values('month', 'category')
-                                .annotate(totalJobs=Sum('numberOfJobs'))
-                                .order_by('month')
-                ) # returns in this format: <QuerySet [{'category': 'IT', 'month': datetime.date(2025, 9, 1), 'totalJobs': 240}]> depending on filter option (TruncMonth, TruncWeek, TruncYear, etc)
+    def get(self, request):
+        try:
+            # For skills
+            skillCounts = CommonSkills.objects.annotate(job_count=Count('job_posting')).order_by('-job_count')
+            topSkills = skillCounts[:10]
+            skillDictionary = [ {'name': skill.name, 'count': skill.job_count} for skill in topSkills ] 
+            #print(skillDictionary)
+
+            # For career area
+            careerAreaList = JobPosting.objects.values_list('careerArea', flat=True)
+            careerAreaCounter = Counter()
+            for area in careerAreaList:
+                if area:
+                    careerAreaCounter.update(area)
+
+            topCareerAreas = careerAreaCounter.most_common(5)
+            careerAreaDict = [ {'name': career, 'value': count} for career, count in topCareerAreas ]
+
+            return Response({'topSkills': skillDictionary, 'topCareerAreas': careerAreaDict}, status=200)
         
-        return Response(list(stats))
+        except Exception as e:
+            return Response({'error': str(e)}, status=500)
