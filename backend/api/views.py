@@ -330,9 +330,22 @@ class DocumentView(APIView):
         #Automatically adds it to the profile
         if skills:
             skillObjects = []
-            for skill in skills:
-                skillObjects.append(CommonSkills.objects.get(name=skill))
-            account.skills.add(*skillObjects)
+            for raw in skills:
+                skill = (raw or "").strip()
+                if not skill:
+                    continue
+                try:
+                    # case-insensitive fetch
+                    obj = CommonSkills.objects.get(name__iexact=skill)
+                except CommonSkills.DoesNotExist:
+                    # create if truly missing
+                    obj = CommonSkills.objects.create(name=skill)
+                except CommonSkills.MultipleObjectsReturned:
+                    # if duplicates exist with different casing, pick one
+                    obj = CommonSkills.objects.filter(name__iexact=skill).first()
+                skillObjects.append(obj)
+            if skillObjects:
+                account.skills.add(*skillObjects)
 
         # Helper function to parse dates
         def parse_date(date_str):
