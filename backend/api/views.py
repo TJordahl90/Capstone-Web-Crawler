@@ -433,7 +433,7 @@ class InterviewPrepChatBotView(APIView):
                 f'Here is the details for the job the applicant is applying for:\n'
                 f'Job Title: {job_posting.title}\n'
                 f'Company: {job_posting.company}\n'
-                f'Description: {job_posting.description}\n'
+                f'Description: {job_posting.fullDescription}\n'
                 f"IMPORTANT: Do not ask any of the following previously asked questions:\n"
                 f"History: {past_questions}\n" 
                 f"Format the output ONLY as a list, with each line starting with 'question: ' ('question: ...\nquestion: ...\nquestion: ...')."
