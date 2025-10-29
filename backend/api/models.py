@@ -59,17 +59,37 @@ class Project(models.Model):
     def __str__(self):
         return self.title
     
+# class JobPosting(models.Model):
+#     company = models.CharField(max_length=150)
+#     title = models.CharField(max_length=200)
+#     description = models.TextField()  # TextField is better for long text
+#     requirements = models.ManyToManyField(CommonSkills, related_name='job_posting', blank=True)
+#     location = models.CharField(max_length=150, blank=True, null=True)  # Optional is good
+#     datePosted = models.CharField(max_length=50, null=True, blank=True)
+#     salary = models.CharField(max_length=255, blank=True, null=True)  # Optional seems better
+#     jobURL = models.URLField(max_length=500)
+#     summary = models.TextField(blank=True, null=True)
+#     minimumRequirements = models.TextField(blank=True, null=True)
+
+#     def __str__(self):
+#         return f'{self.title} at {self.company}'
+    
 class JobPosting(models.Model):
-    company = models.CharField(max_length=150)
+    company = models.CharField(max_length=100)
     title = models.CharField(max_length=200)
-    description = models.TextField()  # TextField is better for long text
-    requirements = models.ManyToManyField(CommonSkills, related_name='job_posting', blank=True)
-    location = models.CharField(max_length=150, blank=True, null=True)  # Optional is good
-    datePosted = models.CharField(max_length=50, null=True, blank=True)
-    salary = models.CharField(max_length=255, blank=True, null=True)  # Optional seems better
+    fullDescription = models.TextField()
+    shortDescription = models.TextField()
+    requirements = models.TextField(blank=True, null=True)
+    skills = models.ManyToManyField(CommonSkills, related_name='job_posting', blank=True)
+    careerArea = models.JSONField(default=list, blank=True)
+    degreeType = models.JSONField(default=list, blank=True)
+    location = models.CharField(max_length=200, blank=True, null=True)
+    datePosted = models.DateField(null=True, blank=True)
+    salary = models.CharField(max_length=100, blank=True, null=True)
     jobURL = models.URLField(max_length=500)
-    summary = models.TextField(blank=True, null=True)
-    minimumRequirements = models.TextField(blank=True, null=True)
+    experienceLevel = models.CharField(max_length=50, blank=True, null=True)
+    employmentType = models.CharField(max_length=50, blank=True, null=True)
+    locationType = models.CharField(max_length=50, blank=True, null=True)
 
     def __str__(self):
         return f'{self.title} at {self.company}'

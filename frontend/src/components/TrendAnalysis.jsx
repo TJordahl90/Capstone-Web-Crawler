@@ -6,25 +6,25 @@ import api from "../api.js";
 const TrendAnalysis = () => {
   	const [topSkills, setTopSkills] = useState([]);
   	const [jobPositions, setJobPositions] = useState([]);
+    const [err, setError] = useState("");
 
 	useEffect(() => {
-	// Call your Django API here
-		setTopSkills([
-			{ name: 'Python', count: 189 },
-			{ name: 'JavaScript', count: 156 },
-			{ name: 'SQL', count: 140 },
-			{ name: 'React', count: 121 },
-			{ name: 'AWS', count: 110 },
-			{ name: 'Java', count: 95 },
-			{ name: 'C#', count: 88 },
-		]);
-		setJobPositions([
-		    { name: 'Software Engineer', value: 480 },
-		    { name: 'System Admin', value: 95 },
-		    { name: 'Database Admin', value: 65 },
-		    { name: 'IT', value: 40 },
-		]);
-  	}, []);
+        const fetchJobStats = async() =>{
+	
+            try{
+                const response = await api.get("/job_statistics");
+                //console.log(response.data);
+                setTopSkills(response.data.topSkills);
+
+                setJobPositions(response.data.topCareerAreas);
+
+            }
+            catch (err) {
+                setError(err.response?.data?.error || "Failed to get job data");
+            }
+        };     
+        fetchJobStats();
+    }, []);
 
 	const COLORS = ['#0088FE', '#00C49F', '#FFBB28', '#FF8042'];
 
@@ -34,7 +34,7 @@ const TrendAnalysis = () => {
                 <Col md={8} className="mb-4">
                     <Card style={{ backgroundColor: '#2d3748', border: '1px solid #4a5568', borderRadius: '1rem' }}>
                         <Card.Body>
-                            <Card.Title as="h5" style={{ color: '#00ADB5' }}>Top In-Demand Skills</Card.Title>
+                            <Card.Title as="h5" style={{ color: '#00ADB5' }}>Highest In-Demand Skills</Card.Title>
                             <ResponsiveContainer width="100%" height={300}>
                                 <BarChart data={topSkills} margin={{ top: 20, right: 20, left: -10, bottom: 5 }}>
                                     <CartesianGrid strokeDasharray="3 3" stroke="#4a5568" />

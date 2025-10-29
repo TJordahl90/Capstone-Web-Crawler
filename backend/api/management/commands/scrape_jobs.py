@@ -1,6 +1,6 @@
 from django.core.management.base import BaseCommand
 from api.models import JobPosting,CommonSkills
-from api.web_scrapers import Alkami_Technology, Fugetec, tekreant, TexasInstruments, Lockhead
+from api.web_scrapers import Alkami_Technology, Fugetec, tekreant, TexasInstruments, lockheed_martin
 
 class Command(BaseCommand):
     """Runs all web scrapers in the 'web_scraper' folder"""
@@ -9,9 +9,9 @@ class Command(BaseCommand):
         
         # list all scrapers here
         scrapers = [
-            Fugetec.fugetec,
-            TexasInstruments.TexInstr,
-            Lockhead.lockheed_scraper
+            # Fugetec.fugetec,
+            # TexasInstruments.TexInstr,
+            lockheed_martin.lockheed_scraper
             # continue...
         ]
 
@@ -27,29 +27,36 @@ class Command(BaseCommand):
 
                 for job in job_data:
                     existing_job = JobPosting.objects.filter(
-                        title=job['Job Title'],
-                        company=job['Company Name'],
-                        jobURL=job['Application Link'],
+                        title=job['title'],
+                        company=job['company'],
+                        jobURL=job['jobURL'],
                     ).exists()
 
                     if not existing_job:
                         job_post = JobPosting.objects.create(
-                            company=job['Company Name'],
-                            title=job['Job Title'],
-                            description=job['Job Description'],
-                            location=job['Location'],
-                            jobURL=job['Application Link'],
-                            datePosted=None,
-                            salary='',
+                            company=job['company'],
+                            title=job['title'],
+                            fullDescription=job['fullDescription'],
+                            shortDescription=job['shortDescription'],
+                            requirements=job['requirements'],
+                            careerArea=job['careerArea'],
+                            degreeType=job['degreeType'],
+                            location=job['location'],
+                            datePosted=job['datePosted'],
+                            salary=job['salary'],
+                            jobURL=job['jobURL'],
+                            experienceLevel=job['experienceLevel'],
+                            employmentType=job['employmentType'],
+                            locationType=job['locationType']
                         )
 
                         skill_objs = []
-                        for skill in job['requirements']:
+                        for skill in job['skills']:
                             obj, _ = CommonSkills.objects.get_or_create(name=skill)
                             skill_objs.append(obj)
-                            print(skill)
+                            # print(skill)
 
-                        job_post.requirements.set(skill_objs)
+                        job_post.skills.set(skill_objs)
                         jobs_saved += 1
 
                     self.stdout.write(
@@ -66,8 +73,4 @@ class Command(BaseCommand):
             self.style.SUCCESS(f'Scraping complete. Total jobs saved {total_jobs_saved}')
         )
 
-
-#-------------------------------------------------------------------------------------------------------------------
-#---------------FUNCTIONS!!!!!!!!!!!-------FUNCTIONS!!!!!!!!!!!------FUNCTIONS!!!!!!!!!!!------FUNCTIONS!!!!!!!!!!!
-#-------------------------------------------------------------------------------------------------------------------
 

@@ -21,8 +21,9 @@ from .resumeParser import * # We need all the functions from this file
 import os
 from openai import OpenAI
 from datetime import datetime, timedelta
-from django.db.models import Sum
+from django.db.models import Sum, Count
 from django.db.models.functions import TruncMonth, TruncWeek, TruncDay, TruncYear
+from collections import Counter
 
 @permission_classes([AllowAny])
 @ensure_csrf_cookie
@@ -93,6 +94,31 @@ class LoginView(APIView):
             user_serializer = UserSerializer(user).data
             return Response({'first_time_login': first_time_login, 'user': user_serializer}, status=200)
         return Response({"error": "Invalid credentials"}, status=400)
+    
+class ResetPasswordView(APIView):
+    permission_classes = [AllowAny]
+
+    def post(self, request):
+        email = request.data.get('email')
+        userCode = str(request.data.get('verificationCode'))
+        newPassword = request.data.get('newPassword')
+        # Get user account
+        try:
+            user = User.objects.get(email__iexact=email)
+            verificationEntry = Verification.objects.get(email__iexact=email)
+            verificationCode = str(verificationEntry.code)
+        except User.DoesNotExist:
+            return Response({"error": "User with this email does not exist."}, status=status.HTTP_404_NOT_FOUND)
+            
+        print(f'user: {user} \nreal code: {verificationCode} \nUser code: {userCode}') 
+
+        if(verificationCode == userCode):
+            user.set_password(newPassword)
+            user.save()
+            verificationEntry.delete()
+            return Response({'message': 'Password reset successful!'}, status=200)        
+        else:
+            return Response({'error': 'Invalid code.'}, status=400)
 
 class LogoutView(APIView):
     permission_classes = [IsAuthenticated]
@@ -206,7 +232,7 @@ def JobMatchingView(request):
     
     for job in matchedJobs:
         count = matchedJobIds.get(job.id, 0)
-        total = job.requirements.count() or 1
+        total = job.skills.count() or 1
         job.matchPercent = round(count / total * 100)
 
     matchedJobs.sort(key=lambda x: x.matchPercent, reverse=True) # this sorts the job list by percentage
@@ -304,9 +330,22 @@ class DocumentView(APIView):
         #Automatically adds it to the profile
         if skills:
             skillObjects = []
-            for skill in skills:
-                skillObjects.append(CommonSkills.objects.get(name=skill))
-            account.skills.add(*skillObjects)
+            for raw in skills:
+                skill = (raw or "").strip()
+                if not skill:
+                    continue
+                try:
+                    # case-insensitive fetch
+                    obj = CommonSkills.objects.get(name__iexact=skill)
+                except CommonSkills.DoesNotExist:
+                    # create if truly missing
+                    obj = CommonSkills.objects.create(name=skill)
+                except CommonSkills.MultipleObjectsReturned:
+                    # if duplicates exist with different casing, pick one
+                    obj = CommonSkills.objects.filter(name__iexact=skill).first()
+                skillObjects.append(obj)
+            if skillObjects:
+                account.skills.add(*skillObjects)
 
         # Helper function to parse dates
         def parse_date(date_str):
@@ -525,12 +564,25 @@ class JobDataVisualization(APIView):
 class JobStatisticsView(APIView):
     permission_classes = [IsAuthenticated]
 
-    def get(self, request): # We need to have an option on the frotnend for what we want to filter by. Week, month, year, etc then we can complete this simply.
-        print('hit the get function')
-        stats = (JobStatistics.objects.annotate(month=TruncMonth('date'))
-                                .values('month', 'category')
-                                .annotate(totalJobs=Sum('numberOfJobs'))
-                                .order_by('month')
-                ) # returns in this format: <QuerySet [{'category': 'IT', 'month': datetime.date(2025, 9, 1), 'totalJobs': 240}]> depending on filter option (TruncMonth, TruncWeek, TruncYear, etc)
+    def get(self, request):
+        try:
+            # For skills
+            skillCounts = CommonSkills.objects.annotate(job_count=Count('job_posting')).order_by('-job_count')
+            topSkills = skillCounts[:10]
+            skillDictionary = [ {'name': skill.name, 'count': skill.job_count} for skill in topSkills ] 
+            #print(skillDictionary)
+
+            # For career area
+            careerAreaList = JobPosting.objects.values_list('careerArea', flat=True)
+            careerAreaCounter = Counter()
+            for area in careerAreaList:
+                if area:
+                    careerAreaCounter.update(area)
+
+            topCareerAreas = careerAreaCounter.most_common(5)
+            careerAreaDict = [ {'name': career, 'value': count} for career, count in topCareerAreas ]
+
+            return Response({'topSkills': skillDictionary, 'topCareerAreas': careerAreaDict}, status=200)
         
-        return Response(list(stats))
+        except Exception as e:
+            return Response({'error': str(e)}, status=500)
