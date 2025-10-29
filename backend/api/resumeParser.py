@@ -99,7 +99,7 @@ def parser(text):
         "Each field can have multiple entries. "
         "Education entries should include: institution, degree, major, minor, graduationDate, and gpa. "
         "Experience entries should include: company, jobTitle, startDate, endDate, and description. "
-        "Project entries should include: title, startDate, endDate, and description"
+        "Project entries should include: title, startDate, endDate, and description. "
         "If there is an error, return an empty JSON object. "
         f"Here is the parsed text: {text}"
     )
