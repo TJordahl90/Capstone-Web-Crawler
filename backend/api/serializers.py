@@ -6,7 +6,6 @@
 from rest_framework import serializers
 from django.contrib.auth.models import User
 from .models import *
-from .resumeParser import extract_text_from_pdf, parser
 
 class CreateUserSerializer(serializers.ModelSerializer): 
     class Meta:
@@ -41,9 +40,29 @@ class CommonSkillsSerializer(serializers.ModelSerializer):
         model = CommonSkills
         fields = ['id', 'name']
 
-class CommonPreferencesSerializer(serializers.ModelSerializer):
+class CommonCareersSerializer(serializers.ModelSerializer):
     class Meta:
-        model = CommonPreferences
+        model = CommonCareers
+        fields = ['id', 'name']
+
+class CommonDegreesSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = CommonDegrees
+        fields = ['id', 'name']
+
+class CommonExperienceLevelsSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = CommonExperienceLevels
+        fields = ['id', 'name']
+
+class CommonEmploymentTypesSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = CommonEmploymentTypes
+        fields = ['id', 'name']
+
+class CommonWorkModelsSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = CommonWorkModels
         fields = ['id', 'name']
 
 class EducationSerializer(serializers.ModelSerializer):
@@ -63,24 +82,36 @@ class ProjectSerializer(serializers.ModelSerializer):
 
 class AccountSerializer(serializers.ModelSerializer):
     skills = CommonSkillsSerializer(many=True, read_only=True)
-    preferences = CommonPreferencesSerializer(many=True, read_only=True)
+    careers = CommonCareersSerializer(many=True, read_only=True)
+    experienceLevels = CommonExperienceLevelsSerializer(many=True, read_only=True)
+    employmentTypes = CommonEmploymentTypesSerializer(many=True, read_only=True)
+    workModels = CommonWorkModelsSerializer(many=True, read_only=True)
     education = EducationSerializer(many=True, read_only=True)
     experience = ExperienceSerializer(many=True, read_only=True)
 
     class Meta:
         model = Account
-        fields = ['user', 'resume', 'headline', 'hometown', 'skills', 'preferences', 'education', 'experience']
+        fields = ['user', 'resume', 'headline', 'hometown', 'skills', 'careers', 'experienceLevels', 'employmentTypes', 'workModels', 'education', 'experience']
         extra_kwargs = {"user": {"read_only": True}}
 
 class JobPostingSerializer(serializers.ModelSerializer):
-    skills = CommonSkillsSerializer(many=True, read_only=True)
+    skills = CommonSkillsSerializer(many=True, read_only=True)    
+    careers = CommonCareersSerializer(many=True, read_only=True)
+    degrees = CommonDegreesSerializer(many=True, read_only=True)
+    experienceLevels = CommonExperienceLevelsSerializer(many=True, read_only=True)
+    employmentTypes = CommonEmploymentTypesSerializer(many=True, read_only=True)
+    workModels = CommonWorkModelsSerializer(many=True, read_only=True)
     matchPercent = serializers.IntegerField(read_only=True)
     is_saved = serializers.SerializerMethodField()
     applied_status = serializers.SerializerMethodField()
 
     class Meta:
         model = JobPosting
-        fields = ['id', 'company', 'title', 'fullDescription', 'shortDescription', 'skills', 'requirements', 'careerArea', 'degreeType', 'location', 'datePosted', 'salary', 'jobURL', 'experienceLevel', 'employmentType', 'locationType', 'matchPercent', 'is_saved', 'applied_status']
+        fields = [
+            'id', 'company', 'title', 'fullDescription', 'shortDescription', 'requirements', 
+            'skills', 'careers', 'degrees', 'experienceLevels', 'employmentTypes', 'workModels',
+            'location', 'datePosted', 'salary', 'jobURL', 'matchPercent', 'is_saved', 'applied_status'
+        ]
 
     def get_is_saved(self, job):
         request = self.context.get('request')
@@ -101,7 +132,7 @@ class JobPostingSerializer(serializers.ModelSerializer):
 class ChatBotSerializer(serializers.ModelSerializer):
     class Meta:
         model = ChatBotHistory
-        fields = ['id', 'question', 'time', 'speficJob', 'account']
+        fields = ['id', 'question', 'response', 'timestamp', 'specificJob', 'account']
 
 class JobStatisticsSerializer(serializers.ModelSerializer):
     class Meta:

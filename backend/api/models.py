@@ -3,33 +3,66 @@ from django.contrib.auth.models import User
 from django.contrib.postgres.fields import ArrayField
 from django.utils import timezone
 
+# e.g. Python, Node.Js, AWS, OOP, Git
 class CommonSkills(models.Model):
     name = models.CharField(max_length=100, unique=True)
 
     def __str__(self):
         return self.name
     
-class CommonPreferences(models.Model):
+# e.g. Software Engineering, Information Technology
+class CommonCareers(models.Model):
     name = models.CharField(max_length=100, unique=True)
+
+    def __str__(self):
+        return self.name
+    
+# e.g. Bachelors, Masters
+class CommonDegrees(models.Model):
+    name = models.CharField(max_length=50, unique=True)
+
+    def __str__(self):
+        return self.name
+    
+# e.g. Entry, Mid, Senior
+class CommonExperienceLevels(models.Model):
+    name = models.CharField(max_length=50, unique=True)
+
+    def __str__(self):
+        return self.name
+    
+# e.g. Full-Time, Part-Time
+class CommonEmploymentTypes(models.Model):
+    name = models.CharField(max_length=50, unique=True)
+
+    def __str__(self):
+        return self.name
+    
+# e.g. On-site, Hybrid, Remote
+class CommonWorkModels(models.Model):
+    name = models.CharField(max_length=50, unique=True)
 
     def __str__(self):
         return self.name
 
 class Account(models.Model):
-    user = models.OneToOneField(User, on_delete=models.CASCADE) # each account is linked to a user
+    user = models.OneToOneField(User, on_delete=models.CASCADE)
     resume = models.FileField(upload_to='api/uploads', blank=True, null=True)
     headline = models.CharField(max_length=50, blank=True, null=True)
     hometown = models.CharField(max_length=50, blank=True, null=True)
-    skills = models.ManyToManyField(CommonSkills, blank=True)
-    preferences = models.ManyToManyField(CommonPreferences, blank=True)
+    skills = models.ManyToManyField(CommonSkills, related_name='accounts', blank=True)    
+    careers = models.ManyToManyField(CommonCareers, related_name='accounts', blank=True)
+    experienceLevels = models.ManyToManyField(CommonExperienceLevels, related_name='accounts', blank=True)
+    employmentTypes = models.ManyToManyField(CommonEmploymentTypes, related_name='accounts', blank=True)    
+    workModels = models.ManyToManyField(CommonWorkModels, related_name='accounts', blank=True)
 
     def __str__(self):
         return self.user.username
 
 class Education(models.Model):
-    account = models.ForeignKey(Account, on_delete=models.CASCADE, related_name='education')
+    account = models.ForeignKey(Account, on_delete=models.CASCADE, related_name='educations')
     institution = models.CharField(max_length=100)
-    degree = models.CharField(max_length=50)
+    degree = models.ForeignKey(CommonDegrees, on_delete=models.SET_NULL, related_name='educations', blank=True, null=True)
     major = models.CharField(max_length=50)
     minor = models.CharField(max_length=50, blank=True, null=True)
     graduationDate = models.CharField(max_length=50, blank=True, null=True)
@@ -39,7 +72,7 @@ class Education(models.Model):
         return self.institution
     
 class Experience(models.Model):
-    account = models.ForeignKey(Account, on_delete=models.CASCADE, related_name='experience')
+    account = models.ForeignKey(Account, on_delete=models.CASCADE, related_name='experiences')
     company = models.CharField(max_length=50)
     title = models.CharField(max_length=50)
     startDate = models.CharField(max_length=50, blank=True, null=True)
@@ -59,37 +92,22 @@ class Project(models.Model):
     def __str__(self):
         return self.title
     
-# class JobPosting(models.Model):
-#     company = models.CharField(max_length=150)
-#     title = models.CharField(max_length=200)
-#     description = models.TextField()  # TextField is better for long text
-#     requirements = models.ManyToManyField(CommonSkills, related_name='job_posting', blank=True)
-#     location = models.CharField(max_length=150, blank=True, null=True)  # Optional is good
-#     datePosted = models.CharField(max_length=50, null=True, blank=True)
-#     salary = models.CharField(max_length=255, blank=True, null=True)  # Optional seems better
-#     jobURL = models.URLField(max_length=500)
-#     summary = models.TextField(blank=True, null=True)
-#     minimumRequirements = models.TextField(blank=True, null=True)
-
-#     def __str__(self):
-#         return f'{self.title} at {self.company}'
-    
 class JobPosting(models.Model):
     company = models.CharField(max_length=100)
     title = models.CharField(max_length=200)
     fullDescription = models.TextField()
-    shortDescription = models.TextField()
-    requirements = models.TextField(blank=True, null=True)
-    skills = models.ManyToManyField(CommonSkills, related_name='job_posting', blank=True)
-    careerArea = models.JSONField(default=list, blank=True)
-    degreeType = models.JSONField(default=list, blank=True)
+    shortDescription = models.TextField(blank=True)
+    requirements = models.TextField(blank=True)
+    skills = models.ManyToManyField(CommonSkills, related_name='job_postings', blank=True)
+    careers = models.ManyToManyField(CommonCareers, related_name='job_postings', blank=True)
+    degrees = models.ManyToManyField(CommonDegrees, related_name='job_postings', blank=True)
+    experienceLevels = models.ManyToManyField(CommonExperienceLevels, related_name='job_postings', blank=True)
+    employmentTypes = models.ManyToManyField(CommonEmploymentTypes, related_name='job_postings', blank=True)
+    workModels = models.ManyToManyField(CommonWorkModels, related_name='job_postings', blank=True)
     location = models.CharField(max_length=200, blank=True, null=True)
     datePosted = models.DateField(null=True, blank=True)
     salary = models.CharField(max_length=100, blank=True, null=True)
     jobURL = models.URLField(max_length=500)
-    experienceLevel = models.CharField(max_length=50, blank=True, null=True)
-    employmentType = models.CharField(max_length=50, blank=True, null=True)
-    locationType = models.CharField(max_length=50, blank=True, null=True)
 
     def __str__(self):
         return f'{self.title} at {self.company}'

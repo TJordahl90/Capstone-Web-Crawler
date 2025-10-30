@@ -1,0 +1,27 @@
+## Academic Fields
+
+computer science
+information technology
+information systems
+software engineering
+computer engineering
+data science
+cybersecurity
+artificial intelligence
+machine learning
+robotics
+bioinformatics
+game development
+web development
+mobile development
+network engineering
+systems engineering
+electrical engineering
+computational mathematics
+human-computer interaction
+it management
+digital media
+computer graphics
+information security
+database administration
+cloud computing

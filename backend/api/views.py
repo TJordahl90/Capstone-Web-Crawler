@@ -166,7 +166,7 @@ class AccountView(APIView):
         user_data = request.data.get('user')
         account_data = request.data.get('account')
         skills_data = request.data.get('skills')
-        preferences_data = request.data.get('preferences')
+        # preferences_data = request.data.get('preferences')
         education_data = request.data.get('education')
         experience_data = request.data.get('experience')
         errors = {}
@@ -192,12 +192,13 @@ class AccountView(APIView):
             except Exception as e:
                 errors['skills'] = str(e)
 
-        if preferences_data:
-            try:
-                preferences_list = [CommonPreferences.objects.get_or_create(name=pref)[0] for pref in preferences_data]
-                account.preferences.set(preferences_list)
-            except Exception as e:
-                errors['preferences'] = str(e)
+        # UPDATE THIS TO INCLUDE NEW ACCOUNT FIELDS CAREERS, ETC
+        # if preferences_data:
+        #     try:
+        #         preferences_list = [CommonPreferences.objects.get_or_create(name=pref)[0] for pref in preferences_data]
+        #         account.preferences.set(preferences_list)
+        #     except Exception as e:
+        #         errors['preferences'] = str(e)
 
         if education_data:
             education_serializer = EducationSerializer(data=education_data, many=True)
@@ -440,7 +441,7 @@ class InterviewPrepChatBotView(APIView):
             )
 
             try:
-                ai_response = client.chat.completions.create(model="gpt-3.5-turbo", messages=[{"role": "user", "content": prompt}])
+                ai_response = client.chat.completions.create(model="gpt-3.5-turbo", messages=[{"role": "user", "content": prompt}]) # can set custom temperature for more creativity
                 questions_text = ai_response.choices[0].message.content.strip()
                 questions_list = [q.strip() for q in questions_text.split('\n') if q.strip()]
                 formatted_questions = []
@@ -484,7 +485,7 @@ class InterviewPrepChatBotView(APIView):
             )
 
             try:
-                ai_response = client.chat.completions.create(model="gpt-3.5-turbo", messages=[{"role": "user", "content": prompt}]) 
+                ai_response = client.chat.completions.create(model="gpt-3.5-turbo", messages=[{"role": "user", "content": prompt}])
                 feedback_text = ai_response.choices[0].message.content.strip()
                 return Response({"message": feedback_text})
 

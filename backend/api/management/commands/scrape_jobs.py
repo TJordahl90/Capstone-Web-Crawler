@@ -10,8 +10,8 @@ class Command(BaseCommand):
         # list all scrapers here
         scrapers = [
             # Fugetec.fugetec,
-            # TexasInstruments.TexInstr,
-            lockheed_martin.lockheed_scraper
+            TexasInstruments.TexInstr,
+            # lockheed_martin.lockheed_scraper
             # continue...
         ]
 
@@ -32,6 +32,7 @@ class Command(BaseCommand):
                         jobURL=job['jobURL'],
                     ).exists()
 
+    # to fix this
                     if not existing_job:
                         job_post = JobPosting.objects.create(
                             company=job['company'],
