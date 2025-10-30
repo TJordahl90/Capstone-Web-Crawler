@@ -788,12 +788,13 @@ const FindJobs = ({ jobPostTypeProp }) => {
                                         }}
                                     >
                                         <Card.Body>
-                                            <Card.Title>Data below needs to be formatted/styled nicely</Card.Title>
+                                            <Card.Title>job description</Card.Title>
+                                            <Card.Text><pre style={{ whiteSpace: "pre-wrap", wordBreak: "break-word" }}>{selectedJob.description}</pre></Card.Text>
                                             <br />
-                                            <Card.Text><pre style={{ whiteSpace: "pre-wrap", wordBreak: "break-word" }}>{selectedJob.fullDescription}</pre></Card.Text>
+                                            <Card.Title>ai summary</Card.Title>
+                                            <Card.Text><pre style={{ whiteSpace: "pre-wrap", wordBreak: "break-word" }}>{selectedJob.summary}</pre></Card.Text>
                                             <br />
-                                            <Card.Text><pre style={{ whiteSpace: "pre-wrap", wordBreak: "break-word" }}>{selectedJob.shortDescription}</pre></Card.Text>
-                                            <br />
+                                            <Card.Title> requirments list</Card.Title>
                                             <Card.Text><pre style={{ whiteSpace: "pre-wrap", wordBreak: "break-word" }}>{selectedJob.requirements}</pre></Card.Text>
                                             <br />
                                         </Card.Body>
@@ -811,29 +812,59 @@ const FindJobs = ({ jobPostTypeProp }) => {
                                         }}
                                     >
                                         <Card.Body>
-                                            <Card.Title>Data below needs to be formatted/styled nicely</Card.Title>
-                                            {selectedJob.skills && selectedJob.skills.length > 0 ? (
+                                            <Card.Title>skills **need to add more skills to keywords list to get more skill keywords</Card.Title>
+                                            {selectedJob.skills && selectedJob.skills.length > 0 && (
                                                 <ul className="ps-3">
                                                     {selectedJob.skills.map(r => (
                                                         <li key={r.id}>{r.name}</li>
                                                     ))}
                                                 </ul>
-                                            ) : (
-                                                <Card.Text>No specific requirements listed.</Card.Text>
                                             )}
                                             <br />
-                                            <Card.Text>{selectedJob.careerArea}</Card.Text>
+                                            <Card.Title>careers </Card.Title>
+                                            {selectedJob.careers && selectedJob.careers.length > 0 && (
+                                                <ul className="ps-3">
+                                                    {selectedJob.careers.map(r => (
+                                                        <li key={r.id}>{r.name}</li>
+                                                    ))}
+                                                </ul>
+                                            )}
                                             <br />
-                                            <Card.Text>{selectedJob.degreeyType}</Card.Text>
+                                            <Card.Title>degrees **this works just forgot to add commondegrees before scraping</Card.Title>
+                                            {selectedJob.degrees && selectedJob.degrees.length > 0 && (
+                                                <ul className="ps-3">
+                                                    {selectedJob.degrees.map(r => (
+                                                        <li key={r.id}>{r.name}</li>
+                                                    ))}
+                                                </ul>
+                                            )}
                                             <br />
-                                            <Card.Text>{selectedJob.location}</Card.Text>
+                                            <Card.Title>experience level</Card.Title>
+                                            {selectedJob.experienceLevels && selectedJob.experienceLevels.length > 0 && (
+                                                <ul className="ps-3">
+                                                    {selectedJob.experienceLevels.map(r => (
+                                                        <li key={r.id}>{r.name}</li>
+                                                    ))}
+                                                </ul>
+                                            )}
                                             <br />
-                                            <Card.Text>{selectedJob.experienceLevel}</Card.Text>
+                                            <Card.Title>employment type</Card.Title>
+                                            {selectedJob.employmentTypes && selectedJob.employmentTypes.length > 0 && (
+                                                <ul className="ps-3">
+                                                    {selectedJob.employmentTypes.map(r => (
+                                                        <li key={r.id}>{r.name}</li>
+                                                    ))}
+                                                </ul>
+                                            )}
                                             <br />
-                                            <Card.Text>{selectedJob.employmentType}</Card.Text>
-                                            <br />
-                                            <Card.Text>{selectedJob.locationType}</Card.Text>
-
+                                            <Card.Title>work modelss</Card.Title>
+                                            {selectedJob.workModels && selectedJob.workModels.length > 0 && (
+                                                <ul className="ps-3">
+                                                    {selectedJob.workModels.map(r => (
+                                                        <li key={r.id}>{r.name}</li>
+                                                    ))}
+                                                </ul>
+                                            )}
                                         </Card.Body>
                                     </Card>
                                 </div>

@@ -9,7 +9,7 @@ from selenium.common.exceptions import TimeoutException, NoSuchElementException
 from webdriver_manager.chrome import ChromeDriverManager
 import time, csv, logging, re
 from datetime import datetime
-from .scraper_ai import extract_job_details_with_openai
+# from .scraper_ai import extract_job_details_with_openai
 
 # Set up logging
 logging.basicConfig(level=logging.INFO, format='%(asctime)s - %(levelname)s - %(message)s')
@@ -212,18 +212,18 @@ def lockheed_scraper():
                     job_details['requirements'] = extract_requirements(raw_soup)
                     job_details['shortDescription'] = extract_short_description(raw_soup)
 
-                    extracted_details = extract_job_details_with_openai(full_description)
+                    # extracted_details = extract_job_details_with_openai(full_description)
 
-                    if extracted_details:
-                        job_details['skills'] = extracted_details.get('skills', [])
-                        job_details["careerArea"] = extracted_details.get("careerArea", [])
-                        job_details["degreeType"] = extracted_details.get("degreType", [])
-                        job_details["salary"] = extracted_details.get("salary", None)
-                        job_details["experienceLevel"] = extracted_details.get("experienceLevel", None)
-                        job_details["employmentType"] = extracted_details.get("employmentType", None)
-                        job_details["locationType"] = extracted_details.get("locationType", None)
-                    else:
-                        print("Error extracting job details using OpenAI API.")
+                    # if extracted_details:
+                    #     job_details['skills'] = extracted_details.get('skills', [])
+                    #     job_details["careerArea"] = extracted_details.get("careerArea", [])
+                    #     job_details["degreeType"] = extracted_details.get("degreType", [])
+                    #     job_details["salary"] = extracted_details.get("salary", None)
+                    #     job_details["experienceLevel"] = extracted_details.get("experienceLevel", None)
+                    #     job_details["employmentType"] = extracted_details.get("employmentType", None)
+                    #     job_details["locationType"] = extracted_details.get("locationType", None)
+                    # else:
+                    #     print("Error extracting job details using OpenAI API.")
 
                 except Exception as e:
                     print(f"Error extracting data: {e}")

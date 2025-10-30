@@ -1,5 +1,5 @@
 from django.core.management.base import BaseCommand
-from api.models import JobPosting,CommonSkills
+from api.models import *
 from api.web_scrapers import Alkami_Technology, Fugetec, tekreant, TexasInstruments, lockheed_martin
 
 class Command(BaseCommand):
@@ -17,7 +17,6 @@ class Command(BaseCommand):
 
         # for scraping log
         jobs_saved = 0
-        total_jobs_saved = 0
         self.stdout.write(self.style.SUCCESS('Starting web scraping...'))
 
         for scraper in scrapers:
@@ -32,38 +31,44 @@ class Command(BaseCommand):
                         jobURL=job['jobURL'],
                     ).exists()
 
-    # to fix this
                     if not existing_job:
                         job_post = JobPosting.objects.create(
                             company=job['company'],
                             title=job['title'],
-                            fullDescription=job['fullDescription'],
-                            shortDescription=job['shortDescription'],
+                            description=job['description'],
+                            summary=job['summary'],
                             requirements=job['requirements'],
-                            careerArea=job['careerArea'],
-                            degreeType=job['degreeType'],
                             location=job['location'],
                             datePosted=job['datePosted'],
                             salary=job['salary'],
                             jobURL=job['jobURL'],
-                            experienceLevel=job['experienceLevel'],
-                            employmentType=job['employmentType'],
-                            locationType=job['locationType']
                         )
 
-                        skill_objs = []
-                        for skill in job['skills']:
-                            obj, _ = CommonSkills.objects.get_or_create(name=skill)
-                            skill_objs.append(obj)
-                            # print(skill)
+                        skill_names = job['skills']
+                        career_names = job['careers']
+                        degree_names = job['degrees']
+                        experience_names = job['experienceLevels']
+                        employment_names = job['employmentTypes']
+                        workmodel_names = job['workModels']
 
+                        skill_objs = CommonSkills.objects.filter(name__in=skill_names)
+                        career_objs = CommonCareers.objects.filter(name__in=career_names)
+                        degree_objs = CommonDegrees.objects.filter(name__in=degree_names)
+                        experience_objs = CommonExperienceLevels.objects.filter(name__in=experience_names)
+                        employment_objs = CommonEmploymentTypes.objects.filter(name__in=employment_names)
+                        workmodel_objs = CommonWorkModels.objects.filter(name__in=workmodel_names)
+                        
                         job_post.skills.set(skill_objs)
+                        job_post.careers.set(career_objs)
+                        job_post.degrees.set(degree_objs)
+                        job_post.experienceLevels.set(experience_objs)
+                        job_post.employmentTypes.set(employment_objs)
+                        job_post.workModels.set(workmodel_objs)
                         jobs_saved += 1
 
                     self.stdout.write(
                         self.style.SUCCESS(f'{scraper.__name__}: {jobs_saved} jobs saved')
                     )
-                    total_jobs_saved += jobs_saved
 
             except Exception as e:
                 self.stdout.write(
@@ -71,7 +76,7 @@ class Command(BaseCommand):
                 )
 
         self.stdout.write(
-            self.style.SUCCESS(f'Scraping complete. Total jobs saved {total_jobs_saved}')
+            self.style.SUCCESS(f'Scraping complete.')
         )
 
 

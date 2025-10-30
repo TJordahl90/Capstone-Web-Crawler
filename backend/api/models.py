@@ -95,8 +95,8 @@ class Project(models.Model):
 class JobPosting(models.Model):
     company = models.CharField(max_length=100)
     title = models.CharField(max_length=200)
-    fullDescription = models.TextField()
-    shortDescription = models.TextField(blank=True)
+    description = models.TextField()
+    summary = models.TextField(blank=True)
     requirements = models.TextField(blank=True)
     skills = models.ManyToManyField(CommonSkills, related_name='job_postings', blank=True)
     careers = models.ManyToManyField(CommonCareers, related_name='job_postings', blank=True)

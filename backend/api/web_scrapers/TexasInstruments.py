@@ -10,20 +10,26 @@ from selenium.common.exceptions import TimeoutException, WebDriverException, NoS
 import time, logging, re, csv
 from webdriver_manager.chrome import ChromeDriverManager
 from datetime import datetime
-from scraper_ai import extract_job_posting_summary
+import pathlib
+from .scraper_ai import extract_job_posting_summary
 # from summarizer import getJobSummary
 
-def load_skill_keywords(filename="keywords_skills.txt"):
+current_file_path = pathlib.Path(__file__)
+base_dir = current_file_path.parent.resolve()
+skills_file = base_dir / "keywords_skills.txt"
+careers_file = base_dir / "keywords_careers.txt"
+
+def load_skill_keywords():
     try:
-        with open(filename, 'r') as file:
+        with open(skills_file, 'r') as file:
             return [line.strip() for line in file if line.strip()]
     except Exception as e:
         print(f"Failed to load skill keywords: {e}")
         return []
     
-def load_career_keywords(filename="keywords_careers.txt"):
+def load_career_keywords():
     try:
-        with open(filename, 'r') as file:
+        with open(careers_file, 'r') as file:
             return [line.strip() for line in file if line.strip()]
     except Exception as e:
         print(f"Failed to load keywords: {e}")
@@ -44,9 +50,8 @@ def extract_skills_and_careers(tokens, description, keywords):
             keywords_found.append(keyword)
     return list(set(keywords_found))
 
-def extract_experience_employment_location(tokens, description):
-    data = { "experience": None, "employment": None, "location": None }
-
+def extract_experience(tokens, description):
+    experience = []
     experience_years = [
         r'(\d+)\s*\+\s*years?',
         r'(\d+)\s*years?\s*\+',
@@ -57,41 +62,35 @@ def extract_experience_employment_location(tokens, description):
         r'minimum\s+(?:of\s+)?(\d+)\s+years?',
         r'at\s+least\s+(\d+)\s+years?'
     ]
-
     experience_names = {
         r'\bintern(ship)?\b': 'intern',
         r'\bentry(-|\s)?level\b': 'entry',
         r'\bjunior\b': 'junior',
+        r'\bassociate\b(?![’\'\s-]*degree)': 'associate',
         r'\bmid(-|\s)?(level)?\b': 'mid',
         r'\bsenior\b': 'senior',
         r'\bleader\b': 'lead',
         r'\bmanager\b': 'manager',
-        r'\bassociate\b(?![’\'\s-]*degree)': 'junior',
     }
 
     for pattern, label in experience_names.items():
         if re.search(pattern, description):
-            data['experience'] = label
-            break
+            experience.append(label)
 
-    if not data['experience']:
+    if not experience:
         for pattern in experience_years:
-            match = re.search(r'\bpattern\b', description)
+            match = re.search(pattern, description)
             if match:
                 years = int(match.group(1))
-                if years <= 1: data["experience"] = 'intern'
-                elif years <= 2: data["experience"] = 'entry'
-                elif years <= 4: data["experience"] = 'junor'
-                elif years <= 6: data["experience"] = 'mid'
-                elif years <= 8: data["experience"] = 'senior'
-                elif years <= 10: data["experience"] = 'lead'
+                if years <= 1: experience.append('intern')
+                elif years <= 2: experience.append('entry')
+                elif years <= 4: experience.append('junior')
+                elif years <= 6: experience.append('mid')
+                elif years <= 8: experience.append('senior')
+                elif years <= 10: experience.append('lead')
                 break
 
-    # Texas Instruments doesnt mention employment type or location type in descriptions, assuming they are all onsite/fulltime
-    data["employment"] = 'full-time'
-    data["location"] = 'on-site'
-
-    return data
+    return experience
 
 def TexInstr():
     logging.basicConfig(level=logging.INFO, format='%(asctime)s - %(levelname)s - %(message)s', filename='job_scraper.log')
@@ -106,9 +105,8 @@ def TexInstr():
 
     job_data = []
     try:
-        # url = "https://careers.ti.com/en/sites/CX/jobs?location=Dallas%2C+TX%2C+United+States&locationId=300000056282337&locationLevel=city&mode=location&radius=25&radiusUnit=MI"
         url = "https://careers.ti.com/en/sites/CX/jobs?lastSelectedFacet=CATEGORIES&location=Dallas%2C+TX%2C+United+States&locationId=300000056282337&locationLevel=city&mode=location&radius=25&radiusUnit=MI&selectedCategoriesFacet=300000068853972%3B300000068853892"
-        # url = "https://careers.ti.com/en/sites/CX/jobs?lastSelectedFacet=CATEGORIES&location=Dallas%2C+TX%2C+United+States&locationId=300000056282337&locationLevel=city&mode=location&radius=25&radiusUnit=MI&selectedCategoriesFacet=300000068853892"
+
         driver.get(url)
         WebDriverWait(driver, 10).until(EC.presence_of_element_located((By.CLASS_NAME, "job-list-item__link")))
 
@@ -130,9 +128,9 @@ def TexInstr():
             try:
                 driver.get(link)
                 job_details = {
-                    "company": "Texas Instruments", "title": "", "fullDescription": "", "shortDescription": "", "requirements": "",
-                    "skills": [], "location": "", "datePosted": None, "salary": "", "jobURL": link, "experienceLevel": "", 
-                    "employmentType": "", "locationType": "", "degreeType": [], "careerArea": [] 
+                    "company": "Texas Instruments", "title": "", "description": "", "summary": "", "requirements": "",
+                    "skills": [], "careers": [], "degrees": [], "experienceLevels": [], "employmentTypes": [], "workModels": [],   
+                    "location": "", "datePosted": None, "salary": "", "jobURL": link,  
                 } 
 
                 WebDriverWait(driver, 10).until(EC.presence_of_element_located((By.CSS_SELECTOR, "h1.job-details__title")))
@@ -147,13 +145,13 @@ def TexInstr():
                 complete_jobpost = (title + "\n\n" + jobpost).lower()
                 jobpost_tokens = complete_jobposting_tokenizer(complete_jobpost)
 
-                # Save short AI description
-                # job_details['shortDescription'] = getJobSummary(complete_jobpost)
-                # job_details['shortDescription'] = extract_job_posting_summary(complete_jobpost)
+                # Save short AI summary
+                # job_details['summary'] = getJobSummary(complete_jobpost)
+                job_details['summary'] = extract_job_posting_summary(complete_jobpost)
 
                 # Save portion of actual job posting
                 header_element = driver.find_element(By.XPATH, f"//h2[contains(text(), 'Job Description')]")
-                job_details['fullDescription'] = header_element.find_element(By.XPATH, "following-sibling::div[contains(@class, 'job-details__description-content')]").text
+                job_details['description'] = header_element.find_element(By.XPATH, "following-sibling::div[contains(@class, 'job-details__description-content')]").text
                 
                 # Save requirements section of job posting
                 header_element = driver.find_element(By.XPATH, f"//h2[contains(text(), 'Qualifications')]")
@@ -161,12 +159,13 @@ def TexInstr():
                 
                 # Save other pieces by parsing the job posting
                 job_details['skills'] = extract_skills_and_careers(jobpost_tokens, complete_jobpost, skill_keywords)
-                job_details['careerArea'] = extract_skills_and_careers(jobpost_tokens, complete_jobpost, career_keywords)
+                job_details['careers'] = extract_skills_and_careers(jobpost_tokens, complete_jobpost, career_keywords)
 
-                extracted_data = extract_experience_employment_location(jobpost_tokens, complete_jobpost)
-                job_details['experienceLevel'] = extracted_data['experience']
-                job_details['employmentType'] = extracted_data['employment']
-                job_details['locationType'] = extracted_data['location']
+                job_details['experienceLevels'] = extract_experience(jobpost_tokens, complete_jobpost)
+
+                # Texas Instruments doesnt mention employment type or workmodels in descriptions, assuming they are all onsite/fulltime
+                job_details['employmentTypes'] = ['full-time']
+                job_details['workModels'] = ['on-site']
 
                 WebDriverWait(driver, 10).until(EC.presence_of_element_located((By.CSS_SELECTOR, "ul.job-meta__list")))
                 meta_item_elements = driver.find_elements(By.CSS_SELECTOR, "li.job-meta__item")
@@ -181,7 +180,7 @@ def TexInstr():
                         job_details['datePosted'] = formatted_date.date()
                     
                     if "Degree Level" in label:
-                        job_details['degreeType'] = value
+                        job_details['degrees'] = [value]
 
                     if "Locations" in label:
                         locations_list = []
@@ -207,8 +206,8 @@ def TexInstr():
 
         if job_data:
             fieldnames = [
-                "company", "title", "fullDescription", "shortDescription", "requirements", "skills", "careerArea", "degreeType", 
-                "location", "datePosted", "salary", "jobURL", "experienceLevel", "employmentType", "locationType", 
+                "company", "title", "description", "summary", "requirements","skills", "careers", "degrees", 
+                "experienceLevels", "employmentTypes", "workModels", "location", "datePosted", "salary", "jobURL",  
             ]
             with open("texas_instruments_data.csv", "w", newline="", encoding="utf-8") as file:
                 writer = csv.DictWriter(file, fieldnames=fieldnames, extrasaction='ignore')
