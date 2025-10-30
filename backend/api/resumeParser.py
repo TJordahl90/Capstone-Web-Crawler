@@ -6,6 +6,7 @@ from django.core.files.uploadedfile import SimpleUploadedFile
 from openai import OpenAI
 import os
 import json
+from .models import *
 
 def extract_text_from_pdf(pdf_file):
     text = ""
@@ -97,7 +98,7 @@ def parser(text):
         "and return it in JSON format. "
         "The JSON should have three keys: Education, Experience, and Projects. "
         "Each field can have multiple entries. "
-        "Education entries should include: institution, degree, major, minor, graduationDate, and gpa. "
+        "Education entries should include: institution, degree (associate's, bachelor's, master's, etc), major, minor, graduationDate, and gpa. "
         "Experience entries should include: company, jobTitle, startDate, endDate, and description. "
         "Project entries should include: title, startDate, endDate, and description. "
         "If there is an error, return an empty JSON object. "
@@ -123,8 +124,9 @@ def parser(text):
         print(f'Error getting the response: {e}')
         return {}
 
-
+'''
 def testFunc():
     uploaded = SimpleUploadedFile("resume.pdf", open("api/JulianOndrey_Resume.pdf", "rb").read(), content_type="application/pdf")
     text = extract_text_from_pdf(uploaded)
-    parser(text)
+    parsedData = parser(text)
+'''

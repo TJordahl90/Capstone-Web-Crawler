@@ -21,7 +21,7 @@ from .resumeParser import * # We need all the functions from this file
 import os
 from openai import OpenAI
 from datetime import datetime, timedelta
-from django.db.models import Sum, Count
+from django.db.models import Sum, Count, Q
 from django.db.models.functions import TruncMonth, TruncWeek, TruncDay, TruncYear
 from collections import Counter
 
@@ -327,7 +327,8 @@ class DocumentView(APIView):
         text = extract_text_from_pdf(resume_file) #run the resume parser and stores data in pasrsed_data
         skills = extractSkills(text)
         parsed_data = parser(text)
-        
+        #print(parsed_data)
+
         #Automatically adds it to the profile
         if skills:
             skillObjects = []
@@ -360,14 +361,19 @@ class DocumentView(APIView):
                     continue
             return None
 
-        # Parse education data
-        education_list = parsed_data.get('Education', [])
-        for edu in education_list:
+        # Get education data
+        educationList = parsed_data.get('Education', [])
+        
+        # Create education objects
+        for edu in educationList:
+            degreeType = edu['degree']
+            degreeObj = CommonDegrees.objects.get(name__icontains=degreeType.split()[0])
+
             try:
                 Education.objects.create(
                     account=account,
                     institution=edu.get('institution', ''),
-                    degree=edu.get('degree', ''),
+                    degree=degreeObj,
                     major=edu.get('major', ''),
                     minor=edu.get('minor', ''),
                     graduationDate=parse_date(edu.get('graduationDate')),
