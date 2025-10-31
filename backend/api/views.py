@@ -586,27 +586,50 @@ class JobDataVisualization(APIView):
     permission_classes = [IsAuthenticated]
 
 class JobStatisticsView(APIView):
-    permission_classes = [IsAuthenticated]
+    permission_classes = [AllowAny]
 
     def get(self, request):
         try:
             # For skills
-            skillCounts = CommonSkills.objects.annotate(job_count=Count('job_posting')).order_by('-job_count')
+            skillCounts = (
+                            CommonSkills.objects
+                            .annotate(count=Count('job_postings'))
+                            .values('name', 'count')
+                            .order_by('-count')
+                          )
+            
             topSkills = skillCounts[:10]
-            skillDictionary = [ {'name': skill.name, 'count': skill.job_count} for skill in topSkills ] 
-            #print(skillDictionary)
 
             # For career area
-            careerAreaList = JobPosting.objects.values_list('careerArea', flat=True)
-            careerAreaCounter = Counter()
-            for area in careerAreaList:
-                if area:
-                    careerAreaCounter.update(area)
+            careerAreas = (
+                                CommonCareers.objects
+                                .annotate(count=Count('job_postings'))
+                                .values('name', 'count')
+                                .order_by('-count')
+                          )
+            topCareers = careerAreas[:5]
 
-            topCareerAreas = careerAreaCounter.most_common(5)
-            careerAreaDict = [ {'name': career, 'value': count} for career, count in topCareerAreas ]
+            # For work models
+            topWorkModels = (
+                                CommonWorkModels.objects
+                                .annotate(count=Count('job_postings'))
+                                .values('name', 'count')
+                            )
 
-            return Response({'topSkills': skillDictionary, 'topCareerAreas': careerAreaDict}, status=200)
+            topExperienceLevels = (
+                                    CommonExperienceLevels.objects
+                                    .annotate(count=Count('job_postings'))
+                                    .filter(count__gt=0)
+                                    .values('name', 'count')
+                                  )
+
+            topEmploymentTypes = (
+                                    CommonEmploymentTypes.objects
+                                    .annotate(count=Count('job_postings'))
+                                    .values('name', 'count')
+                                 )
+            return Response({'topSkills': topSkills, 'topCareerAreas': topCareers, 'topWorkModels': topWorkModels, 'topExperienceLevels': topExperienceLevels, 'topEmploymentTypes': topEmploymentTypes}, status=200)
         
         except Exception as e:
+            print(str(e))
             return Response({'error': str(e)}, status=500)
