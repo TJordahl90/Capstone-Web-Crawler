@@ -230,14 +230,15 @@ def JobMatchingView(request):
     # We should add a page system to not call all the jobs at once.
     matchedJobIds = matchUsersToJobs(userAccount) # Call job matching function
     matchedJobs = list(JobPosting.objects.filter(id__in=matchedJobIds.keys()))
-    
-    for job in matchedJobs:
-        count = matchedJobIds.get(job.id, 0)
-        total = job.skills.count() or 1
-        job.matchPercent = round(count / total * 100)
 
-    matchedJobs.sort(key=lambda x: x.matchPercent, reverse=True) # this sorts the job list by percentage
-    serializedJobs = JobPostingSerializer(matchedJobs, many=True, context={'request': request}).data
+    orderedJobs = []
+    for jobID, score in sorted(matchedJobIds.items(), key=lambda item: item[1], reverse=True):
+        job = next((j for j in matchedJobs if j.id == jobID), None)
+        if job:
+            job.matchPercent = score
+            orderedJobs.append(job)
+    
+    serializedJobs = JobPostingSerializer(orderedJobs, many=True, context={'request': request}).data
     return Response(serializedJobs, status=200)
 
 @api_view(['GET'])
