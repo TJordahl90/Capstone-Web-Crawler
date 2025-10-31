@@ -50,8 +50,7 @@ const FindJobs = ({ jobPostTypeProp }) => {
         setFilters({
             employmentType: [],
             experienceLevel: [],
-            location: [],
-            datePosted: []
+            workModels: [],
         })
     };
 
@@ -986,17 +985,13 @@ const FindJobs = ({ jobPostTypeProp }) => {
                         checked={filters.employmentType.includes("part-time")}
                         onChange={() => toggleFilter("employmentType", "part-time")}
                     />
-                    <Form.Check type="checkbox" label="Internship" value="internship"
-                        checked={filters.employmentType.includes("internship")}
-                        onChange={() => toggleFilter("employmentType", "internship")}
-                    />
-                    <Form.Check type="checkbox" label="Contract" value="contract"
-                        checked={filters.employmentType.includes("contract")}
-                        onChange={() => toggleFilter("employmentType", "contract")}
-                    />
                     <hr />
 
                     <h6 className="mb-2">Experience Level</h6>
+                    <Form.Check type="checkbox" label="Internship" value="internship"
+                        checked={filters.experienceLevel.includes("internship")}
+                        onChange={() => toggleFilter("experienceLevel", "internship")}
+                    />
                     <Form.Check type="checkbox" label="Entry Level" value="entry"
                         checked={filters.experienceLevel.includes("entry")}
                         onChange={() => toggleFilter("experienceLevel", "entry")}
