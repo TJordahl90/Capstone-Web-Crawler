@@ -258,13 +258,29 @@ def JobSearchingView(request):
 def AllJobsView(request):
     """Returns all available jobs"""
     filters = request.data.get("filters", {}) # need to implement
+    
     page_number = request.data.get("page", 1)
 
-    all_jobs = JobPosting.objects.order_by('-id')
-    total_count = all_jobs.count()
+    jobs = JobPosting.objects.order_by('-id')
+    
+    #print(filters)
+    #Filter if necessary by each field
+    if(filters.get('employmentType')):
+       selectedTypes = CommonEmploymentTypes.objects.filter(name__in=filters['employmentType'])
+       jobs = jobs.filter(employmentTypes__in=selectedTypes)
+
+    if(filters.get('experienceLevel')):
+        selectedLevels = CommonExperienceLevels.objects.filter(name__in=filters['experienceLevel'])
+        jobs = jobs.filter(experienceLevels__in=selectedLevels)
+
+    if(filters.get('location')):
+        selectedLocations = CommonWorkModels.objects.filter(name__in=filters['location'])
+        jobs = jobs.filter(workModels__in=selectedLocations)
+
+    total_count = jobs.count()
     start = (page_number - 1) * 15
     end = start + 15
-    paginated_jobs = all_jobs[start:end]
+    paginated_jobs = jobs[start:end]
     
     serializedJobs = JobPostingSerializer(paginated_jobs, many=True, context={'request': request}).data
     return Response({'count': total_count, 'jobs': serializedJobs}, status=200)
