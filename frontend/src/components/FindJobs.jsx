@@ -988,9 +988,9 @@ const FindJobs = ({ jobPostTypeProp }) => {
                     <hr />
 
                     <h6 className="mb-2">Experience Level</h6>
-                    <Form.Check type="checkbox" label="Internship" value="internship"
-                        checked={filters.experienceLevel.includes("internship")}
-                        onChange={() => toggleFilter("experienceLevel", "internship")}
+                    <Form.Check type="checkbox" label="Internship" value="intern"
+                        checked={filters.experienceLevel.includes("intern")}
+                        onChange={() => toggleFilter("experienceLevel", "intern")}
                     />
                     <Form.Check type="checkbox" label="Junior Level" value="junior"
                         checked={filters.experienceLevel.includes("junior")}

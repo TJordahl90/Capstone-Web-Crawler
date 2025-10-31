@@ -261,21 +261,25 @@ def AllJobsView(request):
     
     page_number = request.data.get("page", 1)
 
-    jobs = JobPosting.objects.order_by('-id')
+    jobs = JobPosting.objects.order_by('-id').prefetch_related(
+        'skills',
+        'careers',
+        'degrees',
+        'experienceLevels',
+        'employmentTypes',
+        'workModels'
+    )
     
     #print(filters)
     #Filter if necessary by each field
     if(filters.get('employmentType')):
-       selectedTypes = CommonEmploymentTypes.objects.filter(name__in=filters['employmentType'])
-       jobs = jobs.filter(employmentTypes__in=selectedTypes)
+       jobs = jobs.filter(employmentTypes__name__in=filters['employmentType']).distinct()
 
     if(filters.get('experienceLevel')):
-        selectedLevels = CommonExperienceLevels.objects.filter(name__in=filters['experienceLevel'])
-        jobs = jobs.filter(experienceLevels__in=selectedLevels)
+        jobs = jobs.filter(experienceLevels__name__in=filters['experienceLevel'])
 
     if(filters.get('location')):
-        selectedLocations = CommonWorkModels.objects.filter(name__in=filters['location'])
-        jobs = jobs.filter(workModels__in=selectedLocations)
+        jobs = jobs.filter(workModels__name__in=filters['location'])
 
     total_count = jobs.count()
     start = (page_number - 1) * 15
