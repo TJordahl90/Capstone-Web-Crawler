@@ -11,7 +11,7 @@ import time, logging, re, csv
 from webdriver_manager.chrome import ChromeDriverManager
 from datetime import datetime
 import pathlib
-from .scraper_ai import extract_job_posting_summary
+from .scraper_helper_functions import *
 # from summarizer import getJobSummary
 
 current_file_path = pathlib.Path(__file__)

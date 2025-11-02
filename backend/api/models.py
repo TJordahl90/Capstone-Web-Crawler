@@ -97,14 +97,14 @@ class JobPosting(models.Model):
     title = models.CharField(max_length=200)
     description = models.TextField()
     summary = models.TextField(blank=True)
-    requirements = models.TextField(blank=True)
+    requirements = models.TextField(blank=True) # honestly probably not necessary, can be saved in description
     skills = models.ManyToManyField(CommonSkills, related_name='job_postings', blank=True)
     careers = models.ManyToManyField(CommonCareers, related_name='job_postings', blank=True)
     degrees = models.ManyToManyField(CommonDegrees, related_name='job_postings', blank=True)
     experienceLevels = models.ManyToManyField(CommonExperienceLevels, related_name='job_postings', blank=True)
     employmentTypes = models.ManyToManyField(CommonEmploymentTypes, related_name='job_postings', blank=True)
     workModels = models.ManyToManyField(CommonWorkModels, related_name='job_postings', blank=True)
-    location = models.CharField(max_length=200, blank=True, null=True)
+    location = models.CharField(max_length=200, blank=True, null=True) # lockheed has some long locations, got to increase i think
     datePosted = models.DateField(null=True, blank=True)
     salary = models.CharField(max_length=100, blank=True, null=True)
     jobURL = models.URLField(max_length=500)

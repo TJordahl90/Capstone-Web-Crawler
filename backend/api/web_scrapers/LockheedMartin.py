@@ -9,16 +9,38 @@ from selenium.common.exceptions import TimeoutException, NoSuchElementException
 from webdriver_manager.chrome import ChromeDriverManager
 import time, csv, logging, re
 from datetime import datetime
-# from .scraper_ai import extract_job_details_with_openai
+import pathlib
+from .scraper_helper_functions import *
 
 # Set up logging
 logging.basicConfig(level=logging.INFO, format='%(asctime)s - %(levelname)s - %(message)s')
 
-def extract_short_description(soup):
-    """Extracts the short description (important part of full description)"""
+current_file_path = pathlib.Path(__file__)
+base_dir = current_file_path.parent.resolve()
+skills_file = base_dir / "keywords_skills.txt"
+careers_file = base_dir / "keywords_careers.txt"
+
+def load_skill_keywords():
+    try:
+        with open(skills_file, 'r') as file:
+            return [line.strip() for line in file if line.strip()]
+    except Exception as e:
+        print(f"Failed to load skill keywords: {e}")
+        return []
+    
+def load_career_keywords():
+    try:
+        with open(careers_file, 'r') as file:
+            return [line.strip() for line in file if line.strip()]
+    except Exception as e:
+        print(f"Failed to load keywords: {e}")
+        return []
+
+def extract_description(soup):
+    """Extracts the description from rest of job posting"""
     start = soup.find("b", string=re.compile(r"Description", re.I))
     end = soup.find("b", string=re.compile(r"Basic Qualifications", re.I))
-    if not start: return
+    if not start: return ""
 
     elements = [str(start)]
     for node in start.next_siblings:
@@ -29,9 +51,8 @@ def extract_short_description(soup):
     section_soup = BeautifulSoup(section_html, "html.parser")
     return section_soup.get_text(separator="\n", strip=True).strip()
    
-
 def extract_requirements(soup):
-    """Extracts requirements as  a block of text"""
+    """Extracts requirements as a block of text"""
     start = soup.find("b", string=re.compile(r"Basic Qualifications", re.I))
     end = soup.find("b", string=re.compile(r"(Security Clearance Statement|Clearance Statement|Clearance Level)", re.I))
     if not start: return ""
@@ -48,6 +69,8 @@ def extract_requirements(soup):
 def lockheed_scraper():
     """Scrapes all the data"""
     job_data = [] 
+    skill_keywords = load_skill_keywords()
+    career_keywords = load_career_keywords()
 
     # Setup Chrome options and Chrome driver
     chrome_options = Options()
@@ -78,17 +101,21 @@ def lockheed_scraper():
         driver.execute_script("arguments[0].click();", career_toggle)
         time.sleep(2)
 
-        cyber_checkbox = wait.until(EC.presence_of_element_located((By.XPATH, "//input[@data-display='Cyber']")))
-        driver.execute_script("arguments[0].click();", cyber_checkbox)
+        ai_checkbox = wait.until(EC.presence_of_element_located((By.XPATH, "//input[contains(@data-display, 'AI/Machine Learning')]")))
+        driver.execute_script("arguments[0].click();", ai_checkbox)
         time.sleep(3)
+
+        # cyber_checkbox = wait.until(EC.presence_of_element_located((By.XPATH, "//input[@data-display='Cyber']")))
+        # driver.execute_script("arguments[0].click();", cyber_checkbox)
+        # time.sleep(3)
 
         data_checkbox = wait.until(EC.presence_of_element_located((By.XPATH, "//input[@data-display='Data Science']")))
         driver.execute_script("arguments[0].click();", data_checkbox)
         time.sleep(3)
 
-        ai_checkbox = wait.until(EC.presence_of_element_located((By.XPATH, "//input[contains(@data-display, 'AI/Machine Learning')]")))
-        driver.execute_script("arguments[0].click();", ai_checkbox)
-        time.sleep(3)
+        # electric_checkbox = wait.until(EC.presence_of_element_located((By.XPATH, "//input[@data-display='Electrical Engineering']")))
+        # driver.execute_script("arguments[0].click();", electric_checkbox)
+        # time.sleep(3)
 
         it_checkbox = wait.until(EC.presence_of_element_located((By.XPATH, "//input[@data-display='Information Technology']")))
         driver.execute_script("arguments[0].click();", it_checkbox)
@@ -97,10 +124,10 @@ def lockheed_scraper():
         software_checkbox = wait.until(EC.presence_of_element_located((By.XPATH, "//input[@data-display='Software Engineering']")))
         driver.execute_script("arguments[0].click();", software_checkbox)
         time.sleep(3)
-        
-        systems_checkbox = wait.until(EC.presence_of_element_located((By.XPATH, "//input[@data-display='Systems Engineering']")))
-        driver.execute_script("arguments[0].click();", systems_checkbox)
-        time.sleep(3)
+
+        # systems_checkbox = wait.until(EC.presence_of_element_located((By.XPATH, "//input[@data-display='Systems Engineering']")))
+        # driver.execute_script("arguments[0].click();", systems_checkbox)
+        # time.sleep(3)
 
         state_toggle = wait.until(EC.presence_of_element_located((By.ID, "region-toggle")))
         driver.execute_script("arguments[0].click();", state_toggle)
@@ -112,12 +139,13 @@ def lockheed_scraper():
 
         # Find and click "Show All" using JavaScript
         try:
-            show_all = wait.until(EC.presence_of_element_located((By.CLASS_NAME, "pagination-show-all")))
+            show_all_container = wait.until(EC.presence_of_element_located((By.CLASS_NAME, "pagination-all")))
+            show_all = show_all_container.find_element(By.CLASS_NAME, "pagination-show-all")
             driver.execute_script("arguments[0].click();", show_all)
             print("Clicked 'Show All' button")
-            time.sleep(3)
+            time.sleep(5)
         except TimeoutException:
-            print("No 'Show All' button found - likely too few results on page")
+            print("No 'Show All' button found")
         except Exception as e:
             print(f"Could not click 'Show All' button: {e}")
 
@@ -170,9 +198,9 @@ def lockheed_scraper():
                 driver.get(job["link"])
 
                 job_details = {
-                    "company": "Lockheed Martin", "title": "", "fullDescription": "", "shortDescription": "", "requirements": "",
-                    "skills": [], "location": "", "datePosted": "", "salary": "", "jobURL": job["link"], 
-                    "experienceLevel": "", "employmentType": "", "locationType": "", "degreeType": [], "careerArea": [] 
+                    "company": "Lockheed Martin", "title": "", "description": "", "summary": "", "requirements": "",
+                    "skills": [], "careers": [], "degrees": [], "experienceLevels": [], "employmentTypes": [], "workModels": [],   
+                    "location": "", "datePosted": None, "salary": "", "jobURL": job["link"],   
                 } 
 
                 try:
@@ -206,24 +234,20 @@ def lockheed_scraper():
                         bold.insert_before("\n\n")
 
                     cleaned_text = clean_soup.get_text(separator="\n", strip=True)
-                    full_description = f"{title}\n{location}\n{cleaned_text}"
-                    job_details["fullDescription"] = full_description
+                    complete_jobpost = f"{title}\n{location}\n{cleaned_text}".lower()
+                    jobpost_tokens = tokenizer(complete_jobpost)
 
+                    job_details['description'] = extract_description(raw_soup)
+                    # job_details['summary'] = extract_job_posting_summary(complete_jobpost)
+                    job_details['summary'] = "This will be the AI summary. Not included until testing is done."
                     job_details['requirements'] = extract_requirements(raw_soup)
-                    job_details['shortDescription'] = extract_short_description(raw_soup)
 
-                    # extracted_details = extract_job_details_with_openai(full_description)
-
-                    # if extracted_details:
-                    #     job_details['skills'] = extracted_details.get('skills', [])
-                    #     job_details["careerArea"] = extracted_details.get("careerArea", [])
-                    #     job_details["degreeType"] = extracted_details.get("degreType", [])
-                    #     job_details["salary"] = extracted_details.get("salary", None)
-                    #     job_details["experienceLevel"] = extracted_details.get("experienceLevel", None)
-                    #     job_details["employmentType"] = extracted_details.get("employmentType", None)
-                    #     job_details["locationType"] = extracted_details.get("locationType", None)
-                    # else:
-                    #     print("Error extracting job details using OpenAI API.")
+                    job_details['skills'] = extract_skills_and_careers(jobpost_tokens, complete_jobpost, skill_keywords)
+                    job_details['careers'] = extract_skills_and_careers(jobpost_tokens, complete_jobpost, career_keywords)
+                    job_details['degrees'] = extract_degree(complete_jobpost)
+                    job_details['experienceLevels'] = extract_experience(title.lower())
+                    job_details['employmentTypes'] = extract_employment_type(complete_jobpost)
+                    job_details['workModels'] = extract_work_model(complete_jobpost)
 
                 except Exception as e:
                     print(f"Error extracting data: {e}")
@@ -241,8 +265,8 @@ def lockheed_scraper():
         # Save detailed job information to JSON
         if job_data:
             fieldnames = [
-                "company", "title", "fullDescription", "shortDescription", "requirements", "skills", "location", "datePosted", 
-                "salary", "jobURL", "experienceLevel", "employmentType", "locationType", "degreeType", "careerArea" 
+                "company", "title", "description", "summary", "requirements","skills", "careers", "degrees", 
+                "experienceLevels", "employmentTypes", "workModels", "location", "datePosted", "salary", "jobURL",
             ]
             with open("lockheed_martin_data.csv", "w", newline="", encoding="utf-8") as file:
                 writer = csv.DictWriter(file, fieldnames=fieldnames, extrasaction='ignore')
@@ -268,7 +292,6 @@ def lockheed_scraper():
     finally:
         driver.quit()
 
-
-# If running this script directly
 if __name__ == "__main__":
     lockheed_scraper()
+
