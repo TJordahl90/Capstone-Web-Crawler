@@ -10,9 +10,9 @@ class Command(BaseCommand):
         # list all scrapers here
         scrapers = [
             # Fugetec.fugetec,
-            # TexasInstruments.TexInstr,
+            TexasInstruments.TexInstr,
             # LockheedMartin.lockheed_scraper
-            JSearchAPI.jsearch_api
+            # JSearchAPI.jsearch_api
         ]
 
         # for scraping log
