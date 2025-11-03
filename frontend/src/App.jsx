@@ -16,6 +16,7 @@ import InterviewChatbot from "./components/InterviewChatbot";
 import Settings from "./components/Settings";
 import backgroundImage from "./assets/background4.png";
 import "bootstrap/dist/css/bootstrap.min.css";
+import api from "./api";
 
 function App() {
 	const location = useLocation();
@@ -27,6 +28,19 @@ function App() {
 		window.innerWidth > 480 && window.innerWidth <= 910
 	);
 	const [isMobile, setIsMobile] = useState(window.innerWidth <= 480);
+
+	useEffect(() => {
+        // Fetch CSRF token once on app load
+        const initCSRF = async () => {
+            try {
+                await api.get("/csrf/"); // sets CSRF cookie in browser
+                console.log("CSRF token initialized");
+            } catch (err) {
+                console.error("Failed to initialize CSRF", err);
+            }
+        };
+        initCSRF();
+    }, []);
 
 	useEffect(() => {
 		const handleResize = () => {
