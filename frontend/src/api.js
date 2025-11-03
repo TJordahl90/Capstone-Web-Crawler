@@ -31,6 +31,8 @@ const api = axios.create({
 
 api.interceptors.request.use((config) => {
     const csrfToken = getCookie('csrftoken'); // read cookie dynamically
+    console.log("CSRFToken from getCookie");
+    console.log(csrfToken);
     if (csrfToken && ['post', 'put', 'patch', 'delete'].includes(config.method)) {
         config.headers['X-CSRFToken'] = csrfToken;
     }
