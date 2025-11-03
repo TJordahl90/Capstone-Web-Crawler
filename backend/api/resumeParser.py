@@ -1,5 +1,6 @@
 import re
-import fitz  # PyMuPDF
+#import fitz  # PyMuPDF
+import pdfplumber
 #import spacy
 from api.models import CommonSkills
 from django.core.files.uploadedfile import SimpleUploadedFile
@@ -11,12 +12,12 @@ from .models import *
 def extract_text_from_pdf(pdf_file):
     text = ""
     pdf_file.open('rb')
-    fileBytes = pdf_file.read()
-    pdf_file.seek(0)
 
-    with fitz.open(stream=fileBytes, filetype='pdf') as doc:
-        for page in doc:
-            text += page.get_text() + '\n'
+    with pdfplumber.open(pdf_file) as pdf:
+        for page in pdf.pages:
+            text+=page.extract_text() + '\n'
+            
+    pdf_file.seek(0)
 
     return text
 
