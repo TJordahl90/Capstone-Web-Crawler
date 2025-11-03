@@ -172,6 +172,7 @@ def lockheed_scraper():
                     # Extract all the needed data
                     job_details['company'] = 'Lockheed Martin'
                     job_details['jobURL'] = job['link']
+                    job_details['logoURL'] = LOCKHEED_MARTIN_LOGO
                     job_details['salary'] = None
 
                     job_header_container = wait.until(EC.presence_of_element_located((By.CLASS_NAME, "ajd_header__job-heading")))
@@ -220,7 +221,8 @@ def lockheed_scraper():
         if job_data:
             fieldnames = [
                 "company", "title", "description", "summary", "skills", "careers", "degrees", 
-                "experienceLevels", "employmentTypes", "workModels", "location", "datePosted", "salary", "jobURL",
+                "experienceLevels", "employmentTypes", "workModels", "location", "datePosted", 
+                "salary", "jobURL", "logoURL"
             ]
             with open("lockheed_martin_software_data.csv", "w", newline="", encoding="utf-8") as file:
                 writer = csv.DictWriter(file, fieldnames=fieldnames, extrasaction='ignore')

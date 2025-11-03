@@ -40,11 +40,11 @@ class Command(BaseCommand):
                                 title=job['title'],
                                 description=job['description'],
                                 summary=job['summary'],
-                                requirements="",
                                 location=job['location'],
                                 datePosted=job['datePosted'],
                                 salary=job['salary'],
                                 jobURL=job['jobURL'],
+                                logoURL=job['logoURL']
                             )
 
                             skill_names = job['skills']

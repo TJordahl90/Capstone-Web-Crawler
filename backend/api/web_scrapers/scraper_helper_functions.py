@@ -128,4 +128,8 @@ def extract_work_model(description):
 
     return set(workmodels)
 
-    
+
+# --------- COMPANY LOGO URLS -------------#
+TEXAS_INSTRUMENTS_LOGO = 'https://companieslogo.com/img/orig/TXN-e197f953.png?t=1720244494'    
+LOCKHEED_MARTIN_LOGO = 'https://companieslogo.com/img/orig/LMT-db3de619.png?t=1720244492'
+JPMCHASE_LOGO = 'https://companieslogo.com/img/orig/JPM-6b337108.png?t=1720244492'
