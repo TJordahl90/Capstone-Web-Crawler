@@ -33,7 +33,7 @@ api.interceptors.request.use((config) => {
     const csrfToken = getCookie('csrftoken'); // read cookie dynamically
     console.log("CSRFToken from getCookie");
     console.log(csrfToken);
-    if (csrfToken && ['post', 'put', 'patch', 'delete'].includes(config.method)) {
+    if (csrfToken) {
         config.headers['X-CSRFToken'] = csrfToken;
     }
     return config;
