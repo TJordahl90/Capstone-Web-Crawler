@@ -1,0 +1,175 @@
+from selenium import webdriver
+from selenium.webdriver.common.by import By
+from selenium.webdriver.support.ui import WebDriverWait
+from selenium.webdriver.support import expected_conditions as EC
+import time
+import pandas as pd
+import random
+import sys
+
+# Setup
+driver = webdriver.Chrome()
+driver.get("https://jpmc.fa.oraclecloud.com/hcmUI/CandidateExperience/en/sites/CX_1001/jobs?keyword=Computer&lastSelectedFacet=CATEGORIES&location=Dallas%2C+TX%2C+United+States&locationId=300000020678217&locationLevel=city&mode=location&radius=50&radiusUnit=MI&selectedCategoriesFacet=300000086152753%3B300000086152508%3B300000086251864%3B300026872751543%3B300000086251911%3B300000086250134")
+
+# Accept cookies if needed
+try:
+    cookie_button = WebDriverWait(driver, 5).until(
+        EC.presence_of_element_located((By.ID, "cookie-accept-button"))
+    )
+    cookie_button.click()
+    time.sleep(1)
+except:
+    pass
+
+# Scroll to load all jobs
+last_height = driver.execute_script("return document.body.scrollHeight")
+while True:
+    driver.execute_script("window.scrollTo(0, document.body.scrollHeight);")
+    time.sleep(2)
+    new_height = driver.execute_script("return document.body.scrollHeight")
+    if new_height == last_height:
+        break
+    last_height = new_height
+
+# Extract links and store in array
+links = driver.find_elements(By.CSS_SELECTOR, "a.job-grid-item__link")
+job_urls = [link.get_attribute("href") for link in links]
+
+total_jobs = len(job_urls)
+print(f"\n{'='*60}")
+print(f"Found {total_jobs} job listings. Starting to scrape details...")
+print(f"{'='*60}\n")
+
+# Array to store all job data
+jobs_data = []
+
+# Visit each job URL
+for index, url in enumerate(job_urls, 1):
+    try:
+        # Calculate completion percentage
+        completion_percentage = (index / total_jobs) * 100
+        
+        # Create progress bar
+        bar_length = 40
+        filled_length = int(bar_length * index // total_jobs)
+        bar = '█' * filled_length + '░' * (bar_length - filled_length)
+        
+        # Print loading indicator
+        sys.stdout.write(f'\r[{bar}] {completion_percentage:.1f}% | Job {index}/{total_jobs}')
+        sys.stdout.flush()
+        
+        # Navigate to job page
+        driver.get(url)
+        
+        # Random wait between 3-7 seconds to avoid detection
+        wait_time = random.uniform(3, 7)
+        time.sleep(wait_time)
+        
+        # Wait for page to load
+        WebDriverWait(driver, 10).until(
+            EC.presence_of_element_located((By.CLASS_NAME, "job-details__title"))
+        )
+        
+        # Hard-coded company name
+        company = "JPMorganChase"
+        
+        # Scrape Job Title
+        try:
+            title = driver.find_element(By.CLASS_NAME, "job-details__title").text
+        except:
+            title = "N/A"
+        
+        # Scrape Description
+        try:
+            description = driver.find_element(By.CLASS_NAME, "job-details__description-content").text
+        except:
+            description = "N/A"
+        
+        # Scrape Date Posted
+        try:
+            date_posted_elements = driver.find_elements(By.CSS_SELECTOR, "span.job-meta__subitem")
+            date_posted = "N/A"
+            for element in date_posted_elements:
+                text = element.text
+                if "/" in text and ("AM" in text or "PM" in text):
+                    date_posted = text
+                    break
+        except:
+            date_posted = "N/A"
+        
+        # Scrape Location
+        try:
+            location = driver.find_element(By.CLASS_NAME, "job-meta__pin-item").text.strip()
+        except:
+            location = "N/A"
+        
+        # Scrape Employment Type
+        try:
+            employment_type_elements = driver.find_elements(By.CSS_SELECTOR, "span.job-meta__subitem")
+            employment_type = "N/A"
+            for element in employment_type_elements:
+                text = element.text.lower()
+                if "full time" in text or "part time" in text or "contract" in text:
+                    employment_type = element.text
+                    break
+        except:
+            employment_type = "N/A"
+        
+        # Scrape Salary
+        try:
+            salary_elements = driver.find_elements(By.CSS_SELECTOR, "span.job-meta__subitem")
+            salary = "N/A"
+            for element in salary_elements:
+                text = element.text
+                if "$" in text and ("," in text or "." in text):
+                    salary = text
+                    break
+        except:
+            salary = "N/A"
+        
+        # Store data
+        job_data = {
+            "Company": company,
+            "Job Title": title,
+            "Description": description,
+            "Date Posted": date_posted,
+            "Location": location,
+            "Employment Type": employment_type,
+            "Salary": salary,
+            "Job URL": url
+        }
+        
+        jobs_data.append(job_data)
+        
+    except Exception as e:
+        # Store partial data even if error occurs
+        jobs_data.append({
+            "Company": "JPMorganChase",
+            "Job Title": "Error",
+            "Description": "Error",
+            "Date Posted": "Error",
+            "Location": "Error",
+            "Employment Type": "Error",
+            "Salary": "Error",
+            "Job URL": url
+        })
+        continue
+
+# Print completion
+print(f"\n\n{'='*60}")
+print(f"✓ Scraping complete! Successfully scraped {len(jobs_data)} jobs")
+print(f"{'='*60}\n")
+
+      
+
+# Close browser
+driver.quit()
+
+# Create DataFrame and save to CSV
+df = pd.DataFrame(jobs_data)
+df.to_csv("jpmc_jobs_detailed.csv", index=False)
+
+print(f"Data saved to: jpmc_jobs_detailed.csv")
+print(f"\nColumns included:")
+for col in df.columns:
+    print(f"  - {col}")
