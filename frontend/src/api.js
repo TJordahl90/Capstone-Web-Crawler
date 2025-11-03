@@ -15,28 +15,18 @@ function getCookie(name) {
     }
     return cookieValue;
 }
-/*
+
 axios.defaults.xsrfCookieName = 'csrftoken'
 axios.defaults.xsrfHeaderName = "X-CSRFToken"
 axios.defaults.withCredentials = true
 axios.defaults.withXSRFToken = true
 axios.defaults.headers.common['X-CSRFToken'] = getCookie('csrftoken');
-*/
+
 
 // Create an Axios instance
 const api = axios.create({
     baseURL: 'https://capstone-web-crawler.onrender.com/api',
     withCredentials: true,
 });
-
-api.interceptors.request.use((config) => {
-    const csrfToken = getCookie('csrftoken'); // read cookie dynamically
-    console.log("CSRFToken from getCookie");
-    console.log(csrfToken);
-    if (csrfToken) {
-        config.headers['X-CSRFToken'] = csrfToken;
-    }
-    return config;
-}, (error) => Promise.reject(error));
 
 export default api;
