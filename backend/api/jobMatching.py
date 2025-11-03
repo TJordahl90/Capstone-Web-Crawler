@@ -3,11 +3,11 @@ from api.models import Account, JobPosting
 from django.db.models import Q, Prefetch
 
 def matchUsersToJobs(account):
-    expLevels = set(account.experienceLevels.all())
-    careers = set(account.careers.all())
-    skills = set(account.skills.all())
-    employmentTypes = set(account.employmentTypes.all())
-    workModels = set(account.workModels.all())
+    expLevels = set(account.experienceLevels.values_list('id', flat=True))
+    careers = set(account.careers.values_list('id', flat=True))
+    skills = set(account.skills.values_list('id', flat=True))
+    employmentTypes = set(account.employmentTypes.values_list('id', flat=True))
+    workModels = set(account.workModels.values_list('id', flat=True))
 
     jobs = JobPosting.objects.prefetch_related( 'skills', 'careers', 'experienceLevels', 'employmentTypes', 'workModels').all()
 
@@ -16,11 +16,11 @@ def matchUsersToJobs(account):
     for job in jobs:
         score = 0
 
-        jobSkills = set(job.skills.all())
-        jobCareers = set(job.careers.all())
-        jobExp = set(job.experienceLevels.all())
-        jobEmploymentTypes = set(job.employmentTypes.all())
-        jobWorkModels = set(job.workModels.all())
+        jobSkills = {s.id for s in job.skills.all()}
+        jobCareers = {c.id for c in job.careers.all()}
+        jobExp = {e.id for e in job.experienceLevels.all()}
+        jobEmploymentTypes = {e.id for e in job.employmentTypes.all()}
+        jobWorkModels = {w.id for w in job.workModels.all()}
 
         # Ranking skills
         numJobSkils = len(jobSkills)
@@ -31,11 +31,11 @@ def matchUsersToJobs(account):
 
         # Ranking experience levels
         if(expLevels & jobExp):
-            score += 50
+            score += 40
         
         # Ranking careers
         if(careers & jobCareers):
-            score += 10
+            score += 20
         
         # Ranking employemnt types
         if(employmentTypes & jobEmploymentTypes):
@@ -45,11 +45,12 @@ def matchUsersToJobs(account):
         if(workModels & jobWorkModels):
             score += 10
 
-        jobScores[job.id] = score
+        if(score > 50):
+            jobScores[job.id] = score
 
     rankedJobs = dict(sorted(jobScores.items(), key=lambda item: item[1], reverse=True))
 
-    return dict(list(rankedJobs.items())[:15])
+    return dict(list(rankedJobs.items())[:10])
 
 def searchForJobs(preference):
     search = preference.strip().lower() # Take input and strip spaces off ends. Lowercase if necessary
