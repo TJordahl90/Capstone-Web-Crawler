@@ -25,6 +25,7 @@ from django.db.models import Sum, Count, Q
 from django.db.models.functions import TruncMonth, TruncWeek, TruncDay, TruncYear
 from collections import Counter
 
+@api_view(['GET'])
 @permission_classes([AllowAny])
 @ensure_csrf_cookie
 def CsrfTokenView(request):
