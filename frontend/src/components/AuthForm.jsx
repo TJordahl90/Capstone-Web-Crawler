@@ -76,7 +76,7 @@ const AuthForm = ({ isLogin }) => {
             style={{
                 height: "100vh",
                 width: "100%",
-                backgroundImage: `url(${backgroundImage})`,
+                
                 backgroundSize: "cover",
                 backgroundPosition: "center",
                 backgroundRepeat: "no-repeat",
