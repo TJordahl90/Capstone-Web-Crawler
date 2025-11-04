@@ -152,6 +152,7 @@ DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 CORS_ALLOWED_ORIGINS = [
     'https://capstone-web-crawler.onrender.com',
     'https://capstone-web-crawler-frontend.onrender.com',
+    'https://www.northstarjobs.work',
     'https://northstarjobs.work',
     'https://api.northstarjobs.work',
 ]
@@ -159,6 +160,7 @@ CORS_ALLOWED_ORIGINS = [
 CSRF_TRUSTED_ORIGINS = [
     'https://capstone-web-crawler.onrender.com',
     'https://capstone-web-crawler-frontend.onrender.com',
+    'https://www.northstarjobs.work',
     'https://northstarjobs.work',
     'https://api.northstarjobs.work',
 ]
