@@ -12,6 +12,7 @@ class Command(BaseCommand):
             # Fugetec.fugetec,
             # TexasInstruments.TexInstr,
             LockheedMartinSoftware.lockheed_scraper,
+            JPMChase.jpmc_scraper,
             # LockheedMartinSystems.lockheed_scraper,
             # LockheedMartinOtherTech.lockheed_scraper,
             # JSearchAPI.jsearch_api
