@@ -1,4 +1,9 @@
-from bs4 import BeautifulSoup, NavigableString
+#### THIS SCRAPER ONLY OBTAINS SOFTWARE ENGINEERING JOBS FROM LOCKHEED
+### 
+##
+#
+
+from bs4 import BeautifulSoup
 from selenium import webdriver
 from selenium.webdriver.chrome.service import Service
 from selenium.webdriver.chrome.options import Options
@@ -9,37 +14,12 @@ from selenium.common.exceptions import TimeoutException, NoSuchElementException
 from webdriver_manager.chrome import ChromeDriverManager
 import time, csv, logging, re
 from datetime import datetime
-import pathlib
 from .scraper_helper_functions import *
-
-# Set up logging
-logging.basicConfig(level=logging.INFO, format='%(asctime)s - %(levelname)s - %(message)s')
-
-current_file_path = pathlib.Path(__file__)
-base_dir = current_file_path.parent.resolve()
-skills_file = base_dir / "keywords_skills.txt"
-careers_file = base_dir / "keywords_careers.txt"
-
-def load_skill_keywords():
-    try:
-        with open(skills_file, 'r') as file:
-            return [line.strip() for line in file if line.strip()]
-    except Exception as e:
-        print(f"Failed to load skill keywords: {e}")
-        return []
-    
-def load_career_keywords():
-    try:
-        with open(careers_file, 'r') as file:
-            return [line.strip() for line in file if line.strip()]
-    except Exception as e:
-        print(f"Failed to load keywords: {e}")
-        return []
 
 def extract_description(soup):
     """Extracts the description from rest of job posting"""
     start = soup.find("b", string=re.compile(r"Description", re.I))
-    end = soup.find("b", string=re.compile(r"Basic Qualifications", re.I))
+    end = soup.find("strong", string=re.compile(r"Lockheed Martin is an equal opportunity", re.I))
     if not start: return ""
 
     elements = [str(start)]
@@ -49,28 +29,20 @@ def extract_description(soup):
 
     section_html = "".join(elements)
     section_soup = BeautifulSoup(section_html, "html.parser")
-    return section_soup.get_text(separator="\n", strip=True).strip()
-   
-def extract_requirements(soup):
-    """Extracts requirements as a block of text"""
-    start = soup.find("b", string=re.compile(r"Basic Qualifications", re.I))
-    end = soup.find("b", string=re.compile(r"(Security Clearance Statement|Clearance Statement|Clearance Level)", re.I))
-    if not start: return ""
 
-    elements = [str(start)]
-    for node in start.next_siblings:
-        if node == end: break
-        elements.append(str(node))
+    for br in section_soup.find_all("br"):
+        br.replace_with("\n")
+    for bold in section_soup.find_all(["b", "strong"]):
+        bold.insert_before("\n\n")
 
-    section_html = "".join(elements)
-    section_soup = BeautifulSoup(section_html, "html.parser")
     return section_soup.get_text(separator="\n", strip=True).strip()
 
 def lockheed_scraper():
     """Scrapes all the data"""
+    logging.basicConfig(level=logging.INFO, format='%(asctime)s - %(levelname)s - %(message)s')
+    skill_keywords = load_keywords("keywords_skills.txt")
+    career_keywords = load_keywords("keywords_careers.txt")
     job_data = [] 
-    skill_keywords = load_skill_keywords()
-    career_keywords = load_career_keywords()
 
     # Setup Chrome options and Chrome driver
     chrome_options = Options()
@@ -101,33 +73,9 @@ def lockheed_scraper():
         driver.execute_script("arguments[0].click();", career_toggle)
         time.sleep(2)
 
-        ai_checkbox = wait.until(EC.presence_of_element_located((By.XPATH, "//input[contains(@data-display, 'AI/Machine Learning')]")))
-        driver.execute_script("arguments[0].click();", ai_checkbox)
-        time.sleep(3)
-
-        # cyber_checkbox = wait.until(EC.presence_of_element_located((By.XPATH, "//input[@data-display='Cyber']")))
-        # driver.execute_script("arguments[0].click();", cyber_checkbox)
-        # time.sleep(3)
-
-        data_checkbox = wait.until(EC.presence_of_element_located((By.XPATH, "//input[@data-display='Data Science']")))
-        driver.execute_script("arguments[0].click();", data_checkbox)
-        time.sleep(3)
-
-        # electric_checkbox = wait.until(EC.presence_of_element_located((By.XPATH, "//input[@data-display='Electrical Engineering']")))
-        # driver.execute_script("arguments[0].click();", electric_checkbox)
-        # time.sleep(3)
-
-        it_checkbox = wait.until(EC.presence_of_element_located((By.XPATH, "//input[@data-display='Information Technology']")))
-        driver.execute_script("arguments[0].click();", it_checkbox)
-        time.sleep(3)
-
         software_checkbox = wait.until(EC.presence_of_element_located((By.XPATH, "//input[@data-display='Software Engineering']")))
         driver.execute_script("arguments[0].click();", software_checkbox)
         time.sleep(3)
-
-        # systems_checkbox = wait.until(EC.presence_of_element_located((By.XPATH, "//input[@data-display='Systems Engineering']")))
-        # driver.execute_script("arguments[0].click();", systems_checkbox)
-        # time.sleep(3)
 
         state_toggle = wait.until(EC.presence_of_element_located((By.ID, "region-toggle")))
         driver.execute_script("arguments[0].click();", state_toggle)
@@ -135,7 +83,29 @@ def lockheed_scraper():
 
         texas_checkbox = wait.until(EC.presence_of_element_located((By.XPATH, "//input[@data-display='Texas, United States']")))
         driver.execute_script("arguments[0].click();", texas_checkbox)
-        time.sleep(5)
+        time.sleep(3)
+
+        try:
+            dallas_toggle = wait.until(EC.presence_of_element_located((By.XPATH, "//input[@data-display='Dallas, Texas, United States']")))
+            driver.execute_script("arguments[0].click();", dallas_toggle)
+            time.sleep(3)
+        except TimeoutException:
+            print("Dallas toggle not found, skipping...")
+
+        try:
+            fortworth_toggle = wait.until(EC.presence_of_element_located((By.XPATH, "//input[@data-display='Fort Worth, Texas, United States']")))
+            driver.execute_script("arguments[0].click();", fortworth_toggle)
+            time.sleep(3)
+        except TimeoutException:
+            print("Fort-Worth toggle not found, skipping...")
+
+        try:
+            grandprairie_toggle = wait.until(EC.presence_of_element_located((By.XPATH, "//input[@data-display='Grand Prairie, Texas, United States']")))
+            driver.execute_script("arguments[0].click();", grandprairie_toggle)
+            time.sleep(3)
+        except TimeoutException:
+            print("Grand Prairie toggle not found, skipping...")
+
 
         # Find and click "Show All" using JavaScript
         try:
@@ -196,17 +166,16 @@ def lockheed_scraper():
             try:
                 print(f"Processing job {i + 1}/{len(job_links)}")
                 driver.get(job["link"])
-
-                job_details = {
-                    "company": "Lockheed Martin", "title": "", "description": "", "summary": "", "requirements": "",
-                    "skills": [], "careers": [], "degrees": [], "experienceLevels": [], "employmentTypes": [], "workModels": [],   
-                    "location": "", "datePosted": None, "salary": "", "jobURL": job["link"],   
-                } 
+                job_details = {} 
 
                 try:
-                    # Find the job header and extract title & location
-                    job_header_container = wait.until(EC.presence_of_element_located((By.CLASS_NAME, "ajd_header__job-heading")))
+                    # Extract all the needed data
+                    job_details['company'] = 'Lockheed Martin'
+                    job_details['jobURL'] = job['link']
+                    job_details['logoURL'] = LOCKHEED_MARTIN_LOGO
+                    job_details['salary'] = None
 
+                    job_header_container = wait.until(EC.presence_of_element_located((By.CLASS_NAME, "ajd_header__job-heading")))
                     title_element = job_header_container.find_element(By.CLASS_NAME, "ajd_header__job-title")
                     title = title_element.text.strip()
                     job_details['title'] = title
@@ -215,35 +184,23 @@ def lockheed_scraper():
                     location = location_element.text.strip()
                     job_details['location'] = location
 
-                    # Find the job description, clean it, and extract requirements/date
                     job_body_container = wait.until(EC.presence_of_element_located((By.CLASS_NAME, "ats-description")))
-
                     date_element = job_body_container.find_element(By.CSS_SELECTOR, ".job-date.job-info")
                     date_string = date_element.text.split(':')[-1].strip()
                     job_details['datePosted'] = datetime.strptime(date_string, date_format)
 
                     # Format with soup
                     raw_html = job_body_container.get_attribute("innerHTML")
-                    clean_soup = BeautifulSoup(raw_html, "html.parser")
-                    raw_soup = BeautifulSoup(raw_html, "html.parser")
+                    soup = BeautifulSoup(raw_html, "html.parser")
+                    description = extract_description(soup)
 
-                    for br in clean_soup.find_all("br"):
-                        br.replace_with("\n")
+                    complete_jobpost = (title + "\n\n" + soup.get_text(separator="\n", strip=True)).lower()
+                    tokens = tokenizer(complete_jobpost)
 
-                    for bold in clean_soup.find_all(["b", "strong"]):
-                        bold.insert_before("\n\n")
-
-                    cleaned_text = clean_soup.get_text(separator="\n", strip=True)
-                    complete_jobpost = f"{title}\n{location}\n{cleaned_text}".lower()
-                    jobpost_tokens = tokenizer(complete_jobpost)
-
-                    job_details['description'] = extract_description(raw_soup)
-                    # job_details['summary'] = extract_job_posting_summary(complete_jobpost)
+                    job_details['description'] = description
                     job_details['summary'] = "This will be the AI summary. Not included until testing is done."
-                    job_details['requirements'] = extract_requirements(raw_soup)
-
-                    job_details['skills'] = extract_skills_and_careers(jobpost_tokens, complete_jobpost, skill_keywords)
-                    job_details['careers'] = extract_skills_and_careers(jobpost_tokens, complete_jobpost, career_keywords)
+                    job_details['skills'] = extract_skills_and_careers(tokens, complete_jobpost, skill_keywords)
+                    job_details['careers'] = extract_skills_and_careers(tokens, complete_jobpost, career_keywords)
                     job_details['degrees'] = extract_degree(complete_jobpost)
                     job_details['experienceLevels'] = extract_experience(title.lower())
                     job_details['employmentTypes'] = extract_employment_type(complete_jobpost)
@@ -252,11 +209,9 @@ def lockheed_scraper():
                 except Exception as e:
                     print(f"Error extracting data: {e}")
 
-                # Add to job_data list for return
                 job_data.append(job_details)
 
                 print(f"Scraped job {i + 1}/{len(job_links)}: {job_details['title']}")
-                # Add a small delay between job page visits
                 time.sleep(1)
 
             except Exception as e:
@@ -265,15 +220,16 @@ def lockheed_scraper():
         # Save detailed job information to JSON
         if job_data:
             fieldnames = [
-                "company", "title", "description", "summary", "requirements","skills", "careers", "degrees", 
-                "experienceLevels", "employmentTypes", "workModels", "location", "datePosted", "salary", "jobURL",
+                "company", "title", "description", "summary", "skills", "careers", "degrees", 
+                "experienceLevels", "employmentTypes", "workModels", "location", "datePosted", 
+                "salary", "jobURL", "logoURL"
             ]
-            with open("lockheed_martin_data.csv", "w", newline="", encoding="utf-8") as file:
+            with open("lockheed_martin_software_data.csv", "w", newline="", encoding="utf-8") as file:
                 writer = csv.DictWriter(file, fieldnames=fieldnames, extrasaction='ignore')
                 writer.writeheader()
                 writer.writerows(job_data)
 
-            print(f"Successfully scraped details for {len(job_data)} jobs and saved to lockheed_martin_data.csv")
+            print(f"Successfully scraped details for {len(job_data)} jobs and saved to lockheed_martin_software_data.csv")
         else:
             print("No detailed job information was collected.")
 

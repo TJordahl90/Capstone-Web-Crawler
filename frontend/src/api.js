@@ -22,6 +22,7 @@ axios.defaults.withCredentials = true
 axios.defaults.withXSRFToken = true
 axios.defaults.headers.common['X-CSRFToken'] = getCookie('csrftoken');
 
+
 // Create an Axios instance
 const api = axios.create({
     baseURL: 'https://capstone-web-crawler.onrender.com/api',

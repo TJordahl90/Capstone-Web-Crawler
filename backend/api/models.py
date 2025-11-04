@@ -98,17 +98,17 @@ class JobPosting(models.Model):
     title = models.CharField(max_length=200)
     description = models.TextField()
     summary = models.TextField(blank=True)
-    requirements = models.TextField(blank=True) # honestly probably not necessary, can be saved in description
     skills = models.ManyToManyField(CommonSkills, related_name='job_postings', blank=True)
     careers = models.ManyToManyField(CommonCareers, related_name='job_postings', blank=True)
     degrees = models.ManyToManyField(CommonDegrees, related_name='job_postings', blank=True)
     experienceLevels = models.ManyToManyField(CommonExperienceLevels, related_name='job_postings', blank=True)
     employmentTypes = models.ManyToManyField(CommonEmploymentTypes, related_name='job_postings', blank=True)
     workModels = models.ManyToManyField(CommonWorkModels, related_name='job_postings', blank=True)
-    location = models.CharField(max_length=200, blank=True, null=True) # lockheed has some long locations, got to increase i think
+    location = models.CharField(max_length=200, blank=True, null=True)
     datePosted = models.DateField(null=True, blank=True)
     salary = models.CharField(max_length=100, blank=True, null=True)
     jobURL = models.URLField(max_length=500)
+    logoURL = models.URLField(max_length=500, blank=True, null=True)
 
     def __str__(self):
         return f'{self.title} at {self.company}'
@@ -132,7 +132,6 @@ class SavedJob(models.Model):
         return self.jobPosting.title
 
 class JobTrend(models.Model):
-    # ADD MORE TRENDS (TOP TRENDING SKILLS, IN DEMAND JOBS, ETC)
     industry = models.CharField(max_length=255)
     totalPostings = models.IntegerField()
     averageSalary = models.DecimalField(decimal_places=2, max_digits=10)

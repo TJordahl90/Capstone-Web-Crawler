@@ -78,6 +78,8 @@ def jsearch_api():
                     job_details['experienceLevels'] = extract_experience(complete_post)
                     job_details['employmentTypes'] = employment_types
 
+                    # need to get logo url from json 
+
                     if is_remote:
                         job_details['workModels'] = ['remote']
                     else:

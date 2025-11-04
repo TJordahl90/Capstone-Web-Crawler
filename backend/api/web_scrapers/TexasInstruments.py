@@ -51,9 +51,10 @@ def TexInstr():
 
                 WebDriverWait(driver, 10).until(EC.presence_of_element_located((By.CSS_SELECTOR, "h1.job-details__title")))
 
-                # Save Company/url
+                # Save Company/urls
                 job_details['company'] = 'Texas Instruments'
                 job_details['jobURL'] = link
+                job_details['logoURL'] = TEXAS_INSTRUMENTS_LOGO
 
                 # Save Title
                 title = driver.find_element(By.CSS_SELECTOR, "h1.job-details__title").text.strip()
@@ -124,7 +125,8 @@ def TexInstr():
         if job_data:
             fieldnames = [
                 "company", "title", "description", "summary", "skills", "careers", "degrees", 
-                "experienceLevels", "employmentTypes", "workModels", "location", "datePosted", "salary", "jobURL",  
+                "experienceLevels", "employmentTypes", "workModels", "location", "datePosted", 
+                "salary", "jobURL", 'logoURL'
             ]
             with open("texas_instruments_data.csv", "w", newline="", encoding="utf-8") as file:
                 writer = csv.DictWriter(file, fieldnames=fieldnames, extrasaction='ignore')
