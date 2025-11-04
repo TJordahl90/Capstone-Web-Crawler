@@ -22,9 +22,7 @@ DEBUG = False
 
 ALLOWED_HOSTS = [
     'capstone-web-crawler.onrender.com',
-    'capstone-web-crawler-frontend.onrender.com',
     'api.northstarjobs.work',
-    'northstarjobs.work',
 ]
 
 
@@ -150,15 +148,13 @@ DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
 
 CORS_ALLOWED_ORIGINS = [
-    'https://capstone-web-crawler.onrender.com',
     'https://capstone-web-crawler-frontend.onrender.com',
-    'https://northstarjobs.work/',
+    'https://northstarjobs.work',
 ]
 
 CSRF_TRUSTED_ORIGINS = [
-    'https://capstone-web-crawler.onrender.com',
     'https://capstone-web-crawler-frontend.onrender.com',
-    'https://northstarjobs.work/',
+    'https://northstarjobs.work',
 ]
 
 CORS_ALLOW_CREDENTIALS = True
