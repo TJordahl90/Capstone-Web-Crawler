@@ -43,6 +43,7 @@ def extract_job_posting_summary(job_description_text):
 
 def tokenizer(description):
     regex_pattern = r'(?<!\w)([a-z0-9]+(?:[\+\#\.\/\-’‘\'_][a-z0-9]+)*[\+\#]*|\.[a-z0-9]+(?:[\+\#\.\/\-’‘\'_][a-z0-9]+)*[\+\#]*)(?!\w)'
+    # regex_pattern= r'\b(?:[a-z0-9]+(?:[\+\#\.\-’‘\'_][a-z0-9]+)*)\b'
     description_lower = description.lower()
     tokens = set(re.findall(regex_pattern, description_lower))
     return tokens
@@ -67,17 +68,41 @@ def extract_experience(description):
         r'\bmid[\s-]career\b': 'mid',
         r'\bsenior\b': 'senior',
         r'\bsr\.?\b': 'senior',
-        # r'\blead\b': 'lead',
-        # r'\bleader\b': 'lead',
+        r'\blead\b': 'lead',
+        r'\bleader\b': 'lead',
         r'\bmanager\b': 'management',
         r'\bmgr\.?\b': 'management',
         r'\bsupervisor\b': 'management',
+    }
+    experience_years_map = {
+        r'(\d+)\s*\+\s*years?',
+        r'(\d+)\s*years?\s*\+',
+        r'(\d+)\s*(?:or\s+more|and\s+more)\s+years?',
+        r'(\d+)(?:\+)?\s+years?\s+(?:of\s+)?experience',
+        r'experience\s*:\s*(\d+)(?:\+)?',
+        r'(\d+)\s*-\s*(\d+)\s+years?',
+        r'minimum\s+(?:of\s+)?(\d+)\s+years?',
+        r'at\s+least\s+(\d+)\s+years?'
     }
 
     for pattern, label in experience_map.items():
         if re.search(pattern, description):
             experience.append(label)
 
+    # not sure if this works
+    # if not experience:
+    #     for pattern in experience_years_map:
+    #         match = re.search(r'\bpattern\b', description)
+    #         if match:
+    #             years = int(match.group(1))
+    #             if years <= 1: experience.append('intern')
+    #             elif years <= 2: experience.append('')
+    #             elif years <= 4: experience.append('')
+    #             elif years <= 6: experience.append('')
+    #             elif years <= 8: experience.append('')
+    #             elif years <= 10: experience.append('')
+    #             break
+        
     return set(experience)
 
 def extract_degree(description):
@@ -88,7 +113,6 @@ def extract_degree(description):
         r"\b(associate[']?s|a\.a\.|a\.s\.)\b": 'associates',
         r"\b(ph\.?d|doctorate|doctoral)\b": 'doctorate',
         r"\b(high[\s-]?school|ged)\b": 'highschool'
-
     }
 
     for pattern, label in degree_map.items():
@@ -133,3 +157,4 @@ def extract_work_model(description):
 TEXAS_INSTRUMENTS_LOGO = 'https://companieslogo.com/img/orig/TXN-e197f953.png?t=1720244494'    
 LOCKHEED_MARTIN_LOGO = 'https://companieslogo.com/img/orig/LMT-db3de619.png?t=1720244492'
 JPMCHASE_LOGO = 'https://companieslogo.com/img/orig/JPM-6b337108.png?t=1720244492'
+BANK_OF_AMERICA_LOGO = 'https://companieslogo.com/img/orig/BAC-e7995069.png?t=1720244490'
