@@ -1,5 +1,3 @@
-## Academic Fields
-
 computer science
 information technology
 information systems
@@ -20,8 +18,23 @@ electrical engineering
 computational mathematics
 human-computer interaction
 it management
-digital media
 computer graphics
 information security
 database administration
 cloud computing
+devops
+site reliability engineering
+product management
+ui/ux
+data engineering
+quality assurance
+embedded systems
+system administration
+frontend developer
+backend developer
+fullstack developer
+software development
+network administration
+network security
+cloud engineering
+firmware engineering
