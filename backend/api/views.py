@@ -163,66 +163,86 @@ class AccountView(APIView):
     def patch(self, request):
         user = request.user
         account = user.account
-
-        user_data = request.data.get('user')
-        account_data = request.data.get('account')
-        skills_data = request.data.get('skills')
-        # preferences_data = request.data.get('preferences')
-        education_data = request.data.get('education')
-        experience_data = request.data.get('experience')
         errors = {}
 
-        if user_data:
-            user_serializer = UserSerializer(user, data=user_data, partial=True)
+        if (name_data := request.data.get('name')):
+            user_serializer = UserSerializer(user, data=name_data, partial=True)
             if user_serializer.is_valid():
                 user_serializer.save()
             else:
-                errors['user'] = user_serializer.errors
+                errors['name'] = user_serializer.errors
 
-        if account_data:
-            account_serializer = AccountSerializer(account, data=account_data, partial=True)
+        if (personal_data := request.data.get('personal')):
+            account_serializer = AccountSerializer(account, data=personal_data, partial=True)
             if account_serializer.is_valid():
                 account_serializer.save()
             else:
-                errors['account'] = account_serializer.errors
+                errors['personal'] = account_serializer.errors
 
-        if skills_data:
+        def set_keywords(field_name, model, values):
             try:
-                skills_list = [CommonSkills.objects.get_or_create(name=skill)[0] for skill in skills_data]
-                account.skills.set(skills_list)
+                objs = model.objects.filter(name__in=values)
+                getattr(account, field_name).set(objs)
             except Exception as e:
-                errors['skills'] = str(e)
+                errors[field_name] = str(e)
 
-        # UPDATE THIS TO INCLUDE NEW ACCOUNT FIELDS CAREERS, ETC
-        # if preferences_data:
-        #     try:
-        #         preferences_list = [CommonPreferences.objects.get_or_create(name=pref)[0] for pref in preferences_data]
-        #         account.preferences.set(preferences_list)
-        #     except Exception as e:
-        #         errors['preferences'] = str(e)
+        if (skills := request.data.get('skills')) is not None:
+            set_keywords("skills", CommonSkills, skills)
 
-        if education_data:
-            education_serializer = EducationSerializer(data=education_data, many=True)
+        if (careers := request.data.get('careers')) is not None:
+            set_keywords("careers", CommonCareers, careers)
+
+        if (exp_levels := request.data.get('experienceLevels')) is not None:
+            set_keywords("experienceLevels", CommonExperienceLevels, exp_levels)
+
+        if (emp_types := request.data.get('employmentTypes')) is not None:
+            set_keywords("employmentTypes", CommonEmploymentTypes, emp_types)
+
+        if (work_models := request.data.get('workModels')) is not None:
+            set_keywords("workModels", CommonWorkModels, work_models)
+
+        if (education := request.data.get('education')) is not None:
+            education_serializer = EducationSerializer(data=education, many=True)
             if education_serializer.is_valid():
-                account.education.all().delete()
+                account.educations.all().delete()
                 education_serializer.save(account=account)
             else:
                 errors['education'] = education_serializer.errors
 
-        if experience_data:
-            experience_serializer = ExperienceSerializer(data=experience_data, many=True)
+        if (experience := request.data.get('experience')) is not None:
+            experience_serializer = ExperienceSerializer(data=experience, many=True)
             if experience_serializer.is_valid():
-                account.experience.all().delete()
+                account.experiences.all().delete()
                 experience_serializer.save(account=account)
             else:
                 errors['experience'] = experience_serializer.errors
 
-        user_serialized_data = UserSerializer(user).data
-        account_serialized_data = AccountSerializer(account).data
-
         if errors:
             return Response(errors, status=400)
-        return Response({'user': user_serialized_data, 'account': account_serialized_data}, status=200)
+
+        return Response({'user': UserSerializer(user).data, 'account': AccountSerializer(account).data}, status=200)
+        
+class KeywordsView(APIView):
+    """Retrieves list of careers/skills keywords"""
+    permission_classes = [AllowAny]
+
+    def get(self, request):
+        try:
+            skills = list(CommonSkills.objects.values_list("name", flat=True))
+            careers = list(CommonCareers.objects.values_list("name", flat=True))
+            experienceLevels = list(CommonExperienceLevels.objects.values_list("name", flat=True))
+            employmentTypes = list(CommonEmploymentTypes.objects.values_list("name", flat=True))
+            workModels = list(CommonWorkModels.objects.values_list("name", flat=True))
+
+            return Response({
+                "skills": skills,
+                "careers": careers,
+                "experienceLevels": experienceLevels,
+                "employmentTypes": employmentTypes,
+                "workModels": workModels,
+            }, status=200)
+        except Exception:
+            return Response({"error": "Error finding skills or careers in database"}, status=404)
 
 @api_view(['GET'])
 @permission_classes([IsAuthenticated])
@@ -345,100 +365,100 @@ class DocumentView(APIView):
         
         account.resume = resume_file
         account.save()
-
-        text = extract_text_from_pdf(resume_file) #run the resume parser and stores data in pasrsed_data
-        skills = extractSkills(text)
-        parsed_data = parser(text)
-        #print(parsed_data)
-
-        #Automatically adds it to the profile
-        if skills:
-            skillObjects = []
-            for raw in skills:
-                skill = (raw or "").strip()
-                if not skill:
-                    continue
-                try:
-                    # case-insensitive fetch
-                    obj = CommonSkills.objects.get(name__iexact=skill)
-                except CommonSkills.DoesNotExist:
-                    # create if truly missing
-                    obj = CommonSkills.objects.create(name=skill)
-                except CommonSkills.MultipleObjectsReturned:
-                    # if duplicates exist with different casing, pick one
-                    obj = CommonSkills.objects.filter(name__iexact=skill).first()
-                skillObjects.append(obj)
-            if skillObjects:
-                account.skills.add(*skillObjects)
-
-        # Helper function to parse dates
-        def parse_date(date_str):
-            if not date_str or date_str.lower() in ['present', 'current']:
-                return None
-            # Try to parse MM/YYYY or YYYY formats
-            for fmt in ('%m/%Y', '%Y-%m-%d', '%Y'):
-                try:
-                    return datetime.strptime(date_str, fmt).date()
-                except ValueError:
-                    continue
-            return None
-
-        # Get education data
-        educationList = parsed_data.get('Education', [])
-        
-        # Create education objects
-        for edu in educationList:
-            degreeType = edu['degree']
-            degreeObj = CommonDegrees.objects.get(name__icontains=degreeType.split()[0])
-
-            try:
-                Education.objects.create(
-                    account=account,
-                    institution=edu.get('institution', ''),
-                    degree=degreeObj,
-                    major=edu.get('major', ''),
-                    minor=edu.get('minor', ''),
-                    graduationDate=parse_date(edu.get('graduationDate')),
-                    gpa=edu.get('gpa')
-                )
-            except Exception as e:
-                print(f'Error saving education: {e}')
-
-        # Parse experience data
-        experience_list = parsed_data.get('Experience', [])
-        for exp in experience_list:
-            try:
-                Experience.objects.create(
-                    account=account,
-                    company=exp.get('company', ''),
-                    title=exp.get('jobTitle', ''),
-                    startDate=parse_date(exp.get('startDate')),
-                    endDate=parse_date(exp.get('endDate')),
-                    description=exp.get('description', '')
-                )
-            except Exception as e:
-                print(f'Error saving experience: {e}')
-
-        # Parse project data
-        project_list = parsed_data.get('Projects', [])
-        for proj in project_list:
-            try:
-                Project.objects.create(
-                    account=account,
-                    title=proj.get('title', ''),
-                    description=proj.get('description', ''),
-                    startDate=parse_date(proj.get('startDate')),
-                    endDate=parse_date(proj.get('endDate'))
-                )
-            except Exception as e:
-                print(f'Error saving project: {e}')
-
-
+#
+#        text = extract_text_from_pdf(resume_file) #run the resume parser and stores data in pasrsed_data
+#        skills = extractSkills(text)
+#        parsed_data = parser(text)
+#        #print(parsed_data)
+#
+#        #Automatically adds it to the profile
+#        if skills:
+#            skillObjects = []
+#            for raw in skills:
+#                skill = (raw or "").strip()
+#                if not skill:
+#                    continue
+#                try:
+#                    # case-insensitive fetch
+#                    obj = CommonSkills.objects.get(name__iexact=skill)
+#                except CommonSkills.DoesNotExist:
+#                    # create if truly missing
+#                    obj = CommonSkills.objects.create(name=skill)
+#                except CommonSkills.MultipleObjectsReturned:
+#                    # if duplicates exist with different casing, pick one
+#                    obj = CommonSkills.objects.filter(name__iexact=skill).first()
+#                skillObjects.append(obj)
+#            if skillObjects:
+#                account.skills.add(*skillObjects)
+#
+#        # Helper function to parse dates
+#        def parse_date(date_str):
+#            if not date_str or date_str.lower() in ['present', 'current']:
+#                return None
+#            # Try to parse MM/YYYY or YYYY formats
+#            for fmt in ('%m/%Y', '%Y-%m-%d', '%Y'):
+#                try:
+#                    return datetime.strptime(date_str, fmt).date()
+#                except ValueError:
+#                    continue
+#            return None
+#
+#        # Get education data
+#        educationList = parsed_data.get('Education', [])
+#        
+#        # Create education objects
+#        for edu in educationList:
+#            degreeType = edu['degree']
+#            degreeObj = CommonDegrees.objects.get(name__icontains=degreeType.split()[0])
+#
+#            try:
+#                Education.objects.create(
+#                    account=account,
+#                    institution=edu.get('institution', ''),
+#                    degree=degreeObj,
+#                    major=edu.get('major', ''),
+#                    minor=edu.get('minor', ''),
+#                    graduationDate=parse_date(edu.get('graduationDate')),
+#                    gpa=edu.get('gpa')
+#                )
+#            except Exception as e:
+#                print(f'Error saving education: {e}')
+#
+#        # Parse experience data
+#        experience_list = parsed_data.get('Experience', [])
+#        for exp in experience_list:
+#            try:
+#                Experience.objects.create(
+#                    account=account,
+#                    company=exp.get('company', ''),
+#                    title=exp.get('jobTitle', ''),
+#                    startDate=parse_date(exp.get('startDate')),
+#                    endDate=parse_date(exp.get('endDate')),
+#                    description=exp.get('description', '')
+#                )
+#            except Exception as e:
+#                print(f'Error saving experience: {e}')
+#
+#        # Parse project data
+#        project_list = parsed_data.get('Projects', [])
+#        for proj in project_list:
+#            try:
+#                Project.objects.create(
+#                    account=account,
+#                    title=proj.get('title', ''),
+#                    description=proj.get('description', ''),
+#                    startDate=parse_date(proj.get('startDate')),
+#                    endDate=parse_date(proj.get('endDate'))
+#                )
+#            except Exception as e:
+#                print(f'Error saving project: {e}')
+#
+#
         return Response({
                     'message': 'Resume uploaded and parsed successfully',
-                        'parsed_data': parsed_data
+                        #'parsed_data': parsed_data
                     }, status=201)
-
+        
 client = OpenAI(api_key=os.getenv('ai_api_key')) # Initialize OpenAI client
 
 class InterviewPrepChatBotView(APIView):
