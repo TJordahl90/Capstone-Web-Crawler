@@ -3,7 +3,7 @@ from .views import (
     CreateUserView, UserProfileView, CreateVerificationView, LoginView, LogoutView,
     CsrfTokenView, AccountView, JobMatchingView, JobSearchingView, AllJobsView, DocumentView, 
     InterviewPrepChatBotView, InterviewSummaryView, BookmarkJobView, ApplicationStatusView, 
-    JobStatisticsView, DeleteUserView, ResetPasswordView
+    JobStatisticsView, DeleteUserView, ResetPasswordView, KeywordsView
 )
 
 urlpatterns = [
@@ -17,6 +17,7 @@ urlpatterns = [
     path('job_matching/', JobMatchingView, name="job_matching"),
     path('job_searching/', JobSearchingView, name='job_searching'),
     path("all_jobs/", AllJobsView, name='all_jobs'),
+    path('keywords/', KeywordsView.as_view(), name="keywords"),
     path("bookmark_jobs/", BookmarkJobView.as_view(), name="bookmark_jobs_list"),
     path("bookmark_jobs/<int:job_id>/", BookmarkJobView.as_view(), name="bookmark_jobs"),
     path("documents/", DocumentView.as_view(), name="documents"),

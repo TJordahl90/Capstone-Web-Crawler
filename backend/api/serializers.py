@@ -66,6 +66,7 @@ class CommonWorkModelsSerializer(serializers.ModelSerializer):
         fields = ['id', 'name']
 
 class EducationSerializer(serializers.ModelSerializer):
+    degree = serializers.SlugRelatedField(queryset=CommonDegrees.objects.all(), allow_null=True, required=False, slug_field='name')
     class Meta:
         model = Education
         fields = ['id', 'institution', 'degree', 'major', 'minor', 'graduationDate', 'gpa']
@@ -81,13 +82,14 @@ class ProjectSerializer(serializers.ModelSerializer):
         fields = ['id', 'account', 'title', 'description', 'startDate', 'endDate']
 
 class AccountSerializer(serializers.ModelSerializer):
-    skills = CommonSkillsSerializer(many=True, read_only=True)
-    careers = CommonCareersSerializer(many=True, read_only=True)
-    experienceLevels = CommonExperienceLevelsSerializer(many=True, read_only=True)
-    employmentTypes = CommonEmploymentTypesSerializer(many=True, read_only=True)
-    workModels = CommonWorkModelsSerializer(many=True, read_only=True)
-    education = EducationSerializer(many=True, read_only=True)
-    experience = ExperienceSerializer(many=True, read_only=True)
+    # slugfield returns only a list of the names instead of a list of objects 
+    skills = serializers.SlugRelatedField(many=True, read_only=True, slug_field="name")
+    careers = serializers.SlugRelatedField(many=True, read_only=True, slug_field="name")
+    experienceLevels = serializers.SlugRelatedField(many=True, read_only=True, slug_field="name")
+    employmentTypes = serializers.SlugRelatedField(many=True, read_only=True, slug_field="name")
+    workModels = serializers.SlugRelatedField(many=True, read_only=True, slug_field="name")
+    education = EducationSerializer(source="educations", many=True, read_only=True)
+    experience = ExperienceSerializer(source="experiences", many=True, read_only=True)
 
     class Meta:
         model = Account
