@@ -472,7 +472,7 @@ class DocumentView(APIView):
                 "error": "An error occurred while processing the resume",
                 "details": str(e)
             }, status=500)
-
+        
 client = OpenAI(api_key=os.getenv('ai_api_key')) # Initialize OpenAI client
 
 class InterviewPrepChatBotView(APIView):
