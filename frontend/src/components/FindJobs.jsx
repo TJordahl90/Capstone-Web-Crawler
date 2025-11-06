@@ -392,14 +392,14 @@ const FindJobs = ({ jobPostTypeProp }) => {
                         style={{
                             height: "100%",
                             color: "var(--text6)",
-                            borderRight: "1px solid var(--border)"
+                            borderRight: "2px solid var(--border)"
                         }}
                     >
                         {/* Search bar and buttons - only displays when jobPostType is all or search */}
                         {(jobPostType === "all" || jobPostType === "search") && (
                             <div
                                 className="p-2"
-                                style={{ borderBottom: "1px solid var(--border)" }}
+                                style={{ borderBottom: "2px solid var(--border)" }}
                             >
 
                                 <Form
@@ -540,7 +540,7 @@ const FindJobs = ({ jobPostTypeProp }) => {
                                     style={{
                                         backgroundColor: "rgba(255, 255, 255, 0.15)",
                                         color: "var(--savebtntxt)",
-                                        border: "1px solid var(--border)",
+                                        border: "2px solid var(--border)",
                                         borderRadius: "8px",
                                         backdropFilter: "blur(6px)",
                                         WebkitBackdropFilter: "blur(6px)",

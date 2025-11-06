@@ -44,7 +44,7 @@ const Navbar = ({ setCollapsed, collapsed }) => {
       className="nav-bar"
       style={{
         background: "rgba(255, 255, 255, 0.08)",
-        borderBottom: "1px solid rgba(255, 255, 255, 0.15)",
+        borderBottom: "2px solid rgba(255, 255, 255, 0.15)",
         backdropFilter: "blur(20px)",
         WebkitBackdropFilter: "blur(20px)",
         boxShadow: "0 4px 30px rgba(0, 0, 0, 0.1)",

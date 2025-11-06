@@ -53,7 +53,7 @@ const SidePanel = ({ children, user, handleLogout }) => {
                 backdropFilter: "blur(20px)",
                 WebkitBackdropFilter: "blur(20px)",
                 backgroundColor: "rgba(255, 255, 255, 0.08)",
-                borderRight: "1px solid rgba(255, 255, 255, 0.15)",
+                borderRight: "2px solid rgba(255, 255, 255, 0.15)",
                 height: "100vh",
             }}
         >
