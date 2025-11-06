@@ -8,7 +8,7 @@ const themes = {
         aandl: "white",     // register and login box
         text: "white",  // text : register, login, findjob
         textonhover: "white",  // text on hover
-        border: "#00ADB5",   // border color
+        border: "rgba(255, 255, 255, 0.15)",   // border color
         hover: "#00ADB5",      // button on hover
         lightbackground: "white",
         button1: "white",   // login and register button
@@ -98,7 +98,7 @@ const themes = {
         aandl: "white",     // register and login box
         text: "white",  // text : register, login, findjob
         textonhover: "white",  // text on hover
-        border: "#00ADB5",   // border color
+        border: "rgba(255, 255, 255, 0.15)",   // border color
         hover: "#00ADB5",      // button on hover
         lightbackground: "white",
         button1: "white",   // login and register button
