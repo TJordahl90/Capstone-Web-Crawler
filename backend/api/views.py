@@ -368,7 +368,7 @@ class DocumentView(APIView):
 
         text = extract_text_from_pdf(resume_file) #run the resume parser and stores data in pasrsed_data
         skills = extractSkills(text)
-#        parsed_data = parser(text)
+        parsed_data = parser(text)
 #        #print(parsed_data)
 #
 #        #Automatically adds it to the profile
