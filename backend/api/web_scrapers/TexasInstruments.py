@@ -72,7 +72,7 @@ def TexInstr():
                 jobpost_tokens = tokenizer(complete_jobpost)
 
                 # Save short AI summary
-                job_details['summary'] = "This will be the AI summary. Not included until testing is done." # extract_job_posting_summary(complete_jobpost)
+                job_details['summary'] = extract_job_posting_summary(complete_jobpost)
 
                 # Save other pieces by parsing the job posting
                 job_details['skills'] = extract_skills_and_careers(jobpost_tokens, complete_jobpost, skill_keywords)

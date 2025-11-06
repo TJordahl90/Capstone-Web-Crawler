@@ -12,7 +12,7 @@ querystring = {
     # "query": "Technology jobs in the DFW Texas area",
     "query": "Software engineering jobs in Dallas-Fort Worth, Texas",
     "page": "1",
-    "num_pages": "1" # increase for more jobs (200 a month total)
+    "num_pages": "5" # increase for more jobs (200 a month total)
 }
 
 headers = {
@@ -51,6 +51,7 @@ def jsearch_api():
                     other_apply_links = job.get('apply_options')
                     city = job.get('job_city')
                     state = job.get('job_state')
+                    logo = job.get('employer_logo')
                     employment_types = []
 
                     for type in job.get('job_employment_types', []):
@@ -65,13 +66,13 @@ def jsearch_api():
                         if not apply_link:    
                             apply_link = other_apply_links[0].get("apply_link")
 
-                    complete_post = (title + description).lower()
+                    complete_post = (title + "\n\n" + description).lower()
                     tokens = tokenizer(complete_post)
 
                     job_details['company'] = job.get('employer_name', '')
                     job_details['title'] = title
                     job_details['description'] = description
-                    job_details['summary'] = "This will be the AI summary. Not included until testing is done." # extract_job_posting_summary(complete_post)
+                    job_details['summary'] = extract_job_posting_summary(complete_post)
                     job_details['skills'] = extract_skills_and_careers(tokens, complete_post, skill_keywords)
                     job_details['careers'] = extract_skills_and_careers(tokens, complete_post, career_keywords)
                     job_details['degrees'] = extract_degree(complete_post)
@@ -100,13 +101,15 @@ def jsearch_api():
                         job_details['salary'] = None
 
                     job_details['jobURL'] = apply_link
+                    job_details['logoURL'] = logo
 
                     job_data.append(job_details)
 
                 if job_data:
                     fieldnames = [
                         "company", "title", "description", "summary", "skills", "careers", "degrees", 
-                        "experienceLevels", "employmentTypes", "workModels", "location", "datePosted", "salary", "jobURL",
+                        "experienceLevels", "employmentTypes", "workModels", "location", "datePosted", 
+                        "salary", "jobURL", "logoURL"
                     ]
                     with open("jsearch-api.csv", "w", newline="", encoding="utf-8") as file:
                         writer = csv.DictWriter(file, fieldnames=fieldnames, extrasaction='ignore')
