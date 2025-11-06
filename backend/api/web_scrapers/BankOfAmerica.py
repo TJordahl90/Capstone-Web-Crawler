@@ -10,7 +10,7 @@ from selenium.common.exceptions import TimeoutException, NoSuchElementException
 import time, logging, re, csv
 from webdriver_manager.chrome import ChromeDriverManager
 from datetime import datetime
-from scraper_helper_functions import *
+from .scraper_helper_functions import *
 
 def BankofAmerica():
     logging.basicConfig(level=logging.INFO, format='%(asctime)s - %(levelname)s - %(message)s', filename='job_scraper.log')
@@ -85,7 +85,7 @@ def BankofAmerica():
                 tokens = tokenizer(complete_jobpost)
 
                 # Save AI summary
-                job_details['summary'] = "This will be the AI summary. Not included until testing is done." # extract_job_posting_summary(complete_jobpost)
+                job_details['summary'] = extract_job_posting_summary(complete_jobpost)
 
                 # Save skills, careers, and degrees
                 job_details['skills'] = extract_skills_and_careers(tokens, complete_jobpost, skill_keywords)

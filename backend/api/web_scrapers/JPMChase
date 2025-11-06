@@ -25,7 +25,8 @@ except ImportError:
     HELPERS_AVAILABLE = False
     logging.warning("scraper_helper_functions not available, using fallback functions")
 
-JPMC_LOGO = "https://logo.clearbit.com/jpmorganchase.com"
+# JPMC_LOGO = "https://logo.clearbit.com/jpmorganchase.com" ublock origin blocks this link
+JPMC_LOGO = 'https://companieslogo.com/img/orig/JPM-6b337108.png?t=1720244492'
 
 # Fallback functions if helper module is not available
 def load_keywords_fallback(filename):

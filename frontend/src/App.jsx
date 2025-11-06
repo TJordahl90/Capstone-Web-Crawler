@@ -3,6 +3,7 @@ import { Routes, Route, useLocation } from "react-router-dom";
 import Navbar from "./components/Navbar";
 import SidePanel from "./components/SidePanel";
 import LandingPage from "./components/LandingPage";
+import Dashboard from "./components/Dashboard";
 import AuthForm from "./components/AuthForm";
 import AccountSetup from "./components/AccountSetup";
 import FindJobs from "./components/FindJobs";
@@ -71,6 +72,7 @@ function App() {
 					<Navbar collapsed={collapsed} setCollapsed={setCollapsed} />
 					<SidePanel collapsed={collapsed}>
 						<Routes>
+							<Route path="/dashboard" element={<Dashboard />} />
 							<Route path="/find-jobs" element={<FindJobs jobPostTypeProp="all" />} />
 							<Route path="/matched-jobs" element={<FindJobs jobPostTypeProp="matched" />} />
 							<Route path="/saved-jobs" element={<FindJobs jobPostTypeProp="saved" />} />

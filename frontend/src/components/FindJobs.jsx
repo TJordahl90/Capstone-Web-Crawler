@@ -276,7 +276,7 @@ const FindJobs = ({ jobPostTypeProp }) => {
 
     // Renders each of the job listings in the left sidebar
     const renderJobItem = (job) => {
-        const logo = getCompanyLogo(job.company);
+        const logo = job.logoURL
 
         return (
             <div
@@ -774,7 +774,6 @@ const FindJobs = ({ jobPostTypeProp }) => {
                                     className={windowWidth <= 770 ? "p-2" : "p-4"}
                                     style={{}}
                                 >
-
                                     <Card
                                         className="mb-4"
                                         style={{
@@ -787,83 +786,43 @@ const FindJobs = ({ jobPostTypeProp }) => {
                                         }}
                                     >
                                         <Card.Body>
-                                            <Card.Title>job description</Card.Title>
-                                            <Card.Text><pre style={{ whiteSpace: "pre-wrap", wordBreak: "break-word" }}>{selectedJob.description}</pre></Card.Text>
-                                            <br />
-                                            <Card.Title>ai summary</Card.Title>
-                                            <Card.Text><pre style={{ whiteSpace: "pre-wrap", wordBreak: "break-word" }}>{selectedJob.summary}</pre></Card.Text>
-                                            <br />
-                                            <Card.Title> requirments list</Card.Title>
-                                            <Card.Text><pre style={{ whiteSpace: "pre-wrap", wordBreak: "break-word" }}>{selectedJob.requirements}</pre></Card.Text>
-                                            <br />
-                                        </Card.Body>
-                                    </Card>
+                                            {/* Job Description */}
+                                            <section className="mb-4">
+                                              <h5 className="fw-bold mb-2">Job Description</h5>
+                                              <p style={{ whiteSpace: "pre-wrap", wordBreak: "break-word", margin: 0 }}>
+                                                {selectedJob.description}
+                                              </p>
+                                            </section>
 
-                                    <Card
-                                        className="mb-4"
-                                        style={{
-                                            backgroundColor: "rgba(255, 255, 255, 0.2)", // more translucent
-                                            backdropFilter: "blur(10px)",                // adds frosted-glass effect
-                                            WebkitBackdropFilter: "blur(10px)",
-                                            color: "var(--text2)",
-                                            // border: "2px solid var(--cardborder2)",
-                                            borderRadius: "12px"
-                                        }}
-                                    >
-                                        <Card.Body>
-                                            <Card.Title>skills **need to add more skills to keywords list to get more skill keywords</Card.Title>
-                                            {selectedJob.skills && selectedJob.skills.length > 0 && (
-                                                <ul className="ps-3">
-                                                    {selectedJob.skills.map(r => (
-                                                        <li key={r.id}>{r.name}</li>
+                                            {/* AI Summary */}
+                                            <section className="mb-4">
+                                              <h5 className="fw-bold mb-2">AI Summary</h5>
+                                              <p style={{ whiteSpace: "pre-wrap", wordBreak: "break-word", margin: 0 }}>
+                                                {selectedJob.summary}
+                                              </p>
+                                            </section>
+
+                                            {/* Keywords Sections */}
+                                            {[
+                                              { title: "Skills", key: "skills" },
+                                              { title: "Careers", key: "careers" },
+                                              { title: "Degrees", key: "degrees" },
+                                              { title: "Experience Level", key: "experienceLevels" },
+                                              { title: "Employment Type", key: "employmentTypes" },
+                                              { title: "Work Models", key: "workModels" },
+                                            ].map(({ title, key }) => (
+                                              selectedJob[key] && selectedJob[key].length > 0 && (
+                                                <section className="mb-4" key={key}>
+                                                  <h5 className="fw-bold mb-2">{title}</h5>
+                                                  <ul className="ps-3" style={{ marginBottom: 0 }}>
+                                                    {selectedJob[key].map(item => (
+                                                      <li key={item.id}>{item.name}</li>
                                                     ))}
-                                                </ul>
-                                            )}
-                                            <br />
-                                            <Card.Title>careers </Card.Title>
-                                            {selectedJob.careers && selectedJob.careers.length > 0 && (
-                                                <ul className="ps-3">
-                                                    {selectedJob.careers.map(r => (
-                                                        <li key={r.id}>{r.name}</li>
-                                                    ))}
-                                                </ul>
-                                            )}
-                                            <br />
-                                            <Card.Title>degrees **this works just forgot to add commondegrees before scraping</Card.Title>
-                                            {selectedJob.degrees && selectedJob.degrees.length > 0 && (
-                                                <ul className="ps-3">
-                                                    {selectedJob.degrees.map(r => (
-                                                        <li key={r.id}>{r.name}</li>
-                                                    ))}
-                                                </ul>
-                                            )}
-                                            <br />
-                                            <Card.Title>experience level</Card.Title>
-                                            {selectedJob.experienceLevels && selectedJob.experienceLevels.length > 0 && (
-                                                <ul className="ps-3">
-                                                    {selectedJob.experienceLevels.map(r => (
-                                                        <li key={r.id}>{r.name}</li>
-                                                    ))}
-                                                </ul>
-                                            )}
-                                            <br />
-                                            <Card.Title>employment type</Card.Title>
-                                            {selectedJob.employmentTypes && selectedJob.employmentTypes.length > 0 && (
-                                                <ul className="ps-3">
-                                                    {selectedJob.employmentTypes.map(r => (
-                                                        <li key={r.id}>{r.name}</li>
-                                                    ))}
-                                                </ul>
-                                            )}
-                                            <br />
-                                            <Card.Title>work modelss</Card.Title>
-                                            {selectedJob.workModels && selectedJob.workModels.length > 0 && (
-                                                <ul className="ps-3">
-                                                    {selectedJob.workModels.map(r => (
-                                                        <li key={r.id}>{r.name}</li>
-                                                    ))}
-                                                </ul>
-                                            )}
+                                                  </ul>
+                                                </section>
+                                              )
+                                            ))}
+
                                         </Card.Body>
                                     </Card>
                                 </div>
