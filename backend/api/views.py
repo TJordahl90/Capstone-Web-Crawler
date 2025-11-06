@@ -356,108 +356,122 @@ class DocumentView(APIView):
         return Response({"error": "No resume found"}, status=404)
 
     def post(self, request):
-        user = request.user
-        account = Account.objects.get(user=user)
-        resume_file = request.FILES.get('resume')
-        
-        if not resume_file:
-            return Response({"error": "No file uploaded"}, status=400)
-        
-        account.resume = resume_file
-        account.save()
+        try:
+            user = request.user
+            account = Account.objects.get(user=user)
+            resume_file = request.FILES.get('resume')
 
-        text = extract_text_from_pdf(resume_file) #run the resume parser and stores data in pasrsed_data
-        skills = extractSkills(text)
-        parsed_data = parser(text)
-        #print(parsed_data)
+            if not resume_file:
+                return Response({"error": "No file uploaded"}, status=400)
 
-        #Automatically adds it to the profile
-        if skills:
-            skillObjects = []
-            for raw in skills:
-                skill = (raw or "").strip()
-                if not skill:
-                    continue
-                try:
-                    # case-insensitive fetch
-                    obj = CommonSkills.objects.get(name__iexact=skill)
-                except CommonSkills.DoesNotExist:
-                    # create if truly missing
-                    obj = CommonSkills.objects.create(name=skill)
-                except CommonSkills.MultipleObjectsReturned:
-                    # if duplicates exist with different casing, pick one
-                    obj = CommonSkills.objects.filter(name__iexact=skill).first()
-                skillObjects.append(obj)
-            if skillObjects:
-                account.skills.add(*skillObjects)
+            account.resume = resume_file
+            account.save()
 
-        # Helper function to parse dates
-        def parse_date(date_str):
-            if not date_str or date_str.lower() in ['present', 'current']:
+            text = extract_text_from_pdf(resume_file) #run the resume parser and stores data in pasrsed_data
+            skills = extractSkills(text)
+            parsed_data = parser(text)
+            #print(parsed_data)
+
+            #Automatically adds it to the profile
+            if skills:
+                skillObjects = []
+                for raw in skills:
+                    skill = (raw or "").strip()
+                    if not skill:
+                        continue
+                    try:
+                        # case-insensitive fetch
+                        obj = CommonSkills.objects.get(name__iexact=skill)
+                    except CommonSkills.DoesNotExist:
+                        # create if truly missing
+                        obj = CommonSkills.objects.create(name=skill)
+                    except CommonSkills.MultipleObjectsReturned:
+                        # if duplicates exist with different casing, pick one
+                        obj = CommonSkills.objects.filter(name__iexact=skill).first()
+                    skillObjects.append(obj)
+                if skillObjects:
+                    account.skills.add(*skillObjects)
+
+            # Helper function to parse dates
+            def parse_date(date_str):
+                if not date_str or date_str.lower() in ['present', 'current']:
+                    return None
+                # Try to parse MM/YYYY or YYYY formats
+                for fmt in ('%m/%Y', '%Y-%m-%d', '%Y'):
+                    try:
+                        return datetime.strptime(date_str, fmt).date()
+                    except ValueError:
+                        continue
                 return None
-            # Try to parse MM/YYYY or YYYY formats
-            for fmt in ('%m/%Y', '%Y-%m-%d', '%Y'):
+
+            # Get education data
+            educationList = parsed_data.get('Education', [])
+
+            # Create education objects
+            for edu in educationList:
+                degreeType = edu.get('degree', '')
+
                 try:
-                    return datetime.strptime(date_str, fmt).date()
-                except ValueError:
+                    degreeObj = CommonDegrees.objects.get(name__icontains=degreeType.split()[0])
+                except(CommonDegrees.DoesNotExist, IndexError):
+                    print(f'{degreeType} degree type does not exist, skipping this degree')
                     continue
-            return None
 
-        # Get education data
-        educationList = parsed_data.get('Education', [])
+
+                try:
+                    Education.objects.create(
+                        account=account,
+                        institution=edu.get('institution', ''),
+                        degree=degreeObj,
+                        major=edu.get('major', ''),
+                        minor=edu.get('minor', ''),
+                        graduationDate=parse_date(edu.get('graduationDate')),
+                        gpa=edu.get('gpa')
+                    )
+                except Exception as e:
+                    print(f'Error saving education: {e}')
+
+            # Parse experience data
+            experience_list = parsed_data.get('Experience', [])
+            for exp in experience_list:
+                try:
+                    Experience.objects.create(
+                        account=account,
+                        company=exp.get('company', ''),
+                        title=exp.get('jobTitle', ''),
+                        startDate=parse_date(exp.get('startDate')),
+                        endDate=parse_date(exp.get('endDate')),
+                        description=exp.get('description', '')
+                    )
+                except Exception as e:
+                    print(f'Error saving experience: {e}')
+
+            # Parse project data
+            project_list = parsed_data.get('Projects', [])
+            for proj in project_list:
+                try:
+                    Project.objects.create(
+                        account=account,
+                        title=proj.get('title', ''),
+                        description=proj.get('description', ''),
+                        startDate=parse_date(proj.get('startDate')),
+                        endDate=parse_date(proj.get('endDate'))
+                    )
+                except Exception as e:
+                    print(f'Error saving project: {e}')
+
+
+            return Response({
+                        'message': 'Resume uploaded and parsed successfully',
+                            'parsed_data': parsed_data
+                        }, status=201)
         
-        # Create education objects
-        for edu in educationList:
-            degreeType = edu['degree']
-            degreeObj = CommonDegrees.objects.get(name__icontains=degreeType.split()[0])
-
-            try:
-                Education.objects.create(
-                    account=account,
-                    institution=edu.get('institution', ''),
-                    degree=degreeObj,
-                    major=edu.get('major', ''),
-                    minor=edu.get('minor', ''),
-                    graduationDate=parse_date(edu.get('graduationDate')),
-                    gpa=edu.get('gpa')
-                )
-            except Exception as e:
-                print(f'Error saving education: {e}')
-
-        # Parse experience data
-        experience_list = parsed_data.get('Experience', [])
-        for exp in experience_list:
-            try:
-                Experience.objects.create(
-                    account=account,
-                    company=exp.get('company', ''),
-                    title=exp.get('jobTitle', ''),
-                    startDate=parse_date(exp.get('startDate')),
-                    endDate=parse_date(exp.get('endDate')),
-                    description=exp.get('description', '')
-                )
-            except Exception as e:
-                print(f'Error saving experience: {e}')
-
-        # Parse project data
-        project_list = parsed_data.get('Projects', [])
-        for proj in project_list:
-            try:
-                Project.objects.create(
-                    account=account,
-                    title=proj.get('title', ''),
-                    description=proj.get('description', ''),
-                    startDate=parse_date(proj.get('startDate')),
-                    endDate=parse_date(proj.get('endDate'))
-                )
-            except Exception as e:
-                print(f'Error saving project: {e}')
-
-
-        return Response({
-                    'message': 'Resume uploaded and parsed successfully',
-                        #'parsed_data': parsed_data
-                    }, status=201)
+        except Exception as e:
+            print('Error in file upload') 
+            return Response({
+                "error": "An error occurred while processing the resume",
+                "details": str(e)
+            }, status=500)
         
 client = OpenAI(api_key=os.getenv('ai_api_key')) # Initialize OpenAI client
 
