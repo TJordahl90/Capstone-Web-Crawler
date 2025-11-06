@@ -45,9 +45,12 @@ class CommonWorkModels(models.Model):
     def __str__(self):
         return self.name
 
+def userFilesPath(instance, filename):
+    return f'uploads/user_{instance.user.id}/{filename}'
+
 class Account(models.Model):
     user = models.OneToOneField(User, on_delete=models.CASCADE)
-    resume = models.FileField(upload_to='api/uploads', blank=True, null=True)
+    resume = models.FileField(upload_to=userFilesPath, blank=True, null=True)
     headline = models.CharField(max_length=50, blank=True, null=True)
     hometown = models.CharField(max_length=50, blank=True, null=True)
     skills = models.ManyToManyField(CommonSkills, related_name='accounts', blank=True)    
