@@ -8,7 +8,8 @@ from rest_framework.decorators import permission_classes
 from django.middleware.csrf import get_token
 from django.views.decorators.csrf import ensure_csrf_cookie
 from django.contrib.auth import authenticate, login, logout
-from django.core.mail import send_mail
+from django.core.mail import EmailMultiAlternatives
+from django.template.loader import render_to_string
 from django.conf import settings
 import random
 from django.shortcuts import get_object_or_404
@@ -32,9 +33,6 @@ def CsrfTokenView(request):
     csrf_token = get_token(request) # built-in function that creates csrf tokens
     return JsonResponse({'csrfToken': csrf_token})
 
-def sendMail(to, subject, message):
-    send_mail(subject, message, settings.EMAIL_HOST_USER, to, fail_silently=False)
-
 class CreateUserView(APIView):
     """Register a new user"""
     permission_classes = [AllowAny]
@@ -45,6 +43,15 @@ class CreateUserView(APIView):
             serializer.save()
             return Response(serializer.data, status=status.HTTP_201_CREATED)
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
+def sendEmailVerification(email, subject, message, templateName, context):
+    msg = EmailMultiAlternatives(subject, message, settings.EMAIL_HOST_USER, email)
+
+    if(templateName):
+        htmlContent = render_to_string(templateName, context)
+        msg.attach_alternative(htmlContent, 'text/html')
+    
+    msg.send(fail_silently=False)
 
 class CreateVerificationView(APIView):
     permission_classes = [AllowAny]
@@ -60,10 +67,13 @@ class CreateVerificationView(APIView):
         code = str(random.randint(100000, 999999))
         Verification.objects.create(email=email, code=code)
 
-        message = f'Your verification code is: {code}'
         subject = 'Verification Code for Northstar Jobs'
+        message = f'Your verification code is {code}'
         recipient = [email]
-        sendMail(recipient, subject, message)
+        context = {'code': code, 'user': user}
+
+        sendEmailVerification(recipient, subject, message, 'emails/emailVerification.html', context)
+
         return Response({"message": "Verification code sent."}, status=status.HTTP_201_CREATED)
     
     def get(self, request):

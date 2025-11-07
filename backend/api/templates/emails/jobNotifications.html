@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f7f9fc;
+            color: #333;
+            margin: 0;
+            padding: 20px;
+        }
+        .email-container {
+            background: white;
+            border-radius: 12px;
+            padding: 20px;
+            max-width: 600px;
+            margin: auto;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+        }
+        .header {
+            border-bottom: 2px solid #007BFF;
+            padding-bottom: 10px;
+            margin-bottom: 20px;
+        }
+        h2 {
+            color: #007BFF;
+        }
+        .job {
+            padding: 10px 0;
+            border-bottom: 1px solid #e5e5e5;
+        }
+        .job:last-child {
+            border: none;
+        }
+        a.button {
+            display: inline-block;
+            background: #007BFF;
+            color: white;
+            padding: 10px 16px;
+            text-decoration: none;
+            border-radius: 6px;
+            margin-top: 10px;
+        }
+        .footer {
+            margin-top: 20px;
+            font-size: 13px;
+            color: #777;
+        }
+    </style>
+</head>
+<body>
+    <div class="email-container">
+        <div class="header">
+            <h2>New Job Matches for You!</h2>
+        </div>
+
+        <p>Hi {{ user.first_name }},</p>
+
+        <p>Our system matched you with the following opportunities:</p>
+
+        {% for job, score in job_score.items %}
+        <div class="job">
+            <strong>{{ job.title }}</strong> at <em>{{ job.company }}</em><br>
+            Match score: <strong>{{ score }}%</strong><br>
+            <a href="{{ job.jobURL }}" class="button">View Job</a>
+        </div>
+        {% endfor %}
+
+        <p>Good luck with your job search!<br>-The Lonestar Development Team</p>
+
+        <div class="footer">
+            <p>You’re receiving this email because you opted in for job notifications.</p>
+        </div>
+    </div>
+</body>
+</html>
