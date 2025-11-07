@@ -10,15 +10,20 @@ def sendNotificationEmail(email, subject, message, htmlMessage):
     msg.send(fail_silently=False)
 
 def notifyUsers():
-    accounts = Account.objects.filter(emailVerification=True).iterator()
+    # Only verified AND opted-in users
+    accounts = Account.objects.filter(emailVerification=True, notify_by_email=True).iterator()
 
     for account in accounts:
         try:
-            print(f'Account processing: {account}')
+            # skip if they toggled off
+            if not account.notify_by_email:
+                print(f'{account} opted out of emails')
+                continue
+
             matchedJobs = matchUsersToJobs(account)
 
             # If the user is not matched to enough jobs, dont send an email
-            if(len(matchedJobs) < 3):
+            if len(matchedJobs) < 3:
                 print(f'not enough jobs match for {account}')
                 continue
 
@@ -26,16 +31,19 @@ def notifyUsers():
 
             job_score = {}
             for jobID, score in top3.items():
-                score = int(score)
-                job_score[JobPosting.objects.get(id=jobID)] = score
+                job_score[JobPosting.objects.get(id=jobID)] = int(score)
+
+            # skip if no email on file
+            if not account.user.email:
+                print(f'no email for {account}')
+                continue
 
             email = [account.user.email]
             subject = 'Your Personalized Job Matches Are Available!'
-            message = f'Here are some jobs that might fit your preferences and skills! \n'
+            message = 'Here are some jobs that might fit your preferences and skills!\n'
             for job, score in job_score.items():
-                message = message + f'{job.title} at {job.company} -- {score}% match!\n'
+                message += f'{job.title} at {job.company} -- {score}% match!\n'
 
-            print(message)
             htmlMessage = render_to_string(
                 'emails/jobNotifications.html',
                 {'user': account.user, 'job_score': job_score}
