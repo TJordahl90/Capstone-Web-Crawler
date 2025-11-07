@@ -703,7 +703,7 @@ class DashboardView(APIView):
                 topJobId, topScore = list(topJobs.items())[0]
                 job = JobPosting.objects.get(id=topJobId)
                 serializedJob = JobPostingSerializer(job, context={'request': request}).data
-                topStats['topJob'] = {'job': serializedJob, 'score': topScore}
+                topStats['topJob'] = {'job': serializedJob, 'score': int(topScore)}
 
         except IndexError:
             print('Matched jobs dictionary is empty')
