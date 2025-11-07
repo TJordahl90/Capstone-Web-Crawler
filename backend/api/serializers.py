@@ -93,7 +93,7 @@ class AccountSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Account
-        fields = ['user', 'resume', 'headline', 'hometown', 'skills', 'careers', 'experienceLevels', 'employmentTypes', 'workModels', 'education', 'experience']
+        fields = ['user', 'resume', 'headline', 'hometown', 'skills', 'careers', 'experienceLevels', 'employmentTypes', 'workModels', 'education', 'experience', "notify_by_email"]
         extra_kwargs = {"user": {"read_only": True}}
 
 class JobPostingSerializer(serializers.ModelSerializer):
