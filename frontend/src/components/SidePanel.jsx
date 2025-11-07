@@ -172,6 +172,8 @@ const SidePanel = ({ children, user, handleLogout }) => {
                     padding: "0px",
                     overflowY: "auto",
                     width: "calc(100vw - 80px)",
+                    height: "calc(100vh - 60px)",
+                    boxSizing: "border-box",
                 }}
             >
                 {children}
