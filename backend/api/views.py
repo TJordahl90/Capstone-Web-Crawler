@@ -682,3 +682,65 @@ class JobStatisticsView(APIView):
         except Exception as e:
             print(str(e))
             return Response({'error': str(e)}, status=500)
+
+class DashboardView(APIView):
+    permission_classes = [IsAuthenticated]
+
+    def get(self, request):
+        account = request.user.account
+
+        topStats = {}
+
+        # Get top job
+        try:
+            topJobs = matchUsersToJobs(account)
+
+            if(topJobs):
+                topJobId, topScore = list(topJobs.items())[0]
+                job = JobPosting.objects.get(id=topJobId)
+                serializedJob = JobPostingSerializer(job, context={'request': request}).data
+                topStats['topJob'] = {'job': serializedJob, 'score': topScore}
+
+        except IndexError:
+            print('Matched jobs dictionary is empty')
+        except JobPosting.DoesNotExist:
+            print(f'Job with ID {topJobId} does not exist')
+        except Exception as e:
+            print(f'An unexptected error occured: {e}')
+
+        # Newest Job added
+        try:
+            newestJob = JobPosting.objects.order_by('-id').first()
+            if(newestJob):
+                serializedNewestJob = JobPostingSerializer(newestJob, context={'request': request}).data
+                topStats['newestJob'] = serializedNewestJob
+        except Exception as e:
+            print(f'An unexpected error occured: {e}')
+
+        # Get top skill
+        try:
+            topSkill = (
+                            CommonSkills.objects
+                            .annotate(count=Count('job_postings'))
+                            .order_by('-count')
+                            .first()
+                          )
+            if(topSkill):
+                topStats['topSkill'] = {'skillName': topSkill.name, 'skillCount': topSkill.count}
+        except Exception as e:
+            print(f'An unexpected error ocurred: {e}')
+        
+        # Get top career
+        try:
+            topCareer = (
+                                CommonCareers.objects
+                                .annotate(count=Count('job_postings'))
+                                .order_by('-count')
+                                .first()
+                        )
+            if(topCareer):
+                topStats['topCareer'] = {'career': topCareer.name, 'count': topCareer.count}
+        except Exception as e:
+            print(f'An unexpected error ocurred: {e}')
+        
+        return Response(topStats, status=200)

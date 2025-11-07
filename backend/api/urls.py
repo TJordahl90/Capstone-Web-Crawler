@@ -3,7 +3,7 @@ from .views import (
     CreateUserView, UserProfileView, CreateVerificationView, LoginView, LogoutView,
     CsrfTokenView, AccountView, JobMatchingView, JobSearchingView, AllJobsView, DocumentView, 
     InterviewPrepChatBotView, InterviewSummaryView, BookmarkJobView, ApplicationStatusView, 
-    JobStatisticsView, DeleteUserView, ResetPasswordView, KeywordsView
+    JobStatisticsView, DeleteUserView, ResetPasswordView, KeywordsView, DashboardView
 )
 
 urlpatterns = [
@@ -28,4 +28,5 @@ urlpatterns = [
     path('job_statistics/', JobStatisticsView.as_view(), name='job_statistics'),
     path('delete_user/', DeleteUserView.as_view(), name="delete_user"),
     path('reset_password/', ResetPasswordView.as_view(), name='reset_password'),
+    path('dashboard', DashboardView.as_view(), name='user_dashboard')
 ]
