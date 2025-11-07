@@ -138,3 +138,67 @@ def searchForJobs(preference):
 #
 #    return top15
 #
+
+#Added another way to do the job matching that should take less time/ needs some testing
+# # Constants for scoring weights
+# EXPERIENCE_WEIGHT = 40
+# SKILLS_WEIGHT = 20
+# CAREERS_WEIGHT = 20
+# EMPLOYMENT_TYPE_WEIGHT = 10
+# WORK_MODEL_WEIGHT = 10
+# MIN_SCORE_THRESHOLD = 50
+
+# def matchUsersToJobs(account, limit=10):
+#     # Extract user preferences
+#     expLevels = set(account.experienceLevels.values_list('id', flat=True))
+#     careers = set(account.careers.values_list('id', flat=True))
+#     skills = set(account.skills.values_list('id', flat=True))
+#     employmentTypes = set(account.employmentTypes.values_list('id', flat=True))
+#     workModels = set(account.workModels.values_list('id', flat=True))
+    
+#     # Filter active jobs (add your criteria here)
+#     jobs = JobPosting.objects.filter(
+#         is_active=True  # example filter
+#     ).prefetch_related(
+#         'skills', 'careers', 'experienceLevels', 
+#         'employmentTypes', 'workModels'
+#     )
+    
+#     jobScores = {}
+    
+#     for job in jobs:
+#         score = 0
+        
+#         # Skills - reward match ratio
+#         jobSkills = {s.id for s in job.skills.all()}
+#         if jobSkills:
+#             matchRatio = len(skills & jobSkills) / len(jobSkills)
+#             score += SKILLS_WEIGHT * matchRatio
+        
+#         # Experience levels
+#         jobExp = {e.id for e in job.experienceLevels.all()}
+#         if expLevels & jobExp:
+#             score += EXPERIENCE_WEIGHT
+        
+#         # Careers
+#         jobCareers = {c.id for c in job.careers.all()}
+#         if careers & jobCareers:
+#             score += CAREERS_WEIGHT
+        
+#         # Employment types
+#         jobEmploymentTypes = {e.id for e in job.employmentTypes.all()}
+#         if employmentTypes & jobEmploymentTypes:
+#             score += EMPLOYMENT_TYPE_WEIGHT
+        
+#         # Work models
+#         jobWorkModels = {w.id for w in job.workModels.all()}
+#         if workModels & jobWorkModels:
+#             score += WORK_MODEL_WEIGHT
+        
+#         if score > MIN_SCORE_THRESHOLD:
+#             jobScores[job.id] = score
+    
+#     # Return top matches sorted by score
+#     rankedJobIds = sorted(jobScores.items(), key=lambda x: x[1], reverse=True)[:limit]
+    
+#     return {job_id: score for job_id, score in rankedJobIds}
