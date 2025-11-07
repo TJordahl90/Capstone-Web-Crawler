@@ -53,7 +53,7 @@ const AccountSetup = () => {
             });
 
             const parsedData = response.data;
-            navigate('/find-jobs');
+            navigate('/dashboard');
 
         } catch (err) {
             console.error('Error uploading resume:', err);
@@ -67,7 +67,7 @@ const AccountSetup = () => {
     };
 
     const handleSkip = () => {
-        navigate('/find-jobs');
+        navigate('/dashboard');
     };
 
     return (

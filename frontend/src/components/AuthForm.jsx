@@ -57,7 +57,7 @@ const AuthForm = ({ isLogin }) => {
                 } 
                 else {
                     setMessage("Login successful!");
-                    setTimeout(() => navigate("/find-jobs"), 1000);
+                    setTimeout(() => navigate("/dashboard"), 1000);
                 }
             } catch (err) {
                 setError(err.response?.data?.error || "Something went wrong.");

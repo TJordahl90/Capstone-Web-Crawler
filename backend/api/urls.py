@@ -28,6 +28,6 @@ urlpatterns = [
     path('job_statistics/', JobStatisticsView.as_view(), name='job_statistics'),
     path('delete_user/', DeleteUserView.as_view(), name="delete_user"),
     path('reset_password/', ResetPasswordView.as_view(), name='reset_password'),
-    path('dashboard', DashboardView.as_view(), name='user_dashboard'),
+    path('dashboard/', DashboardView.as_view(), name='user_dashboard'),
     path("user/notifications/email/", update_email_notifications, name="update_email_notifications")
 ]
