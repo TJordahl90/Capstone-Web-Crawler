@@ -77,9 +77,24 @@ def BankofAmerica():
                 description_element = body_element.find_element(By.CSS_SELECTOR, "div.job-description-body__internal")
                 raw_html = description_element.get_attribute("innerHTML")
                 soup = BeautifulSoup(raw_html, "html.parser")
-                description = soup.get_text(separator="\n", strip=True)
-                job_details['description'] = description
 
+                for tag in soup.find_all(["b", "strong"]):
+                    header_text = tag.get_text(strip=True)
+                    if header_text.endswith(":"):
+                        tag.insert_before("<<HEADER_BREAK>>")
+
+                for li in soup.find_all("li"):
+                    li_text = li.get_text(" ", strip=True)
+                    li.replace_with(f"• {li_text}")
+
+                for tag in soup.find_all(["p", "ul", "br"]):
+                    tag.insert_after("\n")
+
+                description = soup.get_text(separator="\n", strip=True)
+                description = description.replace("<<HEADER_BREAK>>", "\n\n")
+                description = re.sub(r'\n{3,}', '\n\n', description)
+                job_details['description'] = description.strip()
+                
                 # Complete job post text for keyword parsing
                 complete_jobpost = (title + "\n" + description).lower()
                 tokens = tokenizer(complete_jobpost)
@@ -96,7 +111,7 @@ def BankofAmerica():
                 employ_type_element = sidebar_element.find_element(By.CLASS_NAME, "job-information__type")
                 employ_type = employ_type_element.find_element(By.CSS_SELECTOR, "span").text.strip().lower()
                 job_details['employmentTypes'] = extract_employment_type(employ_type)
-                job_details['experienceLevels'] = extract_experience(title.lower())
+                job_details['experienceLevels'] = extract_experience(title.lower(), complete_jobpost)
                 job_details['workModels'] = ['onsite']
 
                 # Save location, dateposted, salary

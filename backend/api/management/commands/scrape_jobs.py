@@ -1,6 +1,6 @@
 from django.core.management.base import BaseCommand
 from api.models import *
-from api.web_scrapers import TexasInstruments, LockheedMartinSoftware, LockheedMartinSystems, LockheedMartinOtherTech, JSearchAPI, BankOfAmerica
+from api.web_scrapers import TexasInstruments, LockheedMartinSoftware, LockheedMartinSystems, LockheedMartinOtherTech, JSearchAPI, BankOfAmerica, JPMChase
 
 class Command(BaseCommand):
     """Runs all web scrapers in the 'web_scraper' folder"""
@@ -9,14 +9,13 @@ class Command(BaseCommand):
         
         # list all scrapers here
         scrapers = [
-            # Fugetec.fugetec,
             TexasInstruments.TexInstr,
+            JPMChase.jpmc_scraper,
             # LockheedMartinSoftware.lockheed_scraper,
-            # JPMChase.jpmc_scraper,
             # LockheedMartinSystems.lockheed_scraper,
             # LockheedMartinOtherTech.lockheed_scraper,
-            # JSearchAPI.jsearch_api,
-            # BankOfAmerica.BankofAmerica
+            JSearchAPI.jsearch_api,
+            BankOfAmerica.BankofAmerica
         ]
 
         # for scraping log
