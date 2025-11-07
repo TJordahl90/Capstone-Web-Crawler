@@ -25,6 +25,9 @@ from datetime import datetime, timedelta
 from django.db.models import Sum, Count, Q
 from django.db.models.functions import TruncMonth, TruncWeek, TruncDay, TruncYear
 from collections import Counter
+from rest_framework.decorators import api_view, permission_classes
+from rest_framework.permissions import IsAuthenticated
+from rest_framework.response import Response
 
 @permission_classes([AllowAny])
 @ensure_csrf_cookie
@@ -52,6 +55,7 @@ def sendEmailVerification(email, subject, message, templateName, context):
         msg.attach_alternative(htmlContent, 'text/html')
     
     msg.send(fail_silently=False)
+
 
 class CreateVerificationView(APIView):
     permission_classes = [AllowAny]
@@ -744,3 +748,25 @@ class DashboardView(APIView):
             print(f'An unexpected error ocurred: {e}')
         
         return Response(topStats, status=200)
+    
+@api_view(["POST"])
+@permission_classes([IsAuthenticated])
+def update_email_notifications(request):
+    """
+    POST /api/user/notifications/email/
+    Body: { "notify_by_email": true | false }    # accepts "true"/"false" too
+    """
+    raw = request.data.get("notify_by_email", None)
+    if raw is None:
+        return Response({"detail": "notify_by_email is required"}, status=400)
+
+    # accept bools or common truthy/falsey strings
+    if isinstance(raw, bool):
+        value = raw
+    else:
+        value = str(raw).strip().lower() in {"1", "true", "yes", "on"}
+
+    account = request.user.account
+    account.notify_by_email = value
+    account.save(update_fields=["notify_by_email"])
+    return Response({"notify_by_email": account.notify_by_email}, status=200)
