@@ -2,6 +2,7 @@ from django.db import models
 from django.contrib.auth.models import User
 from django.contrib.postgres.fields import ArrayField
 from django.utils import timezone
+from django_encrypted_filefield.fields import EncryptedFileField
 
 # e.g. Python, Node.Js, AWS, OOP, Git
 class CommonSkills(models.Model):
@@ -50,7 +51,7 @@ def userFilesPath(instance, filename):
 
 class Account(models.Model):
     user = models.OneToOneField(User, on_delete=models.CASCADE)
-    resume = models.FileField(upload_to=userFilesPath, blank=True, null=True)
+    resume = EncryptedFileField(upload_to=userFilesPath, blank=True, null=True)
     headline = models.CharField(max_length=50, blank=True, null=True)
     hometown = models.CharField(max_length=50, blank=True, null=True)
     skills = models.ManyToManyField(CommonSkills, related_name='accounts', blank=True)    

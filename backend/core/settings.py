@@ -17,6 +17,10 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 # SECURITY WARNING: keep the secret key used in production secret!
 SECRET_KEY = os.environ.get('DJANGO_SECRET_KEY')
 
+# Encryption keys
+DEFF_PASSWORD = str(os.environ.get('ENCRYPTED_FILEFIELD_PASSWORD', 'aded123ksljdsljiedjsto12kdlsoels'))
+DEFF_SALT = str(os.environ.get('ENCRYPTED_FILEFIELD_SALT', 'aioopoi918493dlocl0883ldncmbasxc'))
+
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = os.getenv('DEBUG', 'True') == 'True'
 
