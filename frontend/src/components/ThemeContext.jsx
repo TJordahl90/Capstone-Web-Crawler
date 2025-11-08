@@ -137,7 +137,7 @@ const themes = {
 
 
         //side panel- Wingpanel - mobile nav
-        background3: "#393E46", // sidepanel bg
+        background3: "rgba(255, 255, 255, 0.08)", // sidepanel bg
         text2: "white",  // Jobs, Saved, T,P button
         textonhover2: "white",  // text on hover
         hover2: "#00ADB5",      // button on hover
