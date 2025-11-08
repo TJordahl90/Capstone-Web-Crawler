@@ -3,7 +3,7 @@ import { useLocation } from "react-router-dom";
 import { motion, AnimatePresence } from "framer-motion";
 import { createPortal } from "react-dom";
 import { FaBriefcase, FaBookmark, FaUser, FaChartBar, FaUserCircle, FaFileAlt, FaSignOutAlt } from "react-icons/fa";
-import { MdSpaceDashboard } from "react-icons/md";
+import { FaThLarge } from "react-icons/fa";
 import { useTheme } from "./ThemeContext";
 import { useNavigate } from "react-router-dom";
 import api from "../api";
@@ -28,7 +28,7 @@ const SidePanel = ({ children, user, handleLogout }) => {
         navigate("/");
     };
     const navItems = [
-        { icon: <MdSpaceDashboard />, href: "/dashboard", key: "dashboard", label: "Dashboard" },
+        { icon: <FaThLarge />, href: "/dashboard", key: "dashboard", label: "Dashboard" },
         { icon: <FaBriefcase />, href: "/find-jobs", key: "jobs", label: "Explore Jobs" },
         { icon: <FaUser />, href: "/matched-jobs", key: "matches", label: "Matched Jobs" },
         { icon: <FaBookmark />, href: "/saved-jobs", key: "saved", label: "Saved Jobs" },
