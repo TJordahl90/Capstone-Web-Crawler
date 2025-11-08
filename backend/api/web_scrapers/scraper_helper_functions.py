@@ -213,7 +213,7 @@ def extract_work_model(description):
     return set(workmodels)
 
 # --------- COMPANY LOGO URLS -------------#
-TEXAS_INSTRUMENTS_LOGO = 'https://companieslogo.com/img/orig/TXN-e197f953.png?t=1720244494'    
-LOCKHEED_MARTIN_LOGO = 'https://companieslogo.com/img/orig/LMT-db3de619.png?t=1720244492'
+TEXAS_INSTRUMENTS_LOGO = 'https://cdn.brandfetch.io/idjx-GI6U-/w/400/h/400/theme/dark/icon.jpeg?c=1dxbfHSJFAPEGdCLU4o5B'    
+LOCKHEED_MARTIN_LOGO = 'https://cdn.brandfetch.io/idDGntMzIS/w/400/h/400/theme/dark/icon.jpeg?c=1dxbfHSJFAPEGdCLU4o5B'
 JPMC_LOGO = 'https://cdn.brandfetch.io/idB8rdGiLv/w/200/h/200/theme/dark/icon.jpeg?c=1dxbfHSJFAPEGdCLU4o5B'
-BANK_OF_AMERICA_LOGO = 'https://companieslogo.com/img/orig/BAC-e7995069.png?t=1720244490'
+BANK_OF_AMERICA_LOGO = 'https://cdn.brandfetch.io/ide4lTCz-B/w/400/h/400/theme/dark/icon.jpeg?c=1dxbfHSJFAPEGdCLU4o5B'

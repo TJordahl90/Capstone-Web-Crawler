@@ -11,9 +11,9 @@ class Command(BaseCommand):
         scrapers = [
             TexasInstruments.TexInstr,
             JPMChase.jpmc_scraper,
-            # LockheedMartinSoftware.lockheed_scraper,
-            # LockheedMartinSystems.lockheed_scraper,
-            # LockheedMartinOtherTech.lockheed_scraper,
+            LockheedMartinSoftware.lockheed_scraper,
+            LockheedMartinSystems.lockheed_scraper,
+            LockheedMartinOtherTech.lockheed_scraper,
             JSearchAPI.jsearch_api,
             BankOfAmerica.BankofAmerica
         ]
