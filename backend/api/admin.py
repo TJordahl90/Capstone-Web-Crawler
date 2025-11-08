@@ -1,7 +1,11 @@
 from django.contrib import admin
+from django.utils.html import format_html
 from .models import *
 
 # Register your models here.
+class AccountAdmin(admin.ModelAdmin):
+    exclude = ('resume', )
+
 admin.site.register(CommonSkills)
 admin.site.register(CommonCareers)
 admin.site.register(CommonDegrees)
@@ -10,7 +14,6 @@ admin.site.register(CommonEmploymentTypes)
 admin.site.register(CommonWorkModels)
 admin.site.register(Education)
 admin.site.register(Experience)
-admin.site.register(Account)
 admin.site.register(JobPosting)
 admin.site.register(SavedJob)
 admin.site.register(JobTrend)
@@ -18,3 +21,5 @@ admin.site.register(Verification)
 admin.site.register(ChatBotHistory)
 admin.site.register(JobStatistics)
 admin.site.register(Project)
+
+admin.site.register(Account, AccountAdmin)
