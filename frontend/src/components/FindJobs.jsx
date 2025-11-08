@@ -374,7 +374,7 @@ const FindJobs = ({ jobPostTypeProp }) => {
                 height: "100%",
                 width: "100%",
                 flex: 1,
-                backgroundColor: "rgba(255, 255, 255, 0.03)",
+            
                 zIndex: 5,
                 color: "var(--text6)",
                 padding: 0,
@@ -528,7 +528,6 @@ const FindJobs = ({ jobPostTypeProp }) => {
                         className="p-0"
                         style={{
                             height: "100%",
-                            backgroundColor: "rgba(255, 255, 255, 0.03)",
                             color: "var(--text6)"
                         }}
                     >
