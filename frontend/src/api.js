@@ -22,10 +22,11 @@ axios.defaults.withCredentials = true
 axios.defaults.withXSRFToken = true
 axios.defaults.headers.common['X-CSRFToken'] = getCookie('csrftoken');
 
+const isLocalhost = window.location.hostname === "localhost";
 
 // Create an Axios instance
 const api = axios.create({
-    baseURL: 'https://api.northstarjobs.work/api',
+    baseURL: isLocalhost ? "http://localhost:8000/api" : "https://api.northstarjobs.work/api"
 });
 
 export default api;

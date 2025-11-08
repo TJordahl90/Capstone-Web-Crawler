@@ -18,14 +18,20 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 SECRET_KEY = os.environ.get('DJANGO_SECRET_KEY')
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = False
+DEBUG = os.getenv('DEBUG', 'True') == 'True'
 
-ALLOWED_HOSTS = [
-    'capstone-web-crawler.onrender.com',
-    'capstone-web-crawler-frontend.onrender.com',
-    'api.northstarjobs.work',
-    'northstarjobs.work',
-]
+if DEBUG:
+    ALLOWED_HOSTS = [
+        'localhost', 
+        '127.0.0.1'
+    ]
+else:
+    ALLOWED_HOSTS = [
+        'capstone-web-crawler.onrender.com',
+        'capstone-web-crawler-frontend.onrender.com',
+        'api.northstarjobs.work',
+        'northstarjobs.work',
+    ]
 
 
 # Application definition
@@ -149,35 +155,59 @@ MEDIA_ROOT = BASE_DIR / 'media'
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
+if DEBUG:
+    CORS_ALLOWED_ORIGINS = [
+        'http://localhost:5173',
+        'http://127.0.0.1:5173',
+    ]
 
-CORS_ALLOWED_ORIGINS = [
-    'https://capstone-web-crawler.onrender.com',
-    'https://capstone-web-crawler-frontend.onrender.com',
-    'https://www.northstarjobs.work',
-    'https://northstarjobs.work',
-    'https://api.northstarjobs.work',
-]
+    CSRF_TRUSTED_ORIGINS = [
+        'http://localhost:5173',
+        'http://127.0.0.1:5173',
+    ]
 
-CSRF_TRUSTED_ORIGINS = [
-    'https://capstone-web-crawler.onrender.com',
-    'https://capstone-web-crawler-frontend.onrender.com',
-    'https://www.northstarjobs.work',
-    'https://northstarjobs.work',
-    'https://api.northstarjobs.work',
-]
+    CORS_ALLOW_CREDENTIALS = True
 
-CORS_ALLOW_CREDENTIALS = True
+    CSRF_COOKIE_SAMESITE = 'Lax'
+    SESSION_COOKIE_SAMESITE = 'Lax'
 
-CSRF_COOKIE_SAMESITE = 'None'
-SESSION_COOKIE_SAMESITE = 'None'
+    CSRF_USE_SESSIONS = False
 
-CSRF_COOKIE_HTTPONLY = False
-SESSION_COOKIE_HTTPONLY = True
+    CSRF_COOKIE_HTTPONLY = False
+    SESSION_COOKIE_HTTPONLY = True
 
-CSRF_USE_SESSIONS = False
+    CSRF_COOKIE_SECURE = False
+    SESSION_COOKIE_SECURE = False
 
-CSRF_COOKIE_SECURE = True
-SESSION_COOKIE_SECURE = True
+else:
+    CORS_ALLOWED_ORIGINS = [
+        'https://capstone-web-crawler.onrender.com',
+        'https://capstone-web-crawler-frontend.onrender.com',
+        'https://www.northstarjobs.work',
+        'https://northstarjobs.work',
+        'https://api.northstarjobs.work',
+    ]
+    
+    CSRF_TRUSTED_ORIGINS = [
+        'https://capstone-web-crawler.onrender.com',
+        'https://capstone-web-crawler-frontend.onrender.com',
+        'https://www.northstarjobs.work',
+        'https://northstarjobs.work',
+        'https://api.northstarjobs.work',
+    ]
 
-CSRF_COOKIE_DOMAIN = '.northstarjobs.work'
-SESSION_COOKIE_DOMAIN = '.northstarjobs.work'
+    CORS_ALLOW_CREDENTIALS = True
+
+    CSRF_COOKIE_SAMESITE = 'None'
+    SESSION_COOKIE_SAMESITE = 'None'
+
+    CSRF_COOKIE_HTTPONLY = False
+    SESSION_COOKIE_HTTPONLY = True
+
+    CSRF_USE_SESSIONS = False
+
+    CSRF_COOKIE_SECURE = True
+    SESSION_COOKIE_SECURE = True
+
+    CSRF_COOKIE_DOMAIN = '.northstarjobs.work'
+    SESSION_COOKIE_DOMAIN = '.northstarjobs.work'
