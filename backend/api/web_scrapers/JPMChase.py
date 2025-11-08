@@ -12,13 +12,16 @@ import csv
 import logging
 import random
 import os
+import re
 from datetime import datetime
 
 # Try to import helper functions, but provide fallbacks if not available
 try:
     from .scraper_helper_functions import (
         load_keywords, tokenizer, extract_skills_and_careers, 
-        extract_degree, extract_experience, extract_work_model
+        extract_degree, extract_experience, extract_work_model,
+        extract_employment_type, extract_job_posting_summary, 
+        JPMC_LOGO
     )
     HELPERS_AVAILABLE = True
 except ImportError:
@@ -26,7 +29,6 @@ except ImportError:
     logging.warning("scraper_helper_functions not available, using fallback functions")
 
 # JPMC_LOGO = "https://logo.clearbit.com/jpmorganchase.com" ublock origin blocks this link
-JPMC_LOGO = 'https://companieslogo.com/img/orig/JPM-6b337108.png?t=1720244492'
 
 # Fallback functions if helper module is not available
 def load_keywords_fallback(filename):
@@ -166,6 +168,7 @@ if HELPERS_AVAILABLE:
     extract_degree_func = extract_degree
     extract_experience_func = extract_experience
     extract_work_model_func = extract_work_model
+    extract_employment_func = extract_employment_type
 else:
     load_keywords_func = load_keywords_fallback
     tokenizer_func = tokenizer_fallback
@@ -267,7 +270,8 @@ def jpmc_scraper():
     chrome_options.add_experimental_option("excludeSwitches", ["enable-automation"])
     chrome_options.add_experimental_option('useAutomationExtension', False)
 
-    driver = webdriver.Chrome(service=Service(ChromeDriverManager().install()), options=chrome_options)
+    # driver = webdriver.Chrome(service=Service(ChromeDriverManager().install()), options=chrome_options)
+    driver = webdriver.Chrome(service=Service(ChromeDriverManager(driver_version="141.0.7390.108").install()), options=chrome_options)
     wait = WebDriverWait(driver, 15)
 
     try:
@@ -365,7 +369,22 @@ def jpmc_scraper():
                     # Extract description
                     try:
                         description_element = driver.find_element(By.CLASS_NAME, "job-details__description-content")
-                        description = description_element.text.strip()
+                        raw_html = description_element.get_attribute("innerHTML")
+                        soup = BeautifulSoup(raw_html, "html.parser")
+
+                        for li in soup.find_all("li"):
+                            li_text = li.get_text(" ", strip=True)
+                            li.replace_with(f"• {li_text}")
+
+                        for p in soup.find_all("p"):
+                            p.insert_before("<<BREAK>>")
+
+                        for tag in soup.find_all(["ul", "br"]):
+                            tag.insert_after("\n")
+
+                        description = soup.get_text(separator="\n", strip=True)
+                        description = description.replace("<<BREAK>>", "\n\n")
+                        description = re.sub(r"\n{3,}", "\n\n", description).strip()
                         job_details['description'] = description
                     except NoSuchElementException:
                         job_details['description'] = None
@@ -383,13 +402,6 @@ def jpmc_scraper():
                     # Extract date posted
                     job_details['datePosted'] = extract_date_posted(driver)
                     
-                    # Extract employment type
-                    employment_type = extract_employment_type_jpmc(driver)
-                    if employment_type:
-                        job_details['employmentTypes'] = [employment_type]
-                    else:
-                        job_details['employmentTypes'] = []
-                    
                     # Extract salary
                     job_details['salary'] = extract_salary_jpmc(driver)
                     
@@ -403,20 +415,24 @@ def jpmc_scraper():
                         job_details['degrees'] = extract_degree_func(complete_jobpost)
                         
                         # Extract experience level from description based on years of experience
-                        job_details['experienceLevels'] = extract_experience_from_yoe(job_details['description'])
+                        job_details['experienceLevels'] = extract_experience_func(title.lower(), job_details['description'])
+                        
+                        # Extract employment type
+                        # employment_type = extract_employment_type_jpmc(driver)
+                        job_details['employmentTypes'] = extract_employment_func(complete_jobpost)
                         
                         # Extract work models
                         work_models = extract_work_model_func(complete_jobpost)
                         # If empty, default to On-Site
-                        job_details['workModels'] = work_models if work_models else ['On-Site']
+                        job_details['workModels'] = work_models if work_models else ['onsite']
                     else:
                         job_details['skills'] = []
                         job_details['careers'] = []
                         job_details['degrees'] = []
-                        job_details['experienceLevels'] = ['Entry Level']  # Default to Entry Level
-                        job_details['workModels'] = ['On-Site']  # Default to On-Site
+                        job_details['experienceLevels'] = ['entry']  # Default to Entry Level
+                        job_details['workModels'] = ['onsite']  # Default to On-Site
                     
-                    job_details['summary'] = "This will be the AI summary. Not included until testing is done."
+                    job_details['summary'] = "no summary for now" #extract_job_posting_summary(complete_jobpost)
                     
                 except TimeoutException:
                     logging.error(f"Timeout loading job page: {job['link']}")

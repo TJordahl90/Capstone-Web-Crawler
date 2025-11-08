@@ -8,7 +8,8 @@ from rest_framework.decorators import permission_classes
 from django.middleware.csrf import get_token
 from django.views.decorators.csrf import ensure_csrf_cookie
 from django.contrib.auth import authenticate, login, logout
-from django.core.mail import send_mail
+from django.core.mail import EmailMultiAlternatives
+from django.template.loader import render_to_string
 from django.conf import settings
 import random
 from django.shortcuts import get_object_or_404
@@ -24,6 +25,9 @@ from datetime import datetime, timedelta
 from django.db.models import Sum, Count, Q
 from django.db.models.functions import TruncMonth, TruncWeek, TruncDay, TruncYear
 from collections import Counter
+from rest_framework.decorators import api_view, permission_classes
+from rest_framework.permissions import IsAuthenticated
+from rest_framework.response import Response
 
 @api_view(['GET'])
 @permission_classes([AllowAny])
@@ -32,9 +36,6 @@ def CsrfTokenView(request):
     """Create csrf token and send to frontend"""
     csrf_token = get_token(request) # built-in function that creates csrf tokens
     return JsonResponse({'csrfToken': csrf_token})
-
-def sendMail(to, subject, message):
-    send_mail(subject, message, settings.EMAIL_HOST_USER, to, fail_silently=False)
 
 class CreateUserView(APIView):
     """Register a new user"""
@@ -46,6 +47,16 @@ class CreateUserView(APIView):
             serializer.save()
             return Response(serializer.data, status=status.HTTP_201_CREATED)
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
+def sendEmailVerification(email, subject, message, templateName, context):
+    msg = EmailMultiAlternatives(subject, message, settings.EMAIL_HOST_USER, email)
+
+    if(templateName):
+        htmlContent = render_to_string(templateName, context)
+        msg.attach_alternative(htmlContent, 'text/html')
+    
+    msg.send(fail_silently=False)
+
 
 class CreateVerificationView(APIView):
     permission_classes = [AllowAny]
@@ -61,10 +72,13 @@ class CreateVerificationView(APIView):
         code = str(random.randint(100000, 999999))
         Verification.objects.create(email=email, code=code)
 
-        message = f'Your verification code is: {code}'
         subject = 'Verification Code for Northstar Jobs'
+        message = f'Your verification code is {code}'
         recipient = [email]
-        sendMail(recipient, subject, message)
+        context = {'code': code, 'user': user}
+
+        sendEmailVerification(recipient, subject, message, 'emails/emailVerification.html', context)
+
         return Response({"message": "Verification code sent."}, status=status.HTTP_201_CREATED)
     
     def get(self, request):
@@ -483,10 +497,11 @@ class InterviewPrepChatBotView(APIView):
         account = request.user.account
         job_id = request.GET.get('job_id')
 
-        one_day_ago = timezone.now() - timedelta(days=1)
-        chat_today = ChatBotHistory.objects.filter(account=account, timestamp__gte=one_day_ago).count()
-        if chat_today >= 4:
-            return Response({"error": "You have reached your limit of 4 questions per day. Please try again tommorow."}, status=429)
+        # one_day_ago = timezone.now() - timedelta(days=1)
+# chat_today = ChatBotHistory.objects.filter(account=account, timestamp__gte=one_day_ago).count()
+# if chat_today >= 4:
+#     return Response({"error": "You have reached your limit of 4 questions per day. Please try again tommorow."}, status=429)
+
         
         try:
             job_posting = JobPosting.objects.get(id=job_id)
@@ -672,3 +687,87 @@ class JobStatisticsView(APIView):
         except Exception as e:
             print(str(e))
             return Response({'error': str(e)}, status=500)
+
+class DashboardView(APIView):
+    permission_classes = [IsAuthenticated]
+
+    def get(self, request):
+        account = request.user.account
+
+        topStats = {}
+
+        # Get top job
+        try:
+            topJobs = matchUsersToJobs(account)
+
+            if(topJobs):
+                topJobId, topScore = list(topJobs.items())[0]
+                job = JobPosting.objects.get(id=topJobId)
+                serializedJob = JobPostingSerializer(job, context={'request': request}).data
+                topStats['topJob'] = {'job': serializedJob, 'score': int(topScore)}
+
+        except IndexError:
+            print('Matched jobs dictionary is empty')
+        except JobPosting.DoesNotExist:
+            print(f'Job with ID {topJobId} does not exist')
+        except Exception as e:
+            print(f'An unexptected error occured: {e}')
+
+        # Newest Job added
+        try:
+            newestJob = JobPosting.objects.order_by('-id').first()
+            if(newestJob):
+                serializedNewestJob = JobPostingSerializer(newestJob, context={'request': request}).data
+                topStats['newestJob'] = serializedNewestJob
+        except Exception as e:
+            print(f'An unexpected error occured: {e}')
+
+        # Get top skill
+        try:
+            topSkill = (
+                            CommonSkills.objects
+                            .annotate(count=Count('job_postings'))
+                            .order_by('-count')
+                            .first()
+                          )
+            if(topSkill):
+                topStats['topSkill'] = {'skillName': topSkill.name, 'skillCount': topSkill.count}
+        except Exception as e:
+            print(f'An unexpected error ocurred: {e}')
+        
+        # Get top career
+        try:
+            topCareer = (
+                                CommonCareers.objects
+                                .annotate(count=Count('job_postings'))
+                                .order_by('-count')
+                                .first()
+                        )
+            if(topCareer):
+                topStats['topCareer'] = {'career': topCareer.name, 'count': topCareer.count}
+        except Exception as e:
+            print(f'An unexpected error ocurred: {e}')
+        
+        return Response(topStats, status=200)
+    
+@api_view(["POST"])
+@permission_classes([IsAuthenticated])
+def update_email_notifications(request):
+    """
+    POST /api/user/notifications/email/
+    Body: { "notify_by_email": true | false }    # accepts "true"/"false" too
+    """
+    raw = request.data.get("notify_by_email", None)
+    if raw is None:
+        return Response({"detail": "notify_by_email is required"}, status=400)
+
+    # accept bools or common truthy/falsey strings
+    if isinstance(raw, bool):
+        value = raw
+    else:
+        value = str(raw).strip().lower() in {"1", "true", "yes", "on"}
+
+    account = request.user.account
+    account.notify_by_email = value
+    account.save(update_fields=["notify_by_email"])
+    return Response({"notify_by_email": account.notify_by_email}, status=200)

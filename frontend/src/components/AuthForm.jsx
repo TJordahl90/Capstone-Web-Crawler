@@ -13,10 +13,14 @@ const AuthForm = ({ isLogin }) => {
     const [formData, setFormData] = useState({
         username: '',
         password: '',
+        confirmPassword: '',
         first_name: '',
         last_name: '',
         email: '',
+        confirmEmail: '',
     });
+    const [showPassword, setShowPassword] = useState(false);
+    const [showConfirmPassword, setShowConfirmedPassword] = useState(false);
 
     useEffect(() => {
         const getCsrfToken = async () => {
@@ -36,6 +40,31 @@ const AuthForm = ({ isLogin }) => {
         setLoading(true);
 
         if (!isLogin) {
+            const password = formData.password;
+            const passwordRegex = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[\W_]).{8,}$/;
+
+            if(!passwordRegex.test(password)){
+                setError("Password must be at least 8 characters long and include an uppercase letter, lowercase letter, number, and special character");
+                setLoading(false);
+                return;
+            }
+
+            const confirmPassword = formData.confirmPassword;
+            if(password !== confirmPassword){
+                setError("Passwords do not match");
+                setLoading(false);
+                return;
+            }
+
+            const email = formData.email;
+            const confirmEmail = formData.confirmEmail;
+
+            if(email !== confirmEmail){
+                setError("Emails do not match");
+                setLoading(false);
+                return;
+            }
+
             try {
                 await api.post('/register/', formData);
                 await api.post('/verification/', { email: formData.email });
@@ -57,7 +86,7 @@ const AuthForm = ({ isLogin }) => {
                 } 
                 else {
                     setMessage("Login successful!");
-                    setTimeout(() => navigate("/find-jobs"), 1000);
+                    setTimeout(() => navigate("/dashboard"), 1000);
                 }
             } catch (err) {
                 setError(err.response?.data?.error || "Something went wrong.");
@@ -172,6 +201,15 @@ const AuthForm = ({ isLogin }) => {
                                             onChange={(e) => setFormData({ ...formData, password: e.target.value })}
                                             placeholder="Enter a password"
                                         />
+                                        {formData.password && !/^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[\W_]).{8,}$/.test(formData.password) && (
+                                            <small style={{ color: "red" }}>
+                                                Must be 8+ characters and include an uppercase, lowercase, number, and special character
+                                            </small>
+                                        )}
+                                        <InputField label="Confirm Password" type="password" value={formData.confirmPassword}
+                                            onChange={(e) => setFormData({ ...formData, confirmPassword: e.target.value })}
+                                            placeholder="Confirm your password"
+                                        />
                                         <InputField label="First Name" type="text" value={formData.first_name}
                                             onChange={(e) => setFormData({ ...formData, first_name: e.target.value })}
                                             placeholder="Enter your first name"
@@ -183,6 +221,10 @@ const AuthForm = ({ isLogin }) => {
                                         <InputField label="Email" type="email" value={formData.email}
                                             onChange={(e) => setFormData({ ...formData, email: e.target.value })}
                                             placeholder="Enter your email"
+                                        />
+                                        <InputField label="Confirm Email" type="email" value={formData.confirmEmail}
+                                            onChange={(e) => setFormData({ ...formData, confirmEmail: e.target.value })}
+                                            placeholder="Confirm your email"
                                         />
                                     </>
                                 )}

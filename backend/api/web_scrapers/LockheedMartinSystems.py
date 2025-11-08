@@ -31,11 +31,19 @@ def extract_description(soup):
     section_soup = BeautifulSoup(section_html, "html.parser")
 
     for br in section_soup.find_all("br"):
-        br.replace_with("\n")
-    for bold in section_soup.find_all(["b", "strong"]):
-        bold.insert_before("\n\n")
+        br.replace_with("<<BREAK>>")
 
-    return section_soup.get_text(separator="\n", strip=True).strip()
+    for bold in section_soup.find_all(["b", "strong"]):
+        bold_text = bold.get_text(strip=True)
+        if len(bold_text.split()) <= 6:  
+            bold.insert_before("<<BREAK>>")
+
+    text = section_soup.get_text(separator=" ", strip=True)
+    text = re.sub(r'\s*-\s+', r'\n• ', text)
+    text = text.replace("<<BREAK>>", "\n")
+    text = re.sub(r'\n{3,}', '\n\n', text).strip()
+
+    return text
    
 def lockheed_scraper():
     """Scrapes all the data"""
@@ -198,11 +206,11 @@ def lockheed_scraper():
                     tokens = tokenizer(complete_jobpost)
 
                     job_details['description'] = description
-                    job_details['summary'] = "This will be the AI summary. Not included until testing is done."
+                    job_details['summary'] = extract_job_posting_summary(complete_jobpost)
                     job_details['skills'] = extract_skills_and_careers(tokens, complete_jobpost, skill_keywords)
                     job_details['careers'] = extract_skills_and_careers(tokens, complete_jobpost, career_keywords)
                     job_details['degrees'] = extract_degree(complete_jobpost)
-                    job_details['experienceLevels'] = extract_experience(title.lower())
+                    job_details['experienceLevels'] = extract_experience(title.lower(), complete_jobpost)
                     job_details['employmentTypes'] = extract_employment_type(complete_jobpost)
                     job_details['workModels'] = extract_work_model(complete_jobpost)
 

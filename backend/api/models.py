@@ -58,7 +58,7 @@ class Account(models.Model):
     experienceLevels = models.ManyToManyField(CommonExperienceLevels, related_name='accounts', blank=True)
     employmentTypes = models.ManyToManyField(CommonEmploymentTypes, related_name='accounts', blank=True)    
     workModels = models.ManyToManyField(CommonWorkModels, related_name='accounts', blank=True)
-    emailVerification = models.BooleanField(default=False)
+    notify_by_email = models.BooleanField(default=True, help_text="If false, the user will not receive email notifications.")
 
     def __str__(self):
         return self.user.username

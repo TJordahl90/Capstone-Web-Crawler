@@ -76,7 +76,7 @@ def jsearch_api():
                     job_details['skills'] = extract_skills_and_careers(tokens, complete_post, skill_keywords)
                     job_details['careers'] = extract_skills_and_careers(tokens, complete_post, career_keywords)
                     job_details['degrees'] = extract_degree(complete_post)
-                    job_details['experienceLevels'] = extract_experience(complete_post)
+                    job_details['experienceLevels'] = extract_experience(title.lower(), complete_post)
                     job_details['employmentTypes'] = employment_types
 
                     # need to get logo url from json 

@@ -374,7 +374,7 @@ const FindJobs = ({ jobPostTypeProp }) => {
                 height: "100%",
                 width: "100%",
                 flex: 1,
-                backgroundColor: "rgba(255, 255, 255, 0.03)",
+            
                 zIndex: 5,
                 color: "var(--text6)",
                 padding: 0,
@@ -392,14 +392,14 @@ const FindJobs = ({ jobPostTypeProp }) => {
                         style={{
                             height: "100%",
                             color: "var(--text6)",
-                            borderRight: "1px solid var(--border)"
+                            borderRight: "2px solid var(--border)"
                         }}
                     >
                         {/* Search bar and buttons - only displays when jobPostType is all or search */}
                         {(jobPostType === "all" || jobPostType === "search") && (
                             <div
                                 className="p-2"
-                                style={{ borderBottom: "1px solid var(--border)" }}
+                                style={{ borderBottom: "2px solid var(--border)" }}
                             >
 
                                 <Form
@@ -528,7 +528,6 @@ const FindJobs = ({ jobPostTypeProp }) => {
                         className="p-0"
                         style={{
                             height: "100%",
-                            backgroundColor: "rgba(255, 255, 255, 0.03)",
                             color: "var(--text6)"
                         }}
                     >
@@ -540,7 +539,7 @@ const FindJobs = ({ jobPostTypeProp }) => {
                                     style={{
                                         backgroundColor: "rgba(255, 255, 255, 0.15)",
                                         color: "var(--savebtntxt)",
-                                        border: "1px solid var(--border)",
+                                        border: "2px solid var(--border)",
                                         borderRadius: "8px",
                                         backdropFilter: "blur(6px)",
                                         WebkitBackdropFilter: "blur(6px)",
