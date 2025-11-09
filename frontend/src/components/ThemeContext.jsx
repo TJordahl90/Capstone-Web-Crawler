@@ -12,6 +12,7 @@ const themes = {
         accent1: "#2185D5",
         accent2: "#FFD369",
         accent3: "#FF6B6B",
+        accent4: "#05f22c",
 
         border: "rgba(255, 255, 255, 0.15)",
         hover: "rgba(255, 255, 255, 0.10)",
@@ -41,6 +42,7 @@ export const ThemeProvider = ({ children }) => {
             root.style.setProperty("--accent1", theme.accent1);
             root.style.setProperty("--accent2", theme.accent2);
             root.style.setProperty("--accent3", theme.accent3);
+            root.style.setProperty("--accent4", theme.accent4);
 
             root.style.setProperty("--border", theme.border);
             root.style.setProperty("--hover", theme.hover);

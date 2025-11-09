@@ -1,0 +1,274 @@
+import requests
+from bs4 import BeautifulSoup
+import pandas as pd
+from datetime import datetime
+import time
+import urllib.parse
+
+class LinkedInJobLinkScraper:
+    def __init__(self):
+        self.base_url = "https://www.linkedin.com/jobs/search/?"
+        self.jobs_data = []
+        self.session = requests.Session()
+        
+        # More complete headers to mimic a real browser
+        self.session.headers.update({
+            'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36',
+            'Accept': 'text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,*/*;q=0.8',
+            'Accept-Language': 'en-US,en;q=0.9',
+            'Accept-Encoding': 'gzip, deflate, br',
+            'Connection': 'keep-alive',
+            'Upgrade-Insecure-Requests': '1',
+            'Sec-Fetch-Dest': 'document',
+            'Sec-Fetch-Mode': 'navigate',
+            'Sec-Fetch-Site': 'none',
+            'Sec-Fetch-User': '?1',
+            'Cache-Control': 'max-age=0',
+            'DNT': '1'
+        })
+    
+    def build_search_url(self, keywords="", location="", experience_level="", 
+                        job_type="", remote_filter="", start=0):
+        """
+        Build LinkedIn search URL with various filters
+        
+        Parameters:
+        - keywords: Job title or skills
+        - location: Location
+        - experience_level: internship, entry, associate, mid, director, executive
+        - job_type: full-time, part-time, contract, temporary, volunteer, internship
+        - remote_filter: remote, hybrid, on-site
+        - start: pagination start position
+        """
+        
+        params = {}
+        
+        if keywords:
+            params['keywords'] = keywords
+        
+        if location:
+            params['location'] = location
+        
+        # Experience levels
+        experience_mapping = {
+            'internship': '1',
+            'entry': '2', 
+            'associate': '3',
+            'mid': '4',
+            'director': '5',
+            'executive': '6'
+        }
+        if experience_level.lower() in experience_mapping:
+            params['f_E'] = experience_mapping[experience_level.lower()]
+        
+        # Job type
+        job_type_mapping = {
+            'full-time': 'F',
+            'part-time': 'P',
+            'contract': 'C',
+            'temporary': 'T',
+            'volunteer': 'V',
+            'internship': 'I'
+        }
+        if job_type.lower() in job_type_mapping:
+            params['f_JT'] = job_type_mapping[job_type.lower()]
+        
+        # Remote work
+        remote_mapping = {
+            'remote': '2',
+            'hybrid': '3',
+            'on-site': '1'
+        }
+        if remote_filter.lower() in remote_mapping:
+            params['f_WT'] = remote_mapping[remote_filter.lower()]
+        
+        # Time filter - jobs posted in last 24 hours
+        params['f_TPR'] = 'r86400'
+        
+        # Pagination
+        params['start'] = start
+        
+        query_string = urllib.parse.urlencode(params)
+        return f"{self.base_url}{query_string}"
+    
+    def extract_job_links(self, html_content):
+        """Extract job links and titles from HTML"""
+        soup = BeautifulSoup(html_content, 'html.parser')
+        
+        jobs = []
+        
+        # Try multiple selectors for different page structures
+        # Method 1: base-card__full-link (most common)
+        job_links = soup.find_all('a', class_='base-card__full-link')
+        
+        if not job_links:
+            # Method 2: Alternative class names
+            job_links = soup.find_all('a', attrs={'data-tracking-control-name': 'public_jobs_jserp-result_search-card'})
+        
+        if not job_links:
+            # Method 3: Look for any link with /jobs/view/ in href
+            all_links = soup.find_all('a', href=True)
+            job_links = [link for link in all_links if '/jobs/view/' in link.get('href', '')]
+        
+        print(f"  Debug: Found {len(job_links)} job links using extraction method")
+        
+        for link in job_links:
+            # Get the href
+            href = link.get('href', '')
+            
+            # Make sure it's a full URL
+            if href and not href.startswith('http'):
+                href = 'https://www.linkedin.com' + href
+            
+            # Get the job title - try multiple methods
+            title = None
+            
+            # Method 1: sr-only span
+            title_span = link.find('span', class_='sr-only')
+            if title_span:
+                title = title_span.get_text(strip=True)
+            
+            # Method 2: Look in parent card for title
+            if not title:
+                parent_card = link.find_parent('div', class_='base-card')
+                if parent_card:
+                    title_elem = parent_card.find('h3') or parent_card.find('h4')
+                    if title_elem:
+                        title = title_elem.get_text(strip=True)
+            
+            # Method 3: aria-label
+            if not title:
+                title = link.get('aria-label', '')
+            
+            # Method 4: Any text in the link
+            if not title:
+                title = link.get_text(strip=True)
+            
+            if not title:
+                title = 'No title found'
+            
+            if href:
+                job_data = {
+                    'title': title,
+                    'link': href,
+                    'scraped_at': datetime.now().isoformat()
+                }
+                jobs.append(job_data)
+        
+        return jobs
+    
+    def fetch_jobs(self, search_url, max_pages=1):
+        """Fetch jobs from LinkedIn search page"""
+        print(f"Fetching jobs from: {search_url}")
+        
+        all_jobs = []
+        
+        for page in range(max_pages):
+            try:
+                # Add pagination
+                current_url = search_url if page == 0 else f"{search_url}&start={page * 25}"
+                
+                print(f"Scraping page {page + 1}...")
+                response = self.session.get(current_url, timeout=10)
+                
+                # Check if we got blocked
+                if response.status_code == 403:
+                    print("❌ Access forbidden (403) - LinkedIn is blocking the request")
+                    print("Try using cookies from your browser (see instructions in code)")
+                    break
+                elif response.status_code == 429:
+                    print("❌ Rate limited (429) - Too many requests")
+                    break
+                
+                response.raise_for_status()
+                
+                # Save HTML for debugging
+                if page == 0:
+                    with open('debug_response.html', 'w', encoding='utf-8') as f:
+                        f.write(response.text)
+                    print("Saved response to debug_response.html for inspection")
+                
+                # Extract jobs from HTML
+                jobs = self.extract_job_links(response.text)
+                print(f"Found {len(jobs)} jobs on page {page + 1}")
+                
+                if len(jobs) == 0:
+                    print("⚠️  No jobs found - might be blocked or page structure changed")
+                
+                all_jobs.extend(jobs)
+                
+                # Be respectful with delays
+                time.sleep(2)
+                
+            except requests.exceptions.RequestException as e:
+                print(f"Error fetching page {page + 1}: {e}")
+                break
+        
+        self.jobs_data.extend(all_jobs)
+        return all_jobs
+    
+    def save_to_csv(self, filename="linkedin_job_links.csv"):
+        """Save job links to CSV file"""
+        if not self.jobs_data:
+            print("No job data to save")
+            return
+        
+        df = pd.DataFrame(self.jobs_data)
+        df.to_csv(filename, index=False)
+        print(f"Saved {len(self.jobs_data)} job links to {filename}")
+    
+    def save_to_json(self, filename="linkedin_job_links.json"):
+        """Save job links to JSON file"""
+        if not self.jobs_data:
+            print("No job data to save")
+            return
+        
+        df = pd.DataFrame(self.jobs_data)
+        df.to_json(filename, orient='records', indent=2)
+        print(f"Saved {len(self.jobs_data)} job links to {filename}")
+    
+    def search_multiple_criteria(self, search_configs):
+        """Search for jobs with multiple different criteria"""
+        all_jobs = []
+        
+        for config in search_configs:
+            print(f"\n--- Searching: {config.get('name', 'Unnamed Search')} ---")
+            max_pages = config.pop('max_pages', 1)
+            config.pop('name', None)
+            
+            search_url = self.build_search_url(**config)
+            jobs = self.fetch_jobs(search_url, max_pages=max_pages)
+            all_jobs.extend(jobs)
+            
+            time.sleep(3)
+        
+        return all_jobs
+
+
+# Example usage
+if __name__ == "__main__":
+    scraper = LinkedInJobLinkScraper()
+    
+    # Example 1: Simple search
+    print("=== Simple Job Search ===")
+    url = scraper.build_search_url(
+        keywords="python developer", 
+        location="New York", 
+        experience_level="mid"
+    )
+    jobs = scraper.fetch_jobs(url, max_pages=1)
+    
+    # Save results
+    if scraper.jobs_data:
+        scraper.save_to_csv()
+        scraper.save_to_json()
+        
+        # Display results
+        print(f"\n=== Results (Total: {len(scraper.jobs_data)}) ===")
+        for i, job in enumerate(scraper.jobs_data[:10]):
+            print(f"\n{i+1}. {job['title']}")
+            print(f"   Link: {job['link']}")
+    else:
+        print("\n No jobs scraped.")
+        print("Check debug_response.html to see what LinkedIn returned.")
+        print("\nTip: Try copying the exact URL from your browser where you see the jobs,")

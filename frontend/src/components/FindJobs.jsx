@@ -19,7 +19,7 @@ const FindJobs = ({ jobPostTypeProp }) => {
     const [loading, setLoading] = useState(false);
     const [showModal, setShowModal] = useState(false);
     const [showCanvas, setShowCanvas] = useState(false);
-    const [filters, setFilters] = useState({employmentType: [], experienceLevel: [], location: [], datePosted: []});
+    const [filters, setFilters] = useState({ employmentType: [], experienceLevel: [], location: [], datePosted: [] });
     const [showLogo, setShowLogo] = useState(true);
     const [showDetailsMobile, setShowDetailsMobile] = useState(false);
     const [currentPage, setCurrentPage] = useState(1);
@@ -333,12 +333,12 @@ const FindJobs = ({ jobPostTypeProp }) => {
                             flexGrow: 1,
                             borderRadius: "12px",
                             padding: "8px 12px",
-                            backgroundColor: "rgba(255, 255, 255, 0.05)",
+                            backgroundColor: "var(--background)",
                             backdropFilter: "blur(10px)",
                             minWidth: 0,
                         }}
                     >
-                        <h5 className="mb-1" style={{ fontSize: "1rem", color: "var(--text6)" }}>
+                        <h5 className="mb-1" style={{ fontSize: "1rem", color: "var(--accent1)" }}>
                             {job.title}
                         </h5>
                         <p className="mb-0" style={{ fontSize: "0.9rem", color: "white" }}>
@@ -374,7 +374,6 @@ const FindJobs = ({ jobPostTypeProp }) => {
                 height: "100%",
                 width: "100%",
                 flex: 1,
-            
                 zIndex: 5,
                 color: "var(--text6)",
                 padding: 0,
@@ -427,7 +426,7 @@ const FindJobs = ({ jobPostTypeProp }) => {
                                                 onChange={(e) => setSearchTerm(e.target.value)}
                                                 style={{
                                                     paddingLeft: "30px",
-                                                    backgroundColor: "var(--searchbg)",
+                                                    backgroundColor: "var(--text)",
                                                     color: "var(--searchtxt)",
                                                     border: "1px solid var(--border)",
                                                     borderRadius: "8px",
@@ -439,18 +438,18 @@ const FindJobs = ({ jobPostTypeProp }) => {
                                         <div className="d-flex justify-content-start ms-2 ms-md-0 mt-md-2" style={{ gap: "10px" }}>
                                             <Button
                                                 style={{
-                                                    backgroundColor: "var(--savebtnhover)",
-                                                    color: "var(--savebtnhovertxt)",
-                                                    border: "1px solid var(--savebtntxt)",
+                                                    backgroundColor: "var(--background)",
+                                                    color: "var(--text)",
+                                                    border: "1px solid var(--text)",
                                                     transition: "all 0.3s ease",
                                                 }}
                                                 onMouseEnter={(e) => {
-                                                    e.currentTarget.style.backgroundColor = "var(--savebtnbg)";
-                                                    e.currentTarget.style.color = "var(--savebtntxt)";
+                                                    e.currentTarget.style.backgroundColor = "var(--text)";
+                                                    e.currentTarget.style.color = "var(--background)";
                                                 }}
                                                 onMouseLeave={(e) => {
-                                                    e.currentTarget.style.backgroundColor = "var(--savebtnhover)";
-                                                    e.currentTarget.style.color = "var(--savebtnhovertxt)";
+                                                    e.currentTarget.style.backgroundColor = "var(--background)";
+                                                    e.currentTarget.style.color = "var(--text)";
                                                 }}
                                                 onClick={() => setJobPostType("all")}
                                             >
@@ -459,18 +458,18 @@ const FindJobs = ({ jobPostTypeProp }) => {
 
                                             <Button
                                                 style={{
-                                                    backgroundColor: "var(--savebtnhover)",
-                                                    color: "var(--savebtnhovertxt)",
-                                                    border: "1px solid var(--avebtntxt)",
+                                                    backgroundColor: "var(--background)",
+                                                    color: "var(--text)",
+                                                    border: "1px solid var(--text)",
                                                     transition: "all 0.3s ease",
                                                 }}
                                                 onMouseEnter={(e) => {
-                                                    e.currentTarget.style.backgroundColor = "var(--savebtnbg)";
-                                                    e.currentTarget.style.color = "var(--savebtntxt)";
+                                                    e.currentTarget.style.backgroundColor = "var(--text)";
+                                                    e.currentTarget.style.color = "var(--background)";
                                                 }}
                                                 onMouseLeave={(e) => {
-                                                    e.currentTarget.style.backgroundColor = "var(--savebtnhover)";
-                                                    e.currentTarget.style.color = "var(--savebtnhovertxt)";
+                                                    e.currentTarget.style.backgroundColor = "var(--background)";
+                                                    e.currentTarget.style.color = "var(--text)";
                                                 }}
                                                 onClick={() => setShowCanvas(true)}
                                             >
@@ -497,7 +496,7 @@ const FindJobs = ({ jobPostTypeProp }) => {
                                     </Spinner>
                                 </div>
                             ) : displayJobs.length === 0 ? (
-                                <div className="p-3 text-white">No jobs found</div>
+                                <div className="p-3 var(--text)">No jobs found</div>
                             ) : (
                                 <div className="job-list">
                                     {displayJobs.map(job => renderJobItem(job))}
@@ -505,15 +504,15 @@ const FindJobs = ({ jobPostTypeProp }) => {
                             )}
                             <div className="d-flex justify-content-center align-items-center p-3 gap-3">
                                 {!loading && hasPrevPage && (
-                                <Button variant="primary" onClick={() => setCurrentPage(prev => prev - 1)} style={{background: "none", border: "none"}}>
-                                    <FaChevronLeft />
-                                </Button>
+                                    <Button variant="primary" onClick={() => setCurrentPage(prev => prev - 1)} style={{ background: "none", border: "none" }}>
+                                        <FaChevronLeft />
+                                    </Button>
                                 )}
                                 {!loading && jobCount > 0 && (
                                     <span>Page {currentPage}</span>
                                 )}
                                 {!loading && hasNextPage && (
-                                    <Button variant="primary" onClick={() => setCurrentPage(prev => prev + 1)} style={{background: "none", border: "none"}}>
+                                    <Button variant="primary" onClick={() => setCurrentPage(prev => prev + 1)} style={{ background: "none", border: "none" }}>
                                         <FaChevronRight />
                                     </Button>
                                 )}
@@ -528,7 +527,6 @@ const FindJobs = ({ jobPostTypeProp }) => {
                         className="p-0"
                         style={{
                             height: "100%",
-                            color: "var(--text6)"
                         }}
                     >
                         {/* Back button only on mobile */}
@@ -537,8 +535,8 @@ const FindJobs = ({ jobPostTypeProp }) => {
                                 <Button
                                     className=" px-2 py-2"
                                     style={{
-                                        backgroundColor: "rgba(255, 255, 255, 0.15)",
-                                        color: "var(--savebtntxt)",
+                                        backgroundColor: "var(--background)",
+                                        color: "var(--text)",
                                         border: "2px solid var(--border)",
                                         borderRadius: "8px",
                                         backdropFilter: "blur(6px)",
@@ -554,15 +552,15 @@ const FindJobs = ({ jobPostTypeProp }) => {
                                     <Button
                                         variant="link"
                                         style={{
-                                            color: "var(--savebtnhovertxt)",
+                                            color: "var(--text)",
                                             transition: "all 0.3s ease",
                                             marginLeft: "8px",
                                         }}
                                         onMouseEnter={(e) => {
-                                            e.currentTarget.style.color = "var(--savebtntxt)";
+                                            e.currentTarget.style.color = "var(--text)";
                                         }}
                                         onMouseLeave={(e) => {
-                                            e.currentTarget.style.color = "var(--savebtnhovertxt)";
+                                            e.currentTarget.style.color = "var(--text)";
                                         }}
                                         onClick={() => toggleSaveJob(selectedJob.id, selectedJob.is_saved)}
                                     >
@@ -573,7 +571,7 @@ const FindJobs = ({ jobPostTypeProp }) => {
                                     <Button
                                         variant="link"
                                         style={{
-                                            color: "var(--savebtnhovertxt)",
+                                            color: "var(--accent2)",
                                             transition: "all 0.3s ease",
                                             marginLeft: "8px",
                                         }}
@@ -626,7 +624,7 @@ const FindJobs = ({ jobPostTypeProp }) => {
                                 }}
                             >
                                 <div
-                                    className={windowWidth <= 770 ? "pt-0 ps-2 pe-2 pb-2" : "p-4"}
+                                    className={windowWidth <= 770 ? "pt-0 ps-2 pe-2 pb-2" : "pt-4 ps-4 pe-4 pb-2"}
                                     style={{}}
                                 >
 
@@ -668,13 +666,13 @@ const FindJobs = ({ jobPostTypeProp }) => {
                                                     <div className="job-title-company">
                                                         <h2
                                                             className="mb-0"
-                                                            style={{ color: "var(--text6)", lineHeight: "1.2" }}
+                                                            style={{ color: "var(--accent1)", lineHeight: "1.2" }}
                                                         >
                                                             {selectedJob.title}
                                                         </h2>
                                                         <h5
-                                                            className="text-white mt-1 mb-2"
-                                                            style={{ lineHeight: "1.2" }}
+                                                            className="mt-1 mb-2"
+                                                            style={{ color: "var(--accent2)", lineHeight: "1.2" }}
                                                         >
                                                             {selectedJob.company}
                                                         </h5>
@@ -703,39 +701,40 @@ const FindJobs = ({ jobPostTypeProp }) => {
                                             <div className="d-flex">
                                                 <Button
                                                     style={{
-                                                        backgroundColor: "var(--savebtnhover)",
-                                                        color: "var(--savebtnhovertxt)",
-                                                        border: "1px solid var(--savebtntxt)",
+                                                        backgroundColor: "var(--background)",
+                                                        color: "var(--text)",
+                                                        border: "1px solid var(--background)",
                                                         transition: "all 0.3s ease"
                                                     }}
                                                     onMouseEnter={(e) => {
-                                                        e.currentTarget.style.backgroundColor = "var(--savebtnbg)";
-                                                        e.currentTarget.style.color = "var(--savebtntxt)";
+                                                        e.currentTarget.style.backgroundColor = "var(--hover)";
+                                                        e.currentTarget.style.color = "var(--text)";
                                                     }}
                                                     onMouseLeave={(e) => {
-                                                        e.currentTarget.style.backgroundColor = "var(--savebtnhover)";
-                                                        e.currentTarget.style.color = "var(--savebtnhovertxt)";
+                                                        e.currentTarget.style.backgroundColor = "var(--background)";
+                                                        e.currentTarget.style.color = "var(--text)";
                                                     }}
                                                     className="me-2 d-flex align-items-center"
                                                     onClick={() => toggleSaveJob(selectedJob.id, selectedJob.is_saved)}
                                                 >
                                                     {selectedJob.is_saved ? "Unsave" : "Save"}
+                                                    
                                                 </Button>
 
                                                 <Button
                                                     style={{
-                                                        backgroundColor: "var(--savebtnhover)",
-                                                        color: "var(--savebtnhovertxt)",
-                                                        border: "1px solid var(--savebtntxt)",
+                                                        backgroundColor: "var(--background)",
+                                                        color: "var(--text)",
+                                                        border: "1px solid var(--background)",
                                                         transition: "all 0.3s ease"
                                                     }}
                                                     onMouseEnter={(e) => {
-                                                        e.currentTarget.style.backgroundColor = "var(--savebtnbg)";
-                                                        e.currentTarget.style.color = "var(--savebtntxt)";
+                                                        e.currentTarget.style.backgroundColor = "var(--hover)";
+                                                        e.currentTarget.style.color = "var(--text)";
                                                     }}
                                                     onMouseLeave={(e) => {
-                                                        e.currentTarget.style.backgroundColor = "var(--savebtnhover)";
-                                                        e.currentTarget.style.color = "var(--savebtnhovertxt)";
+                                                        e.currentTarget.style.backgroundColor = "var(--background)";
+                                                        e.currentTarget.style.color = "var(--text)";
                                                     }}
                                                     onClick={handleApplyClick}
                                                     disabled={selectedJob.applied_status}
@@ -745,19 +744,19 @@ const FindJobs = ({ jobPostTypeProp }) => {
 
                                                 <Button
                                                     style={{
-                                                        backgroundColor: "var(--savebtnhover)",
-                                                        color: "var(--savebtnhovertxt)",
-                                                        border: "1px solid var(--savebtntxt)",
+                                                        backgroundColor: "var(--background)",
+                                                        color: "var(--text)",
+                                                        border: "1px solid var(--background)",
                                                         transition: "all 0.3s ease",
                                                         marginLeft: "8px",
                                                     }}
                                                     onMouseEnter={(e) => {
-                                                        e.currentTarget.style.backgroundColor = "var(--savebtnbg)";
-                                                        e.currentTarget.style.color = "var(--savebtntxt)";
+                                                        e.currentTarget.style.backgroundColor = "var(--hover)";
+                                                        e.currentTarget.style.color = "var(--text)";
                                                     }}
                                                     onMouseLeave={(e) => {
-                                                        e.currentTarget.style.backgroundColor = "var(--savebtnhover)";
-                                                        e.currentTarget.style.color = "var(--savebtnhovertxt)";
+                                                        e.currentTarget.style.backgroundColor = "var(--background)";
+                                                        e.currentTarget.style.color = "var(--text)";
                                                     }}
                                                     onClick={() => { navigate("/interview-chatbot", { state: { job: selectedJob } }) }}
                                                 >
@@ -770,56 +769,58 @@ const FindJobs = ({ jobPostTypeProp }) => {
 
                                 {/* Description and Requirements Section */}
                                 <div
-                                    className={windowWidth <= 770 ? "p-2" : "p-4"}
+                                    className={windowWidth <= 770 ? "p-2" : "pt-2 pe-4 ps-4 pb-4"}
                                     style={{}}
                                 >
                                     <Card
                                         className="mb-4"
                                         style={{
-                                            backgroundColor: "rgba(255, 255, 255, 0.2)", // more translucent
+                                            backgroundColor: "var(--background)", // more translucent
                                             backdropFilter: "blur(10px)",                // adds frosted-glass effect
                                             WebkitBackdropFilter: "blur(10px)",
-                                            color: "var(--text2)",
-                                            // border: "2px solid var(--cardborder2)",
-                                            borderRadius: "12px"
+                                            color: "var(--accent2)",
+                                            border: "3px solid var(--hover)",
+                                            borderRadius: "12px",
+                                            //boxShadow: "0px 3px 8px rgba(0, 0, 0, 0.48)",
+                                            
                                         }}
                                     >
                                         <Card.Body>
                                             {/* Job Description */}
                                             <section className="mb-4">
-                                              <h5 className="fw-bold mb-2">Job Description</h5>
-                                              <p style={{ whiteSpace: "pre-wrap", wordBreak: "break-word", margin: 0 }}>
-                                                {selectedJob.description}
-                                              </p>
+                                                <h5 className="fw-bold mb-2">Job Description</h5>
+                                                <p style={{ color: "var(--text)", whiteSpace: "pre-wrap", wordBreak: "break-word", margin: 0 }}>
+                                                    {selectedJob.description}
+                                                </p>
                                             </section>
 
                                             {/* AI Summary */}
                                             <section className="mb-4">
-                                              <h5 className="fw-bold mb-2">AI Summary</h5>
-                                              <p style={{ whiteSpace: "pre-wrap", wordBreak: "break-word", margin: 0 }}>
-                                                {selectedJob.summary}
-                                              </p>
+                                                <h5 className="fw-bold mb-2">AI Summary</h5>
+                                                <p style={{ color: "var(--text)", whiteSpace: "pre-wrap", wordBreak: "break-word", margin: 0 }}>
+                                                    {selectedJob.summary}
+                                                </p>
                                             </section>
 
                                             {/* Keywords Sections */}
                                             {[
-                                              { title: "Skills", key: "skills" },
-                                              { title: "Careers", key: "careers" },
-                                              { title: "Degrees", key: "degrees" },
-                                              { title: "Experience Level", key: "experienceLevels" },
-                                              { title: "Employment Type", key: "employmentTypes" },
-                                              { title: "Work Models", key: "workModels" },
+                                                { title: "Skills", key: "skills" },
+                                                { title: "Careers", key: "careers" },
+                                                { title: "Degrees", key: "degrees" },
+                                                { title: "Experience Level", key: "experienceLevels" },
+                                                { title: "Employment Type", key: "employmentTypes" },
+                                                { title: "Work Models", key: "workModels" },
                                             ].map(({ title, key }) => (
-                                              selectedJob[key] && selectedJob[key].length > 0 && (
-                                                <section className="mb-4" key={key}>
-                                                  <h5 className="fw-bold mb-2">{title}</h5>
-                                                  <ul className="ps-3" style={{ marginBottom: 0 }}>
-                                                    {selectedJob[key].map(item => (
-                                                      <li key={item.id}>{item.name}</li>
-                                                    ))}
-                                                  </ul>
-                                                </section>
-                                              )
+                                                selectedJob[key] && selectedJob[key].length > 0 && (
+                                                    <section className="mb-4" key={key}>
+                                                        <h5 className="fw-bold mb-2">{title}</h5>
+                                                        <ul className="ps-3" style={{ color: "var(--text)", marginBottom: 0 }}>
+                                                            {selectedJob[key].map(item => (
+                                                                <li key={item.id}>{item.name}</li>
+                                                            ))}
+                                                        </ul>
+                                                    </section>
+                                                )
                                             ))}
 
                                         </Card.Body>
@@ -850,17 +851,18 @@ const FindJobs = ({ jobPostTypeProp }) => {
                 <style>{`
       /* Panel background */
     .filters-canvas .offcanvas {
-      background: rgba(20, 20, 20, 0.6);
+      background-color: var(--background);
       backdrop-filter: blur(14px);
       -webkit-backdrop-filter: blur(14px);
       border-left: 1px solid var(--border);
-      color: var(--text6);
+      color: var(--text);
     }
 
     /* Header */
     .filters-canvas .offcanvas-header {
+    background-color: var(--background);
       border-bottom: 1px solid var(--border);
-      color: var(--text6);
+      color: var(--text);
     }
     .filters-canvas .offcanvas-title {
       color: var(--text6);

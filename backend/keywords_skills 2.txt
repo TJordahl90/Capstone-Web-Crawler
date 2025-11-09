@@ -1,0 +1,858 @@
+## Programming Languages & Frameworks
+c
+python
+javascript
+java
+c++
+c#
+php
+ruby
+swift
+kotlin
+typescript
+golang
+rust
+scala
+r
+perl
+haskell
+sql
+nosql
+react
+angular
+vue
+node.js
+django
+flask
+spring
+rails
+laravel
+express.js
+next.js
+gatsby
+bootstrap
+jquery
+asp.net
+.net
+xamarin
+flutter
+react native
+ionic
+symfony
+ember
+svelte
+backbone.js
+html
+css
+spring boot
+.net core
+tailwind css
+nestjs
+koa.js
+
+
+
+## Cloud & DevOps
+aws
+azure
+gcp
+google cloud
+cloud computing
+kubernetes
+docker
+jenkins
+gitlab
+github
+bitbucket
+terraform
+ansible
+puppet
+chef
+ci/cd
+continuous integration
+continuous deployment
+infrastructure as code
+serverless
+microservices
+devops
+sre
+cloud native
+containerization
+virtualization
+vmware
+openstack
+digitalocean
+heroku
+
+## Data Science & Analytics
+machine learning
+deep learning
+artificial intelligence
+ai
+ml
+data mining
+data visualization
+data modeling
+etl
+data warehouse
+data lake
+big data
+hadoop
+spark
+tableau
+power bi
+looker
+data studio
+elasticsearch
+kibana
+logstash
+splunk
+grafana
+prometheus
+pandas
+numpy
+scikit-learn
+tensorflow
+pytorch
+keras
+opencv
+nlp
+natural language processing
+computer vision
+predictive analytics
+statistical analysis
+a/b testing
+data engineering
+data science
+business intelligence
+bi
+data analytics
+
+## Database Technologies
+mysql
+postgresql
+mongodb
+oracle
+sql server
+sqlite
+redis
+cassandra
+dynamodb
+mariadb
+neo4j
+couchdb
+firestore
+bigtable
+hbase
+cockroachdb
+influxdb
+graphql
+data modeling
+database design
+database administration
+dba
+data architecture
+data migration
+etl
+normalization
+indexing
+sharding
+replication
+
+## Security
+infosec
+penetration testing
+vulnerability assessment
+security audit
+encryption
+cryptography
+firewall
+iam
+identity and access management
+siem
+zero trust
+oauth
+saml
+single sign-on
+sso
+mfa
+multi-factor authentication
+threat detection
+threat intelligence
+security compliance
+gdpr
+hipaa
+pci dss
+soc
+security operations center
+security architecture
+devsecops
+intrusion detection
+intrusion prevention
+security posture
+
+## Infrastructure & Networking
+tcp/ip
+dns
+dhcp
+vpn
+vlan
+load balancing
+cdn
+content delivery network
+proxy
+reverse proxy
+networking
+routing
+switching
+ipv4
+ipv6
+bgp
+ospf
+mpls
+nat
+firewall
+ipsec
+ssl/tls
+network security
+network architecture
+sdn
+software-defined networking
+wan
+lan
+wireless
+5g
+edge computing
+
+## Project Management & Methodologies
+agile
+scrum
+kanban
+waterfall
+jira
+confluence
+trello
+asana
+monday.com
+project management
+sprint planning
+backlog grooming
+retrospective
+stand-up
+product owner
+scrum master
+burndown chart
+user stories
+epics
+product roadmap
+gantt chart
+critical path
+pmp
+prince2
+itil
+devops
+lean
+six sigma
+sdlc
+software development lifecycle
+
+## Software Development & Design
+oop
+object-oriented programming
+functional programming
+api
+rest
+soap
+grpc
+microservices
+mvc
+design patterns
+software architecture
+uml
+git
+version control
+code review
+unit testing
+integration testing
+e2e testing
+qa
+quality assurance
+ci/cd
+build automation
+dependency management
+refactoring
+debugging
+performance optimization
+test-driven development
+tdd
+ux/ui
+user experience
+user interface
+responsive design
+mobile-first
+accessibility
+i18n
+internationalization
+l10n
+localization
+seo
+caching
+middleware
+backend
+frontend
+full-stack
+
+## Operating Systems & Hardware
+linux
+unix
+windows
+macos
+android
+ios
+ubuntu
+debian
+red hat
+centos
+fedora
+bash
+powershell
+command line
+shell scripting
+system administration
+sysadmin
+embedded systems
+firmware
+iot
+internet of things
+hardware design
+pcb design
+fpga
+microcontroller
+raspberry pi
+arduino
+robotics
+automation
+3d printing
+cad
+computer aided design
+
+## Emerging Technologies
+blockchain
+distributed ledger
+cryptocurrency
+smart contracts
+web3
+nft
+metaverse
+ar
+augmented reality
+vr
+virtual reality
+xr
+extended reality
+quantum computing
+edge computing
+5g
+computer vision
+speech recognition
+cognitive computing
+digital twin
+autonomous systems
+robotics process automation
+rpa
+generative ai
+computer vision
+neural networks
+gans
+transformers
+llm
+large language models
+generative ai
+autonomous vehicles
+drones
+wearable technology
+
+## Industry-Specific Technologies
+fintech
+insurtech
+healthtech
+medtech
+edtech
+proptech
+regtech
+legaltech
+adtech
+martech
+biotech
+cleantech
+agtech
+retailtech
+supplychain tech
+govtech
+automotive tech
+aerospace tech
+defense tech
+energy tech
+manufacturing tech
+telecom tech
+media tech
+
+## Professional Skills & Certifications
+aws certified
+azure certified
+google cloud certified
+cissp
+ceh
+comptia
+itil
+pmp
+scrum certified
+safe certified
+togaf
+cisa
+cism
+ccna
+mcse
+rhce
+lpic
+oracle certified
+mongodb certified
+hadoop certified
+tableau certified
+salesforce certified
+servicenow certified
+six sigma
+lean
+cmmi
+iso
+data analytics
+business analysis
+requirements gathering
+solution architecture
+enterprise architecture
+technical documentation
+technical writing
+api documentation
+requirements specification
+uml diagrams
+workflow diagrams
+process mapping
+stakeholder management
+vendor management
+service management
+
+
+## More Skills
+lua
+dart
+elixir
+clojure
+groovy
+assembly
+cobol
+fortran
+ada
+lisp
+scheme
+prolog
+objective-c
+vba
+.net core
+blazor
+electron
+cordova
+phonegap
+qt
+wordpress
+gtk+
+scipy
+matplotlib
+plotly
+d3.js
+three.js
+babylon.js
+tensorflow.js
+fastapi
+quarkus
+micronaut
+play framework
+phoenix
+nestjs
+nuxt.js
+spring boot
+vagrant
+packer
+pulumi
+new relic
+datadog
+dynatrace
+appdynamics
+circleci
+travis ci
+teamcity
+bamboo
+harness
+spinnaker
+argocd
+flux
+helm
+kustomize
+observability
+gitops
+chaos engineering
+service mesh
+istio
+linkerd
+cloudformation
+arm templates
+ibm cloud
+oracle cloud infrastructure (oci)
+alibaba cloud
+vercel
+netlify
+sas
+spss
+rstudio
+jupyter
+knime
+alteryx
+qlikview
+qlik sense
+sisense
+recommender systems
+causal inference
+time series analysis
+survival analysis
+reinforcement learning
+feature engineering
+mlops
+aiops
+model deployment
+model monitoring
+experiment design
+xgboost
+lightgbm
+catboost
+statsmodels
+time series databases
+graph databases
+columnar databases
+document databases
+sql tuning
+query optimization
+database security
+backup and recovery
+disaster recovery
+ssis
+ssrs
+ssas
+informatica
+talend
+datagrip
+dbeaver
+burp suite
+nmap
+wireshark
+metasploit
+nessus
+openvas
+application security (appsec)
+sast
+dast
+iast
+rasp
+waf (web application firewall)
+endpoint security
+malware analysis
+reverse engineering
+digital forensics
+incident response (ir)
+risk assessment
+risk management
+grc (governance, risk, and compliance)
+casb (cloud access security broker)
+cspm (cloud security posture management)
+cisco
+juniper
+arista
+palo alto networks
+voip
+qos
+network monitoring
+snmp
+nfv (network functions virtualization)
+sd-wan
+zero trust networking (ztn)
+microsoft project
+smartsheet
+basecamp
+clickup
+workfront
+program management
+portfolio management
+risk management
+change management
+stakeholder communication
+resource allocation
+budget management
+agile coaching
+domain-driven design (ddd)
+event-driven architecture (eda)
+server-sent events (sse)
+websockets
+webrtc
+yagni
+system design
+scalability
+high availability
+fault tolerance
+pair programming
+mob programming
+bdd (behavior-driven development)
+acceptance testing
+smoke testing
+regression testing
+usability testing
+design systems
+wireframing
+prototyping
+user research
+persona development
+figma
+sketch
+adobe xd
+invision
+zeplin
+chromeos
+freebsd
+openbsd
+solaris
+autocad
+solidworks
+matlab
+simulink
+rtos (real-time operating system)
+vhdl
+verilog
+system on a chip (soc)
+asic
+kernel development
+neuromorphic computing
+homomorphic encryption
+competitive analysis
+solution engineering
+comptia a+
+comptia network+
+comptia security+
+ccsp (certified cloud security professional)
+cipp (certified information privacy professional)
+crisc (certified in risk and information systems control)
+prompt engineering
+algorithm training
+telemedicine
+electronic health records (ehr)
+medical imaging technologies
+predictive maintenance
+smart factories
+financial modeling
+algorithmic trading
+video editing software
+animation tools
+soc 2
+iso 27001
+api integration with ai services
+bias detection
+model evaluation
+data preparation
+advanced css
+state management (redux, zustand)
+web performance optimization
+openid connect
+threat modeling
+api gateway
+swagger
+openapi
+data structures
+algorithms
+qradar
+arcsight
+public key infrastructure (pki)
+sans framework
+nist framework
+endpoint detection and response (edr)
+sandboxing
+computer forensics
+data wrangling
+probability
+linear algebra
+calculus
+linear regression
+logistic regression
+naive bayes
+decision tree
+random forest
+k-nearest neighbor (knn)
+k-means
+trifacta
+tamr
+ai ethics
+quantum machine learning
+generative engine optimization (geo)
+low-code
+no-code
+platform engineering
+deepfake detection
+ai-generated malware analysis
+capture the flag (ctf)
+service level objectives (slos)
+service level indicators (slis)
+capacity planning
+performance tuning
+benchmarking
+systems thinking
+vlsi chip design
+robotics operating system (ros)
+scada
+industrial control systems (ics)
+digital signal processing (dsp)
+geographic information system (gis)
+clickhouse
+druid
+trino (prestosql)
+dask
+ray
+airflow
+prefect
+dagster
+great expectations
+dbt (data build tool)
+monte carlo (data observability)
+apache flink
+apache beam
+apache kafka
+rabbitmq
+zeromq
+grpc
+grpc-web
+webassembly (wasm)
+solidity
+vyper
+evm (ethereum virtual machine)
+hyperledger fabric
+corda
+truffle suite
+hardhat
+openzeppelin
+ethers.js
+web3.js
+ipfs
+filecoin
+the graph
+chainlink
+unity
+unreal engine
+blender
+maya
+houdini
+zbrush
+substance designer
+substance painter
+ros (robot operating system)
+plc (programmable logic controller)
+hmi (human-machine interface)
+spice (simulation program with integrated circuit emphasis)
+ansys
+abaqus
+finite element analysis (fea)
+computational fluid dynamics (cfd)
+labview
+verilog
+systemverilog
+uvm (universal verification methodology)
+opencv
+cuda
+opencl
+directx
+opengl
+vulkan
+metal
+quantum development kit (qdk)
+qiskit
+cirq
+comsol
+hfss
+siemens nx
+dassault systèmes catia
+ptc creo
+servicenow
+mulesoft
+boomi
+apigee
+kong
+envoy proxy
+falco
+sysdig
+trivy
+clair
+open policy agent (opa)
+vault (hashicorp)
+consul (hashicorp)
+nomad (hashicorp)
+elk stack
+fluentd
+fluent bit
+jaeger
+zipkin
+opentelemetry
+victoriametrics
+thanos
+cortex
+zabbix
+nagios
+icinga
+chef inspec
+sonarqube
+artifactory
+nexus repository
+packer (already listed)
+ansible tower (awx)
+rundeck
+saltstack
+babel
+webpack
+vite
+rollup
+parcel
+eslint
+prettier
+jest
+cypress
+playwright
+selenium
+puppeteer
+lighthouse
+storybook
+chakra ui
+material-ui (mui)
+tailwind css
+styled-components
+emotion
+redux toolkit
+mobx
+recoil
+zustand
+apollo client
+relay
+swr
+react query
+apache ant
+maven
+gradle
+junit
+testng
+mockito
+jmeter
+gatling
+appium
+espresso (android)
+xcuitest (ios)
