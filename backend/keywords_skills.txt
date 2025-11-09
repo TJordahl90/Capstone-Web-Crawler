@@ -1,858 +1,948 @@
 ## Programming Languages & Frameworks
-c
-python
-javascript
-java
-c++
-c#
-php
-ruby
-swift
-kotlin
-typescript
-golang
-rust
-scala
-r
-perl
-haskell
-sql
-nosql
-react
-angular
-vue
-node.js
-django
-flask
-spring
-rails
-laravel
-express.js
-next.js
-gatsby
-bootstrap
-jquery
-asp.net
-.net
-xamarin
-flutter
-react native
-ionic
-symfony
-ember
-svelte
-backbone.js
-html
-css
-spring boot
-.net core
-tailwind css
-nestjs
-koa.js
+C
+Python
+Javascript
+Java
+C++
+C#
+Php
+Ruby
+Swift
+Kotlin
+Typescript
+Golang
+Rust
+Scala
+R
+Perl
+Haskell
+Sql
+Nosql
+React
+Angular
+Vue
+Node.Js
+Django
+Flask
+Spring
+Rails
+Laravel
+Express.Js
+Next.Js
+Gatsby
+Bootstrap
+Jquery
+Asp.Net
+.Net
+Xamarin
+Flutter
+React Native
+Ionic
+Symfony
+Ember
+Svelte
+Backbone.Js
+Html
+Css
+Spring Boot
+.Net Core
+Tailwind Css
+Nestjs
+Koa.Js
 
 
 
 ## Cloud & DevOps
-aws
-azure
-gcp
-google cloud
-cloud computing
-kubernetes
-docker
-jenkins
-gitlab
-github
-bitbucket
-terraform
-ansible
-puppet
-chef
-ci/cd
-continuous integration
-continuous deployment
-infrastructure as code
-serverless
-microservices
-devops
-sre
-cloud native
-containerization
-virtualization
-vmware
-openstack
-digitalocean
-heroku
+Aws
+Azure
+Gcp
+Google Cloud
+Cloud Computing
+Kubernetes
+Docker
+Jenkins
+Gitlab
+Github
+Bitbucket
+Terraform
+Ansible
+Puppet
+Chef
+Ci/Cd
+Continuous Integration
+Continuous Deployment
+Infrastructure As Code
+Serverless
+Microservices
+Devops
+Sre
+Cloud Native
+Containerization
+Virtualization
+Vmware
+Openstack
+Digitalocean
+Heroku
 
 ## Data Science & Analytics
-machine learning
-deep learning
-artificial intelligence
-ai
-ml
-data mining
-data visualization
-data modeling
-etl
-data warehouse
-data lake
-big data
-hadoop
-spark
-tableau
-power bi
-looker
-data studio
-elasticsearch
-kibana
-logstash
-splunk
-grafana
-prometheus
-pandas
-numpy
-scikit-learn
-tensorflow
-pytorch
-keras
-opencv
-nlp
-natural language processing
-computer vision
-predictive analytics
-statistical analysis
-a/b testing
-data engineering
-data science
-business intelligence
-bi
-data analytics
+Machine Learning
+Deep Learning
+Artificial Intelligence
+Ai
+Ml
+Data Mining
+Data Visualization
+Data Modeling
+Etl
+Data Warehouse
+Data Lake
+Big Data
+Hadoop
+Spark
+Tableau
+Power Bi
+Looker
+Data Studio
+Elasticsearch
+Kibana
+Logstash
+Splunk
+Grafana
+Prometheus
+Pandas
+Numpy
+Scikit-Learn
+Tensorflow
+Pytorch
+Keras
+Opencv
+Nlp
+Natural Language Processing
+Computer Vision
+Predictive Analytics
+Statistical Analysis
+A/B Testing
+Data Engineering
+Data Science
+Business Intelligence
+Bi
+Data Analytics
 
 ## Database Technologies
-mysql
-postgresql
-mongodb
-oracle
-sql server
-sqlite
-redis
-cassandra
-dynamodb
-mariadb
-neo4j
-couchdb
-firestore
-bigtable
-hbase
-cockroachdb
-influxdb
-graphql
-data modeling
-database design
-database administration
-dba
-data architecture
-data migration
-etl
-normalization
-indexing
-sharding
-replication
+Mysql
+Postgresql
+Mongodb
+Oracle
+Sql Server
+Sqlite
+Redis
+Cassandra
+Dynamodb
+Mariadb
+Neo4J
+Couchdb
+Firestore
+Bigtable
+Hbase
+Cockroachdb
+Influxdb
+Graphql
+Data Modeling
+Database Design
+Database Administration
+Dba
+Data Architecture
+Data Migration
+Etl
+Normalization
+Indexing
+Sharding
+Replication
 
 ## Security
-infosec
-penetration testing
-vulnerability assessment
-security audit
-encryption
-cryptography
-firewall
-iam
-identity and access management
-siem
-zero trust
-oauth
-saml
-single sign-on
-sso
-mfa
-multi-factor authentication
-threat detection
-threat intelligence
-security compliance
-gdpr
-hipaa
-pci dss
-soc
-security operations center
-security architecture
-devsecops
-intrusion detection
-intrusion prevention
-security posture
+Infosec
+Penetration Testing
+Vulnerability Assessment
+Security Audit
+Encryption
+Cryptography
+Firewall
+Iam
+Identity And Access Management
+Siem
+Zero Trust
+Oauth
+Saml
+Single Sign-On
+Sso
+Mfa
+Multi-Factor Authentication
+Threat Detection
+Threat Intelligence
+Security Compliance
+Gdpr
+Hipaa
+Pci Dss
+Soc
+Security Operations Center
+Security Architecture
+Devsecops
+Intrusion Detection
+Intrusion Prevention
+Security Posture
 
 ## Infrastructure & Networking
-tcp/ip
-dns
-dhcp
-vpn
-vlan
-load balancing
-cdn
-content delivery network
-proxy
-reverse proxy
-networking
-routing
-switching
-ipv4
-ipv6
-bgp
-ospf
-mpls
-nat
-firewall
-ipsec
-ssl/tls
-network security
-network architecture
-sdn
-software-defined networking
-wan
-lan
-wireless
-5g
-edge computing
+Tcp/Ip
+Dns
+Dhcp
+Vpn
+Vlan
+Load Balancing
+Cdn
+Content Delivery Network
+Proxy
+Reverse Proxy
+Networking
+Routing
+Switching
+Ipv4
+Ipv6
+Bgp
+Ospf
+Mpls
+Nat
+Firewall
+Ipsec
+Ssl/Tls
+Network Security
+Network Architecture
+Sdn
+Software-Defined Networking
+Wan
+Lan
+Wireless
+5G
+Edge Computing
 
 ## Project Management & Methodologies
-agile
-scrum
-kanban
-waterfall
-jira
-confluence
-trello
-asana
-monday.com
-project management
-sprint planning
-backlog grooming
-retrospective
-stand-up
-product owner
-scrum master
-burndown chart
-user stories
-epics
-product roadmap
-gantt chart
-critical path
-pmp
-prince2
-itil
-devops
-lean
-six sigma
-sdlc
-software development lifecycle
+Agile
+Scrum
+Kanban
+Waterfall
+Jira
+Confluence
+Trello
+Asana
+Monday.Com
+Project Management
+Sprint Planning
+Backlog Grooming
+Retrospective
+Stand-Up
+Product Owner
+Scrum Master
+Burndown Chart
+User Stories
+Epics
+Product Roadmap
+Gantt Chart
+Critical Path
+Pmp
+Prince2
+Itil
+Devops
+Lean
+Six Sigma
+Sdlc
+Software Development Lifecycle
 
 ## Software Development & Design
-oop
-object-oriented programming
-functional programming
-api
-rest
-soap
-grpc
-microservices
-mvc
-design patterns
-software architecture
-uml
-git
-version control
-code review
-unit testing
-integration testing
-e2e testing
-qa
-quality assurance
-ci/cd
-build automation
-dependency management
-refactoring
-debugging
-performance optimization
-test-driven development
-tdd
-ux/ui
-user experience
-user interface
-responsive design
-mobile-first
-accessibility
-i18n
-internationalization
-l10n
-localization
-seo
-caching
-middleware
-backend
-frontend
-full-stack
+Oop
+Object-Oriented Programming
+Functional Programming
+Api
+Rest
+Soap
+Grpc
+Microservices
+Mvc
+Design Patterns
+Software Architecture
+Uml
+Git
+Version Control
+Code Review
+Unit Testing
+Integration Testing
+E2E Testing
+Qa
+Quality Assurance
+Ci/Cd
+Build Automation
+Dependency Management
+Refactoring
+Debugging
+Performance Optimization
+Test-Driven Development
+Tdd
+Ux/Ui
+User Experience
+User Interface
+Responsive Design
+Mobile-First
+Accessibility
+I18N
+Internationalization
+L10N
+Localization
+Seo
+Caching
+Middleware
+Backend
+Frontend
+Full-Stack
 
 ## Operating Systems & Hardware
-linux
-unix
-windows
-macos
-android
-ios
-ubuntu
-debian
-red hat
-centos
-fedora
-bash
-powershell
-command line
-shell scripting
-system administration
-sysadmin
-embedded systems
-firmware
-iot
-internet of things
-hardware design
-pcb design
-fpga
-microcontroller
-raspberry pi
-arduino
-robotics
-automation
-3d printing
-cad
-computer aided design
+Linux
+Unix
+Windows
+Macos
+Android
+Ios
+Ubuntu
+Debian
+Red Hat
+Centos
+Fedora
+Bash
+Powershell
+Command Line
+Shell Scripting
+System Administration
+Sysadmin
+Embedded Systems
+Firmware
+Iot
+Internet Of Things
+Hardware Design
+Pcb Design
+Fpga
+Microcontroller
+Raspberry Pi
+Arduino
+Robotics
+Automation
+3D Printing
+Cad
+Computer Aided Design
 
 ## Emerging Technologies
-blockchain
-distributed ledger
-cryptocurrency
-smart contracts
-web3
-nft
-metaverse
-ar
-augmented reality
-vr
-virtual reality
-xr
-extended reality
-quantum computing
-edge computing
-5g
-computer vision
-speech recognition
-cognitive computing
-digital twin
-autonomous systems
-robotics process automation
-rpa
-generative ai
-computer vision
-neural networks
-gans
-transformers
-llm
-large language models
-generative ai
-autonomous vehicles
-drones
-wearable technology
+Blockchain
+Distributed Ledger
+Cryptocurrency
+Smart Contracts
+Web3
+Nft
+Metaverse
+Ar
+Augmented Reality
+Vr
+Virtual Reality
+Xr
+Extended Reality
+Quantum Computing
+Edge Computing
+5G
+Computer Vision
+Speech Recognition
+Cognitive Computing
+Digital Twin
+Autonomous Systems
+Robotics Process Automation
+Rpa
+Generative Ai
+Computer Vision
+Neural Networks
+Gans
+Transformers
+Llm
+Large Language Models
+Generative Ai
+Autonomous Vehicles
+Drones
+Wearable Technology
 
 ## Industry-Specific Technologies
-fintech
-insurtech
-healthtech
-medtech
-edtech
-proptech
-regtech
-legaltech
-adtech
-martech
-biotech
-cleantech
-agtech
-retailtech
-supplychain tech
-govtech
-automotive tech
-aerospace tech
-defense tech
-energy tech
-manufacturing tech
-telecom tech
-media tech
+Fintech
+Insurtech
+Healthtech
+Medtech
+Edtech
+Proptech
+Regtech
+Legaltech
+Adtech
+Martech
+Biotech
+Cleantech
+Agtech
+Retailtech
+Supplychain Tech
+Govtech
+Automotive Tech
+Aerospace Tech
+Defense Tech
+Energy Tech
+Manufacturing Tech
+Telecom Tech
+Media Tech
 
 ## Professional Skills & Certifications
-aws certified
-azure certified
-google cloud certified
-cissp
-ceh
-comptia
-itil
-pmp
-scrum certified
-safe certified
-togaf
-cisa
-cism
-ccna
-mcse
-rhce
-lpic
-oracle certified
-mongodb certified
-hadoop certified
-tableau certified
-salesforce certified
-servicenow certified
-six sigma
-lean
-cmmi
-iso
-data analytics
-business analysis
-requirements gathering
-solution architecture
-enterprise architecture
-technical documentation
-technical writing
-api documentation
-requirements specification
-uml diagrams
-workflow diagrams
-process mapping
-stakeholder management
-vendor management
-service management
+Aws Certified
+Azure Certified
+Google Cloud Certified
+Cissp
+Ceh
+Comptia
+Itil
+Pmp
+Scrum Certified
+Safe Certified
+Togaf
+Cisa
+Cism
+Ccna
+Mcse
+Rhce
+Lpic
+Oracle Certified
+Mongodb Certified
+Hadoop Certified
+Tableau Certified
+Salesforce Certified
+Servicenow Certified
+Six Sigma
+Lean
+Cmmi
+Iso
+Data Analytics
+Business Analysis
+Requirements Gathering
+Solution Architecture
+Enterprise Architecture
+Technical Documentation
+Technical Writing
+Api Documentation
+Requirements Specification
+Uml Diagrams
+Workflow Diagrams
+Process Mapping
+Stakeholder Management
+Vendor Management
+Service Management
 
 
 ## More Skills
-lua
-dart
-elixir
-clojure
-groovy
-assembly
-cobol
-fortran
-ada
-lisp
-scheme
-prolog
-objective-c
-vba
-.net core
-blazor
-electron
-cordova
-phonegap
-qt
-wordpress
-gtk+
-scipy
-matplotlib
-plotly
-d3.js
-three.js
-babylon.js
-tensorflow.js
-fastapi
-quarkus
-micronaut
-play framework
-phoenix
-nestjs
-nuxt.js
-spring boot
-vagrant
-packer
-pulumi
-new relic
-datadog
-dynatrace
-appdynamics
-circleci
-travis ci
-teamcity
-bamboo
-harness
-spinnaker
-argocd
-flux
-helm
-kustomize
-observability
-gitops
-chaos engineering
-service mesh
-istio
-linkerd
-cloudformation
-arm templates
-ibm cloud
-oracle cloud infrastructure (oci)
-alibaba cloud
-vercel
-netlify
-sas
-spss
-rstudio
-jupyter
-knime
-alteryx
-qlikview
-qlik sense
-sisense
-recommender systems
-causal inference
-time series analysis
-survival analysis
-reinforcement learning
-feature engineering
-mlops
-aiops
-model deployment
-model monitoring
-experiment design
-xgboost
-lightgbm
-catboost
-statsmodels
-time series databases
-graph databases
-columnar databases
-document databases
-sql tuning
-query optimization
-database security
-backup and recovery
-disaster recovery
-ssis
-ssrs
-ssas
-informatica
-talend
-datagrip
-dbeaver
-burp suite
-nmap
-wireshark
-metasploit
-nessus
-openvas
-application security (appsec)
-sast
-dast
-iast
-rasp
-waf (web application firewall)
-endpoint security
-malware analysis
-reverse engineering
-digital forensics
-incident response (ir)
-risk assessment
-risk management
-grc (governance, risk, and compliance)
-casb (cloud access security broker)
-cspm (cloud security posture management)
-cisco
-juniper
-arista
-palo alto networks
-voip
-qos
-network monitoring
-snmp
-nfv (network functions virtualization)
-sd-wan
-zero trust networking (ztn)
-microsoft project
-smartsheet
-basecamp
-clickup
-workfront
-program management
-portfolio management
-risk management
-change management
-stakeholder communication
-resource allocation
-budget management
-agile coaching
-domain-driven design (ddd)
-event-driven architecture (eda)
-server-sent events (sse)
-websockets
-webrtc
-yagni
-system design
-scalability
-high availability
-fault tolerance
-pair programming
-mob programming
-bdd (behavior-driven development)
-acceptance testing
-smoke testing
-regression testing
-usability testing
-design systems
-wireframing
-prototyping
-user research
-persona development
-figma
-sketch
-adobe xd
-invision
-zeplin
-chromeos
-freebsd
-openbsd
-solaris
-autocad
-solidworks
-matlab
-simulink
-rtos (real-time operating system)
-vhdl
-verilog
-system on a chip (soc)
-asic
-kernel development
-neuromorphic computing
-homomorphic encryption
-competitive analysis
-solution engineering
-comptia a+
-comptia network+
-comptia security+
-ccsp (certified cloud security professional)
-cipp (certified information privacy professional)
-crisc (certified in risk and information systems control)
-prompt engineering
-algorithm training
-telemedicine
-electronic health records (ehr)
-medical imaging technologies
-predictive maintenance
-smart factories
-financial modeling
-algorithmic trading
-video editing software
-animation tools
-soc 2
-iso 27001
-api integration with ai services
-bias detection
-model evaluation
-data preparation
-advanced css
-state management (redux, zustand)
-web performance optimization
-openid connect
-threat modeling
-api gateway
-swagger
-openapi
-data structures
-algorithms
-qradar
-arcsight
-public key infrastructure (pki)
-sans framework
-nist framework
-endpoint detection and response (edr)
-sandboxing
-computer forensics
-data wrangling
-probability
-linear algebra
-calculus
-linear regression
-logistic regression
-naive bayes
-decision tree
-random forest
-k-nearest neighbor (knn)
-k-means
-trifacta
-tamr
-ai ethics
-quantum machine learning
-generative engine optimization (geo)
-low-code
-no-code
-platform engineering
-deepfake detection
-ai-generated malware analysis
-capture the flag (ctf)
-service level objectives (slos)
-service level indicators (slis)
-capacity planning
-performance tuning
-benchmarking
-systems thinking
-vlsi chip design
-robotics operating system (ros)
-scada
-industrial control systems (ics)
-digital signal processing (dsp)
-geographic information system (gis)
-clickhouse
-druid
-trino (prestosql)
-dask
-ray
-airflow
-prefect
-dagster
-great expectations
-dbt (data build tool)
-monte carlo (data observability)
-apache flink
-apache beam
-apache kafka
-rabbitmq
-zeromq
-grpc
-grpc-web
-webassembly (wasm)
-solidity
-vyper
-evm (ethereum virtual machine)
-hyperledger fabric
-corda
-truffle suite
-hardhat
-openzeppelin
-ethers.js
-web3.js
-ipfs
-filecoin
-the graph
-chainlink
-unity
-unreal engine
-blender
-maya
-houdini
-zbrush
-substance designer
-substance painter
-ros (robot operating system)
-plc (programmable logic controller)
-hmi (human-machine interface)
-spice (simulation program with integrated circuit emphasis)
-ansys
-abaqus
-finite element analysis (fea)
-computational fluid dynamics (cfd)
-labview
-verilog
-systemverilog
-uvm (universal verification methodology)
-opencv
-cuda
-opencl
-directx
-opengl
-vulkan
-metal
-quantum development kit (qdk)
-qiskit
-cirq
-comsol
-hfss
-siemens nx
-dassault systèmes catia
-ptc creo
-servicenow
-mulesoft
-boomi
-apigee
-kong
-envoy proxy
-falco
-sysdig
-trivy
-clair
-open policy agent (opa)
-vault (hashicorp)
-consul (hashicorp)
-nomad (hashicorp)
-elk stack
-fluentd
-fluent bit
-jaeger
-zipkin
-opentelemetry
-victoriametrics
-thanos
-cortex
-zabbix
-nagios
-icinga
-chef inspec
-sonarqube
-artifactory
-nexus repository
-packer (already listed)
-ansible tower (awx)
-rundeck
-saltstack
-babel
-webpack
-vite
-rollup
-parcel
-eslint
-prettier
-jest
-cypress
-playwright
-selenium
-puppeteer
-lighthouse
-storybook
-chakra ui
-material-ui (mui)
-tailwind css
-styled-components
-emotion
-redux toolkit
-mobx
-recoil
-zustand
-apollo client
-relay
-swr
-react query
-apache ant
-maven
-gradle
-junit
-testng
-mockito
-jmeter
-gatling
-appium
-espresso (android)
-xcuitest (ios)
+Lua
+Dart
+Elixir
+Clojure
+Groovy
+Assembly
+Cobol
+Fortran
+Ada
+Lisp
+Scheme
+Prolog
+Objective-C
+Vba
+.Net Core
+Blazor
+Electron
+Cordova
+Phonegap
+Qt
+Wordpress
+Gtk+
+Scipy
+Matplotlib
+Plotly
+D3.Js
+Three.Js
+Babylon.Js
+Tensorflow.Js
+Fastapi
+Quarkus
+Micronaut
+Play Framework
+Phoenix
+Nestjs
+Nuxt.Js
+Spring Boot
+Vagrant
+Packer
+Pulumi
+New Relic
+Datadog
+Dynatrace
+Appdynamics
+Circleci
+Travis Ci
+Teamcity
+Bamboo
+Harness
+Spinnaker
+Argocd
+Flux
+Helm
+Kustomize
+Observability
+Gitops
+Chaos Engineering
+Service Mesh
+Istio
+Linkerd
+Cloudformation
+Arm Templates
+Ibm Cloud
+Oracle Cloud Infrastructure (Oci)
+Alibaba Cloud
+Vercel
+Netlify
+Sas
+Spss
+Rstudio
+Jupyter
+Knime
+Alteryx
+Qlikview
+Qlik Sense
+Sisense
+Recommender Systems
+Causal Inference
+Time Series Analysis
+Survival Analysis
+Reinforcement Learning
+Feature Engineering
+Mlops
+Aiops
+Model Deployment
+Model Monitoring
+Experiment Design
+Xgboost
+Lightgbm
+Catboost
+Statsmodels
+Time Series Databases
+Graph Databases
+Columnar Databases
+Document Databases
+Sql Tuning
+Query Optimization
+Database Security
+Backup And Recovery
+Disaster Recovery
+Ssis
+Ssrs
+Ssas
+Informatica
+Talend
+Datagrip
+Dbeaver
+Burp Suite
+Nmap
+Wireshark
+Metasploit
+Nessus
+Openvas
+Application Security (Appsec)
+Sast
+Dast
+Iast
+Rasp
+Waf (Web Application Firewall)
+Endpoint Security
+Malware Analysis
+Reverse Engineering
+Digital Forensics
+Incident Response (Ir)
+Risk Assessment
+Risk Management
+Grc (Governance, Risk, And Compliance)
+Casb (Cloud Access Security Broker)
+Cspm (Cloud Security Posture Management)
+Cisco
+Juniper
+Arista
+Palo Alto Networks
+Voip
+Qos
+Network Monitoring
+Snmp
+Nfv (Network Functions Virtualization)
+Sd-Wan
+Zero Trust Networking (Ztn)
+Microsoft Project
+Smartsheet
+Basecamp
+Clickup
+Workfront
+Program Management
+Portfolio Management
+Risk Management
+Change Management
+Stakeholder Communication
+Resource Allocation
+Budget Management
+Agile Coaching
+Domain-Driven Design (Ddd)
+Event-Driven Architecture (Eda)
+Server-Sent Events (Sse)
+Websockets
+Webrtc
+Yagni
+System Design
+Scalability
+High Availability
+Fault Tolerance
+Pair Programming
+Mob Programming
+Bdd (Behavior-Driven Development)
+Acceptance Testing
+Smoke Testing
+Regression Testing
+Usability Testing
+Design Systems
+Wireframing
+Prototyping
+User Research
+Persona Development
+Figma
+Sketch
+Adobe Xd
+Invision
+Zeplin
+Chromeos
+Freebsd
+Openbsd
+Solaris
+Autocad
+Solidworks
+Matlab
+Simulink
+Rtos (Real-Time Operating System)
+Vhdl
+Verilog
+System On A Chip (Soc)
+Asic
+Kernel Development
+Neuromorphic Computing
+Homomorphic Encryption
+Competitive Analysis
+Solution Engineering
+Comptia A+
+Comptia Network+
+Comptia Security+
+Ccsp (Certified Cloud Security Professional)
+Cipp (Certified Information Privacy Professional)
+Crisc (Certified In Risk And Information Systems Control)
+Prompt Engineering
+Algorithm Training
+Telemedicine
+Electronic Health Records (Ehr)
+Medical Imaging Technologies
+Predictive Maintenance
+Smart Factories
+Financial Modeling
+Algorithmic Trading
+Video Editing Software
+Animation Tools
+Soc 2
+Iso 27001
+Api Integration With Ai Services
+Bias Detection
+Model Evaluation
+Data Preparation
+Advanced Css
+State Management (Redux, Zustand)
+Web Performance Optimization
+Openid Connect
+Threat Modeling
+Api Gateway
+Swagger
+Openapi
+Data Structures
+Algorithms
+Qradar
+Arcsight
+Public Key Infrastructure (Pki)
+Sans Framework
+Nist Framework
+Endpoint Detection And Response (Edr)
+Sandboxing
+Computer Forensics
+Data Wrangling
+Probability
+Linear Algebra
+Calculus
+Linear Regression
+Logistic Regression
+Naive Bayes
+Decision Tree
+Random Forest
+K-Nearest Neighbor (Knn)
+K-Means
+Trifacta
+Tamr
+Ai Ethics
+Quantum Machine Learning
+Generative Engine Optimization (Geo)
+Low-Code
+No-Code
+Platform Engineering
+Deepfake Detection
+Ai-Generated Malware Analysis
+Capture The Flag (Ctf)
+Service Level Objectives (Slos)
+Service Level Indicators (Slis)
+Capacity Planning
+Performance Tuning
+Benchmarking
+Systems Thinking
+Vlsi Chip Design
+Robotics Operating System (Ros)
+Scada
+Industrial Control Systems (Ics)
+Digital Signal Processing (Dsp)
+Geographic Information System (Gis)
+Clickhouse
+Druid
+Trino (Prestosql)
+Dask
+Ray
+Airflow
+Prefect
+Dagster
+Great Expectations
+Dbt (Data Build Tool)
+Monte Carlo (Data Observability)
+Apache Flink
+Apache Beam
+Apache Kafka
+Rabbitmq
+Zeromq
+Grpc
+Grpc-Web
+Webassembly (Wasm)
+Solidity
+Vyper
+Evm (Ethereum Virtual Machine)
+Hyperledger Fabric
+Corda
+Truffle Suite
+Hardhat
+Openzeppelin
+Ethers.Js
+Web3.Js
+Ipfs
+Filecoin
+The Graph
+Chainlink
+Unity
+Unreal Engine
+Blender
+Maya
+Houdini
+Zbrush
+Substance Designer
+Substance Painter
+Ros (Robot Operating System)
+Plc (Programmable Logic Controller)
+Hmi (Human-Machine Interface)
+Spice (Simulation Program With Integrated Circuit Emphasis)
+Ansys
+Abaqus
+Finite Element Analysis (Fea)
+Computational Fluid Dynamics (Cfd)
+Labview
+Verilog
+Systemverilog
+Uvm (Universal Verification Methodology)
+Opencv
+Cuda
+Opencl
+Directx
+Opengl
+Vulkan
+Metal
+Quantum Development Kit (Qdk)
+Qiskit
+Cirq
+Comsol
+Hfss
+Siemens Nx
+Dassault Systèmes Catia
+Ptc Creo
+Servicenow
+Mulesoft
+Boomi
+Apigee
+Kong
+Envoy Proxy
+Falco
+Sysdig
+Trivy
+Clair
+Open Policy Agent (Opa)
+Vault (Hashicorp)
+Consul (Hashicorp)
+Nomad (Hashicorp)
+Elk Stack
+Fluentd
+Fluent Bit
+Jaeger
+Zipkin
+Opentelemetry
+Victoriametrics
+Thanos
+Cortex
+Zabbix
+Nagios
+Icinga
+Chef Inspec
+Sonarqube
+Artifactory
+Nexus Repository
+Packer (Already Listed)
+Ansible Tower (Awx)
+Rundeck
+Saltstack
+Babel
+Webpack
+Vite
+Rollup
+Parcel
+Eslint
+Prettier
+Jest
+Cypress
+Playwright
+Selenium
+Puppeteer
+Lighthouse
+Storybook
+Chakra Ui
+Material-Ui (Mui)
+Tailwind Css
+Styled-Components
+Emotion
+Redux Toolkit
+Mobx
+Recoil
+Zustand
+Apollo Client
+Relay
+Swr
+React Query
+Apache Ant
+Maven
+Gradle
+Junit
+Testng
+Mockito
+Jmeter
+Gatling
+Appium
+Espresso (Android)
+Xcuitest (Ios)
+
+## 2025 Additions & Emerging Technologies
+AI/ML
+AWS ECS
+AWS EKS
+AWS Lambda
+Airbyte
+Apache Iceberg
+Artificial Intelligence / Machine Learning
+Astro
+Autonomous Agents
+Azure DevOps
+Azure Functions
+Bun
+Business Analysis
+C Sharp
+Capacitor.js
+Chroma
+Claude
+Cloud Cost Optimization
+Cloudflare
+Data Catalog
+Data Governance
+Data Lineage
+Data Storytelling
+Databricks
+Delta Lake
+Deno
+Diffusion Models
+Dot Net
+Edge AI
+FAISS
+FinOps
+Fine-Tuning
+Fivetran
+GCP BigQuery
+GCP Vertex AI
+GPT
+Gemini
+Generative Design
+GraphQL Codegen
+HashiCorp Boundary
+HashiCorp Waypoint
+Hugging Face
+Java Script
+Jetpack Compose
+Kotlin Multiplatform
+LLMOps
+LangChain
+LaunchDarkly
+Llama
+LlamaIndex
+Metabase
+Milvus
+Model Distillation
+Model Quantization
+OWASP Top 10
+Object-Oriented Programming (OOP)
+Observability Stack
+Optimizely
+Orca Security
+Pinecone
+Platform Engineering
+Playwright
+Prisma Cloud
+Product Analytics
+Product Management
+Prompt Tuning
+React JS
+React Native Reanimated
+Remix
+Retrieval-Augmented Generation (RAG)
+SOC 2 Type II
+Server-Sent Events (SSE)
+Shadcn/UI
+Snowflake
+Solid.js
+Superset
+SwiftUI
+Synthetic Data
+Tailwind UI
+Technical Program Management
+Threat Modeling
+Vitest
+Weaviate
+WebSockets
+Wiz
+Zero Trust Architecture
+gRPC-Web
+tRPC

@@ -78,11 +78,11 @@ def TexInstr():
                 job_details['skills'] = extract_skills_and_careers(jobpost_tokens, complete_jobpost, skill_keywords)
                 job_details['careers'] = extract_skills_and_careers(jobpost_tokens, complete_jobpost, career_keywords)
 
-                job_details['experienceLevels'] = extract_experience(title.lower(), complete_jobpost)
+                job_details['experienceLevels'] = extract_experience(title, complete_jobpost)
 
                 # Texas Instruments doesnt mention employment type, workmodels, salary in descriptions, assuming they are all onsite/fulltime/tbd
-                job_details['employmentTypes'] = ['fulltime']
-                job_details['workModels'] = ['onsite']
+                job_details['employmentTypes'] = ['Full-Time']
+                job_details['workModels'] = ['On-site']
                 job_details['salary'] = None
 
                 WebDriverWait(driver, 10).until(EC.presence_of_element_located((By.CSS_SELECTOR, "ul.job-meta__list")))
@@ -98,7 +98,7 @@ def TexInstr():
                         job_details['datePosted'] = formatted_date.date()
                     
                     if "Degree Level" in label:
-                        job_details['degrees'] = extract_degree(value.lower())
+                        job_details['degrees'] = extract_degree(value)
 
                     if "Locations" in label:
                         locations_list = []

@@ -82,7 +82,7 @@ def jsearch_api():
                     # need to get logo url from json 
 
                     if is_remote:
-                        job_details['workModels'] = ['remote']
+                        job_details['workModels'] = ['Remote']
                     else:
                         job_details['workModels'] = extract_work_model(complete_post.lower())
 

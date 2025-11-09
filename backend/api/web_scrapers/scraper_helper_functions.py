@@ -6,11 +6,16 @@ from openai import OpenAI
 def load_keywords(filename):
     try:
         with open(filename, 'r') as file:
-            return [line.strip() for line in file if line.strip()]
+            keywords = [line.strip() for line in file if line.strip()]
+
+        keyword_map = {kw.lower(): kw for kw in keywords}
+        return keyword_map
+    
     except Exception as e:
         print(f"Failed to load keywords: {e}")
-        return []
+        return {}
     
+
 client = OpenAI(api_key=os.getenv('ai_api_key')) # Initialize OpenAI client
     
 def extract_job_posting_summary(job_description_text):
@@ -41,17 +46,18 @@ def extract_job_posting_summary(job_description_text):
         print(f"An unexpected error occurred: {e}")
         return None
     
+
 def extract_job_experience_fallback(job_description_text):
     system_prompt = """
     You are an AI assistant that classifies job listings by experience level.
 
     Your task: Given a job description, respond ONLY with one of the following exact words:
-    - intern
-    - entry
-    - mid
-    - senior
-    - lead
-    - management
+    - Intern
+    - Entry
+    - Mid
+    - Senior
+    - Lead
+    - Management
 
     Rules:
     - Do not explain your reasoning.
@@ -81,41 +87,49 @@ def extract_job_experience_fallback(job_description_text):
         print(f"An unexpected error occurred in fallback: {e}")
         return None
 
+
 def tokenizer(description):
     regex_pattern = r'(?<!\w)([a-z0-9]+(?:[\+\#\.\/\-’‘\'_][a-z0-9]+)*[\+\#]*|\.[a-z0-9]+(?:[\+\#\.\/\-’‘\'_][a-z0-9]+)*[\+\#]*)(?!\w)'
-    description_lower = description.lower()
-    tokens = set(re.findall(regex_pattern, description_lower))
+    description = description.lower()
+    tokens = set(re.findall(regex_pattern, description))
     return tokens
 
-def extract_skills_and_careers(tokens, description, keywords):
+
+def extract_skills_and_careers(tokens, description, keyword_map):
     keywords_found = []
-    for keyword in keywords:
-        if (keyword in tokens) or (" " in keyword and keyword in description):
-            keywords_found.append(keyword)
+    description = description.lower()
+
+    for key_lower, key_upper in keyword_map.items():
+        if (key_lower in tokens) or (" " in key_lower and key_lower in description):
+            keywords_found.append(key_upper)
     return list(set(keywords_found))
 
+
 def extract_experience(title, description):
+    title = title.lower()
+    description = description.lower()
+
     experience = []
     experience_map = {
-        r'\bintern\b': 'intern',
-        r'\binternship\b': 'intern',
-        r'\bco[-\s]?op\b': 'intern',
-        r'\bsummer\b': 'intern',
-        r'\bentry[\s-]?level\b': 'entry',
-        r'\bearly[\s-]?career\b': 'entry',
-        r'\bjunior\b': 'entry',
-        r'\bassociate\b': 'entry',
-        r'\b(graduate|new[\s-]?grad)\b': 'entry',
-        r'\bmid[\s-]level\b': 'mid',
-        r'\bmid[\s-]career\b': 'mid',
-        r'\bintermediate\b': 'mid',
-        r'\bsenior\b': 'senior',
-        r'\bsr\.?\b': 'senior',
-        r'\blead\b': 'lead',
-        r'\bleader\b': 'lead',
-        r'\bmanager\b': 'management',
-        r'\bmgr\.?\b': 'management',
-        r'\bsupervisor\b': 'management',
+        r'\bintern\b': 'Intern',
+        r'\binternship\b': 'Intern',
+        r'\bco[-\s]?op\b': 'Intern',
+        r'\bsummer\b': 'Intern',
+        r'\bentry[\s-]?level\b': 'Entry',
+        r'\bearly[\s-]?career\b': 'Entry',
+        r'\bjunior\b': 'Entry',
+        r'\bassociate\b': 'Entry',
+        r'\b(graduate|new[\s-]?grad)\b': 'Entry',
+        r'\bmid[\s-]level\b': 'Mid',
+        r'\bmid[\s-]career\b': 'Mid',
+        r'\bintermediate\b': 'Mid',
+        r'\bsenior\b': 'Senior',
+        r'\bsr\.?\b': 'Senior',
+        r'\blead\b': 'Lead',
+        r'\bleader\b': 'Lead',
+        r'\bmanager\b': 'Management',
+        r'\bmgr\.?\b': 'Management',
+        r'\bsupervisor\b': 'Management',
     }
     experience_years_map = {
         r'(\d+)\s*\+\s*years?',
@@ -144,17 +158,17 @@ def extract_experience(title, description):
                     years = int(match.group(1))
 
                 if years <= 1:
-                    experience.append('intern')
+                    experience.append('Intern')
                 elif years <= 2:
-                    experience.append('entry')
+                    experience.append('Entry')
                 elif years <= 4:
-                    experience.append('mid')
+                    experience.append('Mid')
                 elif years <= 7:
-                    experience.append('senior')
+                    experience.append('Senior')
                 elif years <= 10:
-                    experience.append('lead')
+                    experience.append('Lead')
                 elif years <= 12:
-                    experience.append('management')
+                    experience.append('Management')
                 break
 
     # Last Case - Use AI
@@ -166,13 +180,14 @@ def extract_experience(title, description):
     return set(experience)
 
 def extract_degree(description):
+    description = description.lower()
     degrees = []
     degree_map = {
-        r"\b(master[']?s|m\.s\.|ms|mba|graduate)\b": 'masters',
-        r"\b(bachelor[']?s|b\.s\.|bs|under[\s-]?graduate)\b": 'bachelors',
-        r"\b(associate[']?s|a\.a\.|a\.s\.)\b": 'associates',
-        r"\b(ph\.?d|doctorate|doctoral)\b": 'doctorate',
-        r"\b(high[\s-]?school|ged)\b": 'highschool'
+        r"\b(master[']?s|m\.s\.|ms|mba|graduate)\b": 'Masters',
+        r"\b(bachelor[']?s|b\.s\.|bs|under[\s-]?graduate)\b": 'Bachelors',
+        r"\b(associate[']?s|a\.a\.|a\.s\.)\b": 'Associates',
+        r"\b(ph\.?d|doctorate|doctoral)\b": 'Doctorate',
+        r"\b(high[\s-]?school|ged)\b": 'Highschool'
     }
 
     for pattern, label in degree_map.items():
@@ -182,13 +197,15 @@ def extract_degree(description):
     return set(degrees)
 
 def extract_employment_type(description):
+    description = description.lower()
     employments = []
     employment_map = {
-        r'\bfull[\s-]?time\b': 'fulltime',
-        r'\bpart[\s-]?time\b': 'parttime',
-        r'\bcontract\b' : 'contract',
-        r'\bseasonal\b' : 'contract',
-        r'\btemporary\b' : 'temporary'
+        r'\bfull[\s-]?time\b': 'Full-Time',
+        r'\bpart[\s-]?time\b': 'Part-Time',
+        r'\bcontract\b' : 'Contract',
+        r'\bseasonal\b' : 'Contract',
+        r'\btemporary\b' : 'Temporary',
+        r'\binternship\b' : 'Internship'
     }
 
     for pattern, label in employment_map.items():
@@ -198,12 +215,13 @@ def extract_employment_type(description):
     return set(employments)
 
 def extract_work_model(description):
+    description = description.lower()
     workmodels = []
     workmodel_map = {
-        r'\bonsite\b': 'onsite',
-        r'\bin[\s-]?(person|office)\b': 'onsite',
-        r'\b(remote|telework|wfh|work from home)\b': 'remote',
-        r'\bhybrid\b': 'hybrid',
+        r'\bonsite\b': 'On-site',
+        r'\bin[\s-]?(person|office)\b': 'On-site',
+        r'\b(remote|telework|wfh|work from home)\b': 'Remote',
+        r'\bhybrid\b': 'Hybrid',
     }
 
     for pattern, label in workmodel_map.items():

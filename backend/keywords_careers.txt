@@ -1,40 +1,139 @@
-computer science
-information technology
-information systems
-software engineering
-computer engineering
-data science
-cybersecurity
-artificial intelligence
-machine learning
-robotics
-bioinformatics
-game development
-web development
-mobile development
-network engineering
-systems engineering
-electrical engineering
-computational mathematics
-human-computer interaction
-it management
-computer graphics
-information security
-database administration
-cloud computing
-devops
-site reliability engineering
-product management
-ui/ux
-data engineering
-quality assurance
-embedded systems
-system administration
-frontend developer
-backend developer
-fullstack developer
-software development
-network administration
-network security
-cloud engineering
-firmware engineering
+3D Printing Engineering
+AI Ethics
+AI Research
+API Development
+ASIC Design
+Academic Research In Computer Science
+Agile Coaching
+Applied Machine Learning
+Artificial Intelligence
+Artificial Intelligence Engineering
+Augmented Reality Development
+Automation Engineering
+Autonomous Systems Engineering
+Autonomous Vehicle Engineering
+Backend Developer
+Backend Development
+Bioinformatics
+Bioinformatics Engineering
+Blockchain Engineering
+Business Analytics
+Business Intelligence
+Cloud Architecture
+Cloud Computing
+Cloud DevOps Engineering
+Cloud Engineering
+Cloud FinOps
+Cloud Security
+Cloud Security Engineering
+Computational Biology
+Computational Linguistics
+Computational Mathematics
+Computer Engineering
+Computer Graphics
+Computer Science
+Computer Vision Engineering
+Containerization Engineering
+Customer Success Engineering
+Cyber Threat Intelligence
+Cybersecurity
+Data Analytics
+Data Architecture
+Data Engineering
+Data Science
+Data Visualization
+Database Administration
+Deep Learning Engineering
+DevRel (Developer Relations)
+DevSecOps Engineering
+Devops
+Digital Health Engineering
+Digital Transformation
+Digital Twin Engineering
+Drone Systems Engineering
+Edge Computing Engineering
+Electrical Engineering
+Embedded Software Engineering
+Embedded Systems
+Embedded Systems Design
+Enterprise Architecture
+FPGA Engineering
+Firmware Development
+Firmware Engineering
+Frontend Developer
+Frontend Development
+Fullstack Developer
+Fullstack Engineering
+Game Design And Development
+Game Development
+Generative AI Development
+Governance Risk And Compliance (GRC)
+Hardware Engineering
+Health Informatics
+Human-Computer Interaction
+Information Assurance
+Information Security
+Information Systems
+Information Technology
+Infrastructure Engineering
+Innovation Management
+Internet Of Things (IoT) Engineering
+It Management
+LLMOps Engineering
+MLOps Engineering
+Machine Learning
+Machine Learning Engineering
+Mechatronics Engineering
+Metaverse Engineering
+Microservices Architecture
+Mobile Application Development
+Mobile Development
+Natural Language Processing Engineering
+Network Administration
+Network Defense
+Network Engineering
+Network Security
+Neural Interface Engineering
+Penetration Testing
+Platform Engineering
+Product Design
+Product Management
+Prompt Engineering
+Quality Assurance
+Quantum Algorithms Research
+Quantum Computing
+Quantum Engineering
+R&D Engineering
+Red Team Analysis
+Robotics
+Robotics Engineering
+STEM Education Technology
+Scrum Mastery
+Security Automation Engineering
+Security Operations
+Semiconductor Engineering
+Site Reliability Engineering
+Smart Contract Development
+Software Architecture
+Software Development
+Software Engineering
+Solutions Architecture
+Spatial Computing
+System Administration
+Systems Analysis
+Systems Architecture
+Systems Engineering
+Systems Integration Engineering
+Tech Sales Engineering
+Technical Program Management
+Technical Project Management
+Technical Writing
+Technology Consulting
+UI/UX Design
+Ui/Ux
+VR/AR Development
+Virtual Reality Development
+Web Application Development
+Web Development
+Web3 Development
+Zero Trust Architecture

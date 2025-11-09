@@ -112,7 +112,7 @@ def BankofAmerica():
                 employ_type = employ_type_element.find_element(By.CSS_SELECTOR, "span").text.strip().lower()
                 job_details['employmentTypes'] = extract_employment_type(employ_type)
                 job_details['experienceLevels'] = extract_experience(title.lower(), complete_jobpost)
-                job_details['workModels'] = ['onsite']
+                job_details['workModels'] = ['On-site']
 
                 # Save location, dateposted, salary
                 location_section = wait.until(EC.presence_of_element_located((By.CLASS_NAME, "location-cta")))

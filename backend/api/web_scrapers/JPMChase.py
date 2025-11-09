@@ -424,13 +424,13 @@ def jpmc_scraper():
                         # Extract work models
                         work_models = extract_work_model_func(complete_jobpost)
                         # If empty, default to On-Site
-                        job_details['workModels'] = work_models if work_models else ['onsite']
+                        job_details['workModels'] = work_models if work_models else ['On-site']
                     else:
                         job_details['skills'] = []
                         job_details['careers'] = []
                         job_details['degrees'] = []
-                        job_details['experienceLevels'] = ['entry']  # Default to Entry Level
-                        job_details['workModels'] = ['onsite']  # Default to On-Site
+                        job_details['experienceLevels'] = []
+                        job_details['workModels'] = ['On-site']  # Default to On-Site
                     
                     job_details['summary'] = "no summary for now" #extract_job_posting_summary(complete_jobpost)
                     
