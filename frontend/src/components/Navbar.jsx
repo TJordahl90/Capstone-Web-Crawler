@@ -43,11 +43,10 @@ const Navbar = ({ setCollapsed, collapsed }) => {
     <NavBar
       className="nav-bar"
       style={{
-        background: "rgba(255, 255, 255, 0.08)",
-        borderBottom: "2px solid rgba(255, 255, 255, 0.15)",
+        borderBottom: "2px solid var(--border)",
         backdropFilter: "blur(20px)",
         WebkitBackdropFilter: "blur(20px)",
-        boxShadow: "0 4px 30px rgba(0, 0, 0, 0.1)",
+        boxShadow: "0 4px 30px var(--shadow2)",
         height: "60px",
         position: "sticky",
         top: 0,
@@ -67,10 +66,10 @@ const Navbar = ({ setCollapsed, collapsed }) => {
         <div style={{ display: "flex", alignItems: "center" }}>
           <span
             style={{
-              fontSize: "1.7rem",
+              fontSize: "1.8rem",
               fontWeight: 600,
               letterSpacing: "0.5px",
-              background: "linear-gradient(90deg, #00ADB5, #80D0C7)",
+              background: "linear-gradient(90deg, var(--accent1), teal)",
               WebkitBackgroundClip: "text",
               WebkitTextFillColor: "transparent",
             }}
@@ -87,7 +86,7 @@ const Navbar = ({ setCollapsed, collapsed }) => {
                 style={{
                   height: "50px",
                   width: "auto",
-                  transition: "filter 0.3s ease"
+                  transition: "filter 0.3s ease",
                 }}
                 onMouseEnter={(e) =>
                 (e.currentTarget.style.filter =
@@ -109,7 +108,7 @@ const Navbar = ({ setCollapsed, collapsed }) => {
                   className="navbar-icon"
                   size={45}
                   style={{
-                    color: "var(--border)",
+                    color: "var(--text)",
                   }}
                 />
 
@@ -123,7 +122,7 @@ const Navbar = ({ setCollapsed, collapsed }) => {
                   padding: "8px 20px",
                   border: "2px solid var(--border)",
                   backgroundColor: "transparent",
-                  color: "var(--text5)",
+                  color: "var(--text)",
                   transition: "all 0.3s ease",
                   borderRadius: "0",
                   height: "45px",

@@ -58,10 +58,11 @@ function App() {
 	return (
 		<div
 			style={{
-				backgroundImage: `url(${backgroundImage})`,
+				// backgroundImage: `url(${backgroundImage})`,
+				backgroundColor: "var(--bg)",
 				backgroundSize: "cover",
-				backgroundPosition: "center",
-				backgroundRepeat: "no-repeat",
+				// backgroundPosition: "center",
+				// backgroundRepeat: "no-repeat",
 				minHeight: "100vh",
 				width: "100%",
 				position: "relative",

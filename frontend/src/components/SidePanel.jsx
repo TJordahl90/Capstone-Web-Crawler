@@ -52,8 +52,6 @@ const SidePanel = ({ children, user, handleLogout }) => {
                 display: "flex",
                 backdropFilter: "blur(20px)",
                 WebkitBackdropFilter: "blur(20px)",
-                backgroundColor: "rgba(255, 255, 255, 0.08)",
-                borderRight: "2px solid rgba(255, 255, 255, 0.15)",
                 height: "100vh",
             }}
         >
@@ -71,7 +69,7 @@ const SidePanel = ({ children, user, handleLogout }) => {
                     left: 0,
                     top: 0,
                     bottom: 0,
-                    borderRight: "2px solid rgba(255, 255, 255, 0.15)"
+                    borderRight: "2px solid var(--border)"
                 }}
             >
                 {navItems.map((item) => (
@@ -93,9 +91,9 @@ const SidePanel = ({ children, user, handleLogout }) => {
                                 whileHover={{ scale: 1.15 }}
                                 onClick={item.onClick}
                                 style={{
-                                    color: hovered === item.key ? "var(--textonhover2)" : "var(--text2)",
-                                    backgroundColor: hovered === item.key ? "rgba(255, 255, 255, 0.25)" : "transparent",
-                                    borderRadius: "12px",
+                                    color: hovered === item.key ? "var(--accent1)" : "var(--text)",
+                                    backgroundColor: hovered === item.key ? "var(--hover)" : "transparent",
+                                    borderRadius: "10px",
                                     padding: "12px",
                                     transition: "all 0.25s ease",
                                     display: "flex",
@@ -111,9 +109,9 @@ const SidePanel = ({ children, user, handleLogout }) => {
                                 href={item.href}
                                 whileHover={{ scale: 1.15 }}
                                 style={{
-                                    color: hovered === item.key ? "var(--textonhover2)" : "var(--text2)",
-                                    backgroundColor: hovered === item.key ? "rgba(255, 255, 255, 0.25)" : "transparent",
-                                    borderRadius: "12px",
+                                    color: hovered === item.key ? "var(--accent1)" : "var(--text)",
+                                    backgroundColor: hovered === item.key ? "var(--hover)" : "transparent",
+                                    borderRadius: "10px",
                                     padding: "12px",
                                     transition: "all 0.25s ease",
                                     display: "flex",
@@ -145,15 +143,15 @@ const SidePanel = ({ children, user, handleLogout }) => {
                                 top: tooltipPos.top,
                                 left: tooltipPos.left,
                                 transform: "translateY(-50%)",
-                                backgroundColor: "rgba(10, 10, 10, 0.95)",
-                                color: "white",
+                                backgroundColor: "var(--card)",
+                                color: "var(--text)",
                                 padding: "6px 10px",
                                 borderRadius: "6px",
                                 fontSize: "0.8rem",
                                 whiteSpace: "nowrap",
                                 pointerEvents: "none",
                                 zIndex: 99999,
-                                boxShadow: "0 2px 8px rgba(0, 0, 0, 0.5)",
+                                boxShadow: "0 2px 8px var(--shadow2)",
                             }}
                         >
                             {navItems.find((item) => item.key === hovered)?.label}
