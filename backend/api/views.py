@@ -348,6 +348,100 @@ class BookmarkJobView(APIView):
         job_posting = JobPosting.objects.get(id=job_id)
         SavedJob.objects.filter(jobPosting=job_posting, account=account).delete()
         return Response({"message": "successfully deleted saved job"}, status=200)
+    
+def parseResume(account, resume):
+
+    text = extract_text_from_pdf(resume) #run the resume parser and stores data in pasrsed_data
+    skills = extractSkills(text)
+    parsed_data = parser(text)
+    
+    #print(parsed_data)
+
+    #Automatically adds it to the profile
+    if skills:
+        skillObjects = []
+        for raw in skills:
+            skill = (raw or "").strip()
+            if not skill:
+                continue
+            try:
+                # case-insensitive fetch
+                obj = CommonSkills.objects.get(name__iexact=skill)
+            except CommonSkills.DoesNotExist:
+                # create if truly missing
+                obj = CommonSkills.objects.create(name=skill)
+            except CommonSkills.MultipleObjectsReturned:
+                # if duplicates exist with different casing, pick one
+                obj = CommonSkills.objects.filter(name__iexact=skill).first()
+            skillObjects.append(obj)
+        if skillObjects:
+            account.skills.add(*skillObjects)
+
+    # Helper function to parse dates
+    def parse_date(date_str):
+        if not date_str or date_str.lower() in ['present', 'current']:
+            return None
+        # Try to parse MM/YYYY or YYYY formats
+        for fmt in ('%m/%Y', '%Y-%m-%d', '%Y'):
+            try:
+                return datetime.strptime(date_str, fmt).date()
+            except ValueError:
+                continue
+        return None
+    
+    # Get education data
+    educationList = parsed_data.get('Education', [])
+    # Create education objects
+    for edu in educationList:
+        degreeType = edu.get('degree', '')
+        try:
+            degreeObj = CommonDegrees.objects.get(name__icontains=degreeType.split()[0])
+        except(CommonDegrees.DoesNotExist, IndexError):
+            print(f'{degreeType} degree type does not exist, skipping this degree')
+            continue
+        try:
+            Education.objects.create(
+                account=account,
+                institution=edu.get('institution', ''),
+                degree=degreeObj,
+                major=edu.get('major', ''),
+                minor=edu.get('minor', ''),
+                graduationDate=parse_date(edu.get('graduationDate')),
+                gpa=edu.get('gpa')
+            )
+        except Exception as e:
+            print(f'Error saving education: {e}')
+
+    # Parse experience data
+    experience_list = parsed_data.get('Experience', [])
+    for exp in experience_list:
+        try:
+            Experience.objects.create(
+                account=account,
+                company=exp.get('company', ''),
+                title=exp.get('jobTitle', ''),
+                startDate=parse_date(exp.get('startDate')),
+                endDate=parse_date(exp.get('endDate')),
+                description=exp.get('description', '')
+            )
+        except Exception as e:
+            print(f'Error saving experience: {e}')
+
+    # Parse project data
+    project_list = parsed_data.get('Projects', [])
+    for proj in project_list:
+        try:
+            Project.objects.create(
+                account=account,
+                title=proj.get('title', ''),
+                description=proj.get('description', ''),
+                startDate=parse_date(proj.get('startDate')),
+                endDate=parse_date(proj.get('endDate'))
+            )
+        except Exception as e:
+            print(f'Error saving project: {e}')
+
+    return parsed_data
 
 class DocumentView(APIView):
     permission_classes = [IsAuthenticated]
@@ -361,13 +455,48 @@ class DocumentView(APIView):
             try:
                 file_path = account.resume.path
                 with open(file_path, 'rb') as f:
-                    response = HttpResponse(f.read(), content_type='application/pdf')
-                    response['Content-Disposition'] = f'inline; filename="{os.path.basename(file_path)}"'
-                    return response
+                    encryptedBytes = f.read()
+
+                decryptedFileBytes = decryptFile(encryptedBytes)
+
+                response = HttpResponse(decryptedFileBytes, content_type='application/pdf')
+                response['Content-Disposition'] = f'inline; filename="{os.path.basename(file_path)}"'
+
+                return response
             except FileNotFoundError:
                 return Response({"error": "Resume file not found"}, status=404)
             
         return Response({"error": "No resume found"}, status=404)
+    
+    def put(self, request):
+        user = request.user
+        account = Account.objects.get(user=user)
+        newResume = request.FILES.get('resume')
+
+        if(account.resume):
+            path = 'media/' + str(account.resume)
+            try:
+                os.remove(path)
+            except FileExistsError:
+                print('File not found')
+            except PermissionError:
+                print('Permission denied')
+
+        if(not newResume):
+            return Response({"error": "No file uploaded"}, status=400)
+        
+        account.skills.clear()
+        Education.objects.filter(account=account).delete()
+        Experience.objects.filter(account=account).delete()
+        Project.objects.filter(account=account).delete()
+
+        parseResume(account, newResume)
+        
+        account.saveResume(newResume)
+
+
+        return Response({"message": "Resume replaced successfully"}, status=200)
+
 
     def post(self, request):
         try:
@@ -377,108 +506,15 @@ class DocumentView(APIView):
 
             if not resume_file:
                 return Response({"error": "No file uploaded"}, status=400)
-
+            
             account.saveResume(resume_file)
-
-            text = extract_text_from_pdf(resume_file) #run the resume parser and stores data in pasrsed_data
-            skills = extractSkills(text)
-            parsed_data = parser(text)
-            #print(parsed_data)
-
-            #Automatically adds it to the profile
-            if skills:
-                skillObjects = []
-                for raw in skills:
-                    skill = (raw or "").strip()
-                    if not skill:
-                        continue
-                    try:
-                        # case-insensitive fetch
-                        obj = CommonSkills.objects.get(name__iexact=skill)
-                    except CommonSkills.DoesNotExist:
-                        # create if truly missing
-                        obj = CommonSkills.objects.create(name=skill)
-                    except CommonSkills.MultipleObjectsReturned:
-                        # if duplicates exist with different casing, pick one
-                        obj = CommonSkills.objects.filter(name__iexact=skill).first()
-                    skillObjects.append(obj)
-                if skillObjects:
-                    account.skills.add(*skillObjects)
-
-            # Helper function to parse dates
-            def parse_date(date_str):
-                if not date_str or date_str.lower() in ['present', 'current']:
-                    return None
-                # Try to parse MM/YYYY or YYYY formats
-                for fmt in ('%m/%Y', '%Y-%m-%d', '%Y'):
-                    try:
-                        return datetime.strptime(date_str, fmt).date()
-                    except ValueError:
-                        continue
-                return None
-
-            # Get education data
-            educationList = parsed_data.get('Education', [])
-
-            # Create education objects
-            for edu in educationList:
-                degreeType = edu.get('degree', '')
-
-                try:
-                    degreeObj = CommonDegrees.objects.get(name__icontains=degreeType.split()[0])
-                except(CommonDegrees.DoesNotExist, IndexError):
-                    print(f'{degreeType} degree type does not exist, skipping this degree')
-                    continue
-
-
-                try:
-                    Education.objects.create(
-                        account=account,
-                        institution=edu.get('institution', ''),
-                        degree=degreeObj,
-                        major=edu.get('major', ''),
-                        minor=edu.get('minor', ''),
-                        graduationDate=parse_date(edu.get('graduationDate')),
-                        gpa=edu.get('gpa')
-                    )
-                except Exception as e:
-                    print(f'Error saving education: {e}')
-
-            # Parse experience data
-            experience_list = parsed_data.get('Experience', [])
-            for exp in experience_list:
-                try:
-                    Experience.objects.create(
-                        account=account,
-                        company=exp.get('company', ''),
-                        title=exp.get('jobTitle', ''),
-                        startDate=parse_date(exp.get('startDate')),
-                        endDate=parse_date(exp.get('endDate')),
-                        description=exp.get('description', '')
-                    )
-                except Exception as e:
-                    print(f'Error saving experience: {e}')
-
-            # Parse project data
-            project_list = parsed_data.get('Projects', [])
-            for proj in project_list:
-                try:
-                    Project.objects.create(
-                        account=account,
-                        title=proj.get('title', ''),
-                        description=proj.get('description', ''),
-                        startDate=parse_date(proj.get('startDate')),
-                        endDate=parse_date(proj.get('endDate'))
-                    )
-                except Exception as e:
-                    print(f'Error saving project: {e}')
-
+            parsed_data = parseResume(account, resume_file)
 
             return Response({
                         'message': 'Resume uploaded and parsed successfully',
                             'parsed_data': parsed_data
                         }, status=201)
-        
+
         except Exception as e:
             print('Error in file upload') 
             return Response({

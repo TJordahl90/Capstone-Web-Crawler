@@ -8,51 +8,66 @@ const Documents = () => {
     const [error, setError] = useState("");
     const [message, setMessage] = useState("");
     const [showPreview, setShowPreview] = useState(false);
+    const [pdfUrl, setPdfUrl] = useState(null);
 
     useEffect(() => {
-        const storedAccount = localStorage.getItem("account");
-        if (storedAccount) {
-            const account = JSON.parse(storedAccount);
-            if (account.resume) {
-                setResume(account.resume);
+        const fetchResume = async () => {
+            try{
+                const response = await api.get("/documents/",{
+                    responseType: "blob",
+                });
+                const url = URL.createObjectURL(response.data);
+                setResume(url);
+            }
+            catch (error){
+                console.error("Failed to fetch resume: ", error);
             }
         }
+
+        fetchResume();
     }, []);
 
-    const handleFileChange = (e) => {
+    const handleFileChange = async (e) => {
         const file = e.target.files[0];
         if (file) {
-            const fileURL = URL.createObjectURL(file);
+            const fileUrl = URL.createObjectURL(file);
             setResume({
                 file,
-                url: fileURL,
+                url: fileUrl,
             });
         }
     };
 
     const handleSubmit = async () => {
-        if (!resume || !resume.file) {
+        if(!resume || !resume.file){
             setError("No resume selected.");
             return;
         }
 
-        try {
+        try{
             const formData = new FormData();
             formData.append('resume', resume.file);
+            
+            if(resume.file){
+                await api.put("/documents/", formData, {
+                    headers: { 'Content-Type': 'multipart/form-data' }
+                });
+            }
+            else {
+                await api.post("/documents/", formData, {
+                    headers: { 'Content-Type': 'multipart/form-data' }
+                });
+            }
 
-            const response = await api.post("/documents/", formData, {
-                headers: { 'Content-Type': 'multipart/form-data' }
-            });
+            const newUrl = URL.createObjectURL(resume.file);
+            setResume(newUrl);
+            setShowPreview(true);
 
-            setMessage("Documents successfully updated!");
-            localStorage.setItem("account", JSON.stringify({
-                ...JSON.parse(localStorage.getItem("account") || "{}"),
-                resume: resume
-            }));
+            setMessage("Resume successfully uploaded.");
         }
-        catch (err) {
-            setError("Error updating documents.");
-            console.error(err);
+        catch (error){
+            console.error(error);
+            setError("Error uploading resume.");
         }
 
         setTimeout(() => {
@@ -155,7 +170,7 @@ const Documents = () => {
                     </Card.Header>
                     <Card.Body className="p-0">
                         <iframe
-                            src={resume.url || resume}
+                            src={resume}
                             title="Resume Preview"
                             width="100%"
                             height="600px"
