@@ -7,7 +7,7 @@ class Command(BaseCommand):
     """Updates the CommonSkills and CommonCareers tables with provided text file"""
 
     def load_data_from_file(self, filename):
-        file_path = os.path.join(settings.BASE_DIR, 'api', 'web_scrapers', filename)
+        file_path = os.path.join(filename)
         
         data = []
         try:

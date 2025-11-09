@@ -16,8 +16,8 @@ Scala
 R
 Perl
 Haskell
-Sql
-Nosql
+SQL
+NoSQL
 React
 Angular
 Vue
@@ -32,8 +32,8 @@ Next.Js
 Gatsby
 Bootstrap
 Jquery
-Asp.Net
-.Net
+ASP.NET
+.NET
 Xamarin
 Flutter
 React Native
@@ -45,7 +45,7 @@ Backbone.Js
 Html
 Css
 Spring Boot
-.Net Core
+.NET Core
 Tailwind Css
 Nestjs
 Koa.Js
@@ -53,9 +53,9 @@ Koa.Js
 
 
 ## Cloud & DevOps
-Aws
+AWS
 Azure
-Gcp
+GCP
 Google Cloud
 Cloud Computing
 Kubernetes
@@ -68,14 +68,13 @@ Terraform
 Ansible
 Puppet
 Chef
-Ci/Cd
+CI/CD
 Continuous Integration
 Continuous Deployment
 Infrastructure As Code
 Serverless
 Microservices
-Devops
-Sre
+SRE
 Cloud Native
 Containerization
 Virtualization
@@ -88,12 +87,12 @@ Heroku
 Machine Learning
 Deep Learning
 Artificial Intelligence
-Ai
-Ml
+AI
+ML
 Data Mining
 Data Visualization
 Data Modeling
-Etl
+ETL
 Data Warehouse
 Data Lake
 Big Data
@@ -116,7 +115,7 @@ Tensorflow
 Pytorch
 Keras
 Opencv
-Nlp
+NLP
 Natural Language Processing
 Computer Vision
 Predictive Analytics
@@ -125,35 +124,31 @@ A/B Testing
 Data Engineering
 Data Science
 Business Intelligence
-Bi
 Data Analytics
 
 ## Database Technologies
-Mysql
-Postgresql
-Mongodb
+MySQL
+PostgreSQL
+MongoDB
 Oracle
-Sql Server
-Sqlite
+SQL Server
+SQLite
 Redis
 Cassandra
-Dynamodb
-Mariadb
+DynamoDB
+MariaDB
 Neo4J
-Couchdb
+CouchDB
 Firestore
 Bigtable
 Hbase
-Cockroachdb
-Influxdb
+CockroachDB
+InfluxDB
 Graphql
 Data Modeling
 Database Design
-Database Administration
-Dba
-Data Architecture
 Data Migration
-Etl
+ETL
 Normalization
 Indexing
 Sharding
@@ -167,59 +162,59 @@ Security Audit
 Encryption
 Cryptography
 Firewall
-Iam
+IAM
 Identity And Access Management
-Siem
+SIEM
 Zero Trust
 Oauth
 Saml
 Single Sign-On
-Sso
-Mfa
+SSO
+MFA
 Multi-Factor Authentication
 Threat Detection
 Threat Intelligence
 Security Compliance
-Gdpr
-Hipaa
-Pci Dss
-Soc
+GDPR
+HIPAA
+PCI DSS
+SOC
 Security Operations Center
 Security Architecture
-Devsecops
+DevSecOps
 Intrusion Detection
 Intrusion Prevention
 Security Posture
 
 ## Infrastructure & Networking
-Tcp/Ip
-Dns
-Dhcp
-Vpn
-Vlan
+TCP/IP
+DNS
+DHCP
+VPN
+VLAN
 Load Balancing
-Cdn
+CDN
 Content Delivery Network
 Proxy
 Reverse Proxy
 Networking
 Routing
 Switching
-Ipv4
-Ipv6
-Bgp
-Ospf
-Mpls
-Nat
+IPv4
+IPv6
+BGP
+OSPF
+MPLS
+NAT
 Firewall
 Ipsec
-Ssl/Tls
+SSL/TLS
 Network Security
-Network Architecture
-Sdn
+Network ARchitecture
+SDN
 Software-Defined Networking
-Wan
-Lan
+WAN
+LAN
 Wireless
 5G
 Edge Computing
@@ -233,7 +228,7 @@ Jira
 Confluence
 Trello
 Asana
-Monday.Com
+Monday.com
 Project Management
 Sprint Planning
 Backlog Grooming
@@ -250,42 +245,41 @@ Critical Path
 Pmp
 Prince2
 Itil
-Devops
 Lean
 Six Sigma
 Sdlc
 Software Development Lifecycle
 
 ## Software Development & Design
-Oop
+OOP
 Object-Oriented Programming
 Functional Programming
-Api
-Rest
-Soap
-Grpc
+API
+REST
+SOAP
+gRPC
 Microservices
-Mvc
+MVC
 Design Patterns
-Software Architecture
-Uml
+Software ARchitecture
+UML
 Git
 Version Control
 Code Review
 Unit Testing
 Integration Testing
 E2E Testing
-Qa
+QA
 Quality Assurance
-Ci/Cd
+CI/CD
 Build Automation
 Dependency Management
 Refactoring
 Debugging
 Performance Optimization
 Test-Driven Development
-Tdd
-Ux/Ui
+TDD
+UX/UI
 User Experience
 User Interface
 Responsive Design
@@ -308,7 +302,7 @@ Unix
 Windows
 Macos
 Android
-Ios
+IOS
 Ubuntu
 Debian
 Red Hat
@@ -318,11 +312,9 @@ Bash
 Powershell
 Command Line
 Shell Scripting
-System Administration
-Sysadmin
 Embedded Systems
 Firmware
-Iot
+IoT
 Internet Of Things
 Hardware Design
 Pcb Design
@@ -333,7 +325,7 @@ Arduino
 Robotics
 Automation
 3D Printing
-Cad
+CAD
 Computer Aided Design
 
 ## Emerging Technologies
@@ -342,13 +334,13 @@ Distributed Ledger
 Cryptocurrency
 Smart Contracts
 Web3
-Nft
+NFT
 Metaverse
-Ar
+AR
 Augmented Reality
-Vr
+VR
 Virtual Reality
-Xr
+XR
 Extended Reality
 Quantum Computing
 Edge Computing
@@ -359,15 +351,15 @@ Cognitive Computing
 Digital Twin
 Autonomous Systems
 Robotics Process Automation
-Rpa
-Generative Ai
+RPA
+Generative AI
 Computer Vision
 Neural Networks
-Gans
+GANs
 Transformers
-Llm
+LLM
 Large Language Models
-Generative Ai
+Generative AI
 Autonomous Vehicles
 Drones
 Wearable Technology
@@ -398,33 +390,33 @@ Telecom Tech
 Media Tech
 
 ## Professional Skills & Certifications
-Aws Certified
+AWS Certified
 Azure Certified
 Google Cloud Certified
-Cissp
-Ceh
-Comptia
-Itil
-Pmp
+CISSP
+CEH
+CompTIA
+ITIL
+PMP
 Scrum Certified
-Safe Certified
-Togaf
-Cisa
-Cism
-Ccna
-Mcse
-Rhce
-Lpic
+SAFE Certified
+TOGAF
+CISA
+CISM
+CCNA
+MCSE
+RHCE
+LPIC
 Oracle Certified
-Mongodb Certified
+MongoDB Certified
 Hadoop Certified
 Tableau Certified
 Salesforce Certified
-Servicenow Certified
+ServiceNow Certified
 Six Sigma
 Lean
-Cmmi
-Iso
+CMMI
+ISO
 Data Analytics
 Business Analysis
 Requirements Gathering
@@ -432,9 +424,9 @@ Solution Architecture
 Enterprise Architecture
 Technical Documentation
 Technical Writing
-Api Documentation
+API Documentation
 Requirements Specification
-Uml Diagrams
+UML Diagrams
 Workflow Diagrams
 Process Mapping
 Stakeholder Management
@@ -457,7 +449,7 @@ Scheme
 Prolog
 Objective-C
 Vba
-.Net Core
+.NET Core
 Blazor
 Electron
 Cordova
@@ -506,12 +498,12 @@ Linkerd
 Cloudformation
 Arm Templates
 Ibm Cloud
-Oracle Cloud Infrastructure (Oci)
+Oracle Cloud Infrastructure
 Alibaba Cloud
 Vercel
 Netlify
-Sas
-Spss
+SAS
+SPSS
 Rstudio
 Jupyter
 Knime
@@ -525,8 +517,8 @@ Time Series Analysis
 Survival Analysis
 Reinforcement Learning
 Feature Engineering
-Mlops
-Aiops
+MLOps
+AIOps
 Model Deployment
 Model Monitoring
 Experiment Design
@@ -538,14 +530,13 @@ Time Series Databases
 Graph Databases
 Columnar Databases
 Document Databases
-Sql Tuning
+SQL Tuning
 Query Optimization
 Database Security
 Backup And Recovery
 Disaster Recovery
-Ssis
-Ssrs
-Ssas
+SSIS
+SSRS
 Informatica
 Talend
 Datagrip
@@ -557,11 +548,11 @@ Metasploit
 Nessus
 Openvas
 Application Security (Appsec)
-Sast
-Dast
-Iast
-Rasp
-Waf (Web Application Firewall)
+SAST
+DAST
+IAST
+RASP
+WAF (Web Application Firewall)
 Endpoint Security
 Malware Analysis
 Reverse Engineering
@@ -569,20 +560,20 @@ Digital Forensics
 Incident Response (Ir)
 Risk Assessment
 Risk Management
-Grc (Governance, Risk, And Compliance)
-Casb (Cloud Access Security Broker)
-Cspm (Cloud Security Posture Management)
+GRC
+CASB (Cloud Access Security Broker)
+CSPM (Cloud Security Posture Management)
 Cisco
 Juniper
-Arista
+ARista
 Palo Alto Networks
 Voip
 Qos
 Network Monitoring
 Snmp
-Nfv (Network Functions Virtualization)
-Sd-Wan
-Zero Trust Networking (Ztn)
+NFV
+Sd-WAN
+Zero Trust Networking
 Microsoft Project
 Smartsheet
 Basecamp
@@ -596,9 +587,9 @@ Stakeholder Communication
 Resource Allocation
 Budget Management
 Agile Coaching
-Domain-Driven Design (Ddd)
-Event-Driven Architecture (Eda)
-Server-Sent Events (Sse)
+Domain-Driven Designer
+Event-Driven ARchitecture
+Server-Sent Events
 Websockets
 Webrtc
 Yagni
@@ -608,7 +599,7 @@ High Availability
 Fault Tolerance
 Pair Programming
 Mob Programming
-Bdd (Behavior-Driven Development)
+BDD
 Acceptance Testing
 Smoke Testing
 Regression Testing
@@ -634,7 +625,7 @@ Simulink
 Rtos (Real-Time Operating System)
 Vhdl
 Verilog
-System On A Chip (Soc)
+System On A Chip (SOC)
 Asic
 Kernel Development
 Neuromorphic Computing
@@ -658,9 +649,9 @@ Financial Modeling
 Algorithmic Trading
 Video Editing Software
 Animation Tools
-Soc 2
+SOC 2
 Iso 27001
-Api Integration With Ai Services
+API Integration With AI Services
 Bias Detection
 Model Evaluation
 Data Preparation
@@ -669,13 +660,13 @@ State Management (Redux, Zustand)
 Web Performance Optimization
 Openid Connect
 Threat Modeling
-Api Gateway
+API Gateway
 Swagger
 Openapi
 Data Structures
 Algorithms
 Qradar
-Arcsight
+ARcsight
 Public Key Infrastructure (Pki)
 Sans Framework
 Nist Framework
@@ -695,27 +686,27 @@ K-Nearest Neighbor (Knn)
 K-Means
 Trifacta
 Tamr
-Ai Ethics
+AI Ethics
 Quantum Machine Learning
-Generative Engine Optimization (Geo)
+Generative Engine Optimization
 Low-Code
 No-Code
 Platform Engineering
 Deepfake Detection
-Ai-Generated Malware Analysis
-Capture The Flag (Ctf)
-Service Level Objectives (Slos)
-Service Level Indicators (Slis)
+AI-Generated Malware Analysis
+Capture The Flag
+Service Level Objectives
+Service Level Indicators
 Capacity Planning
 Performance Tuning
 Benchmarking
 Systems Thinking
 Vlsi Chip Design
-Robotics Operating System (Ros)
+Robotics Operating System
 Scada
-Industrial Control Systems (Ics)
-Digital Signal Processing (Dsp)
-Geographic Information System (Gis)
+Industrial Control Systems
+Digital Signal Processing
+Geographic Information System
 Clickhouse
 Druid
 Trino (Prestosql)
@@ -725,15 +716,15 @@ Airflow
 Prefect
 Dagster
 Great Expectations
-Dbt (Data Build Tool)
+DBT (Data Build Tool)
 Monte Carlo (Data Observability)
 Apache Flink
 Apache Beam
 Apache Kafka
 Rabbitmq
 Zeromq
-Grpc
-Grpc-Web
+gRPC
+gRPC-Web
 Webassembly (Wasm)
 Solidity
 Vyper
@@ -776,7 +767,7 @@ Directx
 Opengl
 Vulkan
 Metal
-Quantum Development Kit (Qdk)
+Quantum Development Kit
 Qiskit
 Cirq
 Comsol
@@ -814,7 +805,6 @@ Chef Inspec
 Sonarqube
 Artifactory
 Nexus Repository
-Packer (Already Listed)
 Ansible Tower (Awx)
 Rundeck
 Saltstack
@@ -832,9 +822,9 @@ Selenium
 Puppeteer
 Lighthouse
 Storybook
-Chakra Ui
-Material-Ui (Mui)
-Tailwind Css
+Chakra UI
+Material-UI
+Tailwind
 Styled-Components
 Emotion
 Redux Toolkit
@@ -854,95 +844,5 @@ Mockito
 Jmeter
 Gatling
 Appium
-Espresso (Android)
-Xcuitest (Ios)
-
-## 2025 Additions & Emerging Technologies
-AI/ML
-AWS ECS
-AWS EKS
-AWS Lambda
-Airbyte
-Apache Iceberg
-Artificial Intelligence / Machine Learning
-Astro
-Autonomous Agents
-Azure DevOps
-Azure Functions
-Bun
-Business Analysis
-C Sharp
-Capacitor.js
-Chroma
-Claude
-Cloud Cost Optimization
-Cloudflare
-Data Catalog
-Data Governance
-Data Lineage
-Data Storytelling
-Databricks
-Delta Lake
-Deno
-Diffusion Models
-Dot Net
-Edge AI
-FAISS
-FinOps
-Fine-Tuning
-Fivetran
-GCP BigQuery
-GCP Vertex AI
-GPT
-Gemini
-Generative Design
-GraphQL Codegen
-HashiCorp Boundary
-HashiCorp Waypoint
-Hugging Face
-Java Script
-Jetpack Compose
-Kotlin Multiplatform
-LLMOps
-LangChain
-LaunchDarkly
-Llama
-LlamaIndex
-Metabase
-Milvus
-Model Distillation
-Model Quantization
-OWASP Top 10
-Object-Oriented Programming (OOP)
-Observability Stack
-Optimizely
-Orca Security
-Pinecone
-Platform Engineering
-Playwright
-Prisma Cloud
-Product Analytics
-Product Management
-Prompt Tuning
-React JS
-React Native Reanimated
-Remix
-Retrieval-Augmented Generation (RAG)
-SOC 2 Type II
-Server-Sent Events (SSE)
-Shadcn/UI
-Snowflake
-Solid.js
-Superset
-SwiftUI
-Synthetic Data
-Tailwind UI
-Technical Program Management
-Threat Modeling
-Vitest
-Weaviate
-WebSockets
-Wiz
-Zero Trust Architecture
-gRPC-Web
-tRPC
+Espresso
+Xcuitest
