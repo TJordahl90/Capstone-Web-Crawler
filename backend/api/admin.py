@@ -3,9 +3,6 @@ from django.utils.html import format_html
 from .models import *
 
 # Register your models here.
-class AccountAdmin(admin.ModelAdmin):
-    exclude = ('resume', )
-
 admin.site.register(CommonSkills)
 admin.site.register(CommonCareers)
 admin.site.register(CommonDegrees)
@@ -22,4 +19,4 @@ admin.site.register(ChatBotHistory)
 admin.site.register(JobStatistics)
 admin.site.register(Project)
 
-admin.site.register(Account, AccountAdmin)
+admin.site.register(Account)

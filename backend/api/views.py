@@ -378,8 +378,7 @@ class DocumentView(APIView):
             if not resume_file:
                 return Response({"error": "No file uploaded"}, status=400)
 
-            account.resume = resume_file
-            account.save()
+            account.saveResume(resume_file)
 
             text = extract_text_from_pdf(resume_file) #run the resume parser and stores data in pasrsed_data
             skills = extractSkills(text)

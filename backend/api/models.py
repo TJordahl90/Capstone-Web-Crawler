@@ -2,7 +2,9 @@ from django.db import models
 from django.contrib.auth.models import User
 from django.contrib.postgres.fields import ArrayField
 from django.utils import timezone
-from django_encrypted_filefield.fields import EncryptedFileField
+#from django_encrypted_filefield.fields import EncryptedFileField
+from .utils import encryptFile, decryptFile
+import os
 
 # e.g. Python, Node.Js, AWS, OOP, Git
 class CommonSkills(models.Model):
@@ -51,7 +53,7 @@ def userFilesPath(instance, filename):
 
 class Account(models.Model):
     user = models.OneToOneField(User, on_delete=models.CASCADE)
-    resume = EncryptedFileField(upload_to=userFilesPath, blank=True, null=True)
+    resume = models.FileField(upload_to=userFilesPath, blank=True, null=True)
     headline = models.CharField(max_length=50, blank=True, null=True)
     hometown = models.CharField(max_length=50, blank=True, null=True)
     skills = models.ManyToManyField(CommonSkills, related_name='accounts', blank=True)    
@@ -63,7 +65,29 @@ class Account(models.Model):
 
     def __str__(self):
         return self.user.username
+    
+    def saveResume(self, fileObj):
+        fileBytes = fileObj.read()
+        encryptedBytes = encryptFile(fileBytes)
+        
+        path = os.path.join('media', userFilesPath(self, fileObj.name))
+        os.makedirs(os.path.dirname(path), exist_ok=True)
 
+        with open(path, 'wb') as f:
+            f.write(encryptedBytes)
+        
+        self.resume.name = userFilesPath(self, fileObj.name)
+        self.save()
+
+    def getResume(self) -> bytes:
+        if not self.resume:
+            return
+        
+        path = self.resume.path
+        with open(path, 'rb') as f:
+            encryptedBytes = f.read()
+        return decryptFile(encryptedBytes)
+    
 class Education(models.Model):
     account = models.ForeignKey(Account, on_delete=models.CASCADE, related_name='educations')
     institution = models.CharField(max_length=100)
