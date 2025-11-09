@@ -28,6 +28,31 @@ from collections import Counter
 from rest_framework.decorators import api_view, permission_classes
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.response import Response
+from django.core.exceptions import ValidationError
+from django.core.validators import validate_email
+from django.db import transaction
+
+def _err(status_code: int, code: str, message: str, *, field: str | None = None, details: str | dict | None = None):
+    payload = {"error": {"code": code, "message": message}}
+    if field: payload["error"]["field"] = field
+    if details is not None: payload["error"]["details"] = details
+    return Response(payload, status=status_code)
+
+def _coerce_bool(val):
+    if isinstance(val, bool):
+        return val
+    if val is None:
+        return None
+    return str(val).strip().lower() in {"1", "true", "yes", "on"}
+
+def _coerce_int(val, default=None, *, min_value=None, max_value=None):
+    try:
+        i = int(val)
+        if min_value is not None and i < min_value: return default
+        if max_value is not None and i > max_value: return default
+        return i
+    except (TypeError, ValueError):
+        return default
 
 @api_view(['GET'])
 @permission_classes([AllowAny])
