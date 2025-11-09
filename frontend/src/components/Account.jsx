@@ -268,48 +268,70 @@ const Account = () => {
         setHasUnsavedChanges(true);
     };  
     
+    const headerStyle = {
+        fontWeight: 600, 
+        fontSize: "1.5rem",
+    }
+
+    const chipStyle = {
+        backgroundColor: "var(--accent3)",
+        padding: "5px 10px",
+        borderRadius: "5px",
+        color: "var(--text)",
+        fontSize: "1.1rem",
+        marginLeft: "10px",
+        fontWeight: 600,
+    };
+
+    const iconStyle = {
+        cursor: "pointer", 
+        fontSize: "1.25rem", 
+        color: "var(--text)",
+        flexShrink: 0, 
+        marginLeft: '1rem',
+    }
 
     return (
         <>
-            <Container className="py-4" style={{ minHeight: "100vh" }}>
+            <Container fluid className="py-4" style={{ minHeight: "100vh", color: "var(--text)" }}>
                 <Row className="justify-content-center">
-                    <Col md={10} lg={8}>
+                    <Col md={10} lg={9}>
 
                         {/* Error Messages */}
                         {message && <Alert variant="success" onClose={() => setMessage('')} dismissible>{message}</Alert>}
                         {error && <Alert variant="danger" onClose={() => setError('')} dismissible>{error}</Alert>}
 
                         {/* Personal Data Section */}
-                        <div className="text-start p-4 mb-4" style={{ backgroundColor: "rgba(255, 255, 255, 0.05)", borderRadius: "12px" }}>
+                        <div className="text-start p-4 mb-4" style={{ backgroundColor: "var(--card)", borderRadius: "12px", border: `1px solid var(--accent1)`, borderLeft: `4px solid var(--accent1)` }}>
                             <div className="d-flex justify-content-between align-items-start">
                                 <div>
                                     <Image src={profile} roundedCircle alt="Profile" style={{ width: "80px", height: "80px", border: "2px solid var(--text)" }}/>
-                                    <h2 className="mt-3" style={{ color: "#05e3ed" }}>{`${accountData.firstName} ${accountData.lastName}`}</h2>
-                                    <p className="lead" style={{ color: "var(--text3)" }}>{accountData.headline}</p>
-                                    <p className="lead" style={{ color: "var(--text3)" }}>{accountData.hometown}</p>
+                                    <h2 className="mt-3" style={{ color: "var(--accent1)", fontWeight: 600, fontSize: "2.2rem" }}>{`${accountData.firstName} ${accountData.lastName}`}</h2>
+                                    <p className="lead">{accountData.headline}</p>
+                                    <p className="lead">{accountData.hometown}</p>
                                 </div>
-                                <FaPencilAlt onClick={() => setEditPersonalInfo(true)} style={{ cursor: "pointer", fontSize: "1.25rem", color: "var(--pen)" }}/>
+                                <FaPencilAlt onClick={() => setEditPersonalInfo(true)} style={iconStyle}/>
                             </div>
                         </div>
 
-                        <div className="p-4" style={{ backgroundColor: "rgba(255, 255, 255, 0.05)", borderRadius: "12px" }}>
+                        <div className="p-4" style={{ backgroundColor: "var(--card)", borderRadius: "12px", border: `1px solid var(--accent1)`, borderLeft: `4px solid var(--accent1)` }}>
 
                             {/* Preferences (experience level, employment type, work models) */}
-                            <Row className="py-4 border-bottom">
+                            <Row className="py-4">
                                 <Col xs={12} md={3}>
-                                    <h5 style={{ color: "var(--text3)" }}>Preferences</h5>
+                                    <h5 style={headerStyle}>Job Preferences</h5>
                                 </Col>
                                 <Col xs={12} md={9}>
                                     <div className="d-flex justify-content-between align-items-start">
-                                        <div style={{ color: "var(--text3)" }}>
+                                        <div>
                                             {accountData.experienceLevels.length > 0 && accountData.experienceLevels.map((exp) => (
-                                                <Badge key={exp} className="p-2" bg="secondary">{exp}</Badge>
+                                                <span style={chipStyle}>{exp}</span>
                                             ))}
                                             {accountData.employmentTypes.length > 0 && accountData.employmentTypes.map((emp) => (
-                                                <Badge key={emp} className="p-2" bg="secondary">{emp}</Badge>
+                                                <span style={chipStyle}>{emp}</span>
                                             ))}
                                             {accountData.workModels.length > 0 && accountData.workModels.map((work) => (
-                                                <Badge key={work} className="p-2" bg="secondary">{work}</Badge>
+                                                <span style={chipStyle}>{work}</span>
                                             ))}
                                             {accountData.experienceLevels.length === 0 && 
                                                 accountData.employmentTypes.length === 0 &&
@@ -317,31 +339,27 @@ const Account = () => {
                                                 <span>No preferences selected yet.</span>
                                             )}
                                         </div>
-                                        
-                                        <FaPencilAlt 
-                                            style={{ cursor: "pointer", fontSize: "1.25rem", color: "var(--pen)", flexShrink: 0, marginLeft: '1rem' }}
-                                            onClick={() => {
-                                                setEditPreferences(true);
-                                            }} 
-                                        />
+                                        <FaPencilAlt style={iconStyle} onClick={() => { setEditPreferences(true); }} />
                                     </div>
                                 </Col>
                             </Row>
+                            <hr />
+
                             
                             {/* Careers Section */}
-                            <Row className="py-4 border-bottom">
+                            <Row className="py-4">
                                 <Col xs={12} md={3}>
-                                    <h5 style={{ color: "var(--text3)" }}>Career Fields</h5>
+                                    <h5 style={headerStyle}>Career Fields</h5>
                                 </Col>
                                 <Col xs={12} md={9}>
                                     <div className="d-flex justify-content-between align-items-start">
                                         <div style={{ color: "var(--text3)" }}>
                                             {accountData.careers.length > 0 ? accountData.careers.map((career) => (
-                                                <Badge key={career} className="me-2 mb-2 p-2" bg="secondary">{career}</Badge>
+                                                <span style={chipStyle}>{career}</span>
                                             )) : "No career fields selected yet."}
                                         </div>
                                         <FaPencilAlt 
-                                            style={{ cursor: "pointer", fontSize: "1.25rem", color: "var(--pen)", flexShrink: 0, marginLeft: '1rem' }}
+                                            style={iconStyle}
                                             onClick={() => {
                                                 setSelectedCareers(accountData.careers);
                                                 setEditCareers(true);
@@ -350,21 +368,22 @@ const Account = () => {
                                     </div>
                                 </Col>
                             </Row>
+                            <hr />
                             
                             {/* Skills Section */} 
-                            <Row className="py-4 border-bottom">
+                            <Row className="py-4">
                                 <Col xs={12} md={3}>
-                                    <h5 style={{ color: "var(--text3)" }}>Skills</h5>
+                                    <h5 style={headerStyle}>Technical Skills</h5>
                                 </Col>
                                 <Col xs={12} md={9}>
                                     <div className="d-flex justify-content-between align-items-start">
                                         <div style={{ color: "var(--text3)" }}>
                                             {accountData.skills.length > 0 ? accountData.skills.map((skill) => (
-                                                <Badge key={skill} className="me-2 mb-2 p-2" bg="secondary">{skill}</Badge>
+                                                <span style={chipStyle}>{skill}</span>
                                             )) : "No skills selected yet."}
                                         </div>
                                         <FaPencilAlt 
-                                            style={{ cursor: "pointer", fontSize: "1.25rem", color: "var(--pen)" }}
+                                            style={iconStyle}
                                             onClick={() => {
                                                 setSelectedSkills(accountData.skills);
                                                 setEditSkills(true); 
@@ -373,52 +392,54 @@ const Account = () => {
                                     </div>
                                 </Col>
                             </Row>
+                            <hr />
                             
                             {/* Education Section */}
-                            <Row className="py-4 border-bottom">
+                            <Row className="py-4">
                                 <Col xs={12} md={3}>
                                     <div className="d-flex justify-content-between align-items-center">
-                                        <h5 style={{ color: "var(--text3)" }}>Education</h5>
-                                        <FaPlus onClick={handleAddEducation} style={{ cursor: "pointer", color: "var(--pen)", fontSize: '1.25rem' }} />
+                                        <h5 style={headerStyle}>Education</h5>
+                                        <FaPlus onClick={handleAddEducation} style={iconStyle} />
                                     </div>
                                 </Col>
                                 <Col xs={12} md={9} className="mt-3 mt-md-0">
                                     {accountData.education.map(edu => (
                                         <div key={edu.id} className="d-flex justify-content-between align-items-start mb-3">
-                                            <div style={{ color: "var(--text3)" }}>
+                                            <div style={{ fontWeight: 500, fontSize: "1.2rem" }}>
                                                 <strong>{edu.institution}</strong><br />
                                                 {edu.degree}, {edu.major}<br />
                                                 <small>Graduated: {edu.graduationDate} | GPA: {edu.gpa}</small>
                                             </div>
                                             <div>
-                                                <FaTrash onClick={() => handleDeleteEducation(edu.id)} className="me-3" style={{ cursor: "pointer", fontSize: "1.25rem", color: "#dc3545" }}/>
-                                                <FaPencilAlt onClick={() => handleEditEducation(edu)} style={{ cursor: "pointer", fontSize: "1.25rem", color: "var(--pen)" }}/>
+                                                <FaTrash onClick={() => handleDeleteEducation(edu.id)} className="me-3" style={iconStyle}/>
+                                                <FaPencilAlt onClick={() => handleEditEducation(edu)} style={iconStyle}/>
                                             </div>
                                         </div>
                                     ))}
                                     {accountData.education.length === 0 && <p style={{ color: "var(--text3)" }}>No education information provided.</p>}
                                 </Col>
                             </Row>
+                            <hr />
 
                             {/* Experience Section */}
                             <Row className="py-4">
                                <Col xs={12} md={3}>
                                     <div className="d-flex justify-content-between align-items-center">
-                                        <h5 style={{ color: "var(--text3)" }}>Experience</h5>
-                                        <FaPlus onClick={handleAddExperience} style={{ cursor: "pointer", color: "var(--pen)", fontSize: '1.25rem' }} />
+                                        <h5 style={headerStyle}>Experience</h5>
+                                        <FaPlus onClick={handleAddExperience} style={iconStyle} />
                                     </div>
                                </Col>
                                 <Col xs={12} md={9} className="mt-3 mt-md-0">
                                     {accountData.experience.map(exp => (
                                         <div key={exp.id} className="d-flex justify-content-between align-items-start mb-3">
-                                            <div style={{ color: "var(--text3)" }}>
+                                            <div style={{ fontWeight: 500, fontSize: "1.2rem" }}>
                                                 <strong>{exp.title}</strong> at {exp.company}<br />
                                                 <small>{exp.startDate} to {exp.endDate || 'Present'}</small><br/>
                                                 <p className="mt-2 mb-0">{exp.description}</p>
                                             </div>
                                             <div>
-                                                <FaTrash onClick={() => handleDeleteExperience(exp.id)} className="me-3" style={{ cursor: "pointer", fontSize: "1.25rem", color: "#dc3545" }}/>
-                                                <FaPencilAlt onClick={() => handleEditExperience(exp)} style={{ cursor: "pointer", fontSize: "1.25rem", color: "var(--pen)" }}/>
+                                                <FaTrash onClick={() => handleDeleteExperience(exp.id)} className="me-3" style={iconStyle}/>
+                                                <FaPencilAlt onClick={() => handleEditExperience(exp)} style={iconStyle}/>
                                             </div>
                                         </div>
                                     ))}
@@ -428,9 +449,9 @@ const Account = () => {
                         </div>
 
                         {hasUnsavedChanges && (
-                            <div className="mt-4 p-3 text-end" style={{ backgroundColor: "rgba(255, 255, 255, 0.05)", borderRadius: "12px" }}>
-                                <Button variant="secondary" className="me-2" onClick={fetchAccountData}>Discard Changes</Button>
-                                <Button variant="primary" onClick={handleSaveAllChanges}>Save All Changes</Button>
+                            <div className="mt-4 p-3 text-end" style={{ backgroundColor: "var(--card)", borderRadius: "12px" }}>
+                                <Button style={{ backgroundColor: "var(--accent1)", border: "none" }} className="me-2" onClick={fetchAccountData}>Discard Changes</Button>
+                                <Button style={{ backgroundColor: "var(--accent1)", border: "none" }} onClick={handleSaveAllChanges}>Save All Changes</Button>
                             </div>
                         )}
                     </Col>
