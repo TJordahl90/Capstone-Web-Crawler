@@ -718,7 +718,7 @@ const FindJobs = ({ jobPostTypeProp }) => {
                                                     onClick={() => toggleSaveJob(selectedJob.id, selectedJob.is_saved)}
                                                 >
                                                     {selectedJob.is_saved ? "Unsave" : "Save"}
-                                                    
+
                                                 </Button>
 
                                                 <Button
@@ -782,7 +782,7 @@ const FindJobs = ({ jobPostTypeProp }) => {
                                             border: "3px solid var(--hover)",
                                             borderRadius: "12px",
                                             //boxShadow: "0px 3px 8px rgba(0, 0, 0, 0.48)",
-                                            
+
                                         }}
                                     >
                                         <Card.Body>
@@ -846,6 +846,7 @@ const FindJobs = ({ jobPostTypeProp }) => {
                 onHide={() => setShowCanvas(false)}
                 placement="end"
                 className="filters-canvas"
+                style={{ backgroundColor: "var(--background)", color: "var(--text)" }}
             >
                 {/* Inline styles to keep it self-contained */}
                 <style>{`
@@ -860,18 +861,18 @@ const FindJobs = ({ jobPostTypeProp }) => {
 
     /* Header */
     .filters-canvas .offcanvas-header {
-    background-color: var(--background);
+    background-color: var(--shadow2);
       border-bottom: 1px solid var(--border);
       color: var(--text);
     }
     .filters-canvas .offcanvas-title {
-      color: var(--text6);
+      color: var(--text);
       font-weight: 700;
     }
 
     /* Labels */
     .filters-canvas .form-check-label {
-      color: var(--text6);
+      color: var(--text);
     }
 
     /* Checkboxes */
@@ -885,9 +886,9 @@ const FindJobs = ({ jobPostTypeProp }) => {
       transition: all 0.2s ease;
     }
     .filters-canvas .form-check-input:checked {
-      background-color: var(--applybtnbg);
-      border-color: var(--applybtnbg);
-      box-shadow: 0 0 6px var(--applybtnbg);
+      background-color: var(--background);
+      border-color: var(--border);
+      box-shadow: 0 0 6px var(--shadow1);
     }
 
     .filters-canvas hr {
@@ -910,25 +911,25 @@ const FindJobs = ({ jobPostTypeProp }) => {
     }
 
     .filters-canvas .btn-theme {
-      background-color: var(--applybtnbg);
-      color: var(--applybtntxt);
+      background-color: var(--background);
+      color: var(--text);
       border: none;
       transition: all 0.3s ease;
     }
     .filters-canvas .btn-theme:hover {
-      background-color: var(--applybtnhover);
-      color: var(--applybtnhovertxt);
+      background-color: var(--background);
+      color: var(--text);
     }
 
     .filters-canvas .btn-outline-theme {
       background: transparent;
-      color: var(--savebtntxt);
-      border: 1px solid var(--savebtntxt);
+      color: var(--text);
+      border: 1px solid var(--border);
       transition: all 0.3s ease;
     }
     .filters-canvas .btn-outline-theme:hover {
-      background-color: var(--savebtnhover);
-      color: var(--savebtntxt);
+      background-color: var(--background);
+      color: var(--text);
     }
   `}</style>
                 <Offcanvas.Header closeButton>
@@ -1000,7 +1001,8 @@ const FindJobs = ({ jobPostTypeProp }) => {
                     />
                 </Offcanvas.Body>
 
-                <div className="filters-actions">
+                <div className="filters-actions"
+                    style={{ background: "var(--shadow2)" }}>
                     <Button className="btn-outline-theme" onClick={clearAllFilters}>Clear</Button>
                     <Button className="btn-theme" onClick={handleFilterChange}>Apply</Button>
                 </div>

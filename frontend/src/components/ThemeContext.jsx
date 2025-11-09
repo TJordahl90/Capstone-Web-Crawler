@@ -4,11 +4,11 @@ const themes = {
     light: {
 
     },
-    dark :{
+    dark: {
         background: "#303841",
         card: "#3A4750",
         text: "#F3F3F3",
-
+        
         accent1: "#2185D5",
         accent2: "#FFD369",
         accent3: "#FF6B6B",
@@ -36,7 +36,7 @@ export const ThemeProvider = ({ children }) => {
         if (theme) {
             const root = document.documentElement;
 
-            root.style.setProperty("--bg", theme.background);
+            root.style.setProperty("--background", theme.background);
             root.style.setProperty("--card", theme.card);
             root.style.setProperty("--text", theme.text);
             root.style.setProperty("--accent1", theme.accent1);

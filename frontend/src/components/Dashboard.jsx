@@ -72,7 +72,7 @@ const Dashboard = () => {
 
     if (loading) {
         return (
-            <div style={{ height: "100vh", backgroundColor: "var(--bg)", display: "flex", justifyContent: "center", alignItems: "center", flexDirection: "column", color: "var(--text)" }}>
+            <div style={{ height: "100vh", backgroundColor: "var(--background)", display: "flex", justifyContent: "center", alignItems: "center", flexDirection: "column", color: "var(--text)" }}>
                 <Spinner 
                     animation="border" 
                     role="status" 
