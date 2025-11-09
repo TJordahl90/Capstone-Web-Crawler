@@ -1,4 +1,5 @@
 from django.core.management.base import BaseCommand
+from django.utils import timezone
 from api.models import *
 from api.web_scrapers import TexasInstruments, LockheedMartinSoftware, LockheedMartinSystems, LockheedMartinOtherTech, JSearchAPI, BankOfAmerica, JPMChase, ZipRecruiter
 
@@ -43,7 +44,7 @@ class Command(BaseCommand):
                                 description=job['description'],
                                 summary=job['summary'],
                                 location=job['location'],
-                                datePosted=job['datePosted'],
+                                datePosted=job['datePosted'] or timezone.now(),
                                 salary=job['salary'],
                                 jobURL=job['jobURL'],
                                 logoURL=job['logoURL']
