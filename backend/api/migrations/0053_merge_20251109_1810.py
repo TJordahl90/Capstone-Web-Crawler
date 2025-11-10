@@ -6,7 +6,7 @@ from django.db import migrations
 class Migration(migrations.Migration):
 
     dependencies = [
-        ('api', '0045_account_emailverification 2'),
+        ('api', '0045_account_emailverification'),
         ('api', '0052_alter_account_resume'),
     ]
 

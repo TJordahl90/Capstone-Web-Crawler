@@ -6,7 +6,6 @@ from django.db import migrations
 class Migration(migrations.Migration):
 
     dependencies = [
-        ('api', '0047_alter_account_resume'),
         ('api', '0049_alter_account_resume'),
     ]
 
