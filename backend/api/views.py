@@ -837,23 +837,20 @@ class DashboardView(APIView):
 @api_view(["GET"])
 @permission_classes([IsAuthenticated])
 def getEmailPreference(request):
-    pass
+    return Response({'emailPreference': str(request.user.account.notify_by_email)})
 
 @api_view(["POST"])
 @permission_classes([IsAuthenticated])
 def updateEmailPreference(request):
-    raw = request.data.get("emailPreference", None)
-    print(raw)
-    if raw is None:
+    emailPreference = request.data.get("emailPreference", None)
+    if emailPreference is None:
         return Response({"detail": "emailPreference is required"}, status=400)
-
-    # accept bools or common truthy/falsey strings
-    if isinstance(raw, bool):
-        value = raw
+    
+    print(emailPreference)
+    if(isinstance(emailPreference, bool)):
+        account = request.user.account
+        account.notify_by_email = emailPreference
+        account.save(update_fields=['notify_by_email'])
+        return Response({'emailPreference': account.notify_by_email}, status=200)
     else:
-        value = str(raw).strip().lower() in {"1", "true", "yes", "on"}
-
-    account = request.user.account
-    account.notify_by_email = value
-    account.save(update_fields=["notify_by_email"])
-    return Response({"emailPreference": account.notify_by_email}, status=200)
+        return Response({"detail": "emdasailPreference must be a boolean"}, status=400)

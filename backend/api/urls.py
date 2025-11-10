@@ -3,7 +3,8 @@ from .views import (
     CreateUserView, UserProfileView, CreateVerificationView, LoginView, LogoutView,
     CsrfTokenView, AccountView, JobMatchingView, JobSearchingView, AllJobsView, DocumentView, 
     InterviewPrepChatBotView, InterviewSummaryView, BookmarkJobView, ApplicationStatusView, 
-    JobStatisticsView, DeleteUserView, ResetPasswordView, KeywordsView, DashboardView, update_email_notifications
+    JobStatisticsView, DeleteUserView, ResetPasswordView, KeywordsView, DashboardView, getEmailPreference,
+    updateEmailPreference
 )
 
 urlpatterns = [
@@ -29,5 +30,6 @@ urlpatterns = [
     path('delete_user/', DeleteUserView.as_view(), name="delete_user"),
     path('reset_password/', ResetPasswordView.as_view(), name='reset_password'),
     path('dashboard/', DashboardView.as_view(), name='user_dashboard'),
-    path("user/notifications/email/", update_email_notifications, name="update_email_notifications")
+    path("update_email_preference/", updateEmailPreference, name="update_email_notifications"),
+    path("get_email_preference/", getEmailPreference, name="get_email_notifications"),
 ]

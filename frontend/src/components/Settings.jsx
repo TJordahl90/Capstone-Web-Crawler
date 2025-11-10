@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { Container, Row, Button, Modal, Spinner, Form } from 'react-bootstrap';
 import { useNavigate } from 'react-router-dom';
 import { useTheme } from "./ThemeContext";
@@ -8,10 +8,26 @@ const Settings = () => {
     const [showModal, setShowModal] = useState(false);
     const [loading, setLoading] = useState(false);
     const navigate = useNavigate();
+    const [emailPreference, setEmailPreference] = useState(false);
+    const [draftEmailPref, setDraftEmailPref] = useState(false);
 
      // Theme
     const { currentTheme, switchTheme } = useTheme();
 
+    useEffect(() => {
+        const getEmailPreference = async () => {
+            try{
+                const emailPref = await api.get('/get_email_preference/');
+                const pref = emailPref.data.emailPreference;
+                const boolPref = pref === true || pref === "true" || pref === "True";
+                setEmailPreference(boolPref);
+                setDraftEmailPref(boolPref);
+            }catch (error){
+                console.error("Failed to fetch email preferences:", error)
+            }
+        }
+        getEmailPreference();
+    }, []);
 
     const handleDeleteAccount = async () => {
         setLoading(true);
@@ -26,6 +42,21 @@ const Settings = () => {
         }
     };
 
+    const handleSave = async () => {
+        try{
+            const payload ={
+                emailPreference: draftEmailPref,
+            }
+
+            await api.post("/update_email_preference/", payload);
+
+            setEmailPreference(draftEmailPref);
+        }
+        catch (error){
+            console.error("Failed to save settings:", error);
+            setDraftEmailPref(emailPreference);
+        }
+    }
     return (
         <Container className="mt-5 text-center">
             <h2 className="mb-4"
@@ -87,13 +118,47 @@ const Settings = () => {
                     </div>
                 </div>
 
-            
+                <div
+                    className="text-start p-4 mb-4"
+                    style={{
+                      color: "var(--text)",
+                      backgroundColor: "var(--card)",
+                      borderRadius: "12px",
+                      border: `1px solid var(--accent1)`,
+                      borderLeft: `4px solid var(--accent1)`
+                    }}
+                >         
+                    <div className="d-flex justify-content-between align-items-center">
+                      <h5 style={{ fontWeight: 600, fontSize: "1.5rem" }}>Email Notifications</h5>
+                
+                      {/* Switch to toggle email preference */}
+                      <Form.Check
+                        type="switch"
+                        id="email-pref-switch"
+                        label={draftEmailPref ? "Enabled" : "Disabled"}
+                        checked={draftEmailPref}
+                        disabled={loading} // prevent toggle until loaded
+                        onChange={(e) => setDraftEmailPref(e.target.checked)}
+                        style={{ fontWeight: 600 }}
+                      />
+                    </div>
+                </div>
+        <div className="d-flex flex-column align-items-center" style={{ gap: '10px', marginTop: '20px' }}>
+            <Button
+                variant="primary"
+                onClick={handleSave}
+                disabled={draftEmailPref === emailPreference}
+            >
+                Save
+            </Button>
             
             <Row className="justify-content-center">
                 <Button variant="outline-danger" style={{maxWidth: '200px'}} onClick={() => setShowModal(true)}>
                     Delete Account
                 </Button>
             </Row>
+            </div>
+
 
             <Modal show={showModal} onHide={() => setShowModal(false)} centered>
                 <Modal.Header closeButton>
