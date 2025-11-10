@@ -21,7 +21,7 @@ const MobileNavBar = () => {
                 bottom: 0,
                 width: "100%",
                 height: "65px",
-                backgroundColor: "var(--bg3)",
+                backgroundColor: "var(--background)",
                 borderTop: "5px solid var(--border)",
                 display: "flex",
                 justifyContent: "space-around",
