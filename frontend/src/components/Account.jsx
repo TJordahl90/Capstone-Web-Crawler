@@ -474,7 +474,7 @@ const Account = () => {
             </Modal>}
 
             {editPreferences && <Modal show={editPreferences} onHide={() => setEditPreferences(false)}>
-                <Modal.Header closeButton><Modal.Title style={modalStyle.button}>Edit Job Preferences</Modal.Title></Modal.Header>
+                <Modal.Header closeButton><Modal.Title>Edit Job Preferences</Modal.Title></Modal.Header>
                 <Modal.Body>
                     <Form onSubmit={handlePreferences}>             
                         <h6>Experience Level</h6>
