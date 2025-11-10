@@ -335,6 +335,7 @@ def AllJobsView(request):
     filters = request.data.get("filters", {}) # need to implement
     print(f'filters: {filters}')
     print(f'search: {searchTerm}')
+    
     page_number = request.data.get("page", 1)
 
     jobs = JobPosting.objects.order_by('-id').prefetch_related(

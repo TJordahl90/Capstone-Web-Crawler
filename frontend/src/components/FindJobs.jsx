@@ -49,7 +49,8 @@ const FindJobs = ({ jobPostTypeProp }) => {
         setFilters({
             employmentType: [],
             experienceLevel: [],
-            workModels: [],
+            location: [],
+            datePosted: [],
         })
     };
 
@@ -65,14 +66,26 @@ const FindJobs = ({ jobPostTypeProp }) => {
         try {
             let response;
             if (type === "search") {
-                response = await api.get(`/job_searching/?search=${searchTerm}`);
-                if (response.data && response.data.length > 0) {
-                    setSearchedJobs(response.data);
-                    setSelectedJob(response.data[0]);
+                response = await api.post(`/job_searching/?search=${searchTerm}`,{
+                    filters: filters || {},
+                    page: currentPage,
+                });
+
+                const jobs = response.data.jobs;
+                const count = response.data.count;
+
+                if (jobs && jobs.length > 0) {
+                    setSearchedJobs(jobs);
+                    setSelectedJob(jobs[0]);
+                    setJobCount(count);
+                    setHasNextPage(currentPage * 15 < count);
+                    setHasPrevPage(currentPage > 1);
                 } else {
                     setSearchedJobs([]);
                     setSelectedJob(null);
                     setError("No matching jobs found. Try different search terms.");
+                    setHasNextPage(false);
+                    setHasPrevPage(false);
                 }
             }
             else if (type === "all") {
@@ -406,7 +419,7 @@ const FindJobs = ({ jobPostTypeProp }) => {
                                         e.preventDefault();
                                         setJobPostType("search");
                                         fetchJobPostings("search");
-                                        clearAllFilters();
+                                        //clearAllFilters();
                                     }}
                                 >
                                     {/* Wrapper switches layout: row on small, column on md+ */}
