@@ -4,6 +4,7 @@ import { FaPencilAlt, FaPlus, FaTrash } from "react-icons/fa";
 import profile from "../assets/profile.png";
 import InputField from './InputField';
 import api from '../api.js';
+import { useTheme } from "./ThemeContext";
 
 const Account = () => {
     // Displays messages to user
@@ -17,7 +18,7 @@ const Account = () => {
     const [editCareers, setEditCareers] = useState(false);
     const [editEducation, setEditEducation] = useState(false);
     const [editExperience, setEditExperience] = useState(false);
-    
+
     // Keyword options that are directly from database
     const [skillKeywordList, setSkillKeywordList] = useState([]);
     const [careerKeywordList, setCareerKeywordList] = useState([]);
@@ -38,23 +39,26 @@ const Account = () => {
     const [isEditing, setIsEditing] = useState(false);
 
     // Misc. states
-    const [hasUnsavedChanges, setHasUnsavedChanges] = useState(false);    
+    const [hasUnsavedChanges, setHasUnsavedChanges] = useState(false);
     const [searchQuery, setSearchQuery] = useState("");
 
     // Data that will be saved
     const [accountData, setAccountData] = useState({
-        firstName: "", 
-        lastName: "", 
-        headline: "", 
+        firstName: "",
+        lastName: "",
+        headline: "",
         hometown: "",
-        careers: [], 
-        skills: [], 
-        experienceLevels: [], 
-        employmentTypes: [],  
-        workModels: [], 
-        education: [], 
+        careers: [],
+        skills: [],
+        experienceLevels: [],
+        employmentTypes: [],
+        workModels: [],
+        education: [],
         experience: []
     });
+
+    // Theme
+    const { currentTheme, switchTheme } = useTheme();
 
     // -------------------------------------------------------------
     // fetch all the keywords from database to limit user selections
@@ -82,16 +86,16 @@ const Account = () => {
             const response = await api.get("/account/");
             const { user, account } = response.data;
             setAccountData({
-                firstName: user.first_name || "", 
+                firstName: user.first_name || "",
                 lastName: user.last_name || "",
-                headline: account.headline || "", 
+                headline: account.headline || "",
                 hometown: account.hometown || "",
                 careers: account.careers || [],
-                skills: account.skills || [], 
+                skills: account.skills || [],
                 experienceLevels: account.experienceLevels || [],
                 employmentTypes: account.employmentTypes || [],
-                workModels: account.workModels || [], 
-                education: account.education || [], 
+                workModels: account.workModels || [],
+                education: account.education || [],
                 experience: account.experience || [],
             });
             setHasUnsavedChanges(false);
@@ -108,7 +112,7 @@ const Account = () => {
     // saves all changes to account data
     const handleSaveAllChanges = async () => {
         const cleanData = (items) => items.map(({ id, ...rest }) => (typeof id === 'number' ? { id, ...rest } : rest));
-        
+
         const payload = {
             name: {
                 first_name: accountData.firstName,
@@ -185,21 +189,21 @@ const Account = () => {
 
     const handlePreferences = (e) => {
         e.preventDefault();
-        setAccountData(prev => ({...prev, experienceLevels: selectedExpLevels, employmentTypes: selectedEmployTypes, workModels: selectedWorkModels}));
+        setAccountData(prev => ({ ...prev, experienceLevels: selectedExpLevels, employmentTypes: selectedEmployTypes, workModels: selectedWorkModels }));
         setEditPreferences(false);
         setHasUnsavedChanges(true);
     };
 
     const handleSkills = (e) => {
         e.preventDefault();
-        setAccountData(prev => ({...prev, skills: selectedSkills }));
+        setAccountData(prev => ({ ...prev, skills: selectedSkills }));
         setEditSkills(false);
         setHasUnsavedChanges(true);
     };
 
     const handleCareers = (e) => {
         e.preventDefault();
-        setAccountData(prev => ({...prev, careers: selectedCareers }));
+        setAccountData(prev => ({ ...prev, careers: selectedCareers }));
         setEditCareers(false);
         setHasUnsavedChanges(true);
     };
@@ -266,10 +270,10 @@ const Account = () => {
         });
         setEditExperience(false);
         setHasUnsavedChanges(true);
-    };  
-    
+    };
+
     const headerStyle = {
-        fontWeight: 600, 
+        fontWeight: 600,
         fontSize: "1.5rem",
     }
 
@@ -283,10 +287,10 @@ const Account = () => {
     };
 
     const iconStyle = {
-        cursor: "pointer", 
-        fontSize: "1.25rem", 
+        cursor: "pointer",
+        fontSize: "1.25rem",
         color: "var(--text)",
-        flexShrink: 0, 
+        flexShrink: 0,
         marginLeft: '1rem',
     }
 
@@ -304,14 +308,70 @@ const Account = () => {
                         <div className="text-start p-4 mb-4" style={{ backgroundColor: "var(--card)", borderRadius: "12px", border: `1px solid var(--accent1)`, borderLeft: `4px solid var(--accent1)` }}>
                             <div className="d-flex justify-content-between align-items-start">
                                 <div>
-                                    <Image src={profile} roundedCircle alt="Profile" style={{ width: "80px", height: "80px", border: "2px solid var(--text)" }}/>
+                                    <Image src={profile} roundedCircle alt="Profile" style={{ width: "80px", height: "80px", border: "2px solid var(--text)" }} />
                                     <h2 className="mt-3" style={{ color: "var(--accent1)", fontWeight: 600, fontSize: "2.2rem" }}>{`${accountData.firstName} ${accountData.lastName}`}</h2>
                                     <p className="lead">{accountData.headline}</p>
                                     <p className="lead">{accountData.hometown}</p>
                                 </div>
-                                <FaPencilAlt onClick={() => setEditPersonalInfo(true)} style={iconStyle}/>
+                                <FaPencilAlt onClick={() => setEditPersonalInfo(true)} style={iconStyle} />
                             </div>
                         </div>
+
+                        {/* Display / Theme Section */}
+                        <div
+                            className="text-start p-4 mb-4"
+                            style={{
+                                backgroundColor: "var(--card)",
+                                borderRadius: "12px",
+                                border: `1px solid var(--accent1)`,
+                                borderLeft: `4px solid var(--accent1)`
+                            }}
+                        >
+                            <div className="d-flex justify-content-between align-items-center">
+                                <h5 style={{ fontWeight: 600, fontSize: "1.5rem" }}>Display</h5>
+
+                                {/* Toggle style: switch OR two buttons — pick one */}
+
+                                {/* (1) Switch style */}
+                                <Form.Check
+                                    type="switch"
+                                    id="theme-switch"
+                                    label={currentTheme === "dark" ? "Dark Mode" : "Light Mode"}
+                                    checked={currentTheme === "dark"}
+                                    onChange={(e) => switchTheme(e.target.checked ? "dark" : "light")}
+                                    style={{ fontWeight: 600 }}
+                                />
+
+                                {/* (2) Or Buttons style (comment the switch above if you prefer this) */}
+                                {false && (
+                                    <div className="d-flex align-items-center" style={{ gap: "8px" }}>
+                                        <Button
+                                            size="sm"
+                                            style={{
+                                                backgroundColor: currentTheme === "light" ? "var(--accent1)" : "transparent",
+                                                color: currentTheme === "light" ? "var(--text)" : "var(--text)",
+                                                border: "1px solid var(--accent1)"
+                                            }}
+                                            onClick={() => switchTheme("light")}
+                                        >
+                                            Light
+                                        </Button>
+                                        <Button
+                                            size="sm"
+                                            style={{
+                                                backgroundColor: currentTheme === "dark" ? "var(--accent1)" : "transparent",
+                                                color: currentTheme === "dark" ? "var(--text)" : "var(--text)",
+                                                border: "1px solid var(--accent1)"
+                                            }}
+                                            onClick={() => switchTheme("dark")}
+                                        >
+                                            Dark
+                                        </Button>
+                                    </div>
+                                )}
+                            </div>
+                        </div>
+
 
                         <div className="p-4" style={{ backgroundColor: "var(--card)", borderRadius: "12px", border: `1px solid var(--accent1)`, borderLeft: `4px solid var(--accent1)` }}>
 
@@ -332,11 +392,11 @@ const Account = () => {
                                             {accountData.workModels.length > 0 && accountData.workModels.map((work) => (
                                                 <span style={chipStyle}>{work}</span>
                                             ))}
-                                            {accountData.experienceLevels.length === 0 && 
+                                            {accountData.experienceLevels.length === 0 &&
                                                 accountData.employmentTypes.length === 0 &&
                                                 accountData.workModels.length === 0 && (
-                                                <span>No preferences selected yet.</span>
-                                            )}
+                                                    <span>No preferences selected yet.</span>
+                                                )}
                                         </div>
                                         <FaPencilAlt style={iconStyle} onClick={() => { setEditPreferences(true); }} />
                                     </div>
@@ -344,7 +404,7 @@ const Account = () => {
                             </Row>
                             <hr />
 
-                            
+
                             {/* Careers Section */}
                             <Row className="py-4">
                                 <Col xs={12} md={3}>
@@ -357,19 +417,19 @@ const Account = () => {
                                                 <span style={chipStyle}>{career}</span>
                                             )) : "No career fields selected yet."}
                                         </div>
-                                        <FaPencilAlt 
+                                        <FaPencilAlt
                                             style={iconStyle}
                                             onClick={() => {
                                                 setSelectedCareers(accountData.careers);
                                                 setEditCareers(true);
-                                            }} 
+                                            }}
                                         />
                                     </div>
                                 </Col>
                             </Row>
                             <hr />
-                            
-                            {/* Skills Section */} 
+
+                            {/* Skills Section */}
                             <Row className="py-4">
                                 <Col xs={12} md={3}>
                                     <h5 style={headerStyle}>Technical Skills</h5>
@@ -381,18 +441,18 @@ const Account = () => {
                                                 <span style={chipStyle}>{skill}</span>
                                             )) : "No skills selected yet."}
                                         </div>
-                                        <FaPencilAlt 
+                                        <FaPencilAlt
                                             style={iconStyle}
                                             onClick={() => {
                                                 setSelectedSkills(accountData.skills);
-                                                setEditSkills(true); 
-                                            }} 
+                                                setEditSkills(true);
+                                            }}
                                         />
                                     </div>
                                 </Col>
                             </Row>
                             <hr />
-                            
+
                             {/* Education Section */}
                             <Row className="py-4">
                                 <Col xs={12} md={3}>
@@ -410,8 +470,8 @@ const Account = () => {
                                                 <small>Graduated: {edu.graduationDate} | GPA: {edu.gpa}</small>
                                             </div>
                                             <div>
-                                                <FaTrash onClick={() => handleDeleteEducation(edu.id)} className="me-3" style={iconStyle}/>
-                                                <FaPencilAlt onClick={() => handleEditEducation(edu)} style={iconStyle}/>
+                                                <FaTrash onClick={() => handleDeleteEducation(edu.id)} className="me-3" style={iconStyle} />
+                                                <FaPencilAlt onClick={() => handleEditEducation(edu)} style={iconStyle} />
                                             </div>
                                         </div>
                                     ))}
@@ -422,23 +482,23 @@ const Account = () => {
 
                             {/* Experience Section */}
                             <Row className="py-4">
-                               <Col xs={12} md={3}>
+                                <Col xs={12} md={3}>
                                     <div className="d-flex justify-content-between align-items-center">
                                         <h5 style={headerStyle}>Experience</h5>
                                         <FaPlus onClick={handleAddExperience} style={iconStyle} />
                                     </div>
-                               </Col>
+                                </Col>
                                 <Col xs={12} md={9} className="mt-3 mt-md-0">
                                     {accountData.experience.map(exp => (
                                         <div key={exp.id} className="d-flex justify-content-between align-items-start mb-3">
                                             <div style={{ fontWeight: 500, fontSize: "1.2rem" }}>
                                                 <strong>{exp.title}</strong> at {exp.company}<br />
-                                                <small>{exp.startDate} to {exp.endDate || 'Present'}</small><br/>
+                                                <small>{exp.startDate} to {exp.endDate || 'Present'}</small><br />
                                                 <p className="mt-2 mb-0">{exp.description}</p>
                                             </div>
                                             <div>
-                                                <FaTrash onClick={() => handleDeleteExperience(exp.id)} className="me-3" style={iconStyle}/>
-                                                <FaPencilAlt onClick={() => handleEditExperience(exp)} style={iconStyle}/>
+                                                <FaTrash onClick={() => handleDeleteExperience(exp.id)} className="me-3" style={iconStyle} />
+                                                <FaPencilAlt onClick={() => handleEditExperience(exp)} style={iconStyle} />
                                             </div>
                                         </div>
                                     ))}
@@ -464,10 +524,10 @@ const Account = () => {
                 <Modal.Header closeButton><Modal.Title>Edit Personal Info</Modal.Title></Modal.Header>
                 <Modal.Body>
                     <Form onSubmit={handlePersonalInfo}>
-                        <InputField label="First Name" value={accountData.firstName} onChange={(e) => setAccountData({...accountData, firstName: e.target.value})} />
-                        <InputField label="Last Name" value={accountData.lastName} onChange={(e) => setAccountData({...accountData, lastName: e.target.value})} />
-                        <InputField label="Headline" value={accountData.headline} onChange={(e) => setAccountData({...accountData, headline: e.target.value})} />
-                        <InputField label="Hometown" value={accountData.hometown} onChange={(e) => setAccountData({...accountData, hometown: e.target.value})} />
+                        <InputField label="First Name" value={accountData.firstName} onChange={(e) => setAccountData({ ...accountData, firstName: e.target.value })} />
+                        <InputField label="Last Name" value={accountData.lastName} onChange={(e) => setAccountData({ ...accountData, lastName: e.target.value })} />
+                        <InputField label="Headline" value={accountData.headline} onChange={(e) => setAccountData({ ...accountData, headline: e.target.value })} />
+                        <InputField label="Hometown" value={accountData.hometown} onChange={(e) => setAccountData({ ...accountData, hometown: e.target.value })} />
                         <Button type="submit" className="mt-3">Done</Button>
                     </Form>
                 </Modal.Body>
@@ -476,29 +536,29 @@ const Account = () => {
             {editPreferences && <Modal show={editPreferences} onHide={() => setEditPreferences(false)}>
                 <Modal.Header closeButton><Modal.Title>Edit Job Preferences</Modal.Title></Modal.Header>
                 <Modal.Body>
-                    <Form onSubmit={handlePreferences}>             
+                    <Form onSubmit={handlePreferences}>
                         <h6>Experience Level</h6>
                         {expLevelKeywordList.map((exp) => (
-                              <Form.Check 
-                                  key={exp} type="checkbox" label={exp} checked={selectedExpLevels.includes(exp)} 
-                                  onChange={() => {togglePreference(exp, selectedExpLevels, setSelectedExpLevels)}}
-                                  className="mb-1" 
-                              />
-                        ))}           
+                            <Form.Check
+                                key={exp} type="checkbox" label={exp} checked={selectedExpLevels.includes(exp)}
+                                onChange={() => { togglePreference(exp, selectedExpLevels, setSelectedExpLevels) }}
+                                className="mb-1"
+                            />
+                        ))}
                         <h6>Employment Type</h6>
                         {employTypeKeywordList.map((emp) => (
-                            <Form.Check 
-                                key={emp} type="checkbox" label={emp} checked={selectedEmployTypes.includes(emp)} 
-                                onChange={() => {togglePreference(emp, selectedEmployTypes, setSelectedEmployTypes)}}
-                                className="mb-1" 
+                            <Form.Check
+                                key={emp} type="checkbox" label={emp} checked={selectedEmployTypes.includes(emp)}
+                                onChange={() => { togglePreference(emp, selectedEmployTypes, setSelectedEmployTypes) }}
+                                className="mb-1"
                             />
-                        ))}   
+                        ))}
                         <h6>Work Model</h6>
                         {workModelKeywordList.map((work) => (
-                            <Form.Check 
-                                key={work} type="checkbox" label={work} checked={selectedWorkModels.includes(work)} 
-                                onChange={() => {togglePreference(work, selectedWorkModels, setSelectedWorkModels)}}
-                                className="mb-1" 
+                            <Form.Check
+                                key={work} type="checkbox" label={work} checked={selectedWorkModels.includes(work)}
+                                onChange={() => { togglePreference(work, selectedWorkModels, setSelectedWorkModels) }}
+                                className="mb-1"
                             />
                         ))}
                         <div><Button type="submit" className="mt-3">Done</Button></div>
@@ -512,7 +572,7 @@ const Account = () => {
                     <Form onSubmit={handleSkills}>
                         <div style={{ position: "relative" }}>
                             <InputField label="Search skills..." type="search" value={searchQuery} required={false} onChange={(e) => setSearchQuery(e.target.value)} placeholder="e.g. Python" />
-                            
+
                             {searchQuery && skillsFiltered.length > 0 && (
                                 <Dropdown.Menu show style={{ position: "absolute", top: "100%", width: "100%", maxHeight: "150px", overflowY: "auto" }}>
                                     {skillsFiltered.map((skill) => (
@@ -541,7 +601,7 @@ const Account = () => {
                     <Form onSubmit={handleCareers}>
                         <div style={{ position: "relative" }}>
                             <InputField label="Search careers..." type="search" value={searchQuery} required={false} onChange={(e) => setSearchQuery(e.target.value)} placeholder="e.g. Software Engineering" />
-                            
+
                             {searchQuery && careersFiltered.length > 0 && (
                                 <Dropdown.Menu show style={{ position: "absolute", top: "100%", width: "100%", maxHeight: "150px", overflowY: "auto" }}>
                                     {careersFiltered.map((career) => (
@@ -563,7 +623,7 @@ const Account = () => {
                     </Form>
                 </Modal.Body>
             </Modal>}
-            
+
             {editEducation && currentEducation && <Modal show={editEducation} onHide={() => setEditEducation(false)}>
                 <Modal.Header closeButton><Modal.Title style={{ color: "#05e3ed" }}>{isEditing ? 'Edit' : 'Add'} Education</Modal.Title></Modal.Header>
                 <Modal.Body>
@@ -578,7 +638,7 @@ const Account = () => {
                     </Form>
                 </Modal.Body>
             </Modal>}
-            
+
             {editExperience && currentExperience && <Modal show={editExperience} onHide={() => setEditExperience(false)}>
                 <Modal.Header closeButton><Modal.Title style={{ color: "#05e3ed" }}>{isEditing ? 'Edit' : 'Add'} Experience</Modal.Title></Modal.Header>
                 <Modal.Body>

@@ -41,15 +41,18 @@ const ThemeContext = createContext();
 export const useTheme = () => useContext(ThemeContext);
 
 export const ThemeProvider = ({ children }) => {
-    const [currentTheme, setCurrentTheme] = useState("dark"); // chose theme here
+    const [currentTheme, setCurrentTheme] = useState(() => {
+        const saved = localStorage.getItem("theme");
+        if (saved) return saved;
+        const prefersDark = window.matchMedia?.("(prefers-color-scheme: dark)").matches;
+        return prefersDark ? "dark" : "light";
+    });
 
     useEffect(() => {
-        const root = document.documentElement;
         const theme = themes[currentTheme];
 
         if (theme) {
             const root = document.documentElement;
-
             root.style.setProperty("--background", theme.background);
             root.style.setProperty("--card", theme.card);
             root.style.setProperty("--text", theme.text);
@@ -66,7 +69,7 @@ export const ThemeProvider = ({ children }) => {
 
 
 
-
+            localStorage.setItem("theme", currentTheme);
         }
     }, [currentTheme]);
 
