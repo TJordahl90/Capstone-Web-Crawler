@@ -1035,15 +1035,85 @@ const FindJobs = ({ jobPostTypeProp }) => {
             </Offcanvas>
 
             {/* Pop-up that asks user if they applied to job */}
-            <Modal show={showModal} onHide={() => setShowModal(false)} centered>
-                <Modal.Header closeButton>
-                    <Modal.Title>Did you apply?</Modal.Title>
+            <Modal
+                show={showModal}
+                onHide={() => setShowModal(false)}
+                centered
+            >
+                <Modal.Header
+                    closeButton
+                    style={{
+                        backgroundColor: "var(--card)",
+                        color: "var(--text)",
+                        borderBottom: "1px solid var(--border)"
+                    }}
+                >
+                    <Modal.Title style={{ fontWeight: 600 }}>Did you apply?</Modal.Title>
                 </Modal.Header>
-                <Modal.Body>
-                    <Button onClick={() => setShowModal(false)}>No</Button>
-                    <Button onClick={handleConfirmApply}>Yes</Button>
+
+                <Modal.Body
+                    style={{
+                        backgroundColor: "var(--card)",
+                        color: "var(--text)",
+                        padding: "24px",
+                        textAlign: "center",
+                    }}
+                >
+                    <p style={{ fontSize: "1.1rem", marginBottom: "20px" }}>
+                        Please confirm your application status.
+                    </p>
+
+                    <div className="d-flex justify-content-center gap-3">
+
+                        {/* NO BUTTON */}
+                        <Button
+                            onClick={() => setShowModal(false)}
+                            style={{
+                                backgroundColor: "transparent",
+                                border: "2px solid var(--accent3)",
+                                color: "var(--accent3)",
+                                padding: "8px 18px",
+                                borderRadius: "8px",
+                                fontWeight: 600,
+                                transition: "0.25s",
+                            }}
+                            onMouseEnter={(e) => {
+                                e.target.style.backgroundColor = "var(--accent3)";
+                                e.target.style.color = "#fff";
+                            }}
+                            onMouseLeave={(e) => {
+                                e.target.style.backgroundColor = "transparent";
+                                e.target.style.color = "var(--accent3)";
+                            }}
+                        >
+                            No
+                        </Button>
+
+                        {/* YES BUTTON */}
+                        <Button
+                            onClick={handleConfirmApply}
+                            style={{
+                                backgroundColor: "var(--accent1)",
+                                border: "none",
+                                color: "#fff",
+                                padding: "8px 18px",
+                                borderRadius: "8px",
+                                fontWeight: 600,
+                                transition: "0.25s",
+                            }}
+                            onMouseEnter={(e) => {
+                                e.target.style.backgroundColor = "var(--accent2)";
+                            }}
+                            onMouseLeave={(e) => {
+                                e.target.style.backgroundColor = "var(--accent1)";
+                            }}
+                        >
+                            Yes
+                        </Button>
+                    </div>
                 </Modal.Body>
             </Modal>
+
 
 
             <style>{`
