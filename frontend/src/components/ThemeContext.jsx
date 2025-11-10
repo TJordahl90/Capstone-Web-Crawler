@@ -2,13 +2,27 @@ import React, { createContext, useContext, useState, useEffect } from 'react';
 
 const themes = {
     light: {
+        background: "#F5F7FB",      // soft cool white
+        card: "#FFFFFF",            // pure white card
+        text: "#3A4750",            // near-black for perfect contrast
+
+        accent1: "#2185D5",         // same blue (works for both themes)
+        accent2: "#2185D5",         // softer version of gold/yellow
+        accent3: "#FF6B6B",         // same coral accent
+        accent4: "#2ECC71",         // lighter green for light mode
+
+        border: "rgba(0, 0, 0, 0.15)",  // inverse of dark mode border
+        hover: "rgba(0, 0, 0, 0.05)",   // subtle hover darkening
+
+        shadow1: "rgba(0, 0, 0, 0.15)", // light-mode drop shadow
+        shadow2: "rgba(0, 0, 0, 0.05)", // lighter elevation
 
     },
     dark: {
         background: "#303841",
         card: "#3A4750",
         text: "#F3F3F3",
-        
+
         accent1: "#2185D5",
         accent2: "#FFD369",
         accent3: "#FF6B6B",
@@ -27,7 +41,7 @@ const ThemeContext = createContext();
 export const useTheme = () => useContext(ThemeContext);
 
 export const ThemeProvider = ({ children }) => {
-    const [currentTheme, setCurrentTheme] = useState("dark"); // chose theme here
+    const [currentTheme, setCurrentTheme] = useState("light"); // chose theme here
 
     useEffect(() => {
         const root = document.documentElement;
