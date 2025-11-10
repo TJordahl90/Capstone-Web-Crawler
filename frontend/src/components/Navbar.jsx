@@ -115,7 +115,7 @@ const Navbar = ({ setCollapsed, collapsed }) => {
                     />
 
                   </Dropdown.Toggle>
-                  <div style={{ display: "flex", justifyContent: "center", position: "relative" }}>
+                  <div style={{ color: "var(--text)", display: "flex", justifyContent: "center", position: "relative" }}>
                     <Dropdown.Menu
                       style={{
                         backgroundColor: "var(--card)",
@@ -135,6 +135,7 @@ const Navbar = ({ setCollapsed, collapsed }) => {
                       <Dropdown.Item
                         onClick={() => navigate("/account")}
                         style={{
+                          color: "var(--text)",
                           fontWeight: "500",
                           display: "flex",
                           alignItems: "center",
@@ -142,7 +143,7 @@ const Navbar = ({ setCollapsed, collapsed }) => {
                         }}
                         onMouseEnter={(e) => {
                           e.target.style.backgroundColor = "var(--hover)";
-                          e.target.style.color = "var(--accent1)";
+                          e.target.style.color = "var(--text)";
                         }}
                         onMouseLeave={(e) => {
                           e.target.style.backgroundColor = "transparent";
@@ -164,7 +165,7 @@ const Navbar = ({ setCollapsed, collapsed }) => {
                         }}
                         onMouseEnter={(e) => {
                           e.target.style.backgroundColor = "var(--hover)";
-                          e.target.style.color = "var(--accent1)";
+                          e.target.style.color = "var(--text)";
                         }}
                         onMouseLeave={(e) => {
                           e.target.style.backgroundColor = "transparent";
@@ -186,7 +187,7 @@ const Navbar = ({ setCollapsed, collapsed }) => {
                         }}
                         onMouseEnter={(e) => {
                           e.target.style.backgroundColor = "var(--hover)";
-                          e.target.style.color = "var(--accent1)";
+                          e.target.style.color = "var(--text)";
                         }}
                         onMouseLeave={(e) => {
                           e.target.style.backgroundColor = "transparent";
@@ -209,7 +210,7 @@ const Navbar = ({ setCollapsed, collapsed }) => {
                   padding: "8px 20px",
                   border: "2px solid var(--border)",
                   backgroundColor: "transparent",
-                  color: "var(--text5)",
+                  color: "var(--text)",
                   transition: "all 0.3s ease",
                   borderRadius: "0",
                   height: "45px",
@@ -220,12 +221,12 @@ const Navbar = ({ setCollapsed, collapsed }) => {
                   textDecoration: "none"
                 }}
                 onMouseEnter={(e) => {
-                  e.target.style.backgroundColor = "var(--hover4)";
-                  e.target.style.color = "var(--textonhover5)";
+                  e.target.style.backgroundColor = "var(--background)";
+                  e.target.style.color = "var(--text)";
                 }}
                 onMouseLeave={(e) => {
                   e.target.style.backgroundColor = "transparent";
-                  e.target.style.color = "var(--text5)";
+                  e.target.style.color = "var(--text)";
                 }}
               >
                 Login

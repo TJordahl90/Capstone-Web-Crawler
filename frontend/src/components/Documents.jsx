@@ -9,17 +9,18 @@ const Documents = () => {
     const [message, setMessage] = useState("");
     const [showPreview, setShowPreview] = useState(false);
     const [pdfUrl, setPdfUrl] = useState(null);
+    const [hoverUpload, setHoverUpload] = useState(false);
 
     useEffect(() => {
         const fetchResume = async () => {
-            try{
-                const response = await api.get("/documents/",{
+            try {
+                const response = await api.get("/documents/", {
                     responseType: "blob",
                 });
                 const url = URL.createObjectURL(response.data);
                 setResume(url);
             }
-            catch (error){
+            catch (error) {
                 console.error("Failed to fetch resume: ", error);
             }
         }
@@ -39,16 +40,16 @@ const Documents = () => {
     };
 
     const handleSubmit = async () => {
-        if(!resume || !resume.file){
+        if (!resume || !resume.file) {
             setError("No resume selected.");
             return;
         }
 
-        try{
+        try {
             const formData = new FormData();
             formData.append('resume', resume.file);
-            
-            if(resume.file){
+
+            if (resume.file) {
                 await api.put("/documents/", formData, {
                     headers: { 'Content-Type': 'multipart/form-data' }
                 });
@@ -65,7 +66,7 @@ const Documents = () => {
 
             setMessage("Resume successfully uploaded.");
         }
-        catch (error){
+        catch (error) {
             console.error(error);
             setError("Error uploading resume.");
         }
@@ -78,24 +79,28 @@ const Documents = () => {
 
     return (
         <Container className="py-4">
-            <h3 className="mb-4" style={{ color: "#05e3ed" }}>My Resume</h3>
+            <h3 className="mb-4" style={{ color: "var(--accent1)" }}>My Resume</h3>
             {error && <Alert variant="danger">{error}</Alert>}
             {message && <Alert variant="success">{message}</Alert>}
 
             <Card className="mb-4"
                 style={{
-                    backgroundColor: "rgba(255, 255, 255, 0.2)", // more translucent
+                    backgroundColor: "var(--shadow3)", // more translucent
                     backdropFilter: "blur(10px)",                // adds frosted-glass effect
                     WebkitBackdropFilter: "blur(10px)",          // Safari support
                     borderTopLeftRadius: "12px",
                     borderTopRightRadius: "12px",
                 }}>
-                <Card.Header className="bg-light"
+                <Card.Header className="resumebox"
+                    style={{ background: "var(--text)", color: "var(--background)" }}
                 >
                     <div className="d-flex justify-content-between align-items-center"
                     >
                         <h5 className="mb-0">Resume</h5>
-                        <div className="d-flex">
+                        <div className="d-flex"
+                            style={{
+                                color: "var(--background)",
+                            }}>
                             <input
                                 type="file"
                                 id="upload-resume"
@@ -108,15 +113,27 @@ const Documents = () => {
                                 size="sm"
                                 className="me-2"
                                 onClick={() => document.getElementById('upload-resume').click()}
+
+                                onMouseEnter={() => setHoverUpload(true)}
+                                onMouseLeave={() => setHoverUpload(false)}
+
+                                style={{
+                                    borderColor: hoverUpload ? "var(--text)" : "var(--background)",
+                                    color: hoverUpload ? "var(--text)" : "var(--background)",
+                                    backgroundColor: hoverUpload ? "var(--background)" : "transparent",
+                                    transition: "0.2s ease"
+                                }}
                             >
                                 <FaUpload className="me-1" />
                                 {resume ? "Replace Resume" : "Upload Resume"}
                             </Button>
+
                             {resume && (
                                 <Button
                                     variant="primary"
                                     size="sm"
                                     onClick={handleSubmit}
+                                    style={{ color: "var(--text)" }}
                                 >
                                     Save
                                 </Button>
@@ -147,7 +164,8 @@ const Documents = () => {
                             </div>
                         </div>
                     ) : (
-                        <Alert variant="light" className="text-center">
+                        <Alert variant="light" className="text-center"
+                        style = {{color: "var(--text)",background: "var(--background)"}}>
                             No resume uploaded.
                         </Alert>
                     )}
