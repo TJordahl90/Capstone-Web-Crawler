@@ -7,9 +7,10 @@ const themes = {
         text: "#3A4750",            // near-black for perfect contrast
 
         accent1: "#2185D5",         // same blue (works for both themes)
-        accent2: "#2185D5",         // softer version of gold/yellow
+        accent2: "#FFD369",         // softer version of gold/yellow
         accent3: "#FF6B6B",         // same coral accent
         accent4: "#2ECC71",         // lighter green for light mode
+        accent5: "#2185D5",
 
         border: "rgba(0, 0, 0, 0.15)",  // inverse of dark mode border
         hover: "rgba(0, 0, 0, 0.05)",   // subtle hover darkening
@@ -27,6 +28,7 @@ const themes = {
         accent2: "#FFD369",
         accent3: "#FF6B6B",
         accent4: "#05f22c",
+        accent5: "#FFD369",
 
         border: "rgba(255, 255, 255, 0.15)",
         hover: "rgba(255, 255, 255, 0.10)",
@@ -61,12 +63,14 @@ export const ThemeProvider = ({ children }) => {
             root.style.setProperty("--accent2", theme.accent2);
             root.style.setProperty("--accent3", theme.accent3);
             root.style.setProperty("--accent4", theme.accent4);
+            root.style.setProperty("--accent5", theme.accent5);
 
             root.style.setProperty("--border", theme.border);
             root.style.setProperty("--hover", theme.hover);
 
             root.style.setProperty("--shadow1", theme.shadow1);
             root.style.setProperty("--shadow2", theme.shadow2);
+            root.style.setProperty("--shadow3", theme.shadow3);
 
 
 

@@ -83,7 +83,7 @@ const Documents = () => {
             {error && <Alert variant="danger">{error}</Alert>}
             {message && <Alert variant="success">{message}</Alert>}
 
-            <Card className="mb-4"
+            <Card className="Myresume"
                 style={{
                     backgroundColor: "var(--shadow3)", // more translucent
                     backdropFilter: "blur(10px)",                // adds frosted-glass effect

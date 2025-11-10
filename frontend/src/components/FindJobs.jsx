@@ -24,10 +24,10 @@ const FindJobs = ({ jobPostTypeProp }) => {
     const [hasPrevPage, setHasPrevPage] = useState(false);
     const [jobCount, setJobCount] = useState();
     const [hoveredJobId, setHoveredJobId] = useState(null);
-    
+
     const jobListContainerRef = useRef(null);
     const navigate = useNavigate();
-    
+
     // helper functions below for job filtering system
     const toggleFilter = (category, value) => {
         setFilters(prev => {
@@ -66,7 +66,7 @@ const FindJobs = ({ jobPostTypeProp }) => {
         try {
             let response;
             if (type === "search") {
-                response = await api.post(`/job_searching/?search=${searchTerm}`,{
+                response = await api.post(`/job_searching/?search=${searchTerm}`, {
                     filters: filters || {},
                     page: currentPage,
                 });
@@ -289,9 +289,9 @@ const FindJobs = ({ jobPostTypeProp }) => {
                     minWidth: 0,
                     overflow: "hidden",
                     backgroundColor: selectedJob?.id === job.id
-                        ? "var(--shadow1)"   
-                        : "transparent",         
-                    transition: "background-color 0.25s ease" 
+                        ? "var(--shadow1)"
+                        : "transparent",
+                    transition: "background-color 0.25s ease"
                 }}
             >
                 <div
@@ -307,10 +307,10 @@ const FindJobs = ({ jobPostTypeProp }) => {
                                 display: "flex",
                                 alignItems: "center",
                                 justifyContent: "center",
-                                width: "55px",
-                                height: "55px",
+                                width: "50px",
+                                height: "50px",
                                 flexShrink: 0,
-                                boxShadow: "1.95px 1.95px 2.6px rgba(0, 0, 0, 0.15)",
+                                boxShadow: "1.95px 1.95px 2.6px rgba(0, 0, 0, 0.47)",
                             }}
                         >
                             <img
@@ -335,10 +335,9 @@ const FindJobs = ({ jobPostTypeProp }) => {
                             minWidth: 0,
                         }}
                     >
-
                         <h5
                             className="mb-1"
-                        
+
                             style={{
                                 fontSize: "1rem",
                                 color: "var(--accent1)",
@@ -349,9 +348,6 @@ const FindJobs = ({ jobPostTypeProp }) => {
                         >
                             {job.title}
                         </h5>
-
-
-
                         <p className="mb-0"
                             style={{ fontSize: "0.9rem", color: "var(--text)" }}> {job.company} </p>
                     </div>
@@ -447,7 +443,7 @@ const FindJobs = ({ jobPostTypeProp }) => {
                                                 onChange={(e) => setSearchTerm(e.target.value)}
                                                 style={{
                                                     paddingLeft: "30px",
-                                                    backgroundColor: "#F3F3F3",
+                                                    backgroundColor: "#F5F7FB",
                                                     color: "#303841",
                                                     border: "2px solid var(--border)",
                                                     borderRadius: "8px",
@@ -662,14 +658,17 @@ const FindJobs = ({ jobPostTypeProp }) => {
                                                             className="me-3"
                                                             style={{
                                                                 // border: "2px solid var(--border)",
-                                                                borderRadius: "8px",
+                                                                borderRadius: "1px",
                                                                 padding: "6px",
                                                                 display: "flex",
                                                                 alignItems: "center",
                                                                 justifyContent: "center",
-                                                                width: "82px",
-                                                                height: "82px",
-                                                                backgroundColor: "var(--background)"
+                                                                width: "70px",
+                                                                height: "70px",
+                                                                backgroundColor: "var(--background)",
+
+                                                                flexShrink: 0,
+                                                                boxShadow: "1.95px 1.95px 2.6px rgba(0, 0, 0, 0.32)",
                                                             }}
                                                         >
                                                             <img
@@ -679,6 +678,7 @@ const FindJobs = ({ jobPostTypeProp }) => {
                                                                     width: '70px',
                                                                     height: '70px',
                                                                     objectFit: 'contain'
+
                                                                 }}
                                                             />
                                                         </div>
@@ -800,7 +800,7 @@ const FindJobs = ({ jobPostTypeProp }) => {
                                             backgroundColor: "var(--background)", // more translucent
                                             backdropFilter: "blur(10px)",                // adds frosted-glass effect
                                             WebkitBackdropFilter: "blur(10px)",
-                                            color: "var(--accent2)",
+                                            color: "var(--accent5)",
                                             border: "3px solid var(--hover)",
                                             borderRadius: "12px",
                                             //boxShadow: "0px 3px 8px rgba(0, 0, 0, 0.48)",
@@ -1026,7 +1026,7 @@ const FindJobs = ({ jobPostTypeProp }) => {
                         onChange={() => toggleFilter("datePosted", "30-days")}
                     />
                 </Offcanvas.Body>
-                
+
                 <div className="filters-actions"
                     style={{ background: "var(--shadow2)" }}>
                     <Button className="btn-outline-theme" onClick={clearAllFilters}>Clear</Button>
