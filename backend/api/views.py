@@ -369,6 +369,7 @@ def AllJobsView(request):
     if(filters.get('location')):
         jobs = jobs.filter(workModels__name__in=filters['location'])
 
+    jobs = jobs.order_by('-datePosted')
     total_count = jobs.count()
     start = (page_number - 1) * 15
     end = start + 15
@@ -832,17 +833,19 @@ class DashboardView(APIView):
             print(f'An unexpected error ocurred: {e}')
         
         return Response(topStats, status=200)
-    
+
+@api_view(["GET"])
+@permission_classes([IsAuthenticated])
+def getEmailPreference(request):
+    pass
+
 @api_view(["POST"])
 @permission_classes([IsAuthenticated])
-def update_email_notifications(request):
-    """
-    POST /api/user/notifications/email/
-    Body: { "notify_by_email": true | false }    # accepts "true"/"false" too
-    """
-    raw = request.data.get("notify_by_email", None)
+def updateEmailPreference(request):
+    raw = request.data.get("emailPreference", None)
+    print(raw)
     if raw is None:
-        return Response({"detail": "notify_by_email is required"}, status=400)
+        return Response({"detail": "emailPreference is required"}, status=400)
 
     # accept bools or common truthy/falsey strings
     if isinstance(raw, bool):
@@ -853,4 +856,4 @@ def update_email_notifications(request):
     account = request.user.account
     account.notify_by_email = value
     account.save(update_fields=["notify_by_email"])
-    return Response({"notify_by_email": account.notify_by_email}, status=200)
+    return Response({"emailPreference": account.notify_by_email}, status=200)
