@@ -31,6 +31,7 @@ from rest_framework.response import Response
 from django.core.exceptions import ValidationError
 from django.core.validators import validate_email
 from django.db import transaction
+import shutil
 
 def _err(status_code: int, code: str, message: str, *, field: str | None = None, details: str | dict | None = None):
     payload = {"error": {"code": code, "message": message}}
@@ -189,6 +190,9 @@ class DeleteUserView(APIView):
     def delete(self, request):
         user = request.user
         try:
+            userFilePath = os.path.join(settings.MEDIA_ROOT, f'uploads/user_{user.id}')
+            if(os.path.exists(userFilePath)):
+                shutil.rmtree(userFilePath)
             user.delete()
             return Response({"message": "Account successfully deleted"}, status=204)
         except Exception as e:
