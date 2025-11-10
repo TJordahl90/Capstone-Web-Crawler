@@ -23,9 +23,11 @@ const FindJobs = ({ jobPostTypeProp }) => {
     const [hasNextPage, setHasNextPage] = useState(false);
     const [hasPrevPage, setHasPrevPage] = useState(false);
     const [jobCount, setJobCount] = useState();
+    const [hoveredJobId, setHoveredJobId] = useState(null);
+    
     const jobListContainerRef = useRef(null);
     const navigate = useNavigate();
-    const [hoveredJobId, setHoveredJobId] = useState(null);
+    
     // helper functions below for job filtering system
     const toggleFilter = (category, value) => {
         setFilters(prev => {
@@ -49,21 +51,6 @@ const FindJobs = ({ jobPostTypeProp }) => {
             experienceLevel: [],
             workModels: [],
         })
-    };
-
-    // Get company logo
-    const getCompanyLogo = (companyName) => {
-        if (!companyName) return null;
-
-        const name = companyName.toLowerCase();
-        if (name.includes("fuge") || name.includes("fugetec")) {
-            return fugetec;
-        } else if (name.includes("texas") || name.includes("texas instruments")) {
-            return texasIns;
-        } else if (name.includes("lockheed") || name.includes("lockheed martin")) {
-            return lockheed;
-        }
-        return null;
     };
 
     // calls fetchJobPosting function when page is loaded
@@ -273,8 +260,6 @@ const FindJobs = ({ jobPostTypeProp }) => {
 
     // Renders each of the job listings in the left sidebar
     const renderJobItem = (job) => {
-        const logo = job.logoURL
-
         return (
             <div
                 key={job.id}
@@ -301,7 +286,7 @@ const FindJobs = ({ jobPostTypeProp }) => {
                     style={{ width: "100%" }}
                 >
                     {/* LOGO BOX */}
-                    {showLogo && logo && (
+                    {showLogo && job.logoURL && (
                         <div
                             style={{
                                 borderRadius: "1px",
@@ -316,7 +301,7 @@ const FindJobs = ({ jobPostTypeProp }) => {
                             }}
                         >
                             <img
-                                src={logo}
+                                src={job.logoURL}
                                 alt={`${job.company} logo`}
                                 className="company-logo"
                                 style={{
@@ -659,7 +644,7 @@ const FindJobs = ({ jobPostTypeProp }) => {
                                                     className="d-flex align-items-start gap-2"
                                                     style={{ width: "100%" }}
                                                 >
-                                                    {getCompanyLogo(selectedJob.company) && (
+                                                    {selectedJob.logoURL && (
                                                         <div
                                                             className="me-3"
                                                             style={{
@@ -675,7 +660,7 @@ const FindJobs = ({ jobPostTypeProp }) => {
                                                             }}
                                                         >
                                                             <img
-                                                                src={getCompanyLogo(selectedJob.company)}
+                                                                src={selectedJob.logoURL}
                                                                 alt={`${selectedJob.company} logo`}
                                                                 style={{
                                                                     width: '70px',
