@@ -189,7 +189,7 @@ const InterviewChatbot = () => {
             <Container className="py-5" style={{ maxWidth: '1000px' }}>
                 <Row>
                     <Col>
-                        <div style={{ backgroundColor: 'var(--bg3)', border: '1px solid var(--border)', padding: '2rem', borderRadius: '0.375rem', color: 'var(--text2)' }}>
+                        <div style={{ backgroundColor: 'var(--background)', border: '1px solid var(--border)', padding: '2rem', borderRadius: '0.375rem', color: 'var(--text2)' }}>
                             
                             <h3 style={{ fontSize: '1.75rem', fontWeight: 600, color: 'var(--text2)', textAlign: 'center', marginBottom: '1.5rem' }}>Your Mock Interview Report</h3>
                             <Row className="mb-4 text-center">
@@ -234,25 +234,25 @@ const InterviewChatbot = () => {
     // This will display the instruction page
 	if (!sessionStarted) {
 		return (
-			<Container className="d-flex justify-content-center align-items-center text-center text-white" style={{ height: 'calc(100vh - 52px)' }}>
+			<Container className="d-flex justify-content-center align-items-center text-center" style={{ color: "var(--text)", height: 'calc(100vh - 52px)' }}>
                 <div>
                     <h1>{job ? `Mock Interview for ${job.title}` : 'General Interview Prep'}</h1>
-                    <p className="lead text-white-50 mt-3" style={{ maxWidth: '600px', margin: 'auto' }}>
+                    <p className="lead mt-3" style={{ color : "var(--text)", maxWidth: '600px', margin: 'auto' }}>
     					Welcome to your AI-powered interview practice session. This tool is designed to help you refine your answers and build confidence. Here's how it works:
     				</p>
 
     				<div className="d-flex justify-content-center gap-5 mt-5 text-start">
     				    <div>
-    				        <h5 style={{ color: '#00ADB5' }}>1. Answer the Question</h5>
-    				        <p className="text-white-50">You'll be presented with three questions one at a time. Take a moment to structure your thoughts and provide a complete answer by typing or using the voice recording feature.</p>
+    				        <h5 style={{ color: "var(--accent1" }}>1. Answer the Question</h5>
+    				        <p className="des1">You'll be presented with three questions one at a time. Take a moment to structure your thoughts and provide a complete answer by typing or using the voice recording feature.</p>
     				    </div>
     				    <div>
-    				        <h5 style={{ color: '#00ADB5' }}>2. Get Instant Feedback</h5>
-    				        <p className="text-white-50">Once you submit your answer, our AI coach will provide immediate, structured feedback on your response, highlighting your strengths and areas for improvement.</p>
+    				        <h5 style={{ color: "var(--accent1" }}>2. Get Instant Feedback</h5>
+    				        <p className="des2">Once you submit your answer, our AI coach will provide immediate, structured feedback on your response, highlighting your strengths and areas for improvement.</p>
     				    </div>
     				    <div>
-    				        <h5 style={{ color: '#00ADB5' }}>3. Proceed and Improve</h5>
-    				        <p className="text-white-50">Review the feedback, then click "Next Question" to continue. Use what you've learned to make your next answer even better.</p>
+    				        <h5 style={{ color: "var(--accent1" }}>3. Proceed and Improve</h5>
+    				        <p className="des3">Review the feedback, then click "Next Question" to continue. Use what you've learned to make your next answer even better.</p>
     				    </div>
     				</div>
                     <Button variant="info" size="lg" onClick={getAIQuestions} disabled={loading}>
