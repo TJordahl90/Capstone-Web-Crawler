@@ -28,7 +28,7 @@ const FindJobs = ({ jobPostTypeProp }) => {
     const [jobCount, setJobCount] = useState();
     const jobListContainerRef = useRef(null);
     const navigate = useNavigate();
-
+    const [hoveredJobId, setHoveredJobId] = useState(null);
     // helper functions below for job filtering system
     const toggleFilter = (category, value) => {
         setFilters(prev => {
@@ -286,16 +286,17 @@ const FindJobs = ({ jobPostTypeProp }) => {
                     setSelectedJob(job);
                     if (windowWidth <= 770) setShowDetailsMobile(true);
                 }}
-
+                onMouseEnter={() => setHoveredJobId(job.id)}
+                onMouseLeave={() => setHoveredJobId(null)}
                 style={{
                     cursor: 'pointer',
                     width: "100%",
                     minWidth: 0,
                     overflow: "hidden",
                     backgroundColor: selectedJob?.id === job.id
-                        ? "var(--shadow2)"       // ✅ highlight color
-                        : "transparent",         // default
-                    transition: "background-color 0.25s ease" // smoother animation
+                        ? "var(--shadow1)"   
+                        : "transparent",         
+                    transition: "background-color 0.25s ease" 
                 }}
             >
                 <div
@@ -339,18 +340,24 @@ const FindJobs = ({ jobPostTypeProp }) => {
                             minWidth: 0,
                         }}
                     >
+
                         <h5
                             className="mb-1"
+                        
                             style={{
                                 fontSize: "1rem",
                                 color: "var(--accent1)",
-                                textDecoration: selectedJob && selectedJob.id === job.id ? "underline" : "none",
-                                textUnderlineOffset: "3px",
-                                textDecorationThickness: "2px",
+                                textDecoration: hoveredJobId === job.id ? "underline" : "none",
+                                textUnderlineOffset: hoveredJobId === job.id ? "3px" : undefined,
+                                textDecorationThickness: hoveredJobId === job.id ? "2px" : undefined,
                             }}
                         >
                             {job.title}
-                        </h5> <p className="mb-0"
+                        </h5>
+
+
+
+                        <p className="mb-0"
                             style={{ fontSize: "0.9rem", color: "var(--text)" }}> {job.company} </p>
                     </div>
 
