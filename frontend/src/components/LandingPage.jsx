@@ -20,7 +20,7 @@ const LandingPage = () => {
         backgroundSize: "cover",
         backgroundPosition: "center",
         backgroundRepeat: "no-repeat",
-        color: "var(--text)",
+        color: "white",
         overflowX: "hidden",
         overflowY: "auto",
         position: "relative",
@@ -89,7 +89,7 @@ const LandingPage = () => {
             fontSize: "1rem",
             fontWeight: "bold",
             cursor: "pointer",
-            color: "var(--text)",
+            color: "white",
             backgroundColor: "rgba(0, 173, 181, 0.3)",
             border: "2px solid var(--border)",
             backdropFilter: "blur(6px)",
@@ -101,7 +101,7 @@ const LandingPage = () => {
           }}
           onMouseLeave={(e) => {
             e.currentTarget.style.backgroundColor = "rgba(0, 173, 181, 0.3)";
-            e.currentTarget.style.color = "var(--text)";
+            e.currentTarget.style.color = "white";
           }}
         >
           Register
@@ -118,7 +118,7 @@ const LandingPage = () => {
             fontSize: "1rem",
             fontWeight: "bold",
             cursor: "pointer",
-            color: "var(--text)",
+            color: "white",
             backgroundColor: "rgba(0, 173, 181, 0.3)",
             border: "2px solid var(--border)",
             backdropFilter: "blur(6px)",
@@ -130,7 +130,7 @@ const LandingPage = () => {
           }}
           onMouseLeave={(e) => {
             e.currentTarget.style.backgroundColor = "rgba(0, 173, 181, 0.3)";
-            e.currentTarget.style.color = "var(--text)";
+            e.currentTarget.style.color = "white";
           }}
         >
           Login
@@ -147,7 +147,7 @@ const LandingPage = () => {
                 fontSize: "4rem",
                 fontWeight: "bold",
                 marginBottom: "75px",
-                color: "var(--webname)"
+                color: "white"
               }}
             >
               Northstar
@@ -161,7 +161,7 @@ const LandingPage = () => {
               onClick={() => navigate("/find-jobs")}
               style={{
                 backgroundColor: "rgba(0, 173, 181, 0.3)",
-                color: "var(--text)",
+                color: "white",
                 fontSize: "18px",
                 fontWeight: "bold",
                 border: "2px solid var(--border)",
@@ -178,7 +178,7 @@ const LandingPage = () => {
               }}
               onMouseLeave={(e) => {
                 e.currentTarget.style.backgroundColor = "rgba(0, 173, 181, 0.3)";
-                e.currentTarget.style.color = "var(--text)";
+                e.currentTarget.style.color = "white";
               }}
             >
               Find Jobs
