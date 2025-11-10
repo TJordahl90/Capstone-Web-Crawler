@@ -292,6 +292,10 @@ const FindJobs = ({ jobPostTypeProp }) => {
                     width: "100%",
                     minWidth: 0,
                     overflow: "hidden",
+                    backgroundColor: selectedJob?.id === job.id 
+            ? "var(--shadow2)"       // ✅ highlight color
+            : "transparent",         // default
+        transition: "background-color 0.25s ease" // smoother animation
                 }}
             >
                 <div
@@ -302,16 +306,15 @@ const FindJobs = ({ jobPostTypeProp }) => {
                     {showLogo && logo && (
                         <div
                             style={{
-                                borderRadius: "12px",
-                                padding: "6px",
+                                borderRadius: "1px",
+                                marginTop: "10px",
                                 display: "flex",
                                 alignItems: "center",
                                 justifyContent: "center",
-                                width: "65px",
-                                height: "65px",
-                                flexShrink: 0,
-                                backgroundColor: "rgba(255, 255, 255, 0.05)",
-                                backdropFilter: "blur(10px)",
+                                width: "55px",
+                                height: "55px",
+                                flexShrink: 0,                       
+                                boxShadow: "1.95px 1.95px 2.6px rgba(0, 0, 0, 0.15)",
                             }}
                         >
                             <img
@@ -332,29 +335,29 @@ const FindJobs = ({ jobPostTypeProp }) => {
                         style={{
                             flexGrow: 1,
                             borderRadius: "12px",
-                            padding: "8px 12px",
-                            backgroundColor: "var(--background)",
-                            backdropFilter: "blur(10px)",
+                            padding: "8px 8px",
                             minWidth: 0,
                         }}
                     >
                         <h5 className="mb-1" style={{ fontSize: "1rem", color: "var(--accent1)" }}>
                             {job.title}
                         </h5>
-                        <p className="mb-0" style={{ fontSize: "0.9rem", color: "white" }}>
+                        <p className="mb-0" style={{ fontSize: "0.9rem", color: "var(--text)" }}>
                             {job.company}
                         </p>
                     </div>
                 </div>
 
                 <div className="d-flex justify-content-between align-items-center mt-2">
-                    <small className="text-white">
+                    <small className="adress"
+                        style={{ color: "var(--text)" }}>
                         <FaMapMarkerAlt size={12} className="me-1" />
                         <span>{job.location}</span>
                     </small>
                 </div>
                 <div className="d-flex justify-content-between align-items-center mt-2">
-                    <small className="text-white">
+                    <small className="date"
+                        style={{ color: "var(--text)" }}>
                         <FaClock size={10} className="me-1" />
                         <span>{job.datePosted || "N/A"}</span>
                     </small>
@@ -375,7 +378,7 @@ const FindJobs = ({ jobPostTypeProp }) => {
                 width: "100%",
                 flex: 1,
                 zIndex: 5,
-                color: "var(--text6)",
+                color: "var(--text)",
                 padding: 0,
                 margin: 0,
                 maxWidth: "100%"
@@ -390,7 +393,7 @@ const FindJobs = ({ jobPostTypeProp }) => {
                         ref={jobListContainerRef}
                         style={{
                             height: "100%",
-                            color: "var(--text6)",
+                            color: "var(--text)",
                             borderRight: "2px solid var(--border)"
                         }}
                     >
@@ -417,18 +420,26 @@ const FindJobs = ({ jobPostTypeProp }) => {
                                                 className="position-absolute"
                                                 style={{ left: "10px", top: "50%", transform: "translateY(-50%)" }}
                                             >
-                                                <FaSearch className="text-muted" />
+                                                <FaSearch className="seachbar"
+                                                    style={{ color: "#3A4750" }} />
                                             </div>
+                                            <style>{`
+                                                .search-input::placeholder { color: #303841; opacity: 1; }
+                                                .search-input::-webkit-input-placeholder { color: #303841; opacity: 1; }
+                                                 .search-input::-moz-placeholder { color: #303841; opacity: 1; }
+                                                 .search-input:-ms-input-placeholder { color: #303841; }
+                                            `}</style>
                                             <Form.Control
                                                 type="text"
+                                                className="search-input" 
                                                 placeholder="Search jobs by title, company or location"
                                                 value={searchTerm}
                                                 onChange={(e) => setSearchTerm(e.target.value)}
                                                 style={{
                                                     paddingLeft: "30px",
-                                                    backgroundColor: "var(--text)",
-                                                    color: "var(--searchtxt)",
-                                                    border: "1px solid var(--border)",
+                                                    backgroundColor: "#F3F3F3",
+                                                    color: "#303841",
+                                                    border: "2px solid var(--border)",
                                                     borderRadius: "8px",
                                                 }}
                                             />
@@ -571,15 +582,15 @@ const FindJobs = ({ jobPostTypeProp }) => {
                                     <Button
                                         variant="link"
                                         style={{
-                                            color: "var(--accent2)",
+                                            color: "var(--text)",
                                             transition: "all 0.3s ease",
                                             marginLeft: "8px",
                                         }}
                                         onMouseEnter={(e) => {
-                                            e.currentTarget.style.color = "var(--savebtntxt)";
+                                            e.currentTarget.style.color = "var(--text)";
                                         }}
                                         onMouseLeave={(e) => {
-                                            e.currentTarget.style.color = "var(--savebtnhovertxt)";
+                                            e.currentTarget.style.color = "var(--text)";
                                         }}
                                         onClick={handleApplyClick}
                                         disabled={selectedJob.applied_status}
@@ -591,15 +602,15 @@ const FindJobs = ({ jobPostTypeProp }) => {
                                     <Button
                                         variant="link"
                                         style={{
-                                            color: "var(--savebtnhovertxt)",
+                                            color: "var(--text)",
                                             transition: "all 0.3s ease",
                                             marginLeft: "8px",
                                         }}
                                         onMouseEnter={(e) => {
-                                            e.currentTarget.style.color = "var(--savebtntxt)";
+                                            e.currentTarget.style.color = "var(--text)";
                                         }}
                                         onMouseLeave={(e) => {
-                                            e.currentTarget.style.color = "var(--savebtnhovertxt)";
+                                            e.currentTarget.style.color = "var(--text)";
                                         }}
                                         onClick={() => { navigate("/interview-chatbot", { state: { job: selectedJob } }) }}
                                     >
@@ -620,7 +631,7 @@ const FindJobs = ({ jobPostTypeProp }) => {
                                 className="h-100 overflow-auto auto-hide-scroll"
                                 style={{
 
-                                    color: "var(--contenttxt)",
+                                    color: "var(--text)",
                                 }}
                             >
                                 <div
@@ -648,7 +659,7 @@ const FindJobs = ({ jobPostTypeProp }) => {
                                                                 justifyContent: "center",
                                                                 width: "82px",
                                                                 height: "82px",
-                                                                backgroundColor: "var(--lbg)"
+                                                                backgroundColor: "var(--background)"
                                                             }}
                                                         >
                                                             <img
@@ -672,15 +683,16 @@ const FindJobs = ({ jobPostTypeProp }) => {
                                                         </h2>
                                                         <h5
                                                             className="mt-1 mb-2"
-                                                            style={{ color: "var(--accent2)", lineHeight: "1.2" }}
+                                                            style={{ color: "var(--accent3)", lineHeight: "1.2" }}
                                                         >
                                                             {selectedJob.company}
                                                         </h5>
                                                     </div>
 
                                                 </div>
-                                                <div className="pt-3">
-                                                    <div className="d-flex flex-column text-white">
+                                                <div className="pt-3"
+                                                    style={{ color: "var(--text)" }}>
+                                                    <div className="d-flex flex-column ">
                                                         <div className="d-flex align-items-center mb-1">
                                                             <FaMapMarkerAlt size={14} className="me-1" />
                                                             <span>{selectedJob.location}</span>

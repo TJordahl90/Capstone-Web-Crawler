@@ -112,7 +112,8 @@ const Navbar = ({ setCollapsed, collapsed }) => {
                   }}
                 />
 
-                <span className="text-white ms-2">{user.username}</span>
+                <span className="ms-2"
+                style ={{color: "var(--text)"}}>{user.username}</span>
               </>
             ) : (
               <Nav.Link
