@@ -292,10 +292,10 @@ const FindJobs = ({ jobPostTypeProp }) => {
                     width: "100%",
                     minWidth: 0,
                     overflow: "hidden",
-                    backgroundColor: selectedJob?.id === job.id 
-            ? "var(--shadow2)"       // ✅ highlight color
-            : "transparent",         // default
-        transition: "background-color 0.25s ease" // smoother animation
+                    backgroundColor: selectedJob?.id === job.id
+                        ? "var(--shadow2)"       // ✅ highlight color
+                        : "transparent",         // default
+                    transition: "background-color 0.25s ease" // smoother animation
                 }}
             >
                 <div
@@ -313,7 +313,7 @@ const FindJobs = ({ jobPostTypeProp }) => {
                                 justifyContent: "center",
                                 width: "55px",
                                 height: "55px",
-                                flexShrink: 0,                       
+                                flexShrink: 0,
                                 boxShadow: "1.95px 1.95px 2.6px rgba(0, 0, 0, 0.15)",
                             }}
                         >
@@ -339,13 +339,21 @@ const FindJobs = ({ jobPostTypeProp }) => {
                             minWidth: 0,
                         }}
                     >
-                        <h5 className="mb-1" style={{ fontSize: "1rem", color: "var(--accent1)" }}>
+                        <h5
+                            className="mb-1"
+                            style={{
+                                fontSize: "1rem",
+                                color: "var(--accent1)",
+                                textDecoration: selectedJob && selectedJob.id === job.id ? "underline" : "none",
+                                textUnderlineOffset: "3px",
+                                textDecorationThickness: "2px",
+                            }}
+                        >
                             {job.title}
-                        </h5>
-                        <p className="mb-0" style={{ fontSize: "0.9rem", color: "var(--text)" }}>
-                            {job.company}
-                        </p>
+                        </h5> <p className="mb-0"
+                            style={{ fontSize: "0.9rem", color: "var(--text)" }}> {job.company} </p>
                     </div>
+
                 </div>
 
                 <div className="d-flex justify-content-between align-items-center mt-2">
@@ -431,7 +439,7 @@ const FindJobs = ({ jobPostTypeProp }) => {
                                             `}</style>
                                             <Form.Control
                                                 type="text"
-                                                className="search-input" 
+                                                className="search-input"
                                                 placeholder="Search jobs by title, company or location"
                                                 value={searchTerm}
                                                 onChange={(e) => setSearchTerm(e.target.value)}
@@ -513,9 +521,9 @@ const FindJobs = ({ jobPostTypeProp }) => {
                                     {displayJobs.map(job => renderJobItem(job))}
                                 </div>
                             )}
-                            <div className="d-flex justify-content-center align-items-center p-3 gap-3">
+                            <div className="d-flex justify-content-center align-items-center p-1 gap-1">
                                 {!loading && hasPrevPage && (
-                                    <Button variant="primary" onClick={() => setCurrentPage(prev => prev - 1)} style={{ background: "none", border: "none" }}>
+                                    <Button variant="primary" onClick={() => setCurrentPage(prev => prev - 1)} style={{ color: "var(--accent1)", background: "none", border: "none" }}>
                                         <FaChevronLeft />
                                     </Button>
                                 )}
@@ -523,7 +531,7 @@ const FindJobs = ({ jobPostTypeProp }) => {
                                     <span>Page {currentPage}</span>
                                 )}
                                 {!loading && hasNextPage && (
-                                    <Button variant="primary" onClick={() => setCurrentPage(prev => prev + 1)} style={{ background: "none", border: "none" }}>
+                                    <Button variant="primary" onClick={() => setCurrentPage(prev => prev + 1)} style={{ color: "var(--accent1)", background: "none", border: "none" }}>
                                         <FaChevronRight />
                                     </Button>
                                 )}
