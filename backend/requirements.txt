@@ -52,8 +52,6 @@ pydantic==2.11.7
 pydantic_core==2.33.2
 Pygments==2.19.2
 PyJWT==2.9.0
-PyMuPDF==1.23.22
-PyMuPDFb==1.23.22
 pypdfium2==5.0.0
 PySocks==1.7.1
 python-dotenv==1.1.0
