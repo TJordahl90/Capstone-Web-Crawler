@@ -63,15 +63,27 @@ def CsrfTokenView(request):
     return JsonResponse({'csrfToken': csrf_token})
 
 class CreateUserView(APIView):
-    """Register a new user"""
+    """Register New User"""
     permission_classes = [AllowAny]
 
     def post(self, request):
+        email = request.data.get("email")
+        if not email:
+            return _err(400, "missing_email", "Email is required.", field="email")
+        try:
+            validate_email(email)
+        except ValidationError:
+            return _err(422, "invalid_email", "Email format is invalid.", field="email")
+
         serializer = CreateUserSerializer(data=request.data)
         if serializer.is_valid():
-            serializer.save()
-            return Response(serializer.data, status=status.HTTP_201_CREATED)
-        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+            try:
+                with transaction.atomic():
+                    serializer.save()
+            except Exception as e:
+                return _err(500, "create_user_failed", "Could not create user.", details=str(e))
+            return Response(serializer.data, status=201)
+        return _err(400, "validation_error", "Invalid fields.", details=serializer.errors)
 
 def sendEmailVerification(email, subject, message, templateName, context):
     msg = EmailMultiAlternatives(subject, message, settings.EMAIL_HOST_USER, email)
@@ -498,14 +510,8 @@ class DocumentView(APIView):
         account = Account.objects.get(user=user)
         newResume = request.FILES.get('resume')
 
-        if(account.resume):
-            path = 'media/' + str(account.resume)
-            try:
-                os.remove(path)
-            except FileExistsError:
-                print('File not found')
-            except PermissionError:
-                print('Permission denied')
+        if account.resume:
+            account.resume.delete(save=False)  # uses Django storage; safe if file missing
 
         if(not newResume):
             return Response({"error": "No file uploaded"}, status=400)

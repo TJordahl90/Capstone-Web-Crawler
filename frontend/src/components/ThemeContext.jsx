@@ -41,7 +41,7 @@ const ThemeContext = createContext();
 export const useTheme = () => useContext(ThemeContext);
 
 export const ThemeProvider = ({ children }) => {
-    const [currentTheme, setCurrentTheme] = useState("light"); // chose theme here
+    const [currentTheme, setCurrentTheme] = useState("dark"); // chose theme here
 
     useEffect(() => {
         const root = document.documentElement;
