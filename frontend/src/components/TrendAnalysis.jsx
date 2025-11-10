@@ -16,7 +16,6 @@ const TrendAnalysis = () => {
 	
             try{
                 const response = await api.get("/job_statistics/");
-                //console.log(response.data);
                 setTopSkills(response.data.topSkills);
                 setJobPositions(response.data.topCareerAreas);
                 setWorkModels(response.data.topWorkModels);
@@ -32,22 +31,55 @@ const TrendAnalysis = () => {
         fetchJobStats();
     }, []);
 
-	const COLORS = ['#0088FE', '#00C49F', '#FFBB28', '#FF8042', '#FF0000'];
+    const COLORS = [
+      '#1B6CA8',
+      '#2185D5',
+      '#4ECDC4',
+      '#FFD369',
+      '#FF8C42',
+      '#FF6B6B',
+      '#A86BD5',
+    ];
+
+    const cardBase = {
+        backgroundColor: "var(--card)",
+        border: `1px solid var(--accent1)`,
+        borderLeft: `4px solid var(--accent1)`,
+        borderRadius: "16px",
+        color: "var(--text)",
+        padding: "1.8rem",
+        height: "100%",
+        boxShadow: "0 4px 20px var(--shadow1)",
+        display: "flex",
+        flexDirection: "column",
+        justifyContent: "space-between",
+    };
 
   	return (
-  	  	<Container fluid className="p-4" style={{ color: 'white' }}>
+  	  	<Container fluid style={{ minHeight: "100vh", color: "var(--text)", padding: "3rem 2.5rem", overflowY: "auto" }}>
             <Row>
                 <Col md={8} className="mb-4">
-                    <Card style={{ backgroundColor: '#2d3748', border: '1px solid #4a5568', borderRadius: '1rem' }}>
+                    <Card style={cardBase}>
                         <Card.Body>
-                            <Card.Title as="h5" style={{ color: '#00ADB5' }}>Highest In-Demand Skills</Card.Title>
+                            <Card.Title as="h5" style={{ color: 'var(--accent2)', fontSize: "1.5rem", fontWeight: 600 }}>Highest In-Demand Skills</Card.Title>
                             <ResponsiveContainer width="100%" height={300}>
                                 <BarChart data={topSkills} margin={{ top: 20, right: 20, left: -10, bottom: 5 }}>
-                                    <CartesianGrid strokeDasharray="3 3" stroke="#4a5568" />
-                                    <XAxis dataKey="name" />
-                                    <YAxis />
-                                    <Tooltip cursor={{fill: 'rgba(255, 255, 255, 0.05)'}}/>
-                                    <Bar dataKey="count" fill="#00ADB5" name="Job Postings" />
+                                    <CartesianGrid strokeDasharray="3 3" stroke="var(--border)" />
+                                    <XAxis 
+                                        dataKey="name" 
+                                        tick={{ fill: 'var(--text)', fontSize: 12, fontWeight: 500 }}
+                                        axisLine={{ stroke: 'var(--border)' }} 
+                                    />
+                                    <YAxis 
+                                        tick={{ fill: 'var(--text)', fontSize: 12, fontWeight: 500 }}
+                                        axisLine={{ stroke: 'var(--border)' }} 
+                                    />
+                                    <Tooltip 
+                                        cursor={{ fill: 'var(--shadow2)' }}
+                                        contentStyle={{ backgroundColor: 'var(--card)', border: '1px solid var(--accent1)', color: 'var(--text)' }}
+                                        labelStyle={{ color: 'var(--accent1)' }}
+                                    />
+                                    <Bar dataKey="count" fill="var(--accent1)" name="Job Postings" />
                                 </BarChart>
                             </ResponsiveContainer>
                         </Card.Body>
@@ -55,9 +87,9 @@ const TrendAnalysis = () => {
                 </Col>
 
                 <Col md={4} className="mb-4">
-                    <Card style={{ backgroundColor: '#2d3748', border: '1px solid #4a5568', borderRadius: '1rem' }}>
+                    <Card style={cardBase}>
                         <Card.Body>
-                            <Card.Title as="h5" style={{ color: '#00ADB5' }}>Open Job Position Distribution</Card.Title>
+                            <Card.Title as="h5" style={{ color: 'var(--accent2)', fontSize: "1.5rem", fontWeight: 600 }}>Open Job Position Distribution</Card.Title>
                             <ResponsiveContainer width="100%" height={300}>
                                 <PieChart>
                                     <Pie data={jobPositions} cx="50%" cy="50%" labelLine={false} outerRadius={80} dataKey="count" nameKey="name" label>
@@ -77,9 +109,9 @@ const TrendAnalysis = () => {
             <Row>
                 {/* For Work Distribution */}
                 <Col md={4} className="mb-4">
-                    <Card style={{ backgroundColor: '#2d3748', border: '1px solid #4a5568', borderRadius: '1rem' }}>
+                    <Card style={cardBase}>
                         <Card.Body>
-                            <Card.Title as="h5" style={{ color: '#00ADB5' }}>Work Model Distribution</Card.Title>
+                            <Card.Title as="h5" style={{ color: 'var(--accent2)', fontSize: "1.5rem", fontWeight: 600 }}>Work Model Distribution</Card.Title>
                             <ResponsiveContainer width="100%" height={300}>
                                 <PieChart>
                                     <Pie data={workModels} cx="50%" cy="50%" labelLine={false} outerRadius={80} dataKey="count" nameKey="name" label>
@@ -97,9 +129,9 @@ const TrendAnalysis = () => {
 
                 {/* For Expereinece Levels */}
                 <Col md={4} className="mb-4">
-                    <Card style={{ backgroundColor: '#2d3748', border: '1px solid #4a5568', borderRadius: '1rem' }}>
+                    <Card style={cardBase}>
                         <Card.Body>
-                            <Card.Title as="h5" style={{ color: '#00ADB5' }}>Experience Level Distribution</Card.Title>
+                            <Card.Title as="h5" style={{ color: 'var(--accent2)', fontSize: "1.5rem", fontWeight: 600 }}>Experience Level Distribution</Card.Title>
                             <ResponsiveContainer width="100%" height={300}>
                                 <PieChart>
                                     <Pie data={experienceLevels} cx="50%" cy="50%" labelLine={false} outerRadius={80} dataKey="count" nameKey="name" label>
@@ -117,9 +149,9 @@ const TrendAnalysis = () => {
 
                 {/* For Employment Types */}
                 <Col md={4} className="mb-4">
-                    <Card style={{ backgroundColor: '#2d3748', border: '1px solid #4a5568', borderRadius: '1rem' }}>
+                    <Card style={cardBase}>
                         <Card.Body>
-                            <Card.Title as="h5" style={{ color: '#00ADB5' }}>Employment Type Distribution</Card.Title>
+                            <Card.Title as="h5" style={{ color: 'var(--accent2)', fontSize: "1.5rem", fontWeight: 600 }}>Employment Type Distribution</Card.Title>
                             <ResponsiveContainer width="100%" height={300}>
                                 <PieChart>
                                     <Pie data={employmentTypes} cx="50%" cy="50%" labelLine={false} outerRadius={80} dataKey="count" nameKey="name" label>

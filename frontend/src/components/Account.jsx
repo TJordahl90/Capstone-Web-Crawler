@@ -279,7 +279,6 @@ const Account = () => {
         borderRadius: "5px",
         color: "var(--text)",
         fontSize: "1.1rem",
-        marginLeft: "10px",
         fontWeight: 600,
     };
 
@@ -323,7 +322,7 @@ const Account = () => {
                                 </Col>
                                 <Col xs={12} md={9}>
                                     <div className="d-flex justify-content-between align-items-start">
-                                        <div>
+                                        <div style={{ display: "flex", flexWrap: "wrap", gap: "8px" }}>
                                             {accountData.experienceLevels.length > 0 && accountData.experienceLevels.map((exp) => (
                                                 <span style={chipStyle}>{exp}</span>
                                             ))}
@@ -353,7 +352,7 @@ const Account = () => {
                                 </Col>
                                 <Col xs={12} md={9}>
                                     <div className="d-flex justify-content-between align-items-start">
-                                        <div style={{ color: "var(--text3)" }}>
+                                        <div style={{ display: "flex", flexWrap: "wrap", gap: "8px" }}>
                                             {accountData.careers.length > 0 ? accountData.careers.map((career) => (
                                                 <span style={chipStyle}>{career}</span>
                                             )) : "No career fields selected yet."}
@@ -377,7 +376,7 @@ const Account = () => {
                                 </Col>
                                 <Col xs={12} md={9}>
                                     <div className="d-flex justify-content-between align-items-start">
-                                        <div style={{ color: "var(--text3)" }}>
+                                        <div style={{ display: "flex", flexWrap: "wrap", gap: "8px" }}>
                                             {accountData.skills.length > 0 ? accountData.skills.map((skill) => (
                                                 <span style={chipStyle}>{skill}</span>
                                             )) : "No skills selected yet."}
@@ -449,7 +448,7 @@ const Account = () => {
                         </div>
 
                         {hasUnsavedChanges && (
-                            <div className="mt-4 p-3 text-end" style={{ backgroundColor: "var(--card)", borderRadius: "12px" }}>
+                            <div className="mt-4 p-3 text-end" style={{ display: "inline-block", }}>
                                 <Button style={{ backgroundColor: "var(--accent1)", border: "none" }} className="me-2" onClick={fetchAccountData}>Discard Changes</Button>
                                 <Button style={{ backgroundColor: "var(--accent1)", border: "none" }} onClick={handleSaveAllChanges}>Save All Changes</Button>
                             </div>
@@ -462,7 +461,7 @@ const Account = () => {
             {/* The modals below are for editing user selections */}
             {/* ----------------------------------------------------------------------------- */}
             {editPersonalInfo && <Modal show={editPersonalInfo} onHide={() => setEditPersonalInfo(false)}>
-                <Modal.Header closeButton><Modal.Title style={{ color: "#05e3ed" }}>Edit Personal Info</Modal.Title></Modal.Header>
+                <Modal.Header closeButton><Modal.Title>Edit Personal Info</Modal.Title></Modal.Header>
                 <Modal.Body>
                     <Form onSubmit={handlePersonalInfo}>
                         <InputField label="First Name" value={accountData.firstName} onChange={(e) => setAccountData({...accountData, firstName: e.target.value})} />
@@ -475,7 +474,7 @@ const Account = () => {
             </Modal>}
 
             {editPreferences && <Modal show={editPreferences} onHide={() => setEditPreferences(false)}>
-                <Modal.Header closeButton><Modal.Title style={{ color: "#05e3ed" }}>Edit Job Preferences</Modal.Title></Modal.Header>
+                <Modal.Header closeButton><Modal.Title style={modalStyle.button}>Edit Job Preferences</Modal.Title></Modal.Header>
                 <Modal.Body>
                     <Form onSubmit={handlePreferences}>             
                         <h6>Experience Level</h6>
