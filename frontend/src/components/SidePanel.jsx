@@ -27,6 +27,7 @@ const SidePanel = ({ children, user, handleLogout }) => {
         localStorage.clear();
         navigate("/");
     };
+    
     const navItems = [
         { icon: <FaThLarge />, href: "/dashboard", key: "dashboard", label: "Dashboard" },
         { icon: <FaBriefcase />, href: "/find-jobs", key: "jobs", label: "Explore Jobs" },
@@ -35,13 +36,7 @@ const SidePanel = ({ children, user, handleLogout }) => {
         { icon: <FaChartBar />, href: "/trend-analysis", key: "trends", label: "Job Trends" },
 
     ].concat(
-        userEffective
-            ? [
-                { icon: <FaUserCircle />, href: "/account", key: "account", label: "Profile" },
-                { icon: <FaFileAlt />, href: "/documents", key: "documents", label: "Documents" },
-                { icon: <FaSignOutAlt />, key: "logout",      label: "Log Out", onClick: handleLogoutInternal },
-            ]
-            : []
+        userEffective ? [ { icon: <FaSignOutAlt />, key: "logout",      label: "Log Out", onClick: handleLogoutInternal } ]: []
     );
 
     const currentPath = location.pathname; // need to implement - highlight button on current page

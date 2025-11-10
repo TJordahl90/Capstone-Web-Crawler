@@ -4,7 +4,6 @@ import { FaPencilAlt, FaPlus, FaTrash } from "react-icons/fa";
 import profile from "../assets/profile.png";
 import InputField from './InputField';
 import api from '../api.js';
-import { useTheme } from "./ThemeContext";
 
 const Account = () => {
     // Displays messages to user
@@ -57,8 +56,6 @@ const Account = () => {
         experience: []
     });
 
-    // Theme
-    const { currentTheme, switchTheme } = useTheme();
 
     // -------------------------------------------------------------
     // fetch all the keywords from database to limit user selections
@@ -314,61 +311,6 @@ const Account = () => {
                                     <p className="lead">{accountData.hometown}</p>
                                 </div>
                                 <FaPencilAlt onClick={() => setEditPersonalInfo(true)} style={iconStyle} />
-                            </div>
-                        </div>
-
-                        {/* Display / Theme Section */}
-                        <div
-                            className="text-start p-4 mb-4"
-                            style={{
-                                backgroundColor: "var(--card)",
-                                borderRadius: "12px",
-                                border: `1px solid var(--accent1)`,
-                                borderLeft: `4px solid var(--accent1)`
-                            }}
-                        >
-                            <div className="d-flex justify-content-between align-items-center">
-                                <h5 style={{ fontWeight: 600, fontSize: "1.5rem" }}>Display</h5>
-
-                                {/* Toggle style: switch OR two buttons — pick one */}
-
-                                {/* (1) Switch style */}
-                                <Form.Check
-                                    type="switch"
-                                    id="theme-switch"
-                                    label={currentTheme === "dark" ? "Dark Mode" : "Light Mode"}
-                                    checked={currentTheme === "dark"}
-                                    onChange={(e) => switchTheme(e.target.checked ? "dark" : "light")}
-                                    style={{ fontWeight: 600 }}
-                                />
-
-                                {/* (2) Or Buttons style (comment the switch above if you prefer this) */}
-                                {false && (
-                                    <div className="d-flex align-items-center" style={{ gap: "8px" }}>
-                                        <Button
-                                            size="sm"
-                                            style={{
-                                                backgroundColor: currentTheme === "light" ? "var(--accent1)" : "transparent",
-                                                color: currentTheme === "light" ? "var(--text)" : "var(--text)",
-                                                border: "1px solid var(--accent1)"
-                                            }}
-                                            onClick={() => switchTheme("light")}
-                                        >
-                                            Light
-                                        </Button>
-                                        <Button
-                                            size="sm"
-                                            style={{
-                                                backgroundColor: currentTheme === "dark" ? "var(--accent1)" : "transparent",
-                                                color: currentTheme === "dark" ? "var(--text)" : "var(--text)",
-                                                border: "1px solid var(--accent1)"
-                                            }}
-                                            onClick={() => switchTheme("dark")}
-                                        >
-                                            Dark
-                                        </Button>
-                                    </div>
-                                )}
                             </div>
                         </div>
 

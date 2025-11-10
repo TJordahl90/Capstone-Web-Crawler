@@ -2,9 +2,6 @@ import React, { useRef, useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { Container, Row, Col, Form, Nav, ListGroup, Card, Button, Badge, ProgressBar, Spinner, Offcanvas, Modal } from "react-bootstrap";
 import { FaBookmark, FaRegBookmark, FaPaperPlane, FaComments, FaSearch, FaRobot, FaBriefcase, FaMapMarkerAlt, FaClock, FaStar, FaRegStar, FaFilter, FaMoneyBill, FaChevronLeft, FaChevronRight } from "react-icons/fa";
-import fugetec from "../assets/FugeTechnologies.jpg";
-import texasIns from "../assets/TexasInstruments.jpg";
-import lockheed from "../assets/LockheedMartin.jpg";
 import api from "../api.js";
 
 const FindJobs = ({ jobPostTypeProp }) => {
