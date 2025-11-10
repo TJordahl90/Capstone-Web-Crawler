@@ -71,7 +71,15 @@ const AuthForm = ({ isLogin }) => {
                 navigate("/verification", { state: { email: formData.email } });
             }
             catch (err) {
-                setError(err.response?.data?.error || "Error registering acccount.");
+                const errorData = err.response?.data;
+                let message = "Something went wrong.";
+
+                if (typeof errorData === "string") message = errorData;
+                else if (typeof errorData?.error === "string") message = errorData.error;
+                else if (errorData?.message) message = errorData.message;
+                else if (errorData?.details) message = JSON.stringify(errorData.details);
+
+                setError(message);
                 setLoading(false);
             }
         }
@@ -88,8 +96,17 @@ const AuthForm = ({ isLogin }) => {
                     setMessage("Login successful!");
                     setTimeout(() => navigate("/dashboard"), 1000);
                 }
-            } catch (err) {
-                setError(err.response?.data?.error || "Something went wrong.");
+            } 
+            catch (err) {
+                const errorData = err.response?.data;
+                let message = "Something went wrong.";
+                        
+                if (typeof errorData === "string") message = errorData;
+                else if (typeof errorData?.error === "string") message = errorData.error;
+                else if (errorData?.message) message = errorData.message;
+                else if (errorData?.details) message = JSON.stringify(errorData.details);
+                        
+                setError(message);
                 setLoading(false);
             }
 
