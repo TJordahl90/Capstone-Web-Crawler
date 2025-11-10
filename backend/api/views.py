@@ -329,8 +329,12 @@ def JobSearchingView(request):
 @permission_classes([AllowAny])
 def AllJobsView(request):
     """Returns all available jobs"""
+
+    searchTerm = request.GET.get('search', '').strip()
+
     filters = request.data.get("filters", {}) # need to implement
-    
+    print(f'filters: {filters}')
+    print(f'search: {searchTerm}')
     page_number = request.data.get("page", 1)
 
     jobs = JobPosting.objects.order_by('-id').prefetch_related(
@@ -342,6 +346,13 @@ def AllJobsView(request):
         'workModels'
     )
     
+    if(searchTerm):
+        jobs = jobs.filter(
+            Q(title__icontains=searchTerm) |
+            Q(company__icontains=searchTerm) |
+            Q(skills__name__icontains=searchTerm)
+        ).distinct()
+
     #print(filters)
     #Filter if necessary by each field
     if(filters.get('employmentType')):
@@ -359,6 +370,7 @@ def AllJobsView(request):
     paginated_jobs = jobs[start:end]
     
     serializedJobs = JobPostingSerializer(paginated_jobs, many=True, context={'request': request}).data
+    #print(serializedJobs)
     return Response({'count': total_count, 'jobs': serializedJobs}, status=200)
 
 class BookmarkJobView(APIView):

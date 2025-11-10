@@ -1,6 +1,7 @@
 # Use this file to match users to jobs
 from api.models import Account, JobPosting
 from django.db.models import Q, Prefetch
+from rest_framework.response import Response
 
 def matchUsersToJobs(account):
     expLevels = set(account.experienceLevels.values_list('id', flat=True))
@@ -55,7 +56,7 @@ def matchUsersToJobs(account):
 def searchForJobs(preference):
     search = preference.strip().lower() # Take input and strip spaces off ends. Lowercase if necessary
 
-    jobIds = set(JobPosting.objects.filter(
+    jobIds = list(JobPosting.objects.filter(
                                             Q(title__icontains=search) | Q(company__icontains=search)
                                            ).values_list('id', flat=True)) # This is more efficient. flat=True returns a 'flat' array instead of an array of tuples
 

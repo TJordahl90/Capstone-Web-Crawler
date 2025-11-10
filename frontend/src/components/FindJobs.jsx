@@ -947,51 +947,55 @@ const FindJobs = ({ jobPostTypeProp }) => {
 
                 <Offcanvas.Body>
                     <h6 className="mb-2">Employment Type</h6>
-                    <Form.Check type="checkbox" label="Full-Time" value="full-time"
-                        checked={filters.employmentType.includes("full-time")}
-                        onChange={() => toggleFilter("employmentType", "full-time")}
+                    <Form.Check type="checkbox" label="Full-Time" value="Full-Time"
+                        checked={filters.employmentType.includes("Full-Time")}
+                        onChange={() => toggleFilter("employmentType", "Full-Time")}
                     />
-                    <Form.Check type="checkbox" label="Part-Time" value="part-time"
-                        checked={filters.employmentType.includes("part-time")}
-                        onChange={() => toggleFilter("employmentType", "part-time")}
+                    <Form.Check type="checkbox" label="Part-Time" value="Part-Time"
+                        checked={filters.employmentType.includes("Part-Time")}
+                        onChange={() => toggleFilter("employmentType", "Part-Time")}
                     />
                     <hr />
 
                     <h6 className="mb-2">Experience Level</h6>
-                    <Form.Check type="checkbox" label="Internship" value="intern"
-                        checked={filters.experienceLevel.includes("intern")}
-                        onChange={() => toggleFilter("experienceLevel", "intern")}
+                    <Form.Check type="checkbox" label="Internship" value="Intern"
+                        checked={filters.experienceLevel.includes("Intern")}
+                        onChange={() => toggleFilter("experienceLevel", "Intern")}
                     />
-                    <Form.Check type="checkbox" label="Junior Level" value="junior"
-                        checked={filters.experienceLevel.includes("junior")}
-                        onChange={() => toggleFilter("experienceLevel", "junior")}
+                    <Form.Check type="checkbox" label="Entry Level" value="Entry"
+                        checked={filters.experienceLevel.includes("Entry")}
+                        onChange={() => toggleFilter("experienceLevel", "Entry")}
                     />
-                    <Form.Check type="checkbox" label="Entry Level" value="entry"
-                        checked={filters.experienceLevel.includes("entry")}
-                        onChange={() => toggleFilter("experienceLevel", "entry")}
+                    <Form.Check type="checkbox" label="Mid Level" value="Mid"
+                        checked={filters.experienceLevel.includes("Mid")}
+                        onChange={() => toggleFilter("experienceLevel", "Mid")}
                     />
-                    <Form.Check type="checkbox" label="Mid Level" value="mid"
-                        checked={filters.experienceLevel.includes("mid")}
-                        onChange={() => toggleFilter("experienceLevel", "mid")}
+                    <Form.Check type="checkbox" label="Senior Level" value="Senior"
+                        checked={filters.experienceLevel.includes("Senior")}
+                        onChange={() => toggleFilter("experienceLevel", "Senior")}
                     />
-                    <Form.Check type="checkbox" label="Senior Level" value="senior"
-                        checked={filters.experienceLevel.includes("senior")}
-                        onChange={() => toggleFilter("experienceLevel", "senior")}
+                    <Form.Check type="checkbox" label="Lead" value="Lead"
+                        checked={filters.experienceLevel.includes("Lead")}
+                        onChange={() => toggleFilter("experienceLevel", "Lead")}
+                    />
+                    <Form.Check type="checkbox" label="Management" value="Management"
+                        checked={filters.experienceLevel.includes("Management")}
+                        onChange={() => toggleFilter("experienceLevel", "Management")}
                     />
                     <hr />
 
                     <h6 className="mb-2">Location</h6>
-                    <Form.Check type="checkbox" label="Remote" value="remote"
-                        checked={filters.location.includes("remote")}
-                        onChange={() => toggleFilter("location", "remote")}
+                    <Form.Check type="checkbox" label="Remote" value="Remote"
+                        checked={filters.location.includes("Remote")}
+                        onChange={() => toggleFilter("location", "Remote")}
                     />
-                    <Form.Check type="checkbox" label="On-Site" value="on-site"
-                        checked={filters.location.includes("on-site")}
-                        onChange={() => toggleFilter("location", "on-site")}
+                    <Form.Check type="checkbox" label="On-site" value="On-site"
+                        checked={filters.location.includes("On-site")}
+                        onChange={() => toggleFilter("location", "On-site")}
                     />
-                    <Form.Check type="checkbox" label="Hybrid" value="hybrid"
-                        checked={filters.location.includes("hybrid")}
-                        onChange={() => toggleFilter("location", "hybrid")}
+                    <Form.Check type="checkbox" label="Hybrid" value="Hybrid"
+                        checked={filters.location.includes("Hybrid")}
+                        onChange={() => toggleFilter("location", "Hybrid")}
                     />
                     <hr />
 
@@ -1009,7 +1013,7 @@ const FindJobs = ({ jobPostTypeProp }) => {
                         onChange={() => toggleFilter("datePosted", "30-days")}
                     />
                 </Offcanvas.Body>
-
+                
                 <div className="filters-actions"
                     style={{ background: "var(--shadow2)" }}>
                     <Button className="btn-outline-theme" onClick={clearAllFilters}>Clear</Button>
