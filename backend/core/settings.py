@@ -120,6 +120,8 @@ REST_FRAMEWORK = {
     'DEFAULT_PERMISSION_CLASSES': [
         'rest_framework.permissions.IsAuthenticated'
     ],
+    'DATE_FORMAT': '%m/%d/%Y %H:%M:%S',
+    'DATE_FORMAT':  '%m/%d/%y'
 }
 
 # Internationalization
