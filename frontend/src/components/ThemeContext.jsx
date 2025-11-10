@@ -16,7 +16,7 @@ const themes = {
 
         shadow1: "rgba(0, 0, 0, 0.15)", // light-mode drop shadow
         shadow2: "rgba(0, 0, 0, 0.05)", // lighter elevation
-
+        shadow3: "rgba(255, 255, 255, 0.2)",
     },
     dark: {
         background: "#303841",
@@ -33,6 +33,7 @@ const themes = {
 
         shadow1: "rgba(0, 0, 0, 0.4)",
         shadow2: "rgba(0, 0, 0, 0.1)",
+        shadow3: "rgba(255, 255, 255, 0.2)",
     }
 };
 

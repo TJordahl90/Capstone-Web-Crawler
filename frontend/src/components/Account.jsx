@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useCallback } from "react";
-import { Container, Button, Form, Modal, Badge, Alert, Col, Row, Image, Dropdown } from "react-bootstrap";
+import { Container, Button, Form, Modal, Badge, Alert, Col, Row, Image, Dropdown, Spinner } from "react-bootstrap";
 import { FaPencilAlt, FaPlus, FaTrash } from "react-icons/fa";
 import profile from "../assets/profile.png";
 import InputField from './InputField';
@@ -40,6 +40,7 @@ const Account = () => {
     // Misc. states
     const [hasUnsavedChanges, setHasUnsavedChanges] = useState(false);
     const [searchQuery, setSearchQuery] = useState("");
+    const [loading, setLoading] = useState(true);
 
     // Data that will be saved
     const [accountData, setAccountData] = useState({
@@ -71,6 +72,8 @@ const Account = () => {
                 setWorkModelKeywordList(workModels)
             } catch (err) {
                 setError("Error retrieving account keywords.");
+            } finally {
+                setLoading(false);
             }
         };
         fetchDatabaseKeywords();
@@ -289,6 +292,21 @@ const Account = () => {
         color: "var(--text)",
         flexShrink: 0,
         marginLeft: '1rem',
+    }
+    
+    if (loading) {
+        return (
+            <div style={{ height: "100vh", backgroundColor: "var(--background)", display: "flex", justifyContent: "center", alignItems: "center", flexDirection: "column", color: "var(--text)" }}>
+                <Spinner 
+                    animation="border" 
+                    role="status" 
+                    style={{ width: "4rem", height: "4rem" }} 
+                />
+                <p style={{ marginTop: "1rem", fontSize: "1.1rem" }}>
+                    Loading your profile...
+                </p>
+            </div>
+        );
     }
 
     return (

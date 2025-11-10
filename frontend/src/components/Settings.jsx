@@ -28,12 +28,14 @@ const Settings = () => {
 
     return (
         <Container className="mt-5 text-center">
-            <h2 className="mb-4">Settings</h2>
+            <h2 className="mb-4"
+            style ={{color:"var(--text)"}}>Settings</h2>
 
             {/* Display / Theme Section */}
                 <div
                     className="text-start p-4 mb-4"
                     style={{
+                        color: "var(--text)",
                         backgroundColor: "var(--card)",
                         borderRadius: "12px",
                         border: `1px solid var(--accent1)`,
