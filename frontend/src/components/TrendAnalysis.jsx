@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
-import { Card, Container, Row, Col } from "react-bootstrap";
-import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer, PieChart, Pie, Cell} from "recharts";
+import { Card, Container, Row, Col, Spinner } from "react-bootstrap";
+import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer, PieChart, Pie, Cell } from "recharts";
 import api from "../api.js";
 
 const TrendAnalysis = () => {
@@ -9,11 +9,11 @@ const TrendAnalysis = () => {
     const [workModels, setWorkModels] = useState([]);
     const [experienceLevels, setExperienceLevels] = useState([]);
     const [employmentTypes, setEmploymentTypes] = useState([]);
+    const [loading, setLoading] = useState(true);
     const [err, setError] = useState("");
 
 	useEffect(() => {
         const fetchJobStats = async() =>{
-	
             try{
                 const response = await api.get("/job_statistics/");
                 setTopSkills(response.data.topSkills);
@@ -26,6 +26,9 @@ const TrendAnalysis = () => {
             catch (err) {
                 console.error("Error details:", err);
                 setError(err.response?.data?.error || "Failed to get job data");
+            }
+            finally {
+                setLoading(false);
             }
         };     
         fetchJobStats();
@@ -54,6 +57,21 @@ const TrendAnalysis = () => {
         flexDirection: "column",
         justifyContent: "space-between",
     };
+    
+    if (loading) {
+        return (
+            <div style={{ height: "100vh", backgroundColor: "var(--background)", display: "flex", justifyContent: "center", alignItems: "center", flexDirection: "column", color: "var(--text)" }}>
+                <Spinner 
+                    animation="border" 
+                    role="status" 
+                    style={{ width: "4rem", height: "4rem" }} 
+                />
+                <p style={{ marginTop: "1rem", fontSize: "1.1rem" }}>
+                    Loading trends...
+                </p>
+            </div>
+        );
+    }
 
   	return (
   	  	<Container fluid style={{ minHeight: "100vh", color: "var(--text)", padding: "3rem 2.5rem", overflowY: "auto" }}>
