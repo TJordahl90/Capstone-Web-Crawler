@@ -93,7 +93,7 @@ const AuthForm = ({ isLogin }) => {
                     backgroundColor: "var(--card)",
                     border: `1px solid var(--accent1)`,
                     borderRadius: "20px",
-                    padding: "2.5rem",
+                    padding: "0.7rem 2.5rem",
                     width: "100%",
                     maxWidth: "480px",
                     boxShadow: "0 6px 30px var(--shadow1)",

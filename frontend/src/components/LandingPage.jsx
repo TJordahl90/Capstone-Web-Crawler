@@ -90,17 +90,17 @@ const LandingPage = () => {
             fontWeight: "bold",
             cursor: "pointer",
             color: "white",
-            backgroundColor: "rgba(0, 173, 181, 0.3)",
+            backgroundColor: "rgba(26, 120, 228, 0.3)",
             border: "2px solid var(--border)",
             backdropFilter: "blur(6px)",
             transition: "0.3s ease",
           }}
           onMouseEnter={(e) => {
-            e.currentTarget.style.backgroundColor = "#00ADB5";
+            e.currentTarget.style.backgroundColor = "var(--accent1)";
             e.currentTarget.style.color = "#fff";
           }}
           onMouseLeave={(e) => {
-            e.currentTarget.style.backgroundColor = "rgba(0, 173, 181, 0.3)";
+            e.currentTarget.style.backgroundColor = "rgba(26, 120, 228, 0.3)";
             e.currentTarget.style.color = "white";
           }}
         >
@@ -119,17 +119,17 @@ const LandingPage = () => {
             fontWeight: "bold",
             cursor: "pointer",
             color: "white",
-            backgroundColor: "rgba(0, 173, 181, 0.3)",
+            backgroundColor: "rgba(26, 120, 228, 0.3)",
             border: "2px solid var(--border)",
             backdropFilter: "blur(6px)",
             transition: "0.3s ease",
           }}
           onMouseEnter={(e) => {
-            e.currentTarget.style.backgroundColor = "#00ADB5";
+            e.currentTarget.style.backgroundColor = "var(--accent1)";
             e.currentTarget.style.color = "#fff";
           }}
           onMouseLeave={(e) => {
-            e.currentTarget.style.backgroundColor = "rgba(0, 173, 181, 0.3)";
+            e.currentTarget.style.backgroundColor = "rgba(26, 120, 228, 0.3)";
             e.currentTarget.style.color = "white";
           }}
         >
@@ -160,7 +160,7 @@ const LandingPage = () => {
               className="find-jobs-btn"
               onClick={() => navigate("/find-jobs")}
               style={{
-                backgroundColor: "rgba(0, 173, 181, 0.3)",
+                backgroundColor: "rgba(26, 120, 228, 0.3)",
                 color: "white",
                 fontSize: "18px",
                 fontWeight: "bold",
@@ -173,15 +173,15 @@ const LandingPage = () => {
                 WebkitBackdropFilter: "blur(6px)",
               }}
               onMouseEnter={(e) => {
-                e.currentTarget.style.backgroundColor = "#00ADB5";
+                e.currentTarget.style.backgroundColor = "var(--accent1)";
                 e.currentTarget.style.color = "#fff";
               }}
               onMouseLeave={(e) => {
-                e.currentTarget.style.backgroundColor = "rgba(0, 173, 181, 0.3)";
+                e.currentTarget.style.backgroundColor = "rgba(26, 120, 228, 0.3)";
                 e.currentTarget.style.color = "white";
               }}
             >
-              Find Jobs
+              Northstar Jobs
             </button>
 
           </Col>
@@ -213,7 +213,7 @@ const LandingPage = () => {
                 <i className="bi bi-search fs-3 text-primary"></i>
               </div>
               <h4 className="mb-3"
-                style={{ color: "#00ADB5" }}>Smart Job Matching</h4>
+                style={{ color: "var(--accent1)" }}>Smart Job Matching</h4>
               <p className="text-gray">Our job matching algorithms connect you with the perfect opportunities based on your skills and preferences.</p>
             </div>
           </Col>
@@ -224,7 +224,7 @@ const LandingPage = () => {
                 <i className="bi bi-graph-up fs-3 text-primary"></i>
               </div>
               <h4 className="mb-3"
-                style={{ color: "#00ADB5" }}>Career Growth</h4>
+                style={{ color: "var(--accent1)" }}>Career Growth</h4>
               <p
                 className="text-gray">Access resources and tools designed to help you advance in your professional journey.</p>
             </div>
@@ -236,7 +236,7 @@ const LandingPage = () => {
                 <i className="bi bi-building fs-3 text-primary"></i>
               </div>
               <h4 className="mb-3"
-                style={{ color: "#00ADB5" }}>Top Companies</h4>
+                style={{ color: "var(--accent1)" }}>Top Companies</h4>
               <p className="text-gray">Connect with industry-leading companies looking for talent like yours.</p>
             </div>
           </Col>
@@ -263,18 +263,18 @@ const LandingPage = () => {
               size="lg"
               className="rounded-pill px-5 py-3 fw-bold"
               style={{
-                backgroundColor: "rgba(0, 173, 181, 0.3)",
+                backgroundColor: "rgba(26, 120, 228, 0.3)",
                 color: "white",
                 border: "2px solid var(--border)",
                 backdropFilter: "blur(6px)",
                 transition: "0.3s ease",
               }}
               onMouseEnter={(e) => {
-                e.currentTarget.style.backgroundColor = "#00ADB5";
+                e.currentTarget.style.backgroundColor = "var(--accent1)";
                 e.currentTarget.style.color = "#fff";
               }}
               onMouseLeave={(e) => {
-                e.currentTarget.style.backgroundColor = "rgba(0, 173, 181, 0.3)";
+                e.currentTarget.style.backgroundColor = "rgba(26, 120, 228, 0.3)";
                 e.currentTarget.style.color = "white";
               }}
               onClick={() => navigate("/register")}
