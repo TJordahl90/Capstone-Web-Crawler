@@ -1,7 +1,9 @@
 import React, { useRef, useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { Container, Row, Col, Form, Nav, ListGroup, Card, Button, Badge, ProgressBar, Spinner, Offcanvas, Modal } from "react-bootstrap";
-import { FaBookmark, FaRegBookmark, FaPaperPlane, FaComments, FaSearch, FaRobot, FaBriefcase, FaMapMarkerAlt, FaClock, FaStar, FaRegStar, FaFilter, FaMoneyBill, FaChevronLeft, FaChevronRight } from "react-icons/fa";
+import { FaBookmark, FaRegBookmark, FaPaperPlane, FaComments, FaSearch, FaRobot, FaBriefcase, FaMapMarkerAlt, FaClock, FaCompass, FaFilter, FaMoneyBill, FaChevronLeft, FaChevronRight, FaBuilding } from "react-icons/fa";
+import { formatDistanceToNow } from "date-fns";
+import { motion } from "framer-motion";
 import api from "../api.js";
 
 const FindJobs = ({ jobPostTypeProp }) => {
@@ -271,12 +273,21 @@ const FindJobs = ({ jobPostTypeProp }) => {
         return () => window.removeEventListener("resize", handleResize);
     }, []);
 
+    
+    //-----------------------------------------------------
     // Renders each of the job listings in the left sidebar
     const renderJobItem = (job) => {
+        const isSelected = selectedJob?.id === job.id;
+        const isHovered = hoveredJobId === job.id;
+    
+        const date = new Date(job.datePosted);
+        const safeDate = date > new Date() ? new Date() : date;
+        const timeAgo = formatDistanceToNow(safeDate, { addSuffix: true });
+    
         return (
             <div
                 key={job.id}
-                className={`border-bottom p-2 pe-0 job-list-item`}
+                className="border-bottom p-3 job-list-item"
                 onClick={() => {
                     setSelectedJob(job);
                     if (windowWidth <= 770) setShowDetailsMobile(true);
@@ -284,97 +295,149 @@ const FindJobs = ({ jobPostTypeProp }) => {
                 onMouseEnter={() => setHoveredJobId(job.id)}
                 onMouseLeave={() => setHoveredJobId(null)}
                 style={{
-                    cursor: 'pointer',
+                    cursor: "pointer",
                     width: "100%",
-                    minWidth: 0,
-                    overflow: "hidden",
-                    backgroundColor: selectedJob?.id === job.id
-                        ? "var(--shadow1)"
+                    backgroundColor: isSelected
+                        ? "rgba(33, 133, 213, 0.2)"
+                        : isHovered
+                        ? "rgba(255, 255, 255, 0.08)"
                         : "transparent",
-                    transition: "background-color 0.25s ease"
+                    borderLeft: isSelected
+                        ? "3px solid var(--accent1)"
+                        : "3px solid transparent",
+                    boxShadow: isHovered
+                        ? "0 0 8px rgba(33,133,213,0.3)"
+                        : "none",
+                    transition: "background-color 0.25s ease, border 0.25s ease, box-shadow 0.25s ease",
                 }}
             >
-                <div
-                    className="d-flex align-items-start gap-2"
-                    style={{ width: "100%" }}
+                <motion.div
+                    layout
+                    whileHover={{ y: -3, scale: 1.01 }}
+                    transition={{ duration: 0.25, ease: "easeOut" }}
+                    className="d-flex flex-column gap-2"
                 >
-                    {/* LOGO BOX */}
-                    {showLogo && job.logoURL && (
-                        <div
-                            style={{
-                                borderRadius: "1px",
-                                marginTop: "10px",
-                                display: "flex",
-                                alignItems: "center",
-                                justifyContent: "center",
-                                width: "50px",
-                                height: "50px",
-                                flexShrink: 0,
-                                boxShadow: "1.95px 1.95px 2.6px rgba(0, 0, 0, 0.47)",
-                            }}
-                        >
-                            <img
-                                src={job.logoURL}
-                                alt={`${job.company} logo`}
-                                className="company-logo"
+                    {/* Logo + Title + Company */}
+                    <div className="d-flex align-items-start gap-2">
+                        {showLogo && (
+                            <motion.div
                                 style={{
                                     width: "50px",
                                     height: "50px",
-                                    objectFit: "contain",
+                                    flexShrink: 0,
+                                    display: "flex",
+                                    alignItems: "center",
+                                    justifyContent: "center",
+                                    backgroundColor: "rgba(255, 255, 255, 0.08)",
+                                    border: "1px solid var(--border)",
+                                    borderRadius: "8px",
+                                    overflow: "hidden",
                                 }}
-                            />
+                            >
+                                {job.logoURL ? (
+                                    <img
+                                        src={job.logoURL}
+                                        alt={`${job.company} logo`}
+                                        onError={(e) => (e.target.style.display = "none")}
+                                        style={{
+                                            width: "75%",
+                                            height: "75%",
+                                            objectFit: "contain",
+                                            filter: "drop-shadow(0 1px 1px rgba(0, 0, 0, 0.4))",
+                                        }}
+                                    />
+                                ) : (
+                                    <FaBuilding size={26} color="var(--text)" />
+                                )}
+                            </motion.div>
+                        )}
+
+                        <div style={{ flexGrow: 1, minWidth: 0 }}>
+                            <motion.h5
+                                className="mb-1"
+                                style={{
+                                    fontSize: "1rem",
+                                    color: isSelected
+                                        ? "var(--accent2)"
+                                        : "var(--text)",
+                                    fontWeight: 600,
+                                    transition: "color 0.25s ease",
+                                }}
+                            >
+                                {job.title}
+                            </motion.h5>
+                            
+                            <motion.p
+                                style={{
+                                    fontSize: "0.9rem",
+                                    color: isSelected
+                                        ? "var(--accent1)"
+                                        : "var(--text)",
+                                    margin: 0,
+                                }}
+                            >
+                                {job.company}
+                            </motion.p>
+                        </div>
+                    </div>
+                            
+                    {/* Skills */}
+                    {job.skills && job.skills.length > 0 && (
+                        <div className="d-flex flex-wrap gap-1 mt-1" style={{ rowGap: "10px" }}>
+                            {job.skills.slice(0, 3).map((skill, index) => (
+                                <motion.div
+                                    key={index}
+                                    style={{ display: "inline-flex" }}
+                                    initial={{ opacity: 0, y: 5 }}
+                                    animate={{ opacity: 1, y: 0 }}
+                                    transition={{ delay: index * 0.08, duration: 0.25 }}
+                                >
+                                    <span
+                                        style={{
+                                            backgroundColor: "rgba(255, 255, 255, 0.08)",
+                                            border: "1px solid var(--border)",
+                                            color: "var(--text)",
+                                            fontSize: "0.8rem",
+                                            borderRadius: "4px",
+                                            padding: "4px 10px",
+                                            fontWeight: 600,
+                                        }}
+                                    >
+                                        {skill.name || skill}
+                                    </span>
+                                </motion.div>
+                            ))}
                         </div>
                     )}
-
-                    {/* TEXT BOX */}
-                    <div
-                        style={{
-                            flexGrow: 1,
-                            borderRadius: "12px",
-                            padding: "8px 8px",
-                            minWidth: 0,
-                        }}
-                    >
-                        <h5
-                            className="mb-1"
-
-                            style={{
-                                fontSize: "1rem",
-                                color: "var(--accent1)",
-                                textDecoration: hoveredJobId === job.id ? "underline" : "none",
-                                textUnderlineOffset: hoveredJobId === job.id ? "3px" : undefined,
-                                textDecorationThickness: hoveredJobId === job.id ? "2px" : undefined,
-                            }}
-                        >
-                            {job.title}
-                        </h5>
-                        <p className="mb-0"
-                            style={{ fontSize: "0.9rem", color: "var(--text)" }}> {job.company} </p>
+    
+                    {/* Time + Match */}
+                    <div className="d-flex justify-content-between align-items-center mt-2">
+                        <small style={{ color: "var(--text)", fontSize: "0.85rem" }}>
+                            {timeAgo || "Recently posted"}
+                        </small>
+                
+                        {jobPostType === "matched" && (
+                            <span
+                                style={{
+                                    backgroundColor: "var(--accent3)",
+                                    color: "var(--text)",
+                                    fontSize: "0.8rem",
+                                    borderRadius: "4px",
+                                    padding: "4px 10px",
+                                    fontWeight: 600,
+                                }}
+                            >
+                                {job.matchPercent}% Match
+                            </span>
+                        )}
                     </div>
-
-                </div>
-
-                <div className="d-flex justify-content-between align-items-center mt-2">
-                    <small className="adress"
-                        style={{ color: "var(--text)" }}>
-                        <FaMapMarkerAlt size={12} className="me-1" />
-                        <span>{job.location}</span>
-                    </small>
-                </div>
-                <div className="d-flex justify-content-between align-items-center mt-2">
-                    <small className="date"
-                        style={{ color: "var(--text)" }}>
-                        <FaClock size={10} className="me-1" />
-                        <span>{job.datePosted || "N/A"}</span>
-                    </small>
-                    {(jobPostType === "matched") && (
-                        <Badge>{job.matchPercent}%</Badge>
-                    )}
-                </div>
+                </motion.div>
             </div>
         );
     };
 
+    //--------------------------------------------------------------------------
+    // The entire jobs page including the job list and the job detailed sections
     return (
         <Container
             fluid
@@ -418,23 +481,40 @@ const FindJobs = ({ jobPostTypeProp }) => {
                                         //clearAllFilters();
                                     }}
                                 >
-                                    {/* Wrapper switches layout: row on small, column on md+ */}
-                                    <div className="d-flex flex-row flex-md-column align-items-stretch" style={{ gap: "10px" }}>
+                                    {/* Top Section: Search bar + Icons */}
+                                    <div className="d-flex flex-nowrap align-items-center" style={{ gap: "10px"  }}>
                                         {/* Search input */}
                                         <div className="position-relative flex-grow-1">
                                             <div
                                                 className="position-absolute"
                                                 style={{ left: "10px", top: "50%", transform: "translateY(-50%)" }}
                                             >
-                                                <FaSearch className="seachbar"
-                                                    style={{ color: "#3A4750" }} />
+                                                <FaSearch style={{ color: "#3A4750" }} />
                                             </div>
+                                                                        
                                             <style>{`
                                                 .search-input::placeholder { color: #303841; opacity: 1; }
                                                 .search-input::-webkit-input-placeholder { color: #303841; opacity: 1; }
-                                                 .search-input::-moz-placeholder { color: #303841; opacity: 1; }
-                                                 .search-input:-ms-input-placeholder { color: #303841; }
+                                                .search-input::-moz-placeholder { color: #303841; opacity: 1; }
+                                                .search-input:-ms-input-placeholder { color: #303841; }
+                                                .icon-btn {
+                                                    background-color: var(--background);
+                                                    color: var(--text);
+                                                    border: 1px solid var(--text);
+                                                    border-radius: 8px;
+                                                    padding: 8px 14px;
+                                                    display: flex;
+                                                    align-items: center;
+                                                    justify-content: center;
+                                                    cursor: pointer;
+                                                    transition: all 0.3s ease;
+                                                }
+                                                .icon-btn:hover {
+                                                    background-color: var(--text);
+                                                    color: var(--background);
+                                                }
                                             `}</style>
+                                            
                                             <Form.Control
                                                 type="text"
                                                 className="search-input"
@@ -447,60 +527,50 @@ const FindJobs = ({ jobPostTypeProp }) => {
                                                     color: "#303841",
                                                     border: "2px solid var(--border)",
                                                     borderRadius: "8px",
+                                                    height: "42px",
                                                 }}
                                             />
                                         </div>
-
-                                        {/* Buttons: inline on small, stacked below on md+ */}
-                                        <div className="d-flex justify-content-start ms-2 ms-md-0 mt-md-2" style={{ gap: "10px" }}>
-                                            <Button
-                                                style={{
-                                                    backgroundColor: "var(--background)",
-                                                    color: "var(--text)",
-                                                    border: "1px solid var(--text)",
-                                                    transition: "all 0.3s ease",
-                                                }}
-                                                onMouseEnter={(e) => {
-                                                    e.currentTarget.style.backgroundColor = "var(--text)";
-                                                    e.currentTarget.style.color = "var(--background)";
-                                                }}
-                                                onMouseLeave={(e) => {
-                                                    e.currentTarget.style.backgroundColor = "var(--background)";
-                                                    e.currentTarget.style.color = "var(--text)";
-                                                }}
+                                          
+                                        {/* Icon Buttons */}
+                                        <div className="d-flex align-items-center" style={{ gap: "10px" }}>
+                                            {/* Browse (FaCompass) */}
+                                            <div
+                                                className="icon-btn"
+                                                title="Browse all jobs"
                                                 onClick={() => setJobPostType("all")}
                                             >
-                                                Browse
-                                            </Button>
-
-                                            <Button
-                                                style={{
-                                                    backgroundColor: "var(--background)",
-                                                    color: "var(--text)",
-                                                    border: "1px solid var(--text)",
-                                                    transition: "all 0.3s ease",
-                                                }}
-                                                onMouseEnter={(e) => {
-                                                    e.currentTarget.style.backgroundColor = "var(--text)";
-                                                    e.currentTarget.style.color = "var(--background)";
-                                                }}
-                                                onMouseLeave={(e) => {
-                                                    e.currentTarget.style.backgroundColor = "var(--background)";
-                                                    e.currentTarget.style.color = "var(--text)";
-                                                }}
+                                                <FaCompass size={20} />
+                                            </div>
+                                                
+                                            {/* Filters (FaFilter) */}
+                                            <div
+                                                className="icon-btn"
+                                                title="Filters"
                                                 onClick={() => setShowCanvas(true)}
                                             >
-                                                Filters
-                                            </Button>
+                                                <FaFilter size={20} />
+                                            </div>
                                         </div>
-
-
                                     </div>
+                                      
+                                    {/* Total Jobs */}
+                                    {/* <div className="mt-3">
+                                        <p
+                                            style={{
+                                                fontSize: "1rem",
+                                                fontWeight: 500,
+                                                color: "var(--text)",
+                                                opacity: 0.9,
+                                            }}
+                                        >
+                                          Showing <span style={{ color: "var(--accent1)", fontWeight: 600 }}>120</span> total jobs from <span style={{ color: "var(--accent1)", fontWeight: 600 }}>25</span> different companies
+                                        </p>
+                                    </div> */}
+
                                 </Form>
                             </div>
                         )}
-
-
 
                         {/* Job Posting listings */}
                         <div className="overflow-auto flex-grow-1 auto-hide-scroll">
