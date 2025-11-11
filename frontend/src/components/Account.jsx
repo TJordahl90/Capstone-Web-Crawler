@@ -278,10 +278,10 @@ const Account = () => {
     }
 
     const chipStyle = {
-        backgroundColor: "var(--accent3)",
+        backgroundColor: "var(--accent1)",
         padding: "5px 10px",
         borderRadius: "5px",
-        color: "var(--text)",
+        color: "white",
         fontSize: "1.1rem",
         fontWeight: 600,
     };

@@ -11,18 +11,18 @@ const Settings = () => {
     const [emailPreference, setEmailPreference] = useState(false);
     const [draftEmailPref, setDraftEmailPref] = useState(false);
 
-     // Theme
+    // Theme
     const { currentTheme, switchTheme } = useTheme();
 
     useEffect(() => {
         const getEmailPreference = async () => {
-            try{
+            try {
                 const emailPref = await api.get('/get_email_preference/');
                 const pref = emailPref.data.emailPreference;
                 const boolPref = pref === true || pref === "true" || pref === "True";
                 setEmailPreference(boolPref);
                 setDraftEmailPref(boolPref);
-            }catch (error){
+            } catch (error) {
                 console.error("Failed to fetch email preferences:", error)
             }
         }
@@ -35,7 +35,7 @@ const Settings = () => {
             await api.delete("/delete_user/");
             localStorage.clear();
             navigate("/");
-        } 
+        }
         catch (err) {
             console.error(err.response?.data?.error || "Error deleting account.");
             setLoading(false);
@@ -43,8 +43,8 @@ const Settings = () => {
     };
 
     const handleSave = async () => {
-        try{
-            const payload ={
+        try {
+            const payload = {
                 emailPreference: draftEmailPref,
             }
 
@@ -52,7 +52,7 @@ const Settings = () => {
 
             setEmailPreference(draftEmailPref);
         }
-        catch (error){
+        catch (error) {
             console.error("Failed to save settings:", error);
             setDraftEmailPref(emailPreference);
         }
@@ -60,103 +60,115 @@ const Settings = () => {
     return (
         <Container className="mt-5 text-center">
             <h2 className="mb-4"
-            style ={{color:"var(--text)"}}>Settings</h2>
+                style={{ color: "var(--text)" }}>Settings</h2>
 
             {/* Display / Theme Section */}
-                <div
-                    className="text-start p-4 mb-4"
-                    style={{
-                        color: "var(--text)",
-                        backgroundColor: "var(--card)",
-                        borderRadius: "12px",
-                        border: `1px solid var(--accent1)`,
-                        borderLeft: `4px solid var(--accent1)`
-                    }}
-                >
-                    <div className="d-flex justify-content-between align-items-center">
-                        <h5 style={{ fontWeight: 600, fontSize: "1.5rem" }}>Display</h5>
+            <div
+                className="text-start p-4 mb-4"
+                style={{
+                    color: "var(--text)",
+                    backgroundColor: "var(--card)",
+                    borderRadius: "12px",
+                    border: `1px solid var(--accent1)`,
+                    borderLeft: `4px solid var(--accent1)`
+                }}
+            >
+                <div className="d-flex justify-content-between align-items-center">
+                    <h5 style={{ fontWeight: 600, fontSize: "1.5rem" }}>Display</h5>
 
-                        {/* Toggle style: switch OR two buttons — pick one */}
+                    {/* Toggle style: switch OR two buttons — pick one */}
 
-                        {/* (1) Switch style */}
+                    {/* (1) Switch style */}
+                    <div className="d-flex align-items-center" style={{ gap: "10px" }}>
+                        <span style={{ fontWeight: 600 }}>
+                            {currentTheme === "dark" ? "Dark Mode" : "Light Mode"}
+                        </span>
+
                         <Form.Check
                             type="switch"
                             id="theme-switch"
-                            label={currentTheme === "dark" ? "Dark Mode" : "Light Mode"}
                             checked={currentTheme === "dark"}
                             onChange={(e) => switchTheme(e.target.checked ? "dark" : "light")}
-                            style={{ fontWeight: 600 }}
+                            style={{ margin: 0 }}
                         />
-
-                        {/* (2) Or Buttons style (comment the switch above if you prefer this) */}
-                        {false && (
-                            <div className="d-flex align-items-center" style={{ gap: "8px" }}>
-                                <Button
-                                    size="sm"
-                                    style={{
-                                        backgroundColor: currentTheme === "light" ? "var(--accent1)" : "transparent",
-                                        color: currentTheme === "light" ? "var(--text)" : "var(--text)",
-                                        border: "1px solid var(--accent1)"
-                                    }}
-                                    onClick={() => switchTheme("light")}
-                                >
-                                    Light
-                                </Button>
-                                <Button
-                                    size="sm"
-                                    style={{
-                                        backgroundColor: currentTheme === "dark" ? "var(--accent1)" : "transparent",
-                                        color: currentTheme === "dark" ? "var(--text)" : "var(--text)",
-                                        border: "1px solid var(--accent1)"
-                                    }}
-                                    onClick={() => switchTheme("dark")}
-                                >
-                                    Dark
-                                </Button>
-                            </div>
-                        )}
                     </div>
-                </div>
 
-                <div
-                    className="text-start p-4 mb-4"
-                    style={{
-                      color: "var(--text)",
-                      backgroundColor: "var(--card)",
-                      borderRadius: "12px",
-                      border: `1px solid var(--accent1)`,
-                      borderLeft: `4px solid var(--accent1)`
-                    }}
-                >         
-                    <div className="d-flex justify-content-between align-items-center">
-                      <h5 style={{ fontWeight: 600, fontSize: "1.5rem" }}>Email Notifications</h5>
-                
-                      {/* Switch to toggle email preference */}
-                      <Form.Check
-                        type="switch"
-                        id="email-pref-switch"
-                        label={draftEmailPref ? "Enabled" : "Disabled"}
-                        checked={draftEmailPref}
-                        disabled={loading} // prevent toggle until loaded
-                        onChange={(e) => setDraftEmailPref(e.target.checked)}
-                        style={{ fontWeight: 600 }}
-                      />
-                    </div>
+
+                    {/* (2) Or Buttons style (comment the switch above if you prefer this) */}
+                    {false && (
+                        <div className="d-flex align-items-center" style={{ gap: "8px" }}>
+                            <Button
+                                size="sm"
+                                style={{
+                                    backgroundColor: currentTheme === "light" ? "var(--accent1)" : "transparent",
+                                    color: currentTheme === "light" ? "var(--text)" : "var(--text)",
+                                    border: "1px solid var(--accent1)"
+                                }}
+                                onClick={() => switchTheme("light")}
+                            >
+                                Light
+                            </Button>
+                            <Button
+                                size="sm"
+                                style={{
+                                    backgroundColor: currentTheme === "dark" ? "var(--accent1)" : "transparent",
+                                    color: currentTheme === "dark" ? "var(--text)" : "var(--text)",
+                                    border: "1px solid var(--accent1)"
+                                }}
+                                onClick={() => switchTheme("dark")}
+                            >
+                                Dark
+                            </Button>
+                        </div>
+                    )}
                 </div>
-        <div className="d-flex flex-column align-items-center" style={{ gap: '10px', marginTop: '20px' }}>
-            <Button
-                variant="primary"
-                onClick={handleSave}
-                disabled={draftEmailPref === emailPreference}
+            </div>
+
+            <div
+                className="text-start p-4 mb-4"
+                style={{
+                    color: "var(--text)",
+                    backgroundColor: "var(--card)",
+                    borderRadius: "12px",
+                    border: `1px solid var(--accent1)`,
+                    borderLeft: `4px solid var(--accent1)`
+                }}
             >
-                Save
-            </Button>
-            
-            <Row className="justify-content-center">
-                <Button variant="outline-danger" style={{maxWidth: '200px'}} onClick={() => setShowModal(true)}>
-                    Delete Account
+                <div className="d-flex justify-content-between align-items-center">
+                    <h5 style={{ fontWeight: 600, fontSize: "1.5rem" }}>Email Notifications</h5>
+
+                    {/* Switch to toggle email preference */}
+                    <div className="d-flex align-items-center" style={{ gap: "10px" }}>
+                        <span style={{ fontWeight: 600 }}>
+                            {draftEmailPref ? "Enabled" : "Disabled"}
+                        </span>
+
+                        <Form.Check
+                            type="switch"
+                            id="email-pref-switch"
+                            checked={draftEmailPref}
+                            disabled={loading}
+                            onChange={(e) => setDraftEmailPref(e.target.checked)}
+                            style={{ margin: 0 }}
+                        />
+                    </div>
+
+                </div>
+            </div>
+            <div className="d-flex flex-column align-items-center" style={{ gap: '10px', marginTop: '20px' }}>
+                <Button
+                    variant="primary"
+                    onClick={handleSave}
+                    disabled={draftEmailPref === emailPreference}
+                >
+                    Save
                 </Button>
-            </Row>
+
+                <Row className="justify-content-center">
+                    <Button variant="outline-danger" style={{ maxWidth: '200px' }} onClick={() => setShowModal(true)}>
+                        Delete Account
+                    </Button>
+                </Row>
             </div>
 
 
