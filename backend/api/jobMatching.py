@@ -1,5 +1,5 @@
 # Use this file to match users to jobs
-from api.models import Account, JobPosting
+from api.models import Account, JobPosting, SavedJob
 from django.db.models import Q, Prefetch
 from rest_framework.response import Response
 
@@ -10,7 +10,8 @@ def matchUsersToJobs(account):
     employmentTypes = set(account.employmentTypes.values_list('id', flat=True))
     workModels = set(account.workModels.values_list('id', flat=True))
 
-    jobs = JobPosting.objects.prefetch_related( 'skills', 'careers', 'experienceLevels', 'employmentTypes', 'workModels').all()
+    savedJobIDs = SavedJob.objects.filter(applied=True).values_list('jobPosting_id', flat=True)
+    jobs = JobPosting.objects.exclude(id__in=savedJobIDs).prefetch_related( 'skills', 'careers', 'experienceLevels', 'employmentTypes', 'workModels').all()
 
     jobScores = {}
 

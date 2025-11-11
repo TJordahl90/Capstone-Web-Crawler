@@ -333,7 +333,8 @@ def JobSearchingView(request):
 @permission_classes([AllowAny])
 def AllJobsView(request):
     """Returns all available jobs"""
-
+    user = request.user
+    account = user.account
     searchTerm = request.GET.get('search', '').strip()
 
     filters = request.data.get("filters", {}) # need to implement
@@ -342,14 +343,16 @@ def AllJobsView(request):
     
     page_number = request.data.get("page", 1)
 
-    jobs = JobPosting.objects.order_by('-id').prefetch_related(
+    savedJobIDs = SavedJob.objects.filter(account=account).values_list('jobPosting_id', flat=True)
+
+    jobs = JobPosting.objects.exclude(id__in=savedJobIDs).prefetch_related(
         'skills',
         'careers',
         'degrees',
         'experienceLevels',
         'employmentTypes',
         'workModels'
-    )
+    ).order_by('-datePosted')
     
     if(searchTerm):
         jobs = jobs.filter(
@@ -369,7 +372,6 @@ def AllJobsView(request):
     if(filters.get('location')):
         jobs = jobs.filter(workModels__name__in=filters['location'])
 
-    jobs = jobs.order_by('-datePosted')
     total_count = jobs.count()
     start = (page_number - 1) * 15
     end = start + 15
