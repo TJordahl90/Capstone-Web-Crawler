@@ -1,7 +1,7 @@
 import React, { useRef, useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { Container, Row, Col, Form, Button,  Spinner, Offcanvas } from "react-bootstrap";
-import {  FaSearch, FaBriefcase, FaMapMarkerAlt, FaClock, FaCompass, FaFilter, FaMoneyBill, FaChevronLeft, FaChevronRight, FaBuilding, FaUserTie, FaLaptopHouse } from "react-icons/fa";
+import { Container, Row, Col, Form, Button, Spinner, Offcanvas } from "react-bootstrap";
+import { FaSearch, FaBriefcase, FaMapMarkerAlt, FaClock, FaCompass, FaFilter, FaMoneyBill, FaChevronLeft, FaChevronRight, FaBuilding, FaUserTie, FaLaptopHouse } from "react-icons/fa";
 import { formatDistanceToNow } from "date-fns";
 import { motion } from "framer-motion";
 import GlobalMessage from './GlobalMessage.jsx';
@@ -79,7 +79,7 @@ const FindJobs = ({ jobPostTypeProp }) => {
     const fetchJobPostings = async (type = jobPostType) => {
         setLoading(true);
         setAlert({ type: "", text: "" });
-        
+
         try {
             let response;
             if (type === "search") {
@@ -150,7 +150,7 @@ const FindJobs = ({ jobPostTypeProp }) => {
         catch (err) {
             // console.error(err);
             setAlert({ type: "error", text: "Error retrieving job data." });
-        } 
+        }
         finally {
             setLoading(false);
         }
@@ -453,8 +453,13 @@ const FindJobs = ({ jobPostTypeProp }) => {
                         {jobPostType === "matched" && (
                             <span
                                 style={{
-                                    backgroundColor: "var(--accent3)",
-                                    color: "var(--text)",
+                                    backgroundColor:
+                                        job.matchPercent > 60
+                                            ? "var(--accent4)"
+                                            : job.matchPercent > 30
+                                                ? "var(--accent2)"
+                                                : "var(--accent3)",
+                                    color: "black",
                                     fontSize: "0.8rem",
                                     borderRadius: "4px",
                                     padding: "4px 10px",
@@ -487,14 +492,14 @@ const FindJobs = ({ jobPostTypeProp }) => {
                 maxWidth: "100%"
             }}
         >
-            
+
             {/* Error message popup */}
             <GlobalMessage
                 type={alert.type}
                 message={alert.text}
                 onClose={() => setAlert({ type: "", text: "" })}
             />
-            
+
             <Row className="m-0" style={{ height: "100%" }}>
                 {/* Left sidebar */}
                 {(windowWidth > 770 || !showDetailsMobile) && (
