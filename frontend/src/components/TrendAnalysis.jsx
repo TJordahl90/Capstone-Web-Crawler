@@ -39,9 +39,9 @@ const TrendAnalysis = () => {
       '#FF6B6B',
       '#4ECDC4',
       '#FFD369',
-      '#2185D5',
       '#FF8C42',
       '#A86BD5',
+      '#2185D5',
     ];
 
     const cardBase = {
