@@ -70,11 +70,11 @@ class CreateUserView(APIView):
     def post(self, request):
         email = request.data.get("email")
         if not email:
-            return _err(400, "missing_email", "Email is required.", field="email")
+            return Response({"error": "Email is required."}, status=status.HTTP_400_BAD_REQUEST)
         try:
             validate_email(email)
         except ValidationError:
-            return _err(422, "invalid_email", "Email format is invalid.", field="email")
+            return Response({"error": "Invalid email format."}, status=status.HTTP_400_BAD_REQUEST)
 
         serializer = CreateUserSerializer(data=request.data)
         if serializer.is_valid():
@@ -82,9 +82,11 @@ class CreateUserView(APIView):
                 with transaction.atomic():
                     serializer.save()
             except Exception as e:
-                return _err(500, "create_user_failed", "Could not create user.", details=str(e))
-            return Response(serializer.data, status=201)
-        return _err(400, "validation_error", "Invalid fields.", details=serializer.errors)
+                return Response({"error": "Failed to create user."}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
+            return Response({"message": "User created successfully."}, status=status.HTTP_201_CREATED)
+        
+        return Response({"error": serializer.errors}, status=status.HTTP_400_BAD_REQUEST)
+
 
 def sendEmailVerification(email, subject, message, templateName, context):
     msg = EmailMultiAlternatives(subject, message, settings.EMAIL_HOST_USER, email)

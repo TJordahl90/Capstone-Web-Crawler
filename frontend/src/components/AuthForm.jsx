@@ -1,13 +1,13 @@
 import { useState, useEffect } from 'react';
 import { useNavigate, Link } from 'react-router-dom';
-import { Container, Card, Row, Col, Form, Button, Alert, Spinner } from 'react-bootstrap';
+import { Container, Card, Row, Col, Form, Button, Spinner } from 'react-bootstrap';
 import InputField from './InputField';
+import GlobalMessage from './GlobalMessage.jsx';
 import api from '../api.js';
 
 const AuthForm = ({ isLogin }) => {
     const navigate = useNavigate();
-    const [message, setMessage] = useState('');
-    const [error, setError] = useState('');
+    const [alert, setAlert] = useState({ type: "", text: "" });
     const [loading, setLoading] = useState(false);
     const [formData, setFormData] = useState({
         username: '',
@@ -21,37 +21,53 @@ const AuthForm = ({ isLogin }) => {
 
     useEffect(() => {
         api.get('/csrf/').catch(() =>
-            setError('Error retrieving necessary tokens.')
+            setAlert({ type: "error", text: "Error retrieving necessary tokens." }),
         );
     }, []);
 
     const handleSubmit = async (e) => {
         e.preventDefault();
         setLoading(true);
-        setError('');
-        setMessage('');
+        setAlert({ type: "", text: "" });
 
         try {
             if (!isLogin) {
                 const { password, confirmPassword, email, confirmEmail } = formData;
                 const valid = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[\W_]).{8,}$/;
+                
                 if (!valid.test(password)) throw new Error("Password must be 8+ chars and include uppercase, lowercase, number, and special char.");
                 if (password !== confirmPassword) throw new Error("Passwords do not match.");
                 if (email !== confirmEmail) throw new Error("Emails do not match.");
                 
                 await api.post('/register/', formData);
                 await api.post('/verification/', { email });
-                navigate("/verification", { state: { email } });
-            } else {
+                
+                setAlert({ type: "success", text: "Account created successfully! Check your email for verification." });
+                setTimeout(() => navigate("/verification", { state: { email } }), 1000);
+            } 
+            else {
                 const response = await api.post('/login/', formData);
                 localStorage.setItem("user", JSON.stringify(response.data.user));
-                setMessage("Login successful!");
+                
+                setAlert({ type: "success", text: "Login successful!" });
                 setTimeout(() => navigate(response.data.first_time_login ? "/account-setup" : "/dashboard"), 1000);
             }
-        } catch (err) {
-            const msg = err.response?.data?.error || err.message || "Something went wrong.";
-            setError(msg);
-        } finally {
+        } 
+        catch (err) {
+            const data = err.response?.data;
+            let msg = "Something went wrong.";
+
+            if (typeof data?.error === "string") {
+                msg = data.error;
+            } 
+            else if (typeof data?.error === "object") {
+                msg = Object.entries(data.error)
+                    .map(([field, errors]) => `${field}: ${errors.join(", ")}`)
+                    .join("\n");
+            }
+            setAlert({ type: "error", text: msg });
+        } 
+        finally {
             setLoading(false);
         }
     };
@@ -65,8 +81,13 @@ const AuthForm = ({ isLogin }) => {
                 background: "linear-gradient(135deg, var(--background), var(--card))",
                 color: "var(--text)",
                 overflow: "hidden",
+                position: "relative"
             }}
         >
+
+            {/* Alert Message Pop-up */}
+            <GlobalMessage type={alert.type} message={alert.text} onClose={() => setAlert({ type: "", text: "" })}/>
+
             <Card
                 style={{
                     backgroundColor: "var(--card)",
@@ -78,7 +99,6 @@ const AuthForm = ({ isLogin }) => {
                     boxShadow: "0 6px 30px var(--shadow1)",
                 }}
             >
-                {/* Back button */}
                 <Button
                     onClick={() => navigate("/")}
                     style={{
@@ -93,7 +113,6 @@ const AuthForm = ({ isLogin }) => {
                     ← Back to Home
                 </Button>
 
-                {/* Header */}
                 <h2
                     className="text-center mb-4"
                     style={{
@@ -105,10 +124,6 @@ const AuthForm = ({ isLogin }) => {
                     {isLogin ? "Welcome Back" : "Create Account"}
                 </h2>
 
-                {message && <Alert variant="success" className="text-center">{message}</Alert>}
-                {error && <Alert variant="danger" className="text-center">{error}</Alert>}
-
-                {/* Form */}
                 <Form onSubmit={handleSubmit}>
                     {!isLogin ? (
                         <>

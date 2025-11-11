@@ -1,9 +1,10 @@
 import React, { useRef, useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { Container, Row, Col, Form, Nav, ListGroup, Card, Button, Badge, ProgressBar, Spinner, Offcanvas, Modal } from "react-bootstrap";
-import { FaBookmark, FaRegBookmark, FaPaperPlane, FaComments, FaSearch, FaRobot, FaBriefcase, FaMapMarkerAlt, FaClock, FaCompass, FaFilter, FaMoneyBill, FaChevronLeft, FaChevronRight, FaBuilding, FaUserTie, FaLaptopHouse } from "react-icons/fa";
+import { Container, Row, Col, Form, Button,  Spinner, Offcanvas } from "react-bootstrap";
+import {  FaSearch, FaBriefcase, FaMapMarkerAlt, FaClock, FaCompass, FaFilter, FaMoneyBill, FaChevronLeft, FaChevronRight, FaBuilding, FaUserTie, FaLaptopHouse } from "react-icons/fa";
 import { formatDistanceToNow } from "date-fns";
 import { motion } from "framer-motion";
+import GlobalMessage from './GlobalMessage.jsx';
 import api from "../api.js";
 
 const FindJobs = ({ jobPostTypeProp }) => {
@@ -37,7 +38,7 @@ const FindJobs = ({ jobPostTypeProp }) => {
     // Misc states
     const [showDetailsMobile, setShowDetailsMobile] = useState(false);
     const [showApplyConfirm, setShowApplyConfirm] = useState(false);
-    const [error, setError] = useState("");
+    const [alert, setAlert] = useState({ type: "", text: "" });
     const [loading, setLoading] = useState(false);
     
     const jobListContainerRef = useRef(null);
@@ -77,7 +78,8 @@ const FindJobs = ({ jobPostTypeProp }) => {
     // function to retrieve job postings depending on JobPostType variable
     const fetchJobPostings = async (type = jobPostType) => {
         setLoading(true);
-        setError("");
+        setAlert({ type: "", text: "" });
+        
         try {
             let response;
             if (type === "search") {
@@ -98,7 +100,7 @@ const FindJobs = ({ jobPostTypeProp }) => {
                 } else {
                     setSearchedJobs([]);
                     setSelectedJob(null);
-                    setError("No matching jobs found. Try different search terms.");
+                    setAlert({ type: "error", text: "No matching jobs found. Try different search terms." });
                     setHasNextPage(false);
                     setHasPrevPage(false);
                 }
@@ -117,7 +119,7 @@ const FindJobs = ({ jobPostTypeProp }) => {
                 } else {
                     setAllJobs([]);
                     setSelectedJob(null);
-                    setError("No jobs found. Please try again later.");
+                    setAlert({ type: "error", text: "No jobs found. Please try again later." });
                     setHasNextPage(false);
                     setHasPrevPage(false);
                 }
@@ -130,7 +132,7 @@ const FindJobs = ({ jobPostTypeProp }) => {
                 } else {
                     setMatchedJobs([]);
                     setSelectedJob(null);
-                    setError("No matched jobs found. Expand your account skills/preferences selections.");
+                    setAlert({ type: "error", text: "No matched jobs found. Expand your account selections." });
                 }
             }
             else if (type === "saved") {
@@ -141,14 +143,15 @@ const FindJobs = ({ jobPostTypeProp }) => {
                 } else {
                     setSavedJobs([]);
                     setSelectedJob(null);
-                    setError("No jobs saved. Bookmark a job to save for later.");
+                    setAlert({ type: "error", text: "No jobs saved. Bookmark a job to save for later." });
                 }
             }
         }
         catch (err) {
-            console.error(err);
-            setError("Error retrieving job data.");
-        } finally {
+            // console.error(err);
+            setAlert({ type: "error", text: "Error retrieving job data." });
+        } 
+        finally {
             setLoading(false);
         }
     };
@@ -190,7 +193,8 @@ const FindJobs = ({ jobPostTypeProp }) => {
             }
         }
         catch (err) {
-            console.error(err);
+            // console.error(err);
+            setAlert({ type: "error", text: "Error bookmarking job." });
         }
     };
 
@@ -222,7 +226,8 @@ const FindJobs = ({ jobPostTypeProp }) => {
             setSelectedJob(prev => ({ ...prev, applied_status: true, is_saved: true }));
         }
         catch (err) {
-            console.error(err);
+            // console.error(err);
+            setAlert({ type: "error", text: "Error confirming the job application status." });
         }
         finally {
             setShowApplyConfirm(false);
@@ -482,6 +487,14 @@ const FindJobs = ({ jobPostTypeProp }) => {
                 maxWidth: "100%"
             }}
         >
+            
+            {/* Error message popup */}
+            <GlobalMessage
+                type={alert.type}
+                message={alert.text}
+                onClose={() => setAlert({ type: "", text: "" })}
+            />
+            
             <Row className="m-0" style={{ height: "100%" }}>
                 {/* Left sidebar */}
                 {(windowWidth > 770 || !showDetailsMobile) && (
@@ -600,7 +613,7 @@ const FindJobs = ({ jobPostTypeProp }) => {
 
                         {/* Job Posting listings */}
                         <div className="overflow-auto flex-grow-1 auto-hide-scroll">
-                            {error && <div className="p-3 text-danger">{error}</div>}
+                            {/* {error && <div className="p-3 text-danger">{error}</div>} */}
 
                             {!loading && (
                                 <div className="job-list">

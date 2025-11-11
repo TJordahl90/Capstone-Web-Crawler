@@ -2,12 +2,12 @@ import { useState } from 'react';
 import { useNavigate, useLocation } from 'react-router-dom';
 import { Container, Card, Form, Button, Alert, Spinner } from 'react-bootstrap';
 import InputField from './InputField';
+import GlobalMessage from './GlobalMessage.jsx';
 import api from '../api.js';
 
 const Verification = () => {
     const [code, setCode] = useState("");
-    const [message, setMessage] = useState('');
-    const [error, setError] = useState('');
+    const [alert, setAlert] = useState({ type: "", text: "" });
     const [loading, setLoading] = useState(false);
 
     const navigate = useNavigate();
@@ -17,25 +17,21 @@ const Verification = () => {
     const handleSubmit = async (e) => {
         e.preventDefault();
         setLoading(true);
-        setMessage('');
-        setError('');
+        setAlert({ type: "", text: "" });
 
         try {
             const response = await api.get("/verification/", { params: { email: email, code: code } });
             if (response.status === 200) {
+                setAlert({ type: "success", text: "Registration successful!" });
                 setMessage("Registration successful!");
                 setTimeout(() => navigate("/login"), 1000);
             }
         } catch (err) {
-            setError(err.response?.data?.message || "Invalid verification code.");
+            const msg = err.response?.data?.message || "Invalid verification code.";
+            setAlert({ type: "error", text: msg });
         } finally {
             setLoading(false);
         }
-
-        setTimeout(() => {
-            setMessage('');
-            setError('');
-        }, 3000);
     };
 
     return (
@@ -49,6 +45,13 @@ const Verification = () => {
                 overflow: "hidden",
             }}
         >
+            {/* Error message popup */}
+            <GlobalMessage
+                type={alert.type}
+                message={alert.text}
+                onClose={() => setAlert({ type: "", text: "" })}
+            />
+                
             <Card
                 style={{
                     backgroundColor: "var(--card)",
