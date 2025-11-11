@@ -9,6 +9,8 @@ const Account = () => {
     // Displays messages to user
     const [message, setMessage] = useState('');
     const [error, setError] = useState('');
+    const [alert, setAlert] = useState({ type: "", text: "" });
+
 
     // Shows & hides the editing modals
     const [editPersonalInfo, setEditPersonalInfo] = useState(false);
@@ -292,7 +294,38 @@ const Account = () => {
         color: "var(--text)",
         flexShrink: 0,
         marginLeft: '1rem',
+        // verticalAlign: "middle",
     }
+    
+    const modalStyle = {
+        content: {
+            backgroundColor: "var(--card)",
+            color: "var(--text)",
+            borderRadius: "16px",
+            border: "1px solid var(--border)",
+            boxShadow: "0 8px 30px var(--shadow1)",
+        },
+        header: {
+            backgroundColor: "var(--background)",
+            borderBottom: "1px solid var(--border)",
+            color: "var(--accent1)",
+            fontWeight: 700,
+        },
+        body: {
+            backgroundColor: "var(--card)",
+            color: "var(--text)",
+            padding: "1.8rem",
+        },
+        button: {
+            backgroundColor: "var(--accent1)",
+            color: "var(--text)",
+            border: "none",
+            borderRadius: "8px",
+            padding: "8px 18px",
+            fontWeight: 600,
+            transition: "0.25s",
+        },
+    };
     
     if (loading) {
         return (
@@ -480,22 +513,24 @@ const Account = () => {
             {/* ----------------------------------------------------------------------------- */}
             {/* The modals below are for editing user selections */}
             {/* ----------------------------------------------------------------------------- */}
-            {editPersonalInfo && <Modal show={editPersonalInfo} onHide={() => setEditPersonalInfo(false)}>
-                <Modal.Header closeButton><Modal.Title>Edit Personal Info</Modal.Title></Modal.Header>
-                <Modal.Body>
+            {editPersonalInfo && 
+            <Modal show={editPersonalInfo} onHide={() => setEditPersonalInfo(false)} centered>
+                <Modal.Header style={modalStyle.header} closeButton><Modal.Title>Edit Personal Info</Modal.Title></Modal.Header>
+                <Modal.Body style={modalStyle.body}>
                     <Form onSubmit={handlePersonalInfo}>
                         <InputField label="First Name" value={accountData.firstName} onChange={(e) => setAccountData({ ...accountData, firstName: e.target.value })} />
                         <InputField label="Last Name" value={accountData.lastName} onChange={(e) => setAccountData({ ...accountData, lastName: e.target.value })} />
                         <InputField label="Headline" value={accountData.headline} onChange={(e) => setAccountData({ ...accountData, headline: e.target.value })} />
                         <InputField label="Hometown" value={accountData.hometown} onChange={(e) => setAccountData({ ...accountData, hometown: e.target.value })} />
-                        <Button type="submit" className="mt-3">Done</Button>
+                        <Button type="submit" style={modalStyle.button} className="mt-3">Done</Button>
                     </Form>
                 </Modal.Body>
             </Modal>}
 
-            {editPreferences && <Modal show={editPreferences} onHide={() => setEditPreferences(false)}>
-                <Modal.Header closeButton><Modal.Title>Edit Job Preferences</Modal.Title></Modal.Header>
-                <Modal.Body>
+            {editPreferences && 
+            <Modal show={editPreferences} onHide={() => setEditPreferences(false)} centered>
+                <Modal.Header style={modalStyle.header} closeButton><Modal.Title>Edit Job Preferences</Modal.Title></Modal.Header>
+                <Modal.Body style={modalStyle.body}>
                     <Form onSubmit={handlePreferences}>
                         <h6>Experience Level</h6>
                         {expLevelKeywordList.map((exp) => (
@@ -505,6 +540,7 @@ const Account = () => {
                                 className="mb-1"
                             />
                         ))}
+                        <hr />
                         <h6>Employment Type</h6>
                         {employTypeKeywordList.map((emp) => (
                             <Form.Check
@@ -513,6 +549,7 @@ const Account = () => {
                                 className="mb-1"
                             />
                         ))}
+                        <hr />
                         <h6>Work Model</h6>
                         {workModelKeywordList.map((work) => (
                             <Form.Check
@@ -521,14 +558,15 @@ const Account = () => {
                                 className="mb-1"
                             />
                         ))}
-                        <div><Button type="submit" className="mt-3">Done</Button></div>
+                        <div><Button type="submit" style={modalStyle.button} className="mt-3">Done</Button></div>
                     </Form>
                 </Modal.Body>
             </Modal>}
 
-            {editSkills && <Modal show={editSkills} onHide={() => setEditSkills(false)}>
-                <Modal.Header closeButton><Modal.Title style={{ color: "#05e3ed" }}>Edit Skills</Modal.Title></Modal.Header>
-                <Modal.Body>
+            {editSkills && 
+            <Modal show={editSkills} onHide={() => setEditSkills(false)} centered>
+                <Modal.Header style={modalStyle.header} closeButton><Modal.Title>Edit Technical Skills</Modal.Title></Modal.Header>
+                <Modal.Body style={modalStyle.body}>
                     <Form onSubmit={handleSkills}>
                         <div style={{ position: "relative" }}>
                             <InputField label="Search skills..." type="search" value={searchQuery} required={false} onChange={(e) => setSearchQuery(e.target.value)} placeholder="e.g. Python" />
@@ -550,14 +588,15 @@ const Account = () => {
                             ))}
                         </div>
 
-                        <div><Button type="submit" className="mt-3">Done</Button></div>
+                        <div><Button type="submit" style={modalStyle.button} className="mt-3">Done</Button></div>
                     </Form>
                 </Modal.Body>
             </Modal>}
 
-            {editCareers && <Modal show={editCareers} onHide={() => setEditCareers(false)}>
-                <Modal.Header closeButton><Modal.Title style={{ color: "#05e3ed" }}>Edit Career Fields</Modal.Title></Modal.Header>
-                <Modal.Body>
+            {editCareers && 
+            <Modal show={editCareers} onHide={() => setEditCareers(false)} centered>
+                <Modal.Header style={modalStyle.header} closeButton><Modal.Title>Edit Career Fields</Modal.Title></Modal.Header>
+                <Modal.Body style={modalStyle.body}>
                     <Form onSubmit={handleCareers}>
                         <div style={{ position: "relative" }}>
                             <InputField label="Search careers..." type="search" value={searchQuery} required={false} onChange={(e) => setSearchQuery(e.target.value)} placeholder="e.g. Software Engineering" />
@@ -579,14 +618,15 @@ const Account = () => {
                             ))}
                         </div>
 
-                        <div><Button type="submit" className="mt-3">Done</Button></div>
+                        <div><Button type="submit" style={modalStyle.button} className="mt-3">Done</Button></div>
                     </Form>
                 </Modal.Body>
             </Modal>}
 
-            {editEducation && currentEducation && <Modal show={editEducation} onHide={() => setEditEducation(false)}>
-                <Modal.Header closeButton><Modal.Title style={{ color: "#05e3ed" }}>{isEditing ? 'Edit' : 'Add'} Education</Modal.Title></Modal.Header>
-                <Modal.Body>
+            {editEducation && currentEducation && 
+            <Modal show={editEducation} onHide={() => setEditEducation(false)} centered>
+                <Modal.Header style={modalStyle.header} closeButton><Modal.Title>{isEditing ? 'Edit' : 'Add'} Education</Modal.Title></Modal.Header>
+                <Modal.Body style={modalStyle.body}>
                     <Form onSubmit={handleEducationSubmit}>
                         <InputField label="Institution" value={currentEducation.institution} onChange={(e) => setCurrentEducation({ ...currentEducation, institution: e.target.value })} />
                         <InputField label="Degree" value={currentEducation.degree} onChange={(e) => setCurrentEducation({ ...currentEducation, degree: e.target.value })} />
@@ -594,21 +634,21 @@ const Account = () => {
                         <InputField label="Minor" value={currentEducation.minor || ""} required={false} onChange={(e) => setCurrentEducation({ ...currentEducation, minor: e.target.value })} />
                         <InputField label="Graduation Date" type="date" value={currentEducation.graduationDate} onChange={(e) => setCurrentEducation({ ...currentEducation, graduationDate: e.target.value })} />
                         <InputField label="GPA" value={currentEducation.gpa} onChange={(e) => setCurrentEducation({ ...currentEducation, gpa: e.target.value })} />
-                        <Button type="submit" className="mt-3">Done</Button>
+                        <Button type="submit" style={modalStyle.button} className="mt-3">Done</Button>
                     </Form>
                 </Modal.Body>
             </Modal>}
 
             {editExperience && currentExperience && <Modal show={editExperience} onHide={() => setEditExperience(false)}>
-                <Modal.Header closeButton><Modal.Title style={{ color: "#05e3ed" }}>{isEditing ? 'Edit' : 'Add'} Experience</Modal.Title></Modal.Header>
-                <Modal.Body>
+                <Modal.Header style={modalStyle.header} closeButton><Modal.Title>{isEditing ? 'Edit' : 'Add'} Experience</Modal.Title></Modal.Header>
+                <Modal.Body style={modalStyle.body}>
                     <Form onSubmit={handleExperienceSubmit}>
                         <InputField label="Company" value={currentExperience.company} onChange={(e) => setCurrentExperience({ ...currentExperience, company: e.target.value })} />
                         <InputField label="Title" value={currentExperience.title} onChange={(e) => setCurrentExperience({ ...currentExperience, title: e.target.value })} />
                         <InputField label="Start Date" type="date" value={currentExperience.startDate} onChange={(e) => setCurrentExperience({ ...currentExperience, startDate: e.target.value })} />
                         <InputField label="End Date" type="date" value={currentExperience.endDate} onChange={(e) => setCurrentExperience({ ...currentExperience, endDate: e.target.value })} />
                         <InputField as="textarea" rows={3} label="Description" value={currentExperience.description} onChange={(e) => setCurrentExperience({ ...currentExperience, description: e.target.value })} />
-                        <Button type="submit" className="mt-3">Done</Button>
+                        <Button type="submit" style={modalStyle.button} className="mt-3">Done</Button>
                     </Form>
                 </Modal.Body>
             </Modal>}
