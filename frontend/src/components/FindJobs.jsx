@@ -390,7 +390,7 @@ const FindJobs = ({ jobPostTypeProp }) => {
                             <motion.h5
                                 className="mb-1"
                                 style={{
-                                    fontSize: "1.3rem",
+                                    fontSize: "1.1rem",
                                     color: isSelected
                                         ? "var(--accent1)"
                                         : "var(--text)",
@@ -679,7 +679,8 @@ const FindJobs = ({ jobPostTypeProp }) => {
                             >
                                 {/* Top Section */}
                                 <div className={windowWidth <= 770 ? "p-3" : "pt-5 pb-4"}>
-                                    <div className="d-flex justify-content-between align-items-start flex-wrap gap-3">
+                                    <div className="d-flex justify-content-between align-items-start flex-nowrap gap-3">
+
 
                                         {/* Logo + Title + Company */}
                                         <div className="d-flex align-items-center gap-3">
@@ -736,7 +737,7 @@ const FindJobs = ({ jobPostTypeProp }) => {
                                         </div>
 
                                         {/* Buttons */}
-                                        <div className="d-flex align-items-center gap-2">
+                                        <div className="d-flex align-items-center gap-2 pt-4">
                                             <Button
                                                 style={{
                                                     backgroundColor: "var(--accent1)",
