@@ -1,9 +1,8 @@
-import { useState, useEffect, useRef } from 'react';
+import { useState, useEffect } from 'react';
 import { useNavigate, Link } from 'react-router-dom';
 import { Container, Card, Row, Col, Form, Button, Alert, Spinner } from 'react-bootstrap';
 import InputField from './InputField';
 import api from '../api.js';
-import backgroundImage from "../assets/background4.png";
 
 const AuthForm = ({ isLogin }) => {
     const navigate = useNavigate();
@@ -19,294 +18,165 @@ const AuthForm = ({ isLogin }) => {
         email: '',
         confirmEmail: '',
     });
-    const [showPassword, setShowPassword] = useState(false);
-    const [showConfirmPassword, setShowConfirmedPassword] = useState(false);
 
     useEffect(() => {
-        const getCsrfToken = async () => {
-            try {
-                await api.get('/csrf/');
-            }
-            catch (err) {
-                setError(err.response?.data?.message || "Error retrieving necessary tokens.");
-            }
-        };
-
-        getCsrfToken();
+        api.get('/csrf/').catch(() =>
+            setError('Error retrieving necessary tokens.')
+        );
     }, []);
 
     const handleSubmit = async (e) => {
         e.preventDefault();
         setLoading(true);
+        setError('');
+        setMessage('');
 
-        if (!isLogin) {
-            const password = formData.password;
-            const passwordRegex = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[\W_]).{8,}$/;
-
-            if(!passwordRegex.test(password)){
-                setError("Password must be at least 8 characters long and include an uppercase letter, lowercase letter, number, and special character");
-                setLoading(false);
-                return;
-            }
-
-            const confirmPassword = formData.confirmPassword;
-            if(password !== confirmPassword){
-                setError("Passwords do not match");
-                setLoading(false);
-                return;
-            }
-
-            const email = formData.email;
-            const confirmEmail = formData.confirmEmail;
-
-            if(email !== confirmEmail){
-                setError("Emails do not match");
-                setLoading(false);
-                return;
-            }
-
-            try {
+        try {
+            if (!isLogin) {
+                const { password, confirmPassword, email, confirmEmail } = formData;
+                const valid = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[\W_]).{8,}$/;
+                if (!valid.test(password)) throw new Error("Password must be 8+ chars and include uppercase, lowercase, number, and special char.");
+                if (password !== confirmPassword) throw new Error("Passwords do not match.");
+                if (email !== confirmEmail) throw new Error("Emails do not match.");
+                
                 await api.post('/register/', formData);
-                await api.post('/verification/', { email: formData.email });
-                navigate("/verification", { state: { email: formData.email } });
-            }
-            catch (err) {
-                const errorData = err.response?.data;
-                let message = "Something went wrong.";
-
-                if (typeof errorData === "string") message = errorData;
-                else if (typeof errorData?.error === "string") message = errorData.error;
-                else if (errorData?.message) message = errorData.message;
-                else if (errorData?.details) message = JSON.stringify(errorData.details);
-
-                setError(message);
-                setLoading(false);
-            }
-        }
-
-        if (isLogin) {
-            try {
+                await api.post('/verification/', { email });
+                navigate("/verification", { state: { email } });
+            } else {
                 const response = await api.post('/login/', formData);
                 localStorage.setItem("user", JSON.stringify(response.data.user));
-                if (response.data.first_time_login) {
-                    setMessage("Login successful!");
-                    setTimeout(() => navigate("/account-setup"), 1000);
-                } 
-                else {
-                    setMessage("Login successful!");
-                    setTimeout(() => navigate("/dashboard"), 1000);
-                }
-            } 
-            catch (err) {
-                const errorData = err.response?.data;
-                let message = "Something went wrong.";
-                        
-                if (typeof errorData === "string") message = errorData;
-                else if (typeof errorData?.error === "string") message = errorData.error;
-                else if (errorData?.message) message = errorData.message;
-                else if (errorData?.details) message = JSON.stringify(errorData.details);
-                        
-                setError(message);
-                setLoading(false);
+                setMessage("Login successful!");
+                setTimeout(() => navigate(response.data.first_time_login ? "/account-setup" : "/dashboard"), 1000);
             }
-
-            setTimeout(() => {
-                setMessage('');
-                setError('');
-            }, 3000);
-        };
-    }
+        } catch (err) {
+            const msg = err.response?.data?.error || err.message || "Something went wrong.";
+            setError(msg);
+        } finally {
+            setLoading(false);
+        }
+    };
 
     return (
         <Container
+            fluid
+            className="d-flex align-items-center justify-content-center"
             style={{
                 height: "100vh",
-                width: "100%",
-                
-                backgroundSize: "cover",
-                backgroundPosition: "center",
-                backgroundRepeat: "no-repeat",
+                background: "linear-gradient(135deg, var(--background), var(--card))",
                 color: "var(--text)",
-                overflowX: "hidden",
-                overflowY: "auto",
-                position: "relative",
+                overflow: "hidden",
             }}
         >
-            <div
+            <Card
                 style={{
-                    display: "flex",
-                    justifyContent: "center",
-                    alignItems: "center",
-                    minHeight: "100vh",
-                    padding: "40px 20px",
+                    backgroundColor: "var(--card)",
+                    border: `1px solid var(--accent1)`,
+                    borderRadius: "20px",
+                    padding: "2.5rem",
+                    width: "100%",
+                    maxWidth: "480px",
+                    boxShadow: "0 6px 30px var(--shadow1)",
                 }}
             >
-                <Card
+                {/* Back button */}
+                <Button
+                    onClick={() => navigate("/")}
                     style={{
-                        width: "100%",
-                        maxWidth: "700px",
-                        backgroundColor: "rgba(255, 255, 255, 0.05)",
-                        backdropFilter: "blur(15px)",
-                        WebkitBackdropFilter: "blur(15px)",
-                        border: "1px solid rgba(255, 255, 255, 0.2)",
-                        borderRadius: "20px",
-                        boxShadow: "0 0 20px rgba(0, 0, 0, 0.2)",
-                        padding: "20px",
+                        backgroundColor: "transparent",
+                        color: "var(--accent1)",
+                        border: "none",
+                        fontWeight: "600",
+                        fontSize: "0.9rem",
+                        marginBottom: "10px",
                     }}
                 >
+                    ← Back to Home
+                </Button>
 
-                    <Row className="justify-content-center">
-                        <Col>
-                            <div
-                                className="text-start w-100"
-                                style={{
-                                    paddingTop: "50px",
-                                    paddingLeft: "10px"
-                                }}
-                            >
+                {/* Header */}
+                <h2
+                    className="text-center mb-4"
+                    style={{
+                        color: "var(--accent1)",
+                        fontWeight: 700,
+                        letterSpacing: "1px",
+                    }}
+                >
+                    {isLogin ? "Welcome Back" : "Create Account"}
+                </h2>
 
-                                {/* Back button */}
-                                <Button
-                                    onClick={() => navigate("/")}
-                                    style={{
-                                        backgroundColor: "rgba(0, 173, 181, 0.3)",
-                                        color: "var(--text)",
-                                        border: "2px solid var(--border)",
-                                        borderRadius: "8px",
-                                        padding: "8px 16px",
-                                        fontWeight: "bold",
-                                        marginBottom: "20px",
-                                        backdropFilter: "blur(6px)",
-                                        WebkitBackdropFilter: "blur(6px)",
-                                        transition: "0.3s ease",
-                                    }}
-                                    onMouseEnter={(e) => {
-                                        e.target.style.backgroundColor = "#00ADB5";
-                                        e.target.style.color = "#fff";
-                                    }}
-                                    onMouseLeave={(e) => {
-                                        e.target.style.backgroundColor = "rgba(0, 173, 181, 0.3)";
-                                        e.target.style.color = "var(--text)";
-                                    }}
-                                >
-                                    ← Back to Home
-                                </Button>
+                {message && <Alert variant="success" className="text-center">{message}</Alert>}
+                {error && <Alert variant="danger" className="text-center">{error}</Alert>}
 
+                {/* Form */}
+                <Form onSubmit={handleSubmit}>
+                    {!isLogin ? (
+                        <>
+                            <InputField label="Username" type="text" placeholder="Enter a username"
+                                value={formData.username} onChange={(e) => setFormData({ ...formData, username: e.target.value })} />
+                            <InputField label="Password" type="password" placeholder="Enter a password"
+                                value={formData.password} onChange={(e) => setFormData({ ...formData, password: e.target.value })} />
+                            {formData.password && !/^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[\W_]).{8,}$/.test(formData.password) && (
+                                <small style={{ color: "red" }}>Must meet password requirements</small>
+                            )}
+                            <InputField label="Confirm Password" type="password" placeholder="Confirm your password"
+                                value={formData.confirmPassword} onChange={(e) => setFormData({ ...formData, confirmPassword: e.target.value })} />
+                            <Row>
+                                <Col>
+                                    <InputField label="First Name" type="text" placeholder="First name"
+                                        value={formData.first_name} onChange={(e) => setFormData({ ...formData, first_name: e.target.value })} />
+                                </Col>
+                                <Col>
+                                    <InputField label="Last Name" type="text" placeholder="Last name"
+                                        value={formData.last_name} onChange={(e) => setFormData({ ...formData, last_name: e.target.value })} />
+                                </Col>
+                            </Row>
+                            <InputField label="Email" type="email" placeholder="Enter your email"
+                                value={formData.email} onChange={(e) => setFormData({ ...formData, email: e.target.value })} />
+                            <InputField label="Confirm Email" type="email" placeholder="Confirm your email"
+                                value={formData.confirmEmail} onChange={(e) => setFormData({ ...formData, confirmEmail: e.target.value })} />
+                        </>
+                    ) : (
+                        <>
+                            <InputField label="Username" type="text" placeholder="Enter your username"
+                                value={formData.username} onChange={(e) => setFormData({ ...formData, username: e.target.value })} />
+                            <InputField label="Password" type="password" placeholder="Enter your password"
+                                value={formData.password} onChange={(e) => setFormData({ ...formData, password: e.target.value })} />
+                            <div className="text-end mb-3">
+                                <Link to="/password-reset" style={{ color: "var(--accent1)", textDecoration: "none" }}>Forgot password?</Link>
                             </div>
-                            <h1 className="text-center mb-4"
-                                style={{
-                                    color: "var(--border)",
-                                }}
-                            >{isLogin ? "Login" : "Register"}</h1>
-                            {message && <Alert variant="success">{message}</Alert>}
-                            {error && <Alert variant="danger">{error}</Alert>}
+                        </>
+                    )}
 
-                            <Form
-                                onSubmit={handleSubmit}
-                                style={{
-                                    paddingLeft: "10px",
-                                    paddingRight: "10px",
-                                    color: "var(--hover)"
-                                }}>
-                                {!isLogin && (
-                                    <>
-                                        <InputField label="Username" type="text" value={formData.username}
-                                            onChange={(e) => setFormData({ ...formData, username: e.target.value })}
-                                            placeholder="Enter a username"
-                                        />
-                                        <InputField label="Password" type="password" value={formData.password}
-                                            onChange={(e) => setFormData({ ...formData, password: e.target.value })}
-                                            placeholder="Enter a password"
-                                        />
-                                        {formData.password && !/^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[\W_]).{8,}$/.test(formData.password) && (
-                                            <small style={{ color: "red" }}>
-                                                Must be 8+ characters and include an uppercase, lowercase, number, and special character
-                                            </small>
-                                        )}
-                                        <InputField label="Confirm Password" type="password" value={formData.confirmPassword}
-                                            onChange={(e) => setFormData({ ...formData, confirmPassword: e.target.value })}
-                                            placeholder="Confirm your password"
-                                        />
-                                        <InputField label="First Name" type="text" value={formData.first_name}
-                                            onChange={(e) => setFormData({ ...formData, first_name: e.target.value })}
-                                            placeholder="Enter your first name"
-                                        />
-                                        <InputField label="Last Name" type="text" value={formData.last_name}
-                                            onChange={(e) => setFormData({ ...formData, last_name: e.target.value })}
-                                            placeholder="Enter your last name"
-                                        />
-                                        <InputField label="Email" type="email" value={formData.email}
-                                            onChange={(e) => setFormData({ ...formData, email: e.target.value })}
-                                            placeholder="Enter your email"
-                                        />
-                                        <InputField label="Confirm Email" type="email" value={formData.confirmEmail}
-                                            onChange={(e) => setFormData({ ...formData, confirmEmail: e.target.value })}
-                                            placeholder="Confirm your email"
-                                        />
-                                    </>
-                                )}
+                    <Button
+                        type="submit"
+                        disabled={loading}
+                        style={{
+                            backgroundColor: "var(--accent1)",
+                            width: "100%",
+                            fontSize: "1rem",
+                            padding: "10px 0",
+                            color: "#fff",
+                            border: "none",
+                            borderRadius: "10px",
+                            fontWeight: "600",
+                            transition: "0.3s ease",
+                        }}
+                        onMouseEnter={(e) => (e.target.style.opacity = "0.85")}
+                        onMouseLeave={(e) => (e.target.style.opacity = "1")}
+                    >
+                        {loading ? <Spinner as="span" animation="border" size="sm" /> : (isLogin ? "Login" : "Register")}
+                    </Button>
 
-                                {isLogin && (
-                                    <>
-                                        <InputField label="Username" type="text" value={formData.username}
-                                            onChange={(e) => setFormData({ ...formData, username: e.target.value })}
-                                            placeholder="Enter your username"
-                                        />
-                                        <InputField label="Password" type="password" value={formData.password}
-                                            onChange={(e) => setFormData({ ...formData, password: e.target.value })}
-                                            placeholder="Enter your password"
-                                        />
-                                        <div className="text-end mb-3">
-                                            <Link to="/password-reset">Forgot password?</Link>
-                                        </div>
-                                    </>
-                                )}
-
-                                <Button
-                                    type="submit"
-                                    disabled={loading}
-                                    style={{
-                                        backgroundColor: "rgba(0, 173, 181, 0.3)",
-                                        width: "50%",
-                                        fontSize: "0.9rem",
-                                        padding: "8px 16px",
-                                        color: "var(--text)",
-                                        borderRadius: "8px",
-                                        border: "2px solid var(--border)",
-                                        backdropFilter: "blur(6px)",
-                                        WebkitBackdropFilter: "blur(6px)",
-                                        transition: "all 0.3s ease",
-                                        margin: "0 auto",
-                                        display: "block",
-                                    }}
-                                    onMouseEnter={(e) => {
-                                        e.target.style.backgroundColor = "#00ADB5";
-                                        e.target.style.color = "#fff";
-                                    }}
-                                    onMouseLeave={(e) => {
-                                        e.target.style.backgroundColor = "rgba(0, 173, 181, 0.3)";
-                                        e.target.style.color = "var(--text)";
-                                    }}
-                                >
-                                    {loading ? <Spinner as="span" animation="border" size="sm" /> : (isLogin ? "Login" : "Register")}
-                                </Button>
-
-                                <div className="text-center mt-3"
-                                    style={{
-                                        color: "var(--text1)",
-                                    }}
-                                >
-                                    {isLogin ? (
-                                        <p>Don't have an account? <Link to="/register">Register</Link></p>
-                                    ) : (
-                                        <p>Already have an account? <Link to="/login">Login</Link></p>
-                                    )}
-                                </div>
-                            </Form>
-                        </Col>
-                    </Row>
-                </Card>
-            </div>
+                    <div className="text-center mt-3" style={{ color: "var(--text)" }}>
+                        {isLogin ? (
+                            <p>Don’t have an account? <Link to="/register" style={{ color: "var(--accent1)", fontWeight: 600 }}>Register</Link></p>
+                        ) : (
+                            <p>Already have an account? <Link to="/login" style={{ color: "var(--accent1)", fontWeight: 600 }}>Login</Link></p>
+                        )}
+                    </div>
+                </Form>
+            </Card>
         </Container>
     );
 };

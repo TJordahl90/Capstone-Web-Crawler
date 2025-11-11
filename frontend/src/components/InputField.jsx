@@ -4,7 +4,7 @@ import { Form } from 'react-bootstrap';
 const InputField = ({ label, type, value, onChange, placeholder, required = true }) => {
   return (
     <Form.Group className="mb-3">
-      <Form.Label>{label}</Form.Label>
+      <Form.Label style={{ color: "var(--text)" }}>{label}</Form.Label>
       <Form.Control
         type={type}
         value={value}
