@@ -77,25 +77,24 @@ const AuthForm = ({ isLogin }) => {
             fluid
             className="d-flex align-items-center justify-content-center"
             style={{
-                height: "100vh",
+                minHeight: "100vh",
                 background: "linear-gradient(135deg, var(--background), var(--card))",
                 color: "var(--text)",
-                overflow: "hidden",
-                position: "relative"
+                padding: "1rem",
+                overflowY: "auto",
             }}
         >
-
-            {/* Alert Message Pop-up */}
-            <GlobalMessage type={alert.type} message={alert.text} onClose={() => setAlert({ type: "", text: "" })}/>
+            {/* Alert Message */}
+            <GlobalMessage type={alert.type} message={alert.text} onClose={() => setAlert({ type: "", text: "" })} />
 
             <Card
                 style={{
                     backgroundColor: "var(--card)",
                     border: `1px solid var(--accent1)`,
                     borderRadius: "20px",
-                    padding: "2.5rem",
+                    padding: "2rem",
                     width: "100%",
-                    maxWidth: "480px",
+                    maxWidth: "440px",
                     boxShadow: "0 6px 30px var(--shadow1)",
                 }}
             >
@@ -108,6 +107,7 @@ const AuthForm = ({ isLogin }) => {
                         fontWeight: "600",
                         fontSize: "0.9rem",
                         marginBottom: "10px",
+                        padding: 0,
                     }}
                 >
                     ← Back to Home
@@ -127,38 +127,89 @@ const AuthForm = ({ isLogin }) => {
                 <Form onSubmit={handleSubmit}>
                     {!isLogin ? (
                         <>
-                            <InputField label="Username" type="text" placeholder="Enter a username"
-                                value={formData.username} onChange={(e) => setFormData({ ...formData, username: e.target.value })} />
-                            <InputField label="Password" type="password" placeholder="Enter a password"
-                                value={formData.password} onChange={(e) => setFormData({ ...formData, password: e.target.value })} />
-                            {formData.password && !/^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[\W_]).{8,}$/.test(formData.password) && (
-                                <small style={{ color: "red" }}>Must meet password requirements</small>
-                            )}
-                            <InputField label="Confirm Password" type="password" placeholder="Confirm your password"
-                                value={formData.confirmPassword} onChange={(e) => setFormData({ ...formData, confirmPassword: e.target.value })} />
-                            <Row>
-                                <Col>
-                                    <InputField label="First Name" type="text" placeholder="First name"
-                                        value={formData.first_name} onChange={(e) => setFormData({ ...formData, first_name: e.target.value })} />
+                            <InputField
+                                label="Username"
+                                type="text"
+                                placeholder="Enter a username"
+                                value={formData.username}
+                                onChange={(e) => setFormData({ ...formData, username: e.target.value })}
+                            />
+                            <InputField
+                                label="Password"
+                                type="password"
+                                placeholder="Enter a password"
+                                value={formData.password}
+                                onChange={(e) => setFormData({ ...formData, password: e.target.value })}
+                            />
+                            {formData.password &&
+                                !/^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[\W_]).{8,}$/.test(formData.password) && (
+                                    <small style={{ color: "red" }}>Must meet password requirements</small>
+                                )}
+                            <InputField
+                                label="Confirm Password"
+                                type="password"
+                                placeholder="Confirm your password"
+                                value={formData.confirmPassword}
+                                onChange={(e) => setFormData({ ...formData, confirmPassword: e.target.value })}
+                            />
+                            <Row className="gx-2">
+                                <Col xs={12} sm={6}>
+                                    <InputField
+                                        label="First Name"
+                                        type="text"
+                                        placeholder="First name"
+                                        value={formData.first_name}
+                                        onChange={(e) => setFormData({ ...formData, first_name: e.target.value })}
+                                    />
                                 </Col>
-                                <Col>
-                                    <InputField label="Last Name" type="text" placeholder="Last name"
-                                        value={formData.last_name} onChange={(e) => setFormData({ ...formData, last_name: e.target.value })} />
+                                <Col xs={12} sm={6}>
+                                    <InputField
+                                        label="Last Name"
+                                        type="text"
+                                        placeholder="Last name"
+                                        value={formData.last_name}
+                                        onChange={(e) => setFormData({ ...formData, last_name: e.target.value })}
+                                    />
                                 </Col>
                             </Row>
-                            <InputField label="Email" type="email" placeholder="Enter your email"
-                                value={formData.email} onChange={(e) => setFormData({ ...formData, email: e.target.value })} />
-                            <InputField label="Confirm Email" type="email" placeholder="Confirm your email"
-                                value={formData.confirmEmail} onChange={(e) => setFormData({ ...formData, confirmEmail: e.target.value })} />
+                            <InputField
+                                label="Email"
+                                type="email"
+                                placeholder="Enter your email"
+                                value={formData.email}
+                                onChange={(e) => setFormData({ ...formData, email: e.target.value })}
+                            />
+                            <InputField
+                                label="Confirm Email"
+                                type="email"
+                                placeholder="Confirm your email"
+                                value={formData.confirmEmail}
+                                onChange={(e) => setFormData({ ...formData, confirmEmail: e.target.value })}
+                            />
                         </>
                     ) : (
                         <>
-                            <InputField label="Username" type="text" placeholder="Enter your username"
-                                value={formData.username} onChange={(e) => setFormData({ ...formData, username: e.target.value })} />
-                            <InputField label="Password" type="password" placeholder="Enter your password"
-                                value={formData.password} onChange={(e) => setFormData({ ...formData, password: e.target.value })} />
+                            <InputField
+                                label="Username"
+                                type="text"
+                                placeholder="Enter your username"
+                                value={formData.username}
+                                onChange={(e) => setFormData({ ...formData, username: e.target.value })}
+                            />
+                            <InputField
+                                label="Password"
+                                type="password"
+                                placeholder="Enter your password"
+                                value={formData.password}
+                                onChange={(e) => setFormData({ ...formData, password: e.target.value })}
+                            />
                             <div className="text-end mb-3">
-                                <Link to="/password-reset" style={{ color: "var(--accent1)", textDecoration: "none" }}>Forgot password?</Link>
+                                <Link
+                                    to="/password-reset"
+                                    style={{ color: "var(--accent1)", textDecoration: "none", fontSize: "0.9rem" }}
+                                >
+                                    Forgot password?
+                                </Link>
                             </div>
                         </>
                     )}
@@ -180,14 +231,28 @@ const AuthForm = ({ isLogin }) => {
                         onMouseEnter={(e) => (e.target.style.opacity = "0.85")}
                         onMouseLeave={(e) => (e.target.style.opacity = "1")}
                     >
-                        {loading ? <Spinner as="span" animation="border" size="sm" /> : (isLogin ? "Login" : "Register")}
+                        {loading ? (
+                            <Spinner as="span" animation="border" size="sm" />
+                        ) : (
+                            isLogin ? "Login" : "Register"
+                        )}
                     </Button>
 
                     <div className="text-center mt-3" style={{ color: "var(--text)" }}>
                         {isLogin ? (
-                            <p>Don’t have an account? <Link to="/register" style={{ color: "var(--accent1)", fontWeight: 600 }}>Register</Link></p>
+                            <p style={{ fontSize: "0.95rem" }}>
+                                Don’t have an account?{" "}
+                                <Link to="/register" style={{ color: "var(--accent1)", fontWeight: 600 }}>
+                                    Register
+                                </Link>
+                            </p>
                         ) : (
-                            <p>Already have an account? <Link to="/login" style={{ color: "var(--accent1)", fontWeight: 600 }}>Login</Link></p>
+                            <p style={{ fontSize: "0.95rem" }}>
+                                Already have an account?{" "}
+                                <Link to="/login" style={{ color: "var(--accent1)", fontWeight: 600 }}>
+                                    Login
+                                </Link>
+                            </p>
                         )}
                     </div>
                 </Form>
