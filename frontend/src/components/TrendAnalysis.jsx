@@ -36,11 +36,11 @@ const TrendAnalysis = () => {
 
     const COLORS = [
       '#1B6CA8',
-      '#2185D5',
+      '#FF6B6B',
       '#4ECDC4',
       '#FFD369',
+      '#2185D5',
       '#FF8C42',
-      '#FF6B6B',
       '#A86BD5',
     ];
 
