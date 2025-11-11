@@ -7,6 +7,7 @@ import { FaThLarge } from "react-icons/fa";
 import { useTheme } from "./ThemeContext";
 import { useNavigate } from "react-router-dom";
 import api from "../api";
+import { Modal, Button } from "react-bootstrap";
 
 const SidePanel = ({ children, user, handleLogout }) => {
     const { theme } = useTheme();
@@ -15,10 +16,11 @@ const SidePanel = ({ children, user, handleLogout }) => {
     const location = useLocation();
     const storedUser = typeof window !== "undefined" ? localStorage.getItem("user") : null;
     const userEffective = user ?? (storedUser ? JSON.parse(storedUser) : null);
-     const navigate = useNavigate();
+    const navigate = useNavigate();
+    const [showLogoutConfirm, setShowLogoutConfirm] = useState(false);
 
     const handleLogoutInternal = async (e) => {
-        e?.preventDefault();
+        e?.preventDefault();          // ok to keep
         try {
             await api.post("/logout/");
         } catch (err) {
@@ -27,7 +29,9 @@ const SidePanel = ({ children, user, handleLogout }) => {
         localStorage.clear();
         navigate("/");
     };
-    
+
+
+
     const navItems = [
         { icon: <FaThLarge />, href: "/dashboard", key: "dashboard", label: "Dashboard" },
         { icon: <FaBriefcase />, href: "/find-jobs", key: "jobs", label: "Explore Jobs" },
@@ -36,7 +40,7 @@ const SidePanel = ({ children, user, handleLogout }) => {
         { icon: <FaChartBar />, href: "/trend-analysis", key: "trends", label: "Job Trends" },
 
     ].concat(
-        userEffective ? [ { icon: <FaSignOutAlt />, key: "logout",      label: "Log Out", onClick: handleLogoutInternal } ]: []
+        userEffective ? [{ icon: <FaSignOutAlt />, key: "logout", label: "Log Out", onClick: handleLogoutInternal }] : []
     );
 
     const currentPath = location.pathname; // need to implement - highlight button on current page
@@ -84,7 +88,7 @@ const SidePanel = ({ children, user, handleLogout }) => {
                         {item.key === "logout" ? (
                             <motion.div
                                 whileHover={{ scale: 1.15 }}
-                                onClick={item.onClick}
+                                onClick={() => setShowLogoutConfirm(true)}   // <— change here
                                 style={{
                                     color: hovered === item.key ? "var(--accent1)" : "var(--text)",
                                     backgroundColor: hovered === item.key ? "var(--hover)" : "transparent",
@@ -169,6 +173,65 @@ const SidePanel = ({ children, user, handleLogout }) => {
                 }}
             >
                 {children}
+                <Modal
+                    show={showLogoutConfirm}
+                    onHide={() => setShowLogoutConfirm(false)}
+                    centered
+                >
+                    <Modal.Header
+                        closeButton
+                        style={{
+                            backgroundColor: "var(--card)",
+                            color: "var(--text)",
+                            borderBottom: "1px solid var(--border)",
+                        }}
+                    >
+                        <Modal.Title>Log out?</Modal.Title>
+                    </Modal.Header>
+
+                    <Modal.Body
+                        style={{
+                            backgroundColor: "var(--card)",
+                            color: "var(--text)",
+                        }}
+                    >
+                        Are you sure you want to log out?
+                    </Modal.Body>
+
+                    <Modal.Footer
+                        style={{
+                            backgroundColor: "var(--card)",
+                            borderTop: "1px solid var(--border)",
+                        }}
+                    >
+                        <Button
+                            variant="secondary"
+                            onClick={() => setShowLogoutConfirm(false)}
+                            style={{
+                                backgroundColor: "transparent",
+                                color: "var(--text)",
+                                border: "1px solid var(--border)",
+                            }}
+                        >
+                            Cancel
+                        </Button>
+                        <Button
+                            onClick={async () => {
+                                setShowLogoutConfirm(false);
+                                await handleLogoutInternal();
+                            }}
+                            style={{
+                                backgroundColor: "var(--accent1)",
+                                color: "#fff",
+                                border: "none",
+                                fontWeight: 600,
+                            }}
+                        >
+                            Log Out
+                        </Button>
+                    </Modal.Footer>
+                </Modal>
+
             </div>
         </div>
     );
