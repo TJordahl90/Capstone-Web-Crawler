@@ -9,37 +9,37 @@ import api from "../api.js";
 const FindJobs = ({ jobPostTypeProp }) => {
     // Child prop state
     const [jobPostType, setJobPostType] = useState(jobPostTypeProp);
-    
+
     // Job states
     const [allJobs, setAllJobs] = useState([]);
     const [searchedJobs, setSearchedJobs] = useState([]);
     const [matchedJobs, setMatchedJobs] = useState([]);
     const [savedJobs, setSavedJobs] = useState([]);
     const [selectedJob, setSelectedJob] = useState(null);
-    
+
     // Searching and filtering
     const [searchTerm, setSearchTerm] = useState("");
     const [filters, setFilters] = useState({ employmentType: [], experienceLevel: [], location: [], datePosted: [] });
     const [showCanvas, setShowCanvas] = useState(false);
-    
+
     // Pagination states
     const [currentPage, setCurrentPage] = useState(1);
     const [hasNextPage, setHasNextPage] = useState(false);
     const [hasPrevPage, setHasPrevPage] = useState(false);
-    
+
     // Job detail states
     const [jobCount, setJobCount] = useState();
     const [showLogo, setShowLogo] = useState(true);
     const [hoveredJobId, setHoveredJobId] = useState(null);
     const [showAllSkills, setShowAllSkills] = useState(false);
     const [showFullDescription, setShowFullDescription] = useState(false);
-    
+
     // Misc states
     const [showDetailsMobile, setShowDetailsMobile] = useState(false);
     const [showApplyConfirm, setShowApplyConfirm] = useState(false);
     const [error, setError] = useState("");
     const [loading, setLoading] = useState(false);
-    
+
     const jobListContainerRef = useRef(null);
     const navigate = useNavigate();
 
@@ -285,16 +285,16 @@ const FindJobs = ({ jobPostTypeProp }) => {
         window.addEventListener("resize", handleResize);
         return () => window.removeEventListener("resize", handleResize);
     }, []);
-        
+
     //---------------
     // Loading wheel
     if (loading) {
         return (
             <div style={{ height: "100vh", backgroundColor: "var(--background)", display: "flex", justifyContent: "center", alignItems: "center", flexDirection: "column", color: "var(--text)" }}>
-                <Spinner 
-                    animation="border" 
-                    role="status" 
-                    style={{ width: "4rem", height: "4rem" }} 
+                <Spinner
+                    animation="border"
+                    role="status"
+                    style={{ width: "4rem", height: "4rem" }}
                 />
                 <p style={{ marginTop: "1rem", fontSize: "1.1rem" }}>
                     Loading jobs...
@@ -302,17 +302,17 @@ const FindJobs = ({ jobPostTypeProp }) => {
             </div>
         );
     }
-    
+
     //-----------------------------------------------------
     // Renders each of the job listings in the left sidebar
     const renderJobItem = (job) => {
         const isSelected = selectedJob?.id === job.id;
         const isHovered = hoveredJobId === job.id;
-    
+
         const date = new Date(job.datePosted);
         const safeDate = date > new Date() ? new Date() : date;
         const timeAgo = formatDistanceToNow(safeDate, { addSuffix: true });
-    
+
         return (
             <div
                 key={job.id}
@@ -327,10 +327,10 @@ const FindJobs = ({ jobPostTypeProp }) => {
                     cursor: "pointer",
                     width: "100%",
                     backgroundColor: isSelected
-                        ? "rgba(33, 133, 213, 0.2)"
+                        ? "rgba(71, 107, 141, 0.2)"
                         : isHovered
-                        ? "rgba(255, 255, 255, 0.08)"
-                        : "transparent",
+                            ? "rgba(255, 255, 255, 0.08)"
+                            : "transparent",
                     borderLeft: isSelected
                         ? "3px solid var(--accent1)"
                         : "3px solid transparent",
@@ -385,9 +385,9 @@ const FindJobs = ({ jobPostTypeProp }) => {
                             <motion.h5
                                 className="mb-1"
                                 style={{
-                                    fontSize: "1rem",
+                                    fontSize: "1.3rem",
                                     color: isSelected
-                                        ? "var(--accent2)"
+                                        ? "var(--accent1)"
                                         : "var(--text)",
                                     fontWeight: 600,
                                     transition: "color 0.25s ease",
@@ -395,12 +395,12 @@ const FindJobs = ({ jobPostTypeProp }) => {
                             >
                                 {job.title}
                             </motion.h5>
-                            
+
                             <motion.p
                                 style={{
                                     fontSize: "0.9rem",
                                     color: isSelected
-                                        ? "var(--accent1)"
+                                        ? "var(--accent2)"
                                         : "var(--text)",
                                     margin: 0,
                                 }}
@@ -409,7 +409,7 @@ const FindJobs = ({ jobPostTypeProp }) => {
                             </motion.p>
                         </div>
                     </div>
-                            
+
                     {/* Skills */}
                     {job.skills && job.skills.length > 0 && (
                         <div className="d-flex flex-wrap gap-1 mt-1" style={{ rowGap: "10px" }}>
@@ -438,13 +438,13 @@ const FindJobs = ({ jobPostTypeProp }) => {
                             ))}
                         </div>
                     )}
-    
+
                     {/* Time + Match */}
                     <div className="d-flex justify-content-between align-items-center mt-2">
                         <small style={{ color: "var(--text)", fontSize: "0.85rem" }}>
                             {timeAgo || "Recently posted"}
                         </small>
-                
+
                         {jobPostType === "matched" && (
                             <span
                                 style={{
@@ -511,7 +511,7 @@ const FindJobs = ({ jobPostTypeProp }) => {
                                     }}
                                 >
                                     {/* Top Section: Search bar + Icons */}
-                                    <div className="d-flex flex-nowrap align-items-center" style={{ gap: "10px"  }}>
+                                    <div className="d-flex flex-nowrap align-items-center" style={{ gap: "10px" }}>
                                         {/* Search input */}
                                         <div className="position-relative flex-grow-1">
                                             <div
@@ -520,7 +520,7 @@ const FindJobs = ({ jobPostTypeProp }) => {
                                             >
                                                 <FaSearch style={{ color: "#3A4750" }} />
                                             </div>
-                                                                        
+
                                             <style>{`
                                                 .search-input::placeholder { color: #303841; opacity: 1; }
                                                 .search-input::-webkit-input-placeholder { color: #303841; opacity: 1; }
@@ -543,7 +543,7 @@ const FindJobs = ({ jobPostTypeProp }) => {
                                                     color: var(--background);
                                                 }
                                             `}</style>
-                                            
+
                                             <Form.Control
                                                 type="text"
                                                 className="search-input"
@@ -560,7 +560,7 @@ const FindJobs = ({ jobPostTypeProp }) => {
                                                 }}
                                             />
                                         </div>
-                                          
+
                                         <div className="d-flex align-items-center" style={{ gap: "10px" }}>
                                             <div
                                                 className="icon-btn"
@@ -569,7 +569,7 @@ const FindJobs = ({ jobPostTypeProp }) => {
                                             >
                                                 <FaCompass size={20} />
                                             </div>
-                                                
+
                                             <div
                                                 className="icon-btn"
                                                 title="Filters"
@@ -579,7 +579,7 @@ const FindJobs = ({ jobPostTypeProp }) => {
                                             </div>
                                         </div>
                                     </div>
-                                      
+
                                     {/* Total Jobs */}
                                     {/* <div className="mt-3">
                                         <p
@@ -607,7 +607,7 @@ const FindJobs = ({ jobPostTypeProp }) => {
                                     {displayJobs.map(job => renderJobItem(job))}
                                 </div>
                             )}
-                            
+
                             <div className="d-flex justify-content-center align-items-center p-1 gap-1">
                                 {!loading && hasPrevPage && (
                                     <Button variant="primary" onClick={() => setCurrentPage(prev => prev - 1)} style={{ color: "var(--accent1)", background: "none", border: "none" }}>
@@ -626,172 +626,181 @@ const FindJobs = ({ jobPostTypeProp }) => {
                         </div>
                     </Col>
                 )}
-                
+
                 {/* Job Posting Details */}
                 {(windowWidth > 770 || showDetailsMobile) && (
                     <Col md={9} className="p-0" style={{ height: "100%" }}>
-            	        {windowWidth <= 770 && (
-            	        	<div className="d-flex align-items-center justify-content-between m-2">
-            	        		<Button
-            	        			className="px-2 py-2"
-            	        			style={{
-            	        				backgroundColor: "var(--background)",
-            	        				color: "var(--text)",
-            	        				border: "2px solid var(--border)",
-            	        				borderRadius: "8px",
-            	        			}}
-            	        			onClick={() => setShowDetailsMobile(false)}
-            	        		>
-            	        			← Back
-            	        		</Button>
-            	        	</div>
-            	        )}
-                    
-            	        {loading ? (
-            	        	<div className="h-100 d-flex align-items-center justify-content-center">
-            	        		<Spinner animation="border" role="status">
-            	        			<span className="visually-hidden">Loading...</span>
-            	        		</Spinner>
-            	        	</div>
-            	        ) : selectedJob ? (
-            	        	<div
-            	        		className="h-100 overflow-auto auto-hide-scroll"
-            	        		style={{
-            	        			color: "var(--text)",
-            	        			backgroundColor: "var(--background)",
-            	        			paddingBottom: "3rem",
-            	        			paddingLeft: "5rem",
-            	        			paddingRight: "5rem",
-            	        		}}
-            	        	>
-            	        		{/* Top Section */}
-            	        		<div className={windowWidth <= 770 ? "p-3" : "pt-5 pb-4"}>
-            	        			<div className="d-flex justify-content-between align-items-start flex-wrap gap-3">
-                                        
-            	        				{/* Logo + Title + Company */}
-            	        				<div className="d-flex align-items-center gap-3">
-            	        					<div
-            	        						style={{
-            	        							width: "90px",
-            	        							height: "90px",
-            	        							backgroundColor: "var(--card)",
-            	        							borderRadius: "16px",
-            	        							display: "flex",
-            	        							alignItems: "center",
-            	        							justifyContent: "center",
-            	        							boxShadow: "0 3px 10px var(--shadow1)",
-            	        							flexShrink: 0,
-            	        						}}
-            	        					>
-            	        						{selectedJob.logoURL ? (
-            	        							<img
-            	        								src={selectedJob.logoURL}
-            	        								alt={`${selectedJob.company} logo`}
-            	        								style={{
-            	        									width: "75px",
-            	        									height: "75px",
-            	        									objectFit: "contain",
-            	        								}}
-            	        							/>
-            	        						) : (
-            	        							<FaBuilding size={40} color="var(--text)" />
-            	        						)}
-            	        					</div>
-                                            
-            	        					<div>
-            	        						<h2
-            	        							className="mb-1"
-            	        							style={{
-            	        								color: "var(--accent1)",
-            	        								fontSize: "2rem",
-            	        								fontWeight: 700,
-            	        							}}
-            	        						>
-            	        							{selectedJob.title}
-            	        						</h2>
-            	        						<h4
-            	        							className="mb-0"
-            	        							style={{
-            	        								color: "var(--accent2)",
-            	        								fontWeight: 600,
-            	        								fontSize: "1.3rem",
-            	        							}}
-            	        						>
-            	        							{selectedJob.company}
-            	        						</h4>
-            	        					</div>
-            	        				</div>
-                                                
-            	        				{/* Buttons */}
-            	        				<div className="d-flex align-items-center gap-2">
-            	        					<Button
-            	        						style={{
-            	        							backgroundColor: "var(--accent1)",
-            	        							color: "var(--text)",
-            	        							border: "none",
-            	        							borderRadius: "8px",
-            	        							fontWeight: 600,
-            	        						}}
-            	        						onClick={() =>
-            	        							toggleSaveJob(selectedJob.id, selectedJob.is_saved)
-            	        						}
-            	        						onMouseEnter={(e) =>
-            	        							(e.currentTarget.style.backgroundColor = "var(--background)")
-            	        							(e.currentTarget.style.border = "1px solid var(--accent1)")
-            	        						}
-            	        						onMouseLeave={(e) =>
-            	        							(e.currentTarget.style.backgroundColor = "var(--accent1)")
-            	        						}
-            	        					>
-            	        						{selectedJob.is_saved ? "Unsave" : "Save"}
-            	        					</Button>
-                                            
-            	        					<Button
-            	        						style={{
-            	        							backgroundColor: "var(--accent1)",
-            	        							color: "var(--text)",
-            	        							border: "none",
-            	        							borderRadius: "8px",
-            	        							fontWeight: 600,
-            	        						}}
-            	        						onClick={handleApplyClick}
-            	        						disabled={selectedJob.applied_status}
-            	        						onMouseEnter={(e) =>
-            	        							(e.currentTarget.style.backgroundColor = "var(--background)")
-            	        							(e.currentTarget.style.border = "1px solid var(--accent1)")
-            	        						}
-            	        						onMouseLeave={(e) =>
-            	        							(e.currentTarget.style.backgroundColor = "var(--accent1)")
-            	        						}
-            	        					>
-            	        						{selectedJob.applied_status ? "Applied" : "Apply"}
-            	        					</Button>
-                                            
-            	        					<Button
-            	        						style={{
-            	        							backgroundColor: "var(--accent1)",
-            	        							color: "var(--text)",
-            	        							border: "none",
-            	        							borderRadius: "8px",
-            	        							fontWeight: 600,
-            	        						}}
-            	        						onClick={() =>
-            	        							navigate("/interview-chatbot", { state: { job: selectedJob } })
-            	        						}
-            	        						onMouseEnter={(e) =>
-            	        							(e.currentTarget.style.backgroundColor = "var(--background)")
-            	        							(e.currentTarget.style.border = "1px solid var(--accent1)")
-            	        						}
-            	        						onMouseLeave={(e) =>
-            	        							(e.currentTarget.style.backgroundColor = "var(--accent1)")
-            	        						}
-            	        					>
-            	        						Interview
-            	        					</Button>
-            	        				</div>
-            	        			</div>
-            	        		</div>
-                                
+                        {windowWidth <= 770 && (
+                            <div className="d-flex align-items-center justify-content-between m-2">
+                                <Button
+                                    className="px-2 py-2"
+                                    style={{
+                                        backgroundColor: "var(--background)",
+                                        color: "var(--text)",
+                                        border: "2px solid var(--border)",
+                                        borderRadius: "8px",
+                                    }}
+                                    onClick={() => setShowDetailsMobile(false)}
+                                >
+                                    ← Back
+                                </Button>
+                            </div>
+                        )}
+
+                        {loading ? (
+                            <div className="h-100 d-flex align-items-center justify-content-center">
+                                <Spinner animation="border" role="status">
+                                    <span className="visually-hidden">Loading...</span>
+                                </Spinner>
+                            </div>
+                        ) : selectedJob ? (
+                            <div
+                                className="h-100 overflow-auto auto-hide-scroll"
+                                style={{
+                                    color: "var(--text)",
+                                    backgroundColor: "var(--background)",
+                                    paddingBottom: "3rem",
+                                    paddingLeft: "5rem",
+                                    paddingRight: "5rem",
+                                }}
+                            >
+                                {/* Top Section */}
+                                <div className={windowWidth <= 770 ? "p-3" : "pt-5 pb-4"}>
+                                    <div className="d-flex justify-content-between align-items-start flex-wrap gap-3">
+
+                                        {/* Logo + Title + Company */}
+                                        <div className="d-flex align-items-center gap-3">
+                                            <div
+                                                style={{
+                                                    width: "90px",
+                                                    height: "90px",
+                                                    backgroundColor: "var(--card)",
+                                                    borderRadius: "16px",
+                                                    display: "flex",
+                                                    alignItems: "center",
+                                                    justifyContent: "center",
+                                                    boxShadow: "0 3px 10px var(--shadow1)",
+                                                    flexShrink: 0,
+                                                }}
+                                            >
+                                                {selectedJob.logoURL ? (
+                                                    <img
+                                                        src={selectedJob.logoURL}
+                                                        alt={`${selectedJob.company} logo`}
+                                                        style={{
+                                                            width: "75px",
+                                                            height: "75px",
+                                                            objectFit: "contain",
+                                                        }}
+                                                    />
+                                                ) : (
+                                                    <FaBuilding size={40} color="var(--text)" />
+                                                )}
+                                            </div>
+
+                                            <div>
+                                                <h2
+                                                    className="mb-1"
+                                                    style={{
+                                                        color: "var(--accent1)",
+                                                        fontSize: "2rem",
+                                                        fontWeight: 700,
+                                                    }}
+                                                >
+                                                    {selectedJob.title}
+                                                </h2>
+                                                <h4
+                                                    className="mb-0"
+                                                    style={{
+                                                        color: "var(--accent2)",
+                                                        fontWeight: 600,
+                                                        fontSize: "1.3rem",
+                                                    }}
+                                                >
+                                                    {selectedJob.company}
+                                                </h4>
+                                            </div>
+                                        </div>
+
+                                        {/* Buttons */}
+                                        <div className="d-flex align-items-center gap-2">
+                                            <Button
+                                                style={{
+                                                    backgroundColor: "var(--accent1)",
+                                                    color: "#FFFFFF",
+                                                    border: "none",
+                                                    borderRadius: "8px",
+                                                    fontWeight: 600,
+                                                }}
+                                                onClick={() =>
+                                                    toggleSaveJob(selectedJob.id, selectedJob.is_saved)
+                                                }
+                                                onMouseEnter={(e) => {
+                                                    e.currentTarget.style.color = "var(--accent1)";
+                                                    e.currentTarget.style.backgroundColor = "#FFFFFF";
+                                                    e.currentTarget.style.border = "1px solid var(--accent1)";
+                                                }}
+
+                                                onMouseLeave={(e) => {
+                                                    e.currentTarget.style.color = "#FFFFFF";
+                                                    e.currentTarget.style.backgroundColor = "var(--accent1)";
+                                                }}
+                                            >
+                                                {selectedJob.is_saved ? "Unsave" : "Save"}
+                                            </Button>
+
+                                            <Button
+                                                style={{
+                                                    backgroundColor: "var(--accent1)",
+                                                    color: "#FFFFFF",
+                                                    border: "none",
+                                                    borderRadius: "8px",
+                                                    fontWeight: 600,
+                                                }}
+                                                onClick={handleApplyClick}
+                                                disabled={selectedJob.applied_status}
+                                                onMouseEnter={(e) => {
+                                                    e.currentTarget.style.color = "var(--accent1)";
+                                                    e.currentTarget.style.backgroundColor = "#FFFFFF";
+                                                    e.currentTarget.style.border = "1px solid var(--accent1)";
+                                                }}
+
+                                                onMouseLeave={(e) => {
+                                                    e.currentTarget.style.color = "#FFFFFF";
+                                                    e.currentTarget.style.backgroundColor = "var(--accent1)";
+                                                }}
+                                            >
+                                                {selectedJob.applied_status ? "Applied" : "Apply"}
+                                            </Button>
+
+                                            <Button
+                                                style={{
+                                                    backgroundColor: "var(--accent1)",
+                                                    color: "#FFFFFF",
+                                                    border: "none",
+                                                    borderRadius: "8px",
+                                                    fontWeight: 600,
+                                                }}
+                                                onClick={() =>
+                                                    navigate("/interview-chatbot", { state: { job: selectedJob } })
+                                                }
+                                                onMouseEnter={(e) => {
+                                                    e.currentTarget.style.color = "var(--accent1)";
+                                                    e.currentTarget.style.backgroundColor = "#FFFFFF";
+                                                    e.currentTarget.style.border = "1px solid var(--accent1)";
+                                                }}
+
+                                                onMouseLeave={(e) => {
+                                                    e.currentTarget.style.color = "#FFFFFF";
+                                                    e.currentTarget.style.backgroundColor = "var(--accent1)";
+                                                }}
+                                            >
+                                                Interview
+                                            </Button>
+                                        </div>
+                                    </div>
+                                </div>
+
                                 {/* Did you apply prompt */}
                                 {showApplyConfirm && !selectedJob.applied_status && (
                                     <div
@@ -825,231 +834,231 @@ const FindJobs = ({ jobPostTypeProp }) => {
                                         </span>
                                     </div>
                                 )}
-                                            
-            	        		{/* About this job */}
-            	        		<div className="pt-4 pb-5">
-            	        			<h4 className="fw-bold mb-4" style={{ color: "var(--accent1)" }}>
-            	        				About This Job
-            	        			</h4>
-                                            
-            	        			<div className="row mb-5" style={{ fontSize: "1.1rem", color: "var(--text)" }}>
-                                    	<div className="col-md-6 mb-3">
-                                    		<div className="d-flex align-items-center mb-1">
-                                    			<FaClock className="me-2" size={22} color="var(--text)" />
-                                    			<strong>Date Posted:</strong>
-                                    			<span style={{ marginLeft: "8px" }}>
-                                    				{selectedJob.datePosted || "N/A"}
-                                    			</span>
-                                    		</div>
-                                    	</div>
-                                                                                
-                                    	<div className="col-md-6 mb-3">
-                                    		<div className="d-flex align-items-center mb-1">
-                                    			<FaMoneyBill className="me-2" size={22} color="var(--text)" />
-                                    			<strong>Salary:</strong>
-                                    			<span style={{ marginLeft: "8px" }}>
-                                    				{selectedJob.salary || "Not Posted"}
-                                    			</span>
-                                    		</div>
-                                    	</div>
-                                                                                
-                                    	<div className="col-md-6 mb-3">
-                                    		<div className="d-flex align-items-center mb-1">
-                                    			<FaMapMarkerAlt className="me-2" size={22} color="var(--text)" />
-                                    			<strong>Location:</strong>
-                                    			<span style={{ marginLeft: "8px" }}>
-                                    				{selectedJob.location || "Not Specified"}
-                                    			</span>
-                                    		</div>
-                                    	</div>
-                                                                                
-                                    	<div className="col-md-6 mb-3">
-                                    		<div className="d-flex align-items-center mb-1">
-                                    			<FaBriefcase className="me-2" size={22} color="var(--text)" />
-                                    			<strong>Employment Type:</strong>
-                                    			<span style={{ marginLeft: "8px" }}>
-                                    				{selectedJob.employmentTypes?.[0]?.name || "N/A"}
-                                    			</span>
-                                    		</div>
-                                    	</div>
-                                                                                
-                                    	<div className="col-md-6 mb-3">
-                                    		<div className="d-flex align-items-center mb-1">
-                                    			<FaUserTie className="me-2" size={22} color="var(--text)" />
-                                    			<strong>Experience Level:</strong>
-                                    			<span style={{ marginLeft: "8px" }}>
-                                    				{selectedJob.experienceLevels?.[0]?.name || "N/A"}
-                                    			</span>
-                                    		</div>
-                                    	</div>
-                                                                                
-                                    	<div className="col-md-6 mb-3">
-                                    		<div className="d-flex align-items-center mb-1">
-                                    			<FaLaptopHouse className="me-2" size={22} color="var(--text)" />
-                                    			<strong>Work Model:</strong>
-                                    			<span style={{ marginLeft: "8px" }}>
-                                    				{selectedJob.workModels?.[0]?.name || "N/A"}
-                                    			</span>
-                                    		</div>
-                                    	</div>
+
+                                {/* About this job */}
+                                <div className="pt-4 pb-5">
+                                    <h4 className="fw-bold mb-4" style={{ color: "var(--accent1)" }}>
+                                        About This Job
+                                    </h4>
+
+                                    <div className="row mb-5" style={{ fontSize: "1.1rem", color: "var(--text)" }}>
+                                        <div className="col-md-6 mb-3">
+                                            <div className="d-flex align-items-center mb-1">
+                                                <FaClock className="me-2" size={22} color="var(--text)" />
+                                                <strong>Date Posted:</strong>
+                                                <span style={{ marginLeft: "8px" }}>
+                                                    {selectedJob.datePosted || "N/A"}
+                                                </span>
+                                            </div>
+                                        </div>
+
+                                        <div className="col-md-6 mb-3">
+                                            <div className="d-flex align-items-center mb-1">
+                                                <FaMoneyBill className="me-2" size={22} color="var(--text)" />
+                                                <strong>Salary:</strong>
+                                                <span style={{ marginLeft: "8px" }}>
+                                                    {selectedJob.salary || "Not Posted"}
+                                                </span>
+                                            </div>
+                                        </div>
+
+                                        <div className="col-md-6 mb-3">
+                                            <div className="d-flex align-items-center mb-1">
+                                                <FaMapMarkerAlt className="me-2" size={22} color="var(--text)" />
+                                                <strong>Location:</strong>
+                                                <span style={{ marginLeft: "8px" }}>
+                                                    {selectedJob.location || "Not Specified"}
+                                                </span>
+                                            </div>
+                                        </div>
+
+                                        <div className="col-md-6 mb-3">
+                                            <div className="d-flex align-items-center mb-1">
+                                                <FaBriefcase className="me-2" size={22} color="var(--text)" />
+                                                <strong>Employment Type:</strong>
+                                                <span style={{ marginLeft: "8px" }}>
+                                                    {selectedJob.employmentTypes?.[0]?.name || "N/A"}
+                                                </span>
+                                            </div>
+                                        </div>
+
+                                        <div className="col-md-6 mb-3">
+                                            <div className="d-flex align-items-center mb-1">
+                                                <FaUserTie className="me-2" size={22} color="var(--text)" />
+                                                <strong>Experience Level:</strong>
+                                                <span style={{ marginLeft: "8px" }}>
+                                                    {selectedJob.experienceLevels?.[0]?.name || "N/A"}
+                                                </span>
+                                            </div>
+                                        </div>
+
+                                        <div className="col-md-6 mb-3">
+                                            <div className="d-flex align-items-center mb-1">
+                                                <FaLaptopHouse className="me-2" size={22} color="var(--text)" />
+                                                <strong>Work Model:</strong>
+                                                <span style={{ marginLeft: "8px" }}>
+                                                    {selectedJob.workModels?.[0]?.name || "N/A"}
+                                                </span>
+                                            </div>
+                                        </div>
                                     </div>
- 
-            	        			<hr
-            	        				style={{
-            	        					borderColor: "var(--border)",
-            	        					opacity: 0.8,
-            	        					margin: "2rem 0",
-            	        				}}
-            	        			/>
-                    
-            	        			{/* AI Summary */}
-            	        			{selectedJob.summary && (
-            	        				<div className="mb-5">
-            	        					<h4
-            	        						className="fw-bold mb-4"
-            	        						style={{ color: "var(--accent1)" }}
-            	        					>
-            	        						AI Summary
-            	        					</h4>
-            	        					<p
-            	        						style={{
-            	        							color: "var(--text)",
-            	        							fontSize: "1.05rem",
-            	        							lineHeight: "1.8",
-            	        							marginBottom: 0,
-            	        						}}
-            	        					>
-            	        						{selectedJob.summary}
-            	        					</p>
-            	        				</div>
-            	        			)}
-                    
-            	        			<hr
-            	        				style={{
-            	        					borderColor: "var(--border)",
-            	        					opacity: 0.8,
-            	        					margin: "2rem 0",
-            	        				}}
-            	        			/>
-                    
-            	        			{/*  What They're Looking For */}
-            	        			<div className="mb-5">
-            	        				<h4
-            	        					className="fw-bold mb-4"
-            	        					style={{ color: "var(--accent1)",}}
-            	        				>
-            	        					What They’re Looking For
-            	        				</h4>
-                                    
-            	        				<div className="d-flex flex-wrap gap-2 mb-3">
-            	        					{[...(selectedJob.skills || []), ...(selectedJob.careers || [])]
-            	        						.slice(0, showAllSkills ? undefined : 10)
-            	        						.map((item, index) => (
-            	        							<span
-            	        								key={index}
-            	        								style={{
-            	        									backgroundColor: "var(--accent3)",
-            	        									border: "1px solid var(--border)",
-            	        									borderRadius: "8px",
-            	        									padding: "6px 12px",
-            	        									fontSize: "0.95rem",
-            	        									color: "var(--text)",
-            	        									fontWeight: 600,
-            	        									transition: "all 0.25s ease",
-            	        									cursor: "default",
-            	        									boxShadow: "0 0 0 transparent",
-            	        								}}
-            	        								onMouseEnter={(e) => {
-            	        									e.currentTarget.style.boxShadow =
-            	        										"0 0 10px var(--accent3)";
-            	        									e.currentTarget.style.transform = "scale(1.06)";
-            	        								}}
-            	        								onMouseLeave={(e) => {
-            	        									e.currentTarget.style.boxShadow =
-            	        										"0 0 0 transparent";
-            	        									e.currentTarget.style.transform = "scale(1)";
-            	        								}}
-            	        							>
-            	        								{item.name || item}
-            	        							</span>
-            	        						))}
-            	        				</div>
-                                            
-            	        				{((selectedJob.skills?.length || 0) +
-            	        					(selectedJob.careers?.length || 0)) > 15 && (
-            	        					<Button
-            	        						variant="link"
-            	        						onClick={() => setShowAllSkills((prev) => !prev)}
-            	        						style={{
-            	        							padding: 0,
-            	        							marginTop: "4px",
-            	        							color: "var(--accent1)",
-            	        							textDecoration: "none",
-            	        							fontWeight: "bold",
-            	        						}}
-            	        					>
-            	        						{showAllSkills ? "See Less ▲" : "See More ▼"}
-            	        					</Button>
-            	        				)}
-            	        			</div>
-                                    
-            	        			<hr
-            	        				style={{
-            	        					borderColor: "var(--border)",
-            	        					opacity: 0.8,
-            	        					margin: "2rem 0",
-            	        				}}
-            	        			/>
-                    
-            	        			{/* Complete Description  */}
-            	        			<div>
-            	        				<h4
-            	        					className="fw-bold mb-4"
-            	        					style={{ color: "var(--accent1)" }}
-            	        				>
-            	        					Complete Description
-            	        				</h4>
-            	        				<p
-            	        					style={{
-            	        						color: "var(--text)",
-            	        						fontSize: "1.05rem",
-            	        						lineHeight: "1.8",
-            	        						marginBottom: 0,
-            	        					}}
-            	        				>
-            	        					{showFullDescription
-            	        						? selectedJob.description
-            	        						: selectedJob.description?.slice(0, 600) + "..."}
-            	        				</p>
-            	        				{selectedJob.description &&
-            	        					selectedJob.description.length > 600 && (
-            	        						<Button
-            	        							variant="link"
-            	        							onClick={() =>
-            	        								setShowFullDescription((prev) => !prev)
-            	        							}
-            	        							style={{
-            	        								padding: 0,
-            	        								marginTop: "8px",
-            	        								color: "var(--accent1)",
-            	        								textDecoration: "none",
-            	        								fontWeight: "bold",
-            	        							}}
-            	        						>
-            	        							{showFullDescription ? "See Less ▲" : "See More ▼"}
-            	        						</Button>
-            	        					)}
-            	        			</div>
-            	        		</div>
-            	        	</div>
-            	        ) : (
-            	        	<div className="h-100 d-flex align-items-center justify-content-center text-white">
-            	        		<div className="text-center">
-            	        			<FaBriefcase size={48} className="mb-3 text-secondary" />
-            	        			<p>No jobs were found.</p>
-            	        		</div>
-            	        	</div>
-            	        )}
+
+                                    <hr
+                                        style={{
+                                            borderColor: "var(--border)",
+                                            opacity: 0.8,
+                                            margin: "2rem 0",
+                                        }}
+                                    />
+
+                                    {/* AI Summary */}
+                                    {selectedJob.summary && (
+                                        <div className="mb-5">
+                                            <h4
+                                                className="fw-bold mb-4"
+                                                style={{ color: "var(--accent1)" }}
+                                            >
+                                                AI Summary
+                                            </h4>
+                                            <p
+                                                style={{
+                                                    color: "var(--text)",
+                                                    fontSize: "1.05rem",
+                                                    lineHeight: "1.8",
+                                                    marginBottom: 0,
+                                                }}
+                                            >
+                                                {selectedJob.summary}
+                                            </p>
+                                        </div>
+                                    )}
+
+                                    <hr
+                                        style={{
+                                            borderColor: "var(--border)",
+                                            opacity: 0.8,
+                                            margin: "2rem 0",
+                                        }}
+                                    />
+
+                                    {/*  What They're Looking For */}
+                                    <div className="mb-5">
+                                        <h4
+                                            className="fw-bold mb-4"
+                                            style={{ color: "var(--accent1)", }}
+                                        >
+                                            What They’re Looking For
+                                        </h4>
+
+                                        <div className="d-flex flex-wrap gap-2 mb-3">
+                                            {[...(selectedJob.skills || []), ...(selectedJob.careers || [])]
+                                                .slice(0, showAllSkills ? undefined : 10)
+                                                .map((item, index) => (
+                                                    <span
+                                                        key={index}
+                                                        style={{
+                                                            backgroundColor: "var(--accent3)",
+                                                            border: "1px solid var(--border)",
+                                                            borderRadius: "8px",
+                                                            padding: "6px 12px",
+                                                            fontSize: "0.95rem",
+                                                            color: "var(--text)",
+                                                            fontWeight: 600,
+                                                            transition: "all 0.25s ease",
+                                                            cursor: "default",
+                                                            boxShadow: "0 0 0 transparent",
+                                                        }}
+                                                        onMouseEnter={(e) => {
+                                                            e.currentTarget.style.boxShadow =
+                                                                "0 0 10px var(--accent3)";
+                                                            e.currentTarget.style.transform = "scale(1.06)";
+                                                        }}
+                                                        onMouseLeave={(e) => {
+                                                            e.currentTarget.style.boxShadow =
+                                                                "0 0 0 transparent";
+                                                            e.currentTarget.style.transform = "scale(1)";
+                                                        }}
+                                                    >
+                                                        {item.name || item}
+                                                    </span>
+                                                ))}
+                                        </div>
+
+                                        {((selectedJob.skills?.length || 0) +
+                                            (selectedJob.careers?.length || 0)) > 15 && (
+                                                <Button
+                                                    variant="link"
+                                                    onClick={() => setShowAllSkills((prev) => !prev)}
+                                                    style={{
+                                                        padding: 0,
+                                                        marginTop: "4px",
+                                                        color: "var(--accent1)",
+                                                        textDecoration: "none",
+                                                        fontWeight: "bold",
+                                                    }}
+                                                >
+                                                    {showAllSkills ? "See Less ▲" : "See More ▼"}
+                                                </Button>
+                                            )}
+                                    </div>
+
+                                    <hr
+                                        style={{
+                                            borderColor: "var(--border)",
+                                            opacity: 0.8,
+                                            margin: "2rem 0",
+                                        }}
+                                    />
+
+                                    {/* Complete Description  */}
+                                    <div>
+                                        <h4
+                                            className="fw-bold mb-4"
+                                            style={{ color: "var(--accent1)" }}
+                                        >
+                                            Complete Description
+                                        </h4>
+                                        <p
+                                            style={{
+                                                color: "var(--text)",
+                                                fontSize: "1.05rem",
+                                                lineHeight: "1.8",
+                                                marginBottom: 0,
+                                            }}
+                                        >
+                                            {showFullDescription
+                                                ? selectedJob.description
+                                                : selectedJob.description?.slice(0, 600) + "..."}
+                                        </p>
+                                        {selectedJob.description &&
+                                            selectedJob.description.length > 600 && (
+                                                <Button
+                                                    variant="link"
+                                                    onClick={() =>
+                                                        setShowFullDescription((prev) => !prev)
+                                                    }
+                                                    style={{
+                                                        padding: 0,
+                                                        marginTop: "8px",
+                                                        color: "var(--accent1)",
+                                                        textDecoration: "none",
+                                                        fontWeight: "bold",
+                                                    }}
+                                                >
+                                                    {showFullDescription ? "See Less ▲" : "See More ▼"}
+                                                </Button>
+                                            )}
+                                    </div>
+                                </div>
+                            </div>
+                        ) : (
+                            <div className="h-100 d-flex align-items-center justify-content-center text-white">
+                                <div className="text-center">
+                                    <FaBriefcase size={48} className="mb-3 text-secondary" />
+                                    <p>No jobs were found.</p>
+                                </div>
+                            </div>
+                        )}
                     </Col>
                 )}
             </Row>
@@ -1147,7 +1156,7 @@ const FindJobs = ({ jobPostTypeProp }) => {
                   color: var(--text);
                 }
                 `}</style>
-                
+
                 <Offcanvas.Header closeButton>
                     <Offcanvas.Title>Filters</Offcanvas.Title>
                 </Offcanvas.Header>
@@ -1178,7 +1187,7 @@ const FindJobs = ({ jobPostTypeProp }) => {
                         />
                     ))}
                     <hr />
-                    
+
                     <h6 className="mb-2">Location</h6>
                     {["Remote", "On-site", "Hybrid"].map((location) => (
                         <Form.Check

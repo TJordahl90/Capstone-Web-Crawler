@@ -7,7 +7,7 @@ const themes = {
         text: "#3A4750",            // near-black for perfect contrast
 
         accent1: "#2185D5",         // same blue (works for both themes)
-        accent2: "#FFD369",         // softer version of gold/yellow
+        accent2: "#9e7822ff",         // softer version of gold/yellow
         accent3: "#FF6B6B",         // same coral accent
         accent4: "#2ECC71",         // lighter green for light mode
         accent5: "#2185D5",
