@@ -11,7 +11,7 @@ def sendNotificationEmail(email, subject, message, htmlMessage):
 
 def notifyUsers():
     # Only verified AND opted-in users
-    accounts = Account.objects.filter(emailVerification=True, notify_by_email=True).iterator()
+    accounts = Account.objects.filter(notify_by_email=True).iterator()
 
     for account in accounts:
         try:
