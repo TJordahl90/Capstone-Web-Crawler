@@ -4,8 +4,8 @@ import { Container, Card, Form, Button, Alert, Spinner } from 'react-bootstrap';
 import api from '../api.js';
 
 const AccountSetup = () => {
-    const [view, setView] = useState('resume');
     const [resume, setResume] = useState(null);
+    const [fileName, setFileName] = useState("");
     const [loading, setLoading] = useState(false);
     const [error, setError] = useState('');
     const navigate = useNavigate();
@@ -17,16 +17,19 @@ const AccountSetup = () => {
             if (file.type !== 'application/pdf') {
                 setError('Please upload a PDF file.');
                 setResume(null);
-                if(fileInputRef.current) fileInputRef.current.value = null;
+                setFileName('');
+                if (fileInputRef.current) fileInputRef.current.value = null;
                 return;
             }
             if (file.size > 5 * 1024 * 1024) {
                 setError('File size must be less than 5MB.');
                 setResume(null);
-                if(fileInputRef.current) fileInputRef.current.value = null;
+                setFileName('');
+                if (fileInputRef.current) fileInputRef.current.value = null;
                 return;
             }
             setResume(file);
+            setFileName(file.name);
             setError('');
         }
     };
@@ -45,16 +48,13 @@ const AccountSetup = () => {
             const formData = new FormData();
             formData.append('resume', resume);
 
-            // Call backend resume parser
-            const response = await api.post('/documents/', formData, {
+            await api.post('/documents/', formData, {
                 headers: {
                     'Content-Type': 'multipart/form-data',
                 },
             });
 
-            const parsedData = response.data;
             navigate('/dashboard');
-
         } catch (err) {
             console.error('Error uploading resume:', err);
             setError(
@@ -70,59 +70,145 @@ const AccountSetup = () => {
         navigate('/dashboard');
     };
 
+    const handleBrowseClick = () => {
+        fileInputRef.current?.click();
+    };
+
     return (
-        <Container className="d-flex align-items-center justify-content-center" style={{ minHeight: '100vh', color: 'white' }}>
-            <Card style={{ width: '100%', maxWidth: '500px'}}>
-                <Card.Body className="p-4 p-md-5">
-                    <h2 className="text-center mb-3">Set Up Your Profile</h2>
-                    
-                    {error && <Alert variant="danger">{error}</Alert>}
+        <Container
+            fluid
+            className="d-flex align-items-center justify-content-center"
+            style={{
+                height: "100vh",
+                background: "linear-gradient(135deg, var(--background), var(--card))",
+                color: "var(--text)",
+                overflow: "hidden",
+            }}
+        >
+            <Card
+                style={{
+                    backgroundColor: "var(--card)",
+                    border: `1px solid var(--accent1)`,
+                    borderRadius: "20px",
+                    padding: "2.5rem",
+                    width: "100%",
+                    maxWidth: "520px",
+                    boxShadow: "0 6px 30px rgba(--shadow2)",
+                }}
+            >
+                {/* Back button */}
+                <Button
+                    onClick={() => navigate("/")}
+                    style={{
+                        backgroundColor: "transparent",
+                        color: "var(--accent1)",
+                        border: "none",
+                        fontWeight: "600",
+                        fontSize: "0.9rem",
+                        marginBottom: "10px",
+                    }}
+                >
+                    ← Back to Home
+                </Button>
 
-                    {view === 'resume' ? (
-                        <div>
-                            <p className="text-center mb-4">
-                                Speed up the process by uploading your resume. We'll parse it to fill in your profile.
-                            </p>
-                            <Form onSubmit={handleResumeSubmit}>
-                                <Form.Group controlId="formFile" className="mb-3">
-                                    <Form.Control 
-                                        type="file" 
-                                        accept=".pdf" 
-                                        ref={fileInputRef} 
-                                        onChange={handleFileChange} 
-                                    />
-                                </Form.Group>
-                                <Button variant="info" type="submit" className="w-100" disabled={loading}>
-                                    {loading ? <Spinner as="span" animation="border" size="sm"/> : 'Upload and Continue'}
-                                </Button>
-                            </Form>
-                            <hr />
-                            <Button variant="outline-secondary" className="w-100" onClick={() => setView('manual')}>
-                                Or, Enter Details Manually
-                            </Button>
-                        </div>
-                    ) : (
-                        <div>
-                            <p className="text-center mb-4">Fill in your professional details below.</p>
-                            <div className="text-center p-5 border border-dashed rounded">
-                                <p>need to implement.</p>
-                            </div>
-                            <hr />
-                            <Button variant="outline-secondary" className="w-100" onClick={() => setView('resume')}>
-                                Back to Resume Upload
-                            </Button>
-                        </div>
-                    )}
+                {/* Header */}
+                <h2
+                    className="text-center mb-4"
+                    style={{
+                        color: "var(--accent1)",
+                        fontWeight: 700,
+                        letterSpacing: "1px",
+                    }}
+                >
+                    Set Up Your Profile
+                </h2>
 
-                    <div className="text-center mt-4">
-                        <Button variant="link" onClick={handleSkip}>
-                            Skip for now
+                {error && <Alert variant="danger" className="text-center">{error}</Alert>}
+
+                <p
+                    className="text-center mb-4"
+                    style={{
+                        color: "var(--text)",
+                        fontSize: "0.95rem",
+                    }}
+                >
+                    Upload your resume (PDF) to automatically extract your experience and skills.
+                </p>
+
+                <Form onSubmit={handleResumeSubmit}>
+                    {/* Hidden input */}
+                    <input
+                        type="file"
+                        accept=".pdf"
+                        ref={fileInputRef}
+                        style={{ display: 'none' }}
+                        onChange={handleFileChange}
+                    />
+
+                    {/* Custom file upload button */}
+                    <div className="d-flex flex-column align-items-center mb-4">
+                        <Button
+                            onClick={handleBrowseClick}
+                            style={{
+                                width: "100%",
+                                backgroundColor: "#222831",
+                                color: "#fff",
+                                border: "1px solid var(--border)",
+                                borderRadius: "10px",
+                                fontWeight: "600",
+                                padding: "10px 20px",
+                                transition: "0.3s ease",
+                            }}
+                            onMouseEnter={(e) => (e.target.style.opacity = "0.85")}
+                            onMouseLeave={(e) => (e.target.style.opacity = "1")}
+                        >
+                            {fileName ? `Selected: ${fileName}` : "Select File"}
                         </Button>
                     </div>
-                </Card.Body>
+
+                    {/* Upload button */}
+                    <Button
+                        type="submit"
+                        disabled={loading}
+                        style={{
+                            backgroundColor: "var(--accent1)",
+                            width: "100%",
+                            fontSize: "1rem",
+                            padding: "10px 0",
+                            color: "#fff",
+                            border: "none",
+                            borderRadius: "10px",
+                            fontWeight: "600",
+                            transition: "0.3s ease",
+                            marginBottom: "15px",
+                        }}
+                        onMouseEnter={(e) => (e.target.style.opacity = "0.85")}
+                        onMouseLeave={(e) => (e.target.style.opacity = "1")}
+                    >
+                        {loading ? (
+                            <Spinner as="span" animation="border" size="sm" />
+                        ) : (
+                            "Upload and Continue"
+                        )}
+                    </Button>
+                </Form>
+
+                <div className="text-center mt-4">
+                    <Button
+                        variant="link"
+                        onClick={handleSkip}
+                        style={{
+                            color: "var(--accent1)",
+                            fontWeight: "600",
+                            textDecoration: "none",
+                        }}
+                    >
+                        Skip for now
+                    </Button>
+                </div>
             </Card>
         </Container>
     );
-}
+};
 
 export default AccountSetup;
