@@ -451,6 +451,7 @@ def parseResume(account, resume):
     # Create education objects
     for edu in educationList:
         degreeType = edu.get('degree', '')
+        degreeType = re.sub(r"[^a-z\s]", "", degreeType)
         try:
             degreeObj = CommonDegrees.objects.get(name__icontains=degreeType.split()[0])
         except(CommonDegrees.DoesNotExist, IndexError):
