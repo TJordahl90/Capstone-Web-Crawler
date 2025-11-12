@@ -92,7 +92,7 @@ const AuthForm = ({ isLogin }) => {
                     backgroundColor: "var(--card)",
                     border: `1px solid var(--accent1)`,
                     borderRadius: "20px",
-                    padding: "0.7rem 2.5rem",
+                    padding: "0.3rem 2.5rem",
                     width: "100%",
                     maxWidth: "440px",
                     boxShadow: "0 6px 30px var(--shadow1)",
@@ -106,7 +106,7 @@ const AuthForm = ({ isLogin }) => {
                         border: "none",
                         fontWeight: "600",
                         fontSize: "0.9rem",
-                        marginBottom: "10px",
+                        marginBottom: "5px",
                         padding: 0,
                     }}
                 >
@@ -114,7 +114,7 @@ const AuthForm = ({ isLogin }) => {
                 </Button>
 
                 <h2
-                    className="text-center mb-4"
+                    className="text-center mb-1"
                     style={{
                         color: "var(--accent1)",
                         fontWeight: 700,
@@ -238,7 +238,7 @@ const AuthForm = ({ isLogin }) => {
                         )}
                     </Button>
 
-                    <div className="text-center mt-3" style={{ color: "var(--text)" }}>
+                    <div className="text-center mt-2" style={{ color: "var(--text)" }}>
                         {isLogin ? (
                             <p style={{ fontSize: "0.95rem" }}>
                                 Don’t have an account?{" "}
