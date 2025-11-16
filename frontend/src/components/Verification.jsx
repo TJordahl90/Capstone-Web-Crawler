@@ -23,7 +23,7 @@ const Verification = () => {
             const response = await api.get("/verification/", { params: { email: email, code: code } });
             if (response.status === 200) {
                 setAlert({ type: "success", text: "Registration successful!" });
-                setMessage("Registration successful!");
+                // setMessage("Registration successful!");
                 setTimeout(() => navigate("/login"), 1000);
             }
         } catch (err) {
@@ -100,9 +100,9 @@ const Verification = () => {
                     We’ve sent a verification code to <strong style={{ color: "var(--accent1)" }}>{email}</strong>.
                     Please enter it below to verify your account.
                 </p>
-
+{/* 
                 {message && <Alert variant="success" className="text-center">{message}</Alert>}
-                {error && <Alert variant="danger" className="text-center">{error}</Alert>}
+                {error && <Alert variant="danger" className="text-center">{error}</Alert>} */}
 
                 <Form onSubmit={handleSubmit}>
                     <InputField
