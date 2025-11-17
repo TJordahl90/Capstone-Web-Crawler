@@ -65,11 +65,12 @@ const Navbar = ({ setCollapsed, collapsed }) => {
       >
         <div style={{ display: "flex", alignItems: "center" }}>
           <span
+            onClick={() => navigate("/")}
             style={{
+              cursor: "pointer",
               fontSize: "1.8rem",
               fontWeight: 600,
               letterSpacing: "0.5px",
-              // background: "linear-gradient(90deg, var(--accent1), var(--accent2))",
               background: "var(--accent1)",
               WebkitBackgroundClip: "text",
               WebkitTextFillColor: "transparent",
@@ -78,22 +79,27 @@ const Navbar = ({ setCollapsed, collapsed }) => {
             Northstar Jobs
           </span>
 
+
           {/* Logo */}
           {!isMobile && (
             <div style={{ position: "absolute", left: "49%", transform: "translateX(-50%)" }}>
               <img
                 src={logo}
-                alt="center logo"
+                alt="Northstar Jobs logo"
+                tabIndex={0}
+                onClick={() => navigate("/")}
+                onKeyDown={(e) => e.key === "Enter" && navigate("/")}
                 style={{
                   height: "65px",
                   width: "auto",
+                  cursor: "pointer",
                   transition: "filter 0.3s ease",
                 }}
-                // onMouseEnter={(e) =>
-                // (e.currentTarget.style.filter =
-                //   "brightness(0) saturate(100%) invert(46%) sepia(21%) saturate(1549%) hue-rotate(7deg) brightness(89%) contrast(85%)")
-                // }
-                // onMouseLeave={(e) => (e.currentTarget.style.filter = "none")}
+                onMouseEnter={(e) =>
+                (e.currentTarget.style.filter =
+                  "brightness(0) saturate(100%) invert(46%) sepia(21%) saturate(1549%) hue-rotate(7deg) brightness(89%) contrast(85%)")
+                }
+                onMouseLeave={(e) => (e.currentTarget.style.filter = "none")}
               />
             </div>
           )}
@@ -151,7 +157,7 @@ const Navbar = ({ setCollapsed, collapsed }) => {
                         }}
                       >
                         <FaUser size={14} /> Profile
-                      </Dropdown.Item>                
+                      </Dropdown.Item>
 
                       {/* Documents */}
                       <Dropdown.Item
@@ -173,7 +179,7 @@ const Navbar = ({ setCollapsed, collapsed }) => {
                         }}
                       >
                         <FaFileAlt size={14} /> Resume
-                      </Dropdown.Item>                
+                      </Dropdown.Item>
 
                       {/* Settings */}
                       <Dropdown.Item
@@ -195,12 +201,12 @@ const Navbar = ({ setCollapsed, collapsed }) => {
                         }}
                       >
                         <FaCog size={14} /> Settings
-                      </Dropdown.Item>                
+                      </Dropdown.Item>
 
                     </Dropdown.Menu>
                   </div>
                 </Dropdown>
-                <span style={{color: "var(--accent1)", fontWeight: 600 }}>{user.username}</span>
+                <span style={{ color: "var(--accent1)", fontWeight: 600 }}>{user.username}</span>
               </>
             ) : (
               <Nav.Link
