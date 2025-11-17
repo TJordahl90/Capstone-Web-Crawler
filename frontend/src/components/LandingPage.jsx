@@ -2,11 +2,12 @@ import React from "react";
 import { useNavigate } from "react-router-dom";
 import { Container, Row, Col, Button, Navbar, Nav, Image } from "react-bootstrap";
 import logo from "../assets/logo3.png";
-import backgroundImage from "../assets/background4.png";
+// import backgroundImage from "../assets/background4.png";
 import "bootstrap/dist/css/bootstrap.min.css";
-import videobg from "../assets/sky.mp4";
+import videobg from "../assets/background_video_1.mp4";
 const LandingPage = () => {
   const navigate = useNavigate();
+  console.log("Video URL:", videobg);
 
   return (
 
@@ -16,16 +17,34 @@ const LandingPage = () => {
       style={{
         height: "100vh",
         width: "100%",
-        backgroundImage: `url(${backgroundImage})`,
-        backgroundSize: "cover",
-        backgroundPosition: "center",
-        backgroundRepeat: "no-repeat",
+        // backgroundImage: `url(${backgroundImage})`,
+        // backgroundSize: "cover",
+        // backgroundPosition: "center",
+        // backgroundRepeat: "no-repeat",
         color: "white",
         overflowX: "hidden",
         overflowY: "auto",
         position: "relative",
       }}
     >
+      
+      <video
+        autoPlay
+        muted
+        loop
+        playsInline
+        style={{
+          position: "absolute",
+          top: 0,
+          left: 0,
+          width: "100%",
+          height: "100%",
+          objectFit: "cover",
+          zIndex: 0,
+        }}
+      >
+        <source src={videobg} type="video/mp4" />
+      </video>
 
 
       {/* logo */}
@@ -137,7 +156,7 @@ const LandingPage = () => {
         </button>
       </div>
 
-      <Container className="d-flex flex-column justify-content-center align-items-center text-center py-5" style={{ minHeight: "100vh" }}>
+      <Container className="d-flex flex-column justify-content-center align-items-center text-center py-5" style={{ minHeight: "100vh", position: 'relative', zIndex: 2 }}>
         <Row className="justify-content-center">
           <Col md={8} lg={6}>
             {/*Title Web */}
@@ -150,7 +169,7 @@ const LandingPage = () => {
                 color: "white"
               }}
             >
-              Northstar
+              Northstar Jobs
             </h1>
             <p className="lead mb-5 text-white">
               Find your dream job or the perfect candidate with our cutting-edge job matching platform
