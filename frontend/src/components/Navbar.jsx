@@ -132,9 +132,9 @@ const Navbar = ({ setCollapsed, collapsed }) => {
                         borderRadius: "8px",
                         fontSize: "14px",
                         marginTop: "5px",
-                        position: "absolute",
-                        left: "50%",
-                        transform: "translateX(-50%)",
+                        //position: "absolute",
+                        //left: "50%",
+                        // transform: "translateX(-50%)",
                       }}
                     >
                       {/* Profile */}
