@@ -369,14 +369,14 @@ const LandingPage = () => {
             <Col md={8} lg={6}>
               <h2
                 className="fw-bold mb-4"
-                style={{ color: "var(--text)" }}
+                style={{ color: "#ffffff" }}
               >
                 Ready to Start Your Journey?
               </h2>
 
               <p
                 className="mb-4"
-                style={{ color: "var(--text)" }}
+                style={{ color: "#ffffff" }}
               >
                 Join thousands of professionals who found their dream job through Northstar
               </p>

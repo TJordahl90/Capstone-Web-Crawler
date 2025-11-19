@@ -46,12 +46,14 @@ const SidePanel = ({ children, user, handleLogout }) => {
     const currentPath = location.pathname; // need to implement - highlight button on current page
 
     return (
-        <div
+
+        <div className="NorthstarJob"
             style={{
                 display: "flex",
                 backdropFilter: "blur(20px)",
                 WebkitBackdropFilter: "blur(20px)",
                 height: "100vh",
+                backgroundColor: "var(--background)"
             }}
         >
             {/* Sidepanel */}
