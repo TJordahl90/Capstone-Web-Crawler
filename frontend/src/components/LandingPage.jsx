@@ -86,8 +86,7 @@ const LandingPage = () => {
             height: "100%",
             objectFit: "cover",
             zIndex: 0,
-            borderBottomRightRadius: "32px",
-            borderBottomLeftRadius: "32px"
+           
           }}
         >
           <source src={videobg} type="video/mp4" />
@@ -106,7 +105,8 @@ const LandingPage = () => {
             display: "flex",
             justifyContent: "center",
             alignItems: "center",
-            zIndex: 20
+            zIndex: 20,
+            cursor:"pointer",
           }}
         >
           <img

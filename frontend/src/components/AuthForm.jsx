@@ -5,6 +5,7 @@ import InputField from './InputField';
 import GlobalMessage from './GlobalMessage.jsx';
 import api from '../api.js';
 import videobg from "../assets/background_video_1.mp4";
+import logo from "../assets/logo3.png";
 
 const AuthForm = ({ isLogin }) => {
     const navigate = useNavigate();
@@ -108,7 +109,7 @@ const AuthForm = ({ isLogin }) => {
                 <Row className="g-0" style={{ height: "100%" }}>
                     {/* LEFT PANEL = VIDEO (order changes when isLogin) */}
                     <Col
-                        md={6}
+                        md={8}
                         style={{
                             padding: 0,
                             height: "100%",
@@ -120,10 +121,10 @@ const AuthForm = ({ isLogin }) => {
                                 position: "relative",
                                 width: "100%",
                                 height: "100%",
-                                borderTopRightRadius: !isLogin ? "32px" : "0px",
-                                borderBottomRightRadius: !isLogin ? "32px" : "0px",
-                                borderTopLeftRadius: isLogin ? "32px" : "0px",
-                                borderBottomLeftRadius: isLogin ? "32px" : "0px",
+                                // borderTopRightRadius: !isLogin ? "32px" : "0px",
+                                // borderBottomRightRadius: !isLogin ? "32px" : "0px",
+                                // borderTopLeftRadius: isLogin ? "32px" : "0px",
+                                // borderBottomLeftRadius: isLogin ? "32px" : "0px",
                                 overflow: "hidden", // clip video to rounded corners
                                 animation: isLogin
                                     ? "slideFromRight 0.6s ease forwards"   // when logging in, video comes from right
@@ -153,14 +154,18 @@ const AuthForm = ({ isLogin }) => {
                                 className="d-flex align-items-center"
                                 style={{
                                     position: "relative",
+                                    justifyContent: !isLogin ? "center" : "start",
                                     zIndex: 1,
                                     height: "100%",
-                                    padding: "2.5rem 2.2rem 2.5rem 5rem",
+                                    padding: !isLogin ? "0rem 0rem 5rem 0em" : "2.5rem 2.2rem 3rem 5rem",
                                     color: "#ffffff",
                                     background: "translucent",
                                 }}
                             >
-                                <div>
+                                <div classname="authform_title"
+                                    style={{
+                                        width: !isLogin ? "500px" : "700px"
+                                    }}>
                                     <style>
                                         {`
                                             @keyframes fadeUp {
@@ -180,9 +185,39 @@ const AuthForm = ({ isLogin }) => {
                                            `}
                                     </style>
                                     {/* Title first */}
+                                    <div
+                                        className="landing-logo-container"
+                                        onClick={() => navigate("/")}
+                                        style={{
+                                            position: "absolute",
+                                            top: "2vh",
+                                            left: "2vw",
+                                            width: "10vw",
+                                            height: "14vh",
+                                            display: "flex",
+                                            justifyContent: "center",
+                                            alignItems: "center",
+                                            zIndex: 20,
+                                            cursor: "pointer",
+
+                                        }}
+
+                                    >
+                                        <img
+                                            src={logo}
+                                            alt="website logo"
+                                            className="landing-logo"
+                                            style={{
+                                                maxWidth: "100%",
+                                                height: "100%",
+                                                objectFit: "contain"
+                                            }}
+                                        />
+
+                                    </div>
                                     <h2
                                         style={{
-                                            fontSize: "2.3rem",
+                                            fontSize: isLogin ? "4rem" : "5rem",
                                             fontWeight: 800,
                                             lineHeight: 1.2,
                                             marginBottom: "1rem",
@@ -197,7 +232,7 @@ const AuthForm = ({ isLogin }) => {
                                     {/* Paragraph appears later */}
                                     <p
                                         style={{
-                                            fontSize: "0.98rem",
+                                            fontSize: "1.2rem",
                                             lineHeight: 1.7,
                                             maxWidth: "360px",
                                             opacity: 0,
@@ -217,57 +252,53 @@ const AuthForm = ({ isLogin }) => {
 
                     {/* RIGHT PANEL = FORM (order changes when isLogin) */}
                     <Col
-                        md={6}
+                        md={4}
                         style={{
+                            display: 'flex',
+                            justifyContent: 'center',
+                            // alignItems:'center',
                             backgroundColor: "#ffffff",
+                            flexDirection: 'column',
                             padding: "0rem 2.7rem",
                             color: "#111111",
                             height: "100%",
                             "--text": "#111111",
                             order: isLogin ? 1 : 2, // move to left when login
-                            borderTopLeftRadius: isLogin ? "32px" : "0px",
-                            borderBottomLeftRadius: isLogin ? "32px" : "0px",
-                            borderTopRightRadius: !isLogin ? "32px" : "0px",
-                            borderBottomRightRadius: !isLogin ? "32px" : "0px",
+                            //borderTopLeftRadius: isLogin ? "32px" : "0px",
+                            //borderBottomLeftRadius: isLogin ? "32px" : "0px",
+                            //borderTopRightRadius: !isLogin ? "32px" : "0px",
+                            //borderBottomRightRadius: !isLogin ? "32px" : "0px",
                             animation: isLogin
                                 ? "slideFromLeft 0.6s ease forwards"    // form comes from left on login
                                 : "slideFromRight 0.6s ease forwards",  // comes from right on register
                         }}
                     >
-                        <div className="d-flex justify-content-between align-items-center mb-3 mt-5">
+                        <div className="d-flex justify-content-center align-items-center">
                             <h3
                                 style={{
-                                    fontSize: "1.7rem",
+                                    fontSize: "2.5rem",
                                     fontWeight: 700,
                                     margin: 0,
+                                    marginBottom: 20
                                 }}
                             >
                                 {isLogin ? "Sign In" : "Sign Up"}
                             </h3>
 
-                            <Button
-                                onClick={() => navigate("/")}
-                                style={{
-                                    backgroundColor: "transparent",
-                                    color: "#555",
-                                    border: "none",
-                                    fontWeight: 500,
-                                    fontSize: "0.85rem",
-                                    padding: 0,
-                                }}
-                            >
-                                ← Back to Home
-                            </Button>
                         </div>
 
-                        <Form onSubmit={handleSubmit}>
+                        <Form onSubmit={handleSubmit}
+                            style={{
+                                display: "flex",
+                                flexDirection: "column",
+                            }}>
                             {/* REGISTER FIELDS */}
                             {!isLogin ? (
                                 <>
                                     <Row className="gx-2">
                                         <Col xs={12} sm={6}>
                                             <InputField
-                                                label="First Name"
+                                                // label="First Name"
                                                 placeholder="First name"
                                                 value={formData.first_name}
                                                 onChange={(e) =>
@@ -277,7 +308,7 @@ const AuthForm = ({ isLogin }) => {
                                         </Col>
                                         <Col xs={12} sm={6}>
                                             <InputField
-                                                label="Last Name"
+                                                // label="Last Name"
                                                 type="text"
                                                 placeholder="Last name"
                                                 value={formData.last_name}
@@ -287,19 +318,20 @@ const AuthForm = ({ isLogin }) => {
                                             />
                                         </Col>
                                     </Row>
+                                    <div style={{ marginBottom: 0, paddingTop: -10 }}>
+                                        <InputField
+                                            // label="Username"
+                                            type="text"
+                                            placeholder="Choose a username"
 
+                                            value={formData.username}
+                                            onChange={(e) =>
+                                                setFormData({ ...formData, username: e.target.value })
+                                            }
+                                        />
+                                    </div>
                                     <InputField
-                                        label="Username"
-                                        type="text"
-                                        placeholder="Choose a username"
-                                        value={formData.username}
-                                        onChange={(e) =>
-                                            setFormData({ ...formData, username: e.target.value })
-                                        }
-                                    />
-
-                                    <InputField
-                                        label="Email"
+                                        // label="Email"
                                         type="email"
                                         placeholder="Enter your email"
                                         value={formData.email}
@@ -309,7 +341,7 @@ const AuthForm = ({ isLogin }) => {
                                     />
 
                                     <InputField
-                                        label="Confirm Email"
+                                        // label="Confirm Email"
                                         type="email"
                                         placeholder="Confirm your email"
                                         value={formData.confirmEmail}
@@ -319,7 +351,7 @@ const AuthForm = ({ isLogin }) => {
                                     />
 
                                     <InputField
-                                        label="Password"
+                                        // label="Password"
                                         type="password"
                                         placeholder="Create a password"
                                         value={formData.password}
@@ -333,7 +365,7 @@ const AuthForm = ({ isLogin }) => {
                                         ) && <small style={{ color: "red" }}>Must meet password requirements</small>}
 
                                     <InputField
-                                        label="Confirm Password"
+                                        // label="Confirm Password"
                                         type="password"
                                         placeholder="Confirm your password"
                                         value={formData.confirmPassword}
@@ -348,7 +380,7 @@ const AuthForm = ({ isLogin }) => {
                             ) : (
                                 <>
                                     <InputField
-                                        label="Username"
+                                        //label="Username"
                                         type="text"
                                         placeholder="Enter your username"
                                         value={formData.username}
@@ -358,7 +390,7 @@ const AuthForm = ({ isLogin }) => {
                                     />
 
                                     <InputField
-                                        label="Password"
+                                        //label="Password"
                                         type="password"
                                         placeholder="Enter your password"
                                         value={formData.password}
