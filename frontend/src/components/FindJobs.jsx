@@ -792,7 +792,7 @@ const FindJobs = ({ jobPostTypeProp }) => {
                                                     {selectedJob.applied_status ? "Applied" : "Apply"}
                                                 </Button>
 
-                                                <Button
+                                                {/* <Button
                                                     style={{
                                                         backgroundColor: "var(--accent1)",
                                                         color: "#FFFFFF",
@@ -815,7 +815,7 @@ const FindJobs = ({ jobPostTypeProp }) => {
                                                     }}
                                                 >
                                                     Interview
-                                                </Button>
+                                                </Button> */}
                                             </div>
                                         </div>
                                     </div>
