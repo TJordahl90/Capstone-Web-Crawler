@@ -6,3 +6,4 @@ job_scraper.log
 api/uploads/
 media/api/uploads/
 *.csv
+.
