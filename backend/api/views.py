@@ -585,32 +585,115 @@ class InterviewPrepChatBotView(APIView):
     def get(self, request):
         account = request.user.account
         job_id = request.GET.get('job_id')
+        job_posting = None
 
+        # CODE TO SET DAILY LIMIT
         # one_day_ago = timezone.now() - timedelta(days=1)
-# chat_today = ChatBotHistory.objects.filter(account=account, timestamp__gte=one_day_ago).count()
-# if chat_today >= 4:
-#     return Response({"error": "You have reached your limit of 4 questions per day. Please try again tommorow."}, status=429)
-
+        # chat_today = ChatBotHistory.objects.filter(account=account, timestamp__gte=one_day_ago).count()
+        # if chat_today >= 4:
+        #     return Response({"error": "You have reached your limit of 4 questions per day. Please try again tommorow."}, status=429)
         
         try:
-            job_posting = JobPosting.objects.get(id=job_id)
-            past_questions = ", ".join(list(ChatBotHistory.objects.filter(account=account).values_list('question', flat=True)))
-            prompt = (
-                f"You are an AI job interview coach. Your task is to generate 4 unique and insightful interview questions based on the provided job application description.\n"
-                f'Here is the details for the job the applicant is applying for:\n'
-                f'Job Title: {job_posting.title}\n'
-                f'Company: {job_posting.company}\n'
-                f'Description: {job_posting.description}\n'
-                f"IMPORTANT: Do not ask any of the following previously asked questions:\n"
-                f"History: {past_questions}\n" 
-                f"Format the output ONLY as a list, with each line starting with 'question: ' ('question: ...\nquestion: ...\nquestion: ...')."
-            )
+            if job_id: 
+                job_posting = JobPosting.objects.get(id=job_id)
+                past_questions = ", ".join(list(ChatBotHistory.objects.filter(account=account).values_list('question', flat=True)))
+                prompt = f"""
+                    You are an AI interview coach.
+                    Generate 4 unique, tailored interview questions based entirely on the job posting provided.
+                    The goal is to help the user prepare for interviews aligned with the responsibilities, skills, and challenges of this specific role.
+                    
+                    Job Title: {job_posting.title}
+                    Company: {job_posting.company}
+                    Job Description: {job_posting.description}
+                    
+                    IMPORTANT RULES
+                    1. Do NOT repeat any previously asked questions.
+                       Previously asked: {past_questions}
+                    
+                    2. Questions must be:
+                       - Highly relevant to the job's duties, expectations, and required skills
+                       - Insightful and helpful for real interviews
+                       - Designed to reflect what an employer for this specific role would ask
+                    
+                    3. Output ONLY in this exact format:
+                    question: <text>
+                    question: <text>
+                    question: <text>
+                    question: <text>
+                    
+                    4. Do NOT add numbering, lists, markdown, or extra text.
+                """
+                
+            else:
+                past_questions = ", ".join(list(ChatBotHistory.objects.filter(account=account).values_list('question', flat=True)))
+                
+                skills = ", ".join([s.name for s in account.skills.all()]) or "None"
+                careers = ", ".join([c.name for c in account.careers.all()]) or "None"
+                experience_levels = ", ".join([e.name for e in account.experienceLevels.all()]) or "None"
+                employment_types = ", ".join([e.name for e in account.employmentTypes.all()]) or "None"
+                work_models = ", ".join([w.name for w in account.workModels.all()]) or "None"
+                
+                education_list = [
+                    f"{edu.degree.name if edu.degree else ''} in {edu.major} at {edu.institution}"
+                    for edu in account.educations.all()
+                ]
+                education_summary = "; ".join(education_list) or "None"
+                
+                experience_list = [
+                    f"{exp.title} at {exp.company} — {exp.description[:150]}..."
+                    for exp in account.experiences.all()
+                ]
+                experience_summary = "; ".join(experience_list) or "None"
+                
+                project_list = [
+                    f"{proj.title} — {proj.description[:150]}..."
+                    for proj in account.projects.all()
+                ]
+                project_summary = "; ".join(project_list) or "None"
+                
+                prompt = f"""
+                    You are an AI interview coach.
+                    Generate 4 unique, tailored interview questions based entirely on the user's profile.
+                    The goal is to help the user prepare for interviews aligned with their background, strengths, skills, and career direction.
+                    
+                    Skills: {skills}
+                    Career Interests: {careers}
+                    Experience Levels: {experience_levels}
+                    Employment Types: {employment_types}
+                    Work Models: {work_models}
+                    Education: {education_summary}
+                    Experience History: {experience_summary}
+                    Projects: {project_summary}
+                    
+                    IMPORTANT RULES
+                    1. Do NOT repeat any previously asked questions.
+                       Previously asked: {past_questions}
+                    
+                    2. Questions must be:
+                       - Highly personalized
+                       - Insightful and helpful for real interviews
+                       - Designed to reflect the user's skills, experience, and goals
+                    
+                    3. Output ONLY in this exact format:
+                    question: <text>
+                    question: <text>
+                    question: <text>
+                    question: <text>
+                    
+                    4. Do NOT add numbering, lists, markdown, or extra text.
+                """
 
             try:
-                ai_response = client.chat.completions.create(model="gpt-3.5-turbo", messages=[{"role": "user", "content": prompt}]) # can set custom temperature for more creativity
+                ai_response = client.chat.completions.create(
+                    model="gpt-4o-mini",
+                    temperature=0.4,
+                    messages=[{"role": "user", "content": prompt}]
+                )
+                
                 questions_text = ai_response.choices[0].message.content.strip()
                 questions_list = [q.strip() for q in questions_text.split('\n') if q.strip()]
                 formatted_questions = []
+                
                 for q in questions_list:
                     new_question = q.split('question: ', 1)[-1]
                     ChatBotHistory.objects.create(question=new_question, specificJob=job_posting, account=account)
@@ -634,24 +717,42 @@ class InterviewPrepChatBotView(APIView):
             chat.response = user_response
             chat.save()
 
-            prompt = (
-                f"You are an AI job interview coach. An applicant was asked the following question.\n"
-                f"Question: {ai_question}\n"
-                f"The applicant provided this response\n"
-                f"Response: {user_response}\n"
-                f"Analyze the applicant's response. Provide feedback ONLY in the following format, using these exact headings:\n\n"
-                f"**Overall Feedback:**\n"
-                f"[Provide a 2-3 sentence summary of the response's effectiveness.]\n\n"
-                f"**Strengths:**\n"
-                f"- [List 1-2 specific strengths of the answer.]\n\n"
-                f"**Areas for Improvement:**\n"
-                f"- [List 1-2 specific, actionable areas for improvement.]\n\n"
-                f"**Example Response:**\n"
-                f"[Provide an ideal, concise example response to the question.]"
-            )
+            prompt = f"""
+                You are an AI interview coach.
+                
+                A candidate was asked the following interview question: {ai_question}
+                Their response was: {user_response}
+                
+                Your task is to analyze the response and provide helpful, professional feedback.
+                
+                IMPORTANT RULES:
+                - Follow the exact section titles below.
+                - Keep all feedback concise, specific, and actionable.
+                - Do NOT use markdown, bold text, numbering, or extra formatting.
+                - Do NOT restate the question or the response.
+                
+                Output your analysis in this exact format:
+                
+                Overall Feedback:
+                [Write a 2-3 sentence evaluation of the response's effectiveness.]
+                
+                Strengths:
+                - [List 1-2 specific strengths.]
+                
+                Areas for Improvement:
+                - [List 1-2 specific, actionable improvements.]
+                
+                Example Response:
+                [Provide a concise, strong example answer to the question.]
+            """
 
             try:
-                ai_response = client.chat.completions.create(model="gpt-3.5-turbo", messages=[{"role": "user", "content": prompt}])
+                ai_response = client.chat.completions.create(
+                    model="gpt-4o-mini",
+                    temperature=0.4,
+                    messages=[{"role": "user", "content": prompt}]
+                )
+                
                 feedback_text = ai_response.choices[0].message.content.strip()
                 return Response({"message": feedback_text})
 
@@ -676,24 +777,44 @@ class InterviewSummaryView(APIView):
         for question, response in chat_history_pairs:
             conversation_history += f"Q: {question}\nA: {response}\n\n"
 
-        prompt = (
-            f"You are an expert career coach providing a final summary of a mock interview."
-            f"Based on the conversation below, provide an complete overview and a letter grade.\n\n"
-            f"CONVERSATION HISTORY:\n{conversation_history}\n"
-            f"YOUR TASK:\n"
-            f"1.Grade: Assign a single letter grade (A, B, C, D, or F).\n"
-            f"2.Analysis: Write a 4-6 sentence summary of the candidate's performance. Identify one key strength and one major area for improvement that was evident across all their answers.\n"
-            f"3.Hired: Determine whether you would employ the user to this job position based on the results of their mock interview. Answer with either 'yes' or 'no'.\n"
-            f"Format the output ONLY as a list, with each line starting with 'data: ' ('data: (letter grade)\ndata: (analysis)\ndata: (hired)')."
-        )
+        prompt = f"""
+            You are an expert interview coach.
+            Using the mock interview transcript below, generate a final evaluation of the candidate.
+            
+            Conversation History: {conversation_history}
+            
+            Your tasks:
+            1. Grade: Assign a single letter grade (A, B, C, D, or F) based on overall interview performance.
+            2. Analysis: Write a 5-8 sentence summary of the candidate's performance. Include one key strength and one major area for improvement that appeared consistently across their answers.
+            3. Hired: State whether you would hire the candidate for the job based on their overall interview performance. Answer only yes or no.
+            
+            IMPORTANT RULES:
+            - Output must follow the exact format shown below.
+            - Do NOT use markdown, bold text, numbering, or extra formatting.
+            - Do NOT restate the conversation history.
+            
+            Output format:
+            data: <letter grade>
+            data: <analysis>
+            data: <yes or no>
+        """
 
         try:
-            ai_response = client.chat.completions.create(model="gpt-3.5-turbo", messages=[{"role": "user", "content": prompt}])
+            ai_response = client.chat.completions.create(
+                model="gpt-4o-mini",
+                temperature=0.4,
+                messages=[{"role": "user", "content": prompt}]
+            )
+            
             summary_text = ai_response.choices[0].message.content.strip()
             summary_list = [s.strip() for s in summary_text.split('\n') if s.strip()]
             formatted_summary = []
+            
             for s in summary_list:
                 formatted_summary.append(s.split('data: ', 1)[-1])
+                
+                
+            # TO DO: CLEAR OLD CHAT HISTORY
 
             return Response(formatted_summary, status=201)
 

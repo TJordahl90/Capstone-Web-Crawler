@@ -58,8 +58,7 @@ function App() {
 	return (
 		<div
 			style={{
-				// backgroundImage: `url(${backgroundImage})`,
-				backgroundColor: "var(--background)",
+				//backgroundColor: "var(--background)",
 				backgroundSize: "cover",
 				// backgroundPosition: "center",
 				// backgroundRepeat: "no-repeat",

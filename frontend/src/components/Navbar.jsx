@@ -40,205 +40,215 @@ const Navbar = ({ setCollapsed, collapsed }) => {
   };
 
   return (
-    <NavBar
-      className="nav-bar"
-      style={{
-        borderBottom: "2px solid var(--border)",
-        backdropFilter: "blur(20px)",
-        WebkitBackdropFilter: "blur(20px)",
-        boxShadow: "0 4px 30px var(--shadow2)",
-        height: "60px",
-        position: "sticky",
-        top: 0,
-        zIndex: 20,
-      }}
+    <div className="Navbar"
+      style={{ backgroundColor: "var(--background)", }}
     >
-      <Container
-        fluid
+      <NavBar
+        className="nav-bar"
         style={{
-          display: "flex",
-          flexWrap: "nowrap",
-          alignItems: "center",
-          justifyContent: "space-between",
-          width: "100%",
+          borderBottom: "2px solid var(--border)",
+          backdropFilter: "blur(20px)",
+          WebkitBackdropFilter: "blur(20px)",
+          boxShadow: "0 4px 30px var(--shadow2)",
+          height: "60px",
+          position: "sticky",
+          top: 0,
+          zIndex: 20,
         }}
       >
-        <div style={{ display: "flex", alignItems: "center" }}>
-          <span
-            style={{
-              fontSize: "1.8rem",
-              fontWeight: 600,
-              letterSpacing: "0.5px",
-              // background: "linear-gradient(90deg, var(--accent1), var(--accent2))",
-              background: "var(--accent1)",
-              WebkitBackgroundClip: "text",
-              WebkitTextFillColor: "transparent",
-            }}
-          >
-            Northstar Jobs
-          </span>
+        <Container
+          fluid
+          style={{
+            display: "flex",
+            flexWrap: "nowrap",
+            alignItems: "center",
+            justifyContent: "space-between",
+            width: "100%",
+          }}
+        >
+          <div style={{ display: "flex", alignItems: "center" }}>
+            <span
+              onClick={() => navigate("/")}
+              style={{
+                cursor: "pointer",
+                fontSize: "1.8rem",
+                fontWeight: 600,
+                letterSpacing: "0.5px",
+                background: "var(--accent1)",
+                WebkitBackgroundClip: "text",
+                WebkitTextFillColor: "transparent",
+              }}
+            >
+              Northstar Jobs
+            </span>
 
-          {/* Logo */}
-          {!isMobile && (
-            <div style={{ position: "absolute", left: "49%", transform: "translateX(-50%)" }}>
-              <img
-                src={logo}
-                alt="center logo"
-                style={{
-                  height: "65px",
-                  width: "auto",
-                  transition: "filter 0.3s ease",
-                }}
-                // onMouseEnter={(e) =>
-                // (e.currentTarget.style.filter =
-                //   "brightness(0) saturate(100%) invert(46%) sepia(21%) saturate(1549%) hue-rotate(7deg) brightness(89%) contrast(85%)")
-                // }
-                // onMouseLeave={(e) => (e.currentTarget.style.filter = "none")}
-              />
-            </div>
-          )}
-        </div>
 
-        {/* Top right side - Login, avatar, username*/}
-        <div className="navbar-right">
-          <div className="d-flex align-items-center">
-            {user ? (
-              <>
-                <Dropdown align="end">
-                  <Dropdown.Toggle as="div" className="p-2 cursor-pointer">
-                    <FaUserCircle
-                      className="navbar-icon"
-                      size={45}
-                      style={{
-                        color: "var(--text)",
-                      }}
-                    />
-
-                  </Dropdown.Toggle>
-                  <div style={{ color: "var(--text)", display: "flex", justifyContent: "center", position: "relative" }}>
-                    <Dropdown.Menu
-                      style={{
-                        backgroundColor: "var(--card)",
-                        border: "2px solid var(--border)",
-                        color: "var(--text)",
-                        transform: "none",
-                        minWidth: "125px",
-                        borderRadius: "8px",
-                        fontSize: "14px",
-                        marginTop: "5px",
-                        position: "absolute",
-                        left: "50%",
-                        transform: "translateX(-50%)",
-                      }}
-                    >
-                      {/* Profile */}
-                      <Dropdown.Item
-                        onClick={() => navigate("/account")}
-                        style={{
-                          color: "var(--text)",
-                          fontWeight: "500",
-                          display: "flex",
-                          alignItems: "center",
-                          gap: "8px",
-                        }}
-                        onMouseEnter={(e) => {
-                          e.target.style.backgroundColor = "var(--hover)";
-                          e.target.style.color = "var(--text)";
-                        }}
-                        onMouseLeave={(e) => {
-                          e.target.style.backgroundColor = "transparent";
-                          e.target.style.color = "var(--text)";
-                        }}
-                      >
-                        <FaUser size={14} /> Profile
-                      </Dropdown.Item>                
-
-                      {/* Documents */}
-                      <Dropdown.Item
-                        onClick={() => navigate("/documents")}
-                        style={{
-                          color: "var(--text)",
-                          fontWeight: "500",
-                          display: "flex",
-                          alignItems: "center",
-                          gap: "8px",
-                        }}
-                        onMouseEnter={(e) => {
-                          e.target.style.backgroundColor = "var(--hover)";
-                          e.target.style.color = "var(--text)";
-                        }}
-                        onMouseLeave={(e) => {
-                          e.target.style.backgroundColor = "transparent";
-                          e.target.style.color = "var(--text)";
-                        }}
-                      >
-                        <FaFileAlt size={14} /> Resume
-                      </Dropdown.Item>                
-
-                      {/* Settings */}
-                      <Dropdown.Item
-                        onClick={() => navigate("/settings")}
-                        style={{
-                          color: "var(--text)",
-                          fontWeight: "500",
-                          display: "flex",
-                          alignItems: "center",
-                          gap: "8px",
-                        }}
-                        onMouseEnter={(e) => {
-                          e.target.style.backgroundColor = "var(--hover)";
-                          e.target.style.color = "var(--text)";
-                        }}
-                        onMouseLeave={(e) => {
-                          e.target.style.backgroundColor = "transparent";
-                          e.target.style.color = "var(--text)";
-                        }}
-                      >
-                        <FaCog size={14} /> Settings
-                      </Dropdown.Item>                
-
-                    </Dropdown.Menu>
-                  </div>
-                </Dropdown>
-                <span style={{color: "var(--accent1)", fontWeight: 600 }}>{user.username}</span>
-              </>
-            ) : (
-              <Nav.Link
-                href="/login"
-                style={{
-                  width: "auto",
-                  padding: "8px 20px",
-                  border: "2px solid var(--border)",
-                  backgroundColor: "transparent",
-                  color: "var(--text)",
-                  transition: "all 0.3s ease",
-                  borderRadius: "0",
-                  height: "45px",
-                  display: "flex",
-                  alignItems: "center",
-                  justifyContent: "center",
-                  fontWeight: "600",
-                  textDecoration: "none"
-                }}
-                onMouseEnter={(e) => {
-                  e.target.style.backgroundColor = "var(--background)";
-                  e.target.style.color = "var(--text)";
-                }}
-                onMouseLeave={(e) => {
-                  e.target.style.backgroundColor = "transparent";
-                  e.target.style.color = "var(--text)";
-                }}
-              >
-                Login
-              </Nav.Link>
-
+            {/* Logo */}
+            {!isMobile && (
+              <div style={{ position: "absolute", left: "49%", transform: "translateX(-50%)" }}>
+                <img
+                  src={logo}
+                  alt="Northstar Jobs logo"
+                  tabIndex={0}
+                  onClick={() => navigate("/")}
+                  onKeyDown={(e) => e.key === "Enter" && navigate("/")}
+                  style={{
+                    height: "65px",
+                    width: "auto",
+                    cursor: "pointer",
+                    transition: "filter 0.3s ease",
+                  }}
+                  onMouseEnter={(e) =>
+                  (e.currentTarget.style.filter =
+                    "brightness(0) saturate(100%) invert(46%) sepia(21%) saturate(1549%) hue-rotate(7deg) brightness(89%) contrast(85%)")
+                  }
+                  onMouseLeave={(e) => (e.currentTarget.style.filter = "none")}
+                />
+              </div>
             )}
           </div>
-        </div>
 
-      </Container>
-    </NavBar>
-  );
+          {/* Top right side - Login, avatar, username*/}
+          <div className="navbar-right">
+            <div className="d-flex align-items-center">
+              {user ? (
+                <>
+                  <Dropdown align="end">
+                    <Dropdown.Toggle as="div" className="p-2 cursor-pointer">
+                      <FaUserCircle
+                        className="navbar-icon"
+                        size={45}
+                        style={{
+                          color: "var(--text)",
+                        }}
+                      />
+
+                    </Dropdown.Toggle>
+                    <div style={{ color: "var(--text)", display: "flex", justifyContent: "center", position: "relative" }}>
+                      <Dropdown.Menu
+                        style={{
+                          backgroundColor: "var(--card)",
+                          border: "2px solid var(--border)",
+                          color: "var(--text)",
+                          transform: "none",
+                          minWidth: "125px",
+                          borderRadius: "8px",
+                          fontSize: "14px",
+                          marginTop: "5px",
+                          //position: "absolute",
+                          //left: "50%",
+                          // transform: "translateX(-50%)",
+                        }}
+                      >
+                        {/* Profile */}
+                        <Dropdown.Item
+                          onClick={() => navigate("/account")}
+                          style={{
+                            color: "var(--text)",
+                            fontWeight: "500",
+                            display: "flex",
+                            alignItems: "center",
+                            gap: "8px",
+                          }}
+                          onMouseEnter={(e) => {
+                            e.target.style.backgroundColor = "var(--hover)";
+                            e.target.style.color = "var(--text)";
+                          }}
+                          onMouseLeave={(e) => {
+                            e.target.style.backgroundColor = "transparent";
+                            e.target.style.color = "var(--text)";
+                          }}
+                        >
+                          <FaUser size={14} /> Profile
+                        </Dropdown.Item>
+
+                        {/* Documents */}
+                        <Dropdown.Item
+                          onClick={() => navigate("/documents")}
+                          style={{
+                            color: "var(--text)",
+                            fontWeight: "500",
+                            display: "flex",
+                            alignItems: "center",
+                            gap: "8px",
+                          }}
+                          onMouseEnter={(e) => {
+                            e.target.style.backgroundColor = "var(--hover)";
+                            e.target.style.color = "var(--text)";
+                          }}
+                          onMouseLeave={(e) => {
+                            e.target.style.backgroundColor = "transparent";
+                            e.target.style.color = "var(--text)";
+                          }}
+                        >
+                          <FaFileAlt size={14} /> Resume
+                        </Dropdown.Item>
+
+                        {/* Settings */}
+                        <Dropdown.Item
+                          onClick={() => navigate("/settings")}
+                          style={{
+                            color: "var(--text)",
+                            fontWeight: "500",
+                            display: "flex",
+                            alignItems: "center",
+                            gap: "8px",
+                          }}
+                          onMouseEnter={(e) => {
+                            e.target.style.backgroundColor = "var(--hover)";
+                            e.target.style.color = "var(--text)";
+                          }}
+                          onMouseLeave={(e) => {
+                            e.target.style.backgroundColor = "transparent";
+                            e.target.style.color = "var(--text)";
+                          }}
+                        >
+                          <FaCog size={14} /> Settings
+                        </Dropdown.Item>
+
+                      </Dropdown.Menu>
+                    </div>
+                  </Dropdown>
+                  <span style={{ color: "var(--accent1)", fontWeight: 600 }}>{user.username}</span>
+                </>
+              ) : (
+                <Nav.Link
+                  href="/login"
+                  style={{
+                    width: "auto",
+                    padding: "8px 20px",
+                    border: "2px solid var(--border)",
+                    backgroundColor: "transparent",
+                    color: "var(--text)",
+                    transition: "all 0.3s ease",
+                    borderRadius: "0",
+                    height: "45px",
+                    display: "flex",
+                    alignItems: "center",
+                    justifyContent: "center",
+                    fontWeight: "600",
+                    textDecoration: "none"
+                  }}
+                  onMouseEnter={(e) => {
+                    e.target.style.backgroundColor = "var(--background)";
+                    e.target.style.color = "var(--text)";
+                  }}
+                  onMouseLeave={(e) => {
+                    e.target.style.backgroundColor = "transparent";
+                    e.target.style.color = "var(--text)";
+                  }}
+                >
+                  Login
+                </Nav.Link>
+
+              )}
+            </div>
+          </div>
+
+        </Container>
+      </NavBar>
+      </div>
+      );
 };
 
-export default Navbar;
+      export default Navbar;
