@@ -1,6 +1,6 @@
 import React, { useRef, useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { Container, Row, Col, Form, Button, Spinner, Offcanvas } from "react-bootstrap";
+import { Container, Row, Col, Form, Button, Spinner, Offcanvas, Pagination } from "react-bootstrap";
 import { FaSearch, FaBriefcase, FaMapMarkerAlt, FaClock, FaCompass, FaFilter, FaMoneyBill, FaChevronLeft, FaChevronRight, FaBuilding, FaUserTie, FaLaptopHouse } from "react-icons/fa";
 import { formatDistanceToNow } from "date-fns";
 import { motion } from "framer-motion";
@@ -25,8 +25,6 @@ const FindJobs = ({ jobPostTypeProp }) => {
 
     // Pagination states
     const [currentPage, setCurrentPage] = useState(1);
-    const [hasNextPage, setHasNextPage] = useState(false);
-    const [hasPrevPage, setHasPrevPage] = useState(false);
 
     // Job detail states
     const [jobCount, setJobCount] = useState();
@@ -42,7 +40,9 @@ const FindJobs = ({ jobPostTypeProp }) => {
     const [loading, setLoading] = useState(false);
 
     const jobListContainerRef = useRef(null);
-    const navigate = useNavigate();
+    const jobsPerPage = 15;
+    const totalPages = Math.ceil(jobCount / jobsPerPage);
+    
 
     // helper functions below for job filtering system
     const toggleFilter = (category, value) => {
@@ -95,14 +95,10 @@ const FindJobs = ({ jobPostTypeProp }) => {
                     setSearchedJobs(jobs);
                     setSelectedJob(jobs[0]);
                     setJobCount(count);
-                    setHasNextPage(currentPage * 15 < count);
-                    setHasPrevPage(currentPage > 1);
                 } else {
                     setSearchedJobs([]);
                     setSelectedJob(null);
                     setAlert({ type: "error", text: "No matching jobs found. Try different search terms." });
-                    setHasNextPage(false);
-                    setHasPrevPage(false);
                 }
             }
             else if (type === "all") {
@@ -114,14 +110,10 @@ const FindJobs = ({ jobPostTypeProp }) => {
                     setAllJobs(jobs);
                     setSelectedJob(jobs[0]);
                     setJobCount(count);
-                    setHasNextPage(currentPage * 15 < count);
-                    setHasPrevPage(currentPage > 1);
                 } else {
                     setAllJobs([]);
                     setSelectedJob(null);
                     setAlert({ type: "error", text: "No jobs found. Please try again later." });
-                    setHasNextPage(false);
-                    setHasPrevPage(false);
                 }
             }
             else if (type === "matched") {
@@ -618,7 +610,6 @@ const FindJobs = ({ jobPostTypeProp }) => {
 
                             {/* Job Posting listings */}
                             <div className="overflow-auto flex-grow-1 auto-hide-scroll">
-                                {/* {error && <div className="p-3 text-danger">{error}</div>} */}
 
                                 {!loading && (
                                     <div className="job-list">
@@ -626,21 +617,67 @@ const FindJobs = ({ jobPostTypeProp }) => {
                                     </div>
                                 )}
 
-                                <div className="d-flex justify-content-center align-items-center p-1 gap-1">
-                                    {!loading && hasPrevPage && (
-                                        <Button variant="primary" onClick={() => setCurrentPage(prev => prev - 1)} style={{ color: "var(--accent1)", background: "none", border: "none" }}>
-                                            <FaChevronLeft />
-                                        </Button>
-                                    )}
-                                    {!loading && jobCount > 0 && (
-                                        <span>Page {currentPage}</span>
-                                    )}
-                                    {!loading && hasNextPage && (
-                                        <Button variant="primary" onClick={() => setCurrentPage(prev => prev + 1)} style={{ color: "var(--accent1)", background: "none", border: "none" }}>
-                                            <FaChevronRight />
-                                        </Button>
-                                    )}
-                                </div>
+                                {/* Pagination */}
+                                {!loading && totalPages > 1 && (
+                                    <div className="d-flex justify-content-center mt-3">
+                                        <Pagination style={{ display: "flex", flexWrap: "nowrap", gap: "4px" }}>                                                            
+                                            <Pagination.Prev
+                                                disabled={currentPage === 1}
+                                                onClick={() => setCurrentPage(prev => prev - 1)}
+                                                linkStyle={{
+                                                    backgroundColor: "var(--card)",
+                                                    color: "var(--text)",
+                                                    border: "none",
+                                                    boxShadow: "none",
+                                                    padding: "2px 6px",
+                                                    fontSize: "0.8rem",
+                                                    borderRadius: "6px"
+                                                }}
+                                            />
+                                    
+                                            {Array.from({ length: totalPages }, (_, i) => i + 1)
+                                                .filter(p => p === 1 || p === totalPages || Math.abs(p - currentPage) <= 1)
+                                                .map((page, index, pages) => (
+                                                    <span key={page} style={{ display: "flex", alignItems: "center" }}>
+                                                        {index > 0 && page !== pages[index - 1] + 1 && (
+                                                            <span style={{ padding: "0 4px", opacity: 0.6, fontSize: "0.8rem", color: "var(--text)" }}>…</span>
+                                                        )}
+                                                                
+                                                        <Pagination.Item
+                                                            active={page === currentPage}
+                                                            onClick={() => setCurrentPage(page)}
+                                                            linkStyle={{
+                                                                backgroundColor: page === currentPage ? "var(--accent1)" : "var(--card)",
+                                                                color: page === currentPage ? "white" : "var(--text)",
+                                                                border: "none",
+                                                                boxShadow: "none",
+                                                                padding: "2px 8px",
+                                                                fontSize: "0.8rem",
+                                                                borderRadius: "6px"
+                                                            }}
+                                                        >
+                                                            {page}
+                                                        </Pagination.Item>
+                                                    </span>
+                                                ))
+                                            }
+                                    
+                                            <Pagination.Next
+                                                disabled={currentPage === totalPages}
+                                                onClick={() => setCurrentPage(prev => prev + 1)}
+                                                linkStyle={{
+                                                    backgroundColor: "var(--card)",
+                                                    color: "var(--text)",
+                                                    border: "none",
+                                                    boxShadow: "none",
+                                                    padding: "2px 6px",
+                                                    fontSize: "0.8rem",
+                                                    borderRadius: "6px"
+                                                }}
+                                            />
+                                        </Pagination>
+                                    </div>
+                                )}
                             </div>
                         </Col>
                     )}
