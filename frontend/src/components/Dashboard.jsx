@@ -86,7 +86,7 @@ const Dashboard = () => {
     }
 
     return (
-        <Container fluid style={{ minHeight: "100vh", color: "var(--text)", padding: "3rem 2.5rem", overflowY: "auto" }}>
+        <Container fluid style={{ minHeight: "100vh", color: "var(--text)", padding: "3rem 3rem", overflowY: "auto" }}>
             <div style={{ marginBottom: "2.5rem" }}>
                 <h2 style={{ fontWeight: 700, fontSize: "2.2rem" }}>Welcome back, <span style={{ color: "var(--accent1)" }}>{username}</span></h2>
                 <p style={{ color: "var(--accent2)", fontSize: "1.1rem" }}>Here’s what’s happening in your job search world today.</p>
@@ -150,11 +150,12 @@ const Dashboard = () => {
                             </div>
                             <hr style={{ opacity: 0.2, borderColor: "var(--accent1)" }} />
                             <p>
-                                Practice for your next interview with AI-generated questions tailored to your skills and target roles. The assistant provides real-time feedback, helps you refine your responses, and evaluates your overall interview performance.
+                                Prepare for real interviews with AI-generated questions customized to your profile or any job you’ve saved. 
+                                Answer using text or voice, receive instant feedback, and review your overall performance summary.
                             </p>
-                            <p style={{ color: "var(--accent2)" }}>Visit any job posting and click <strong>Interview</strong> to start your personalized mock interview session.</p>
+                            <p style={{ color: "var(--accent2)" }}>Choose <strong>Profile</strong> or <strong>Saved Job</strong> on the interview page to begin your session.</p>
                         </div>
-                        <span style={linkStyle} onClick={() => navigate("/find-jobs")}>Try it out →</span>
+                        <span style={linkStyle} onClick={() => navigate("/interview-chatbot")}>Try it out →</span>
                     </Card>
                 </Col>
             </Row>

@@ -354,10 +354,10 @@ const FindJobs = ({ jobPostTypeProp }) => {
                                     display: "flex",
                                     alignItems: "center",
                                     justifyContent: "center",
-                                    backgroundColor: "rgba(255, 255, 255, 0.08)",
-                                    border: "1px solid var(--border)",
-                                    borderRadius: "8px",
-                                    overflow: "hidden",
+                                    background: "none",
+                                    border: "none",
+                                    borderRadius: "0",
+                                    overflow: "visible",
                                 }}
                             >
                                 {job.logoURL ? (
@@ -366,10 +366,9 @@ const FindJobs = ({ jobPostTypeProp }) => {
                                         alt={`${job.company} logo`}
                                         onError={(e) => (e.target.style.display = "none")}
                                         style={{
-                                            width: "75%",
-                                            height: "75%",
+                                            width: "100%",
+                                            height: "100%",
                                             objectFit: "contain",
-                                            filter: "drop-shadow(0 1px 1px rgba(0, 0, 0, 0.4))",
                                         }}
                                     />
                                 ) : (
@@ -715,14 +714,13 @@ const FindJobs = ({ jobPostTypeProp }) => {
                                         color: "var(--text)",
                                         backgroundColor: "var(--background)",
                                         paddingBottom: "3rem",
-                                        paddingLeft: "5rem",
-                                        paddingRight: "5rem",
+                                        paddingLeft: "3rem",
+                                        paddingRight: "3rem",
                                     }}
                                 >
                                     {/* Top Section */}
                                     <div className={windowWidth <= 770 ? "p-3" : "pt-5 pb-4"}>
                                         <div className="d-flex justify-content-between align-items-start flex-nowrap gap-3">
-
 
                                             {/* Logo + Title + Company */}
                                             <div className="d-flex align-items-center gap-3">

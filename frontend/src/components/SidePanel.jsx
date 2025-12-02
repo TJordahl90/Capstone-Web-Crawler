@@ -2,7 +2,7 @@ import React, { useState } from "react";
 import { useLocation } from "react-router-dom";
 import { motion, AnimatePresence } from "framer-motion";
 import { createPortal } from "react-dom";
-import { FaBriefcase, FaBookmark, FaUser, FaChartBar, FaCommentAlt, FaSignOutAlt } from "react-icons/fa";
+import { FaBriefcase, FaBookmark, FaUser, FaChartBar, FaCommentAlt, FaSignOutAlt, FaRobot } from "react-icons/fa";
 import { FaThLarge } from "react-icons/fa";
 import { useTheme } from "./ThemeContext";
 import { useNavigate } from "react-router-dom";
@@ -35,7 +35,7 @@ const SidePanel = ({ children, user, handleLogout }) => {
         { icon: <FaBriefcase />, href: "/find-jobs", key: "jobs", label: "Explore Jobs" },
         { icon: <FaUser />, href: "/matched-jobs", key: "matches", label: "Matched Jobs" },
         { icon: <FaBookmark />, href: "/saved-jobs", key: "saved", label: "Saved Jobs" },
-        { icon: <FaCommentAlt />, href: "/interview-chatbot", key: "chatbot", label: "Interview Chatbot" },
+        { icon: <FaRobot />, href: "/interview-chatbot", key: "chatbot", label: "Interview Chatbot" },
         { icon: <FaChartBar />, href: "/trend-analysis", key: "trends", label: "Job Trends" },
 
     ].concat(
