@@ -630,7 +630,8 @@ const FindJobs = ({ jobPostTypeProp }) => {
                                                 border: "none",
                                                 boxShadow: "none",
                                                 padding: "2px 6px",
-                                                fontSize: "0.8rem",
+                                                fontSize: "1rem",
+                                                fontWeight: 600,
                                                 borderRadius: "6px"
                                             }}
                                         />
@@ -651,9 +652,10 @@ const FindJobs = ({ jobPostTypeProp }) => {
                                                             color: page === currentPage ? "white" : "var(--text)",
                                                             border: "none",
                                                             boxShadow: "none",
-                                                            padding: "2px 8px",
-                                                            fontSize: "0.8rem",
-                                                            borderRadius: "6px"
+                                                            padding: "2px 12px",
+                                                            fontSize: "1rem",
+                                                            borderRadius: "6px",
+                                                            fontWeight: 600,
                                                         }}
                                                     >
                                                         {page}
@@ -671,7 +673,7 @@ const FindJobs = ({ jobPostTypeProp }) => {
                                                 border: "none",
                                                 boxShadow: "none",
                                                 padding: "2px 6px",
-                                                fontSize: "0.8rem",
+                                                fontSize: "1rem",
                                                 borderRadius: "6px"
                                             }}
                                         />
