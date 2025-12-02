@@ -13,6 +13,8 @@ const LandingPage = () => {
   const [whyVisible, setWhyVisible] = useState(false);
   const ctaRef = useRef(null);
   const [ctaVisible, setCtaVisible] = useState(false);
+  const storedUser = localStorage.getItem("user");
+  const user = storedUser ? JSON.parse(storedUser) : null;
 
   useEffect(() => {
     const observer = new IntersectionObserver(
@@ -86,7 +88,7 @@ const LandingPage = () => {
             height: "100%",
             objectFit: "cover",
             zIndex: 0,
-           
+
           }}
         >
           <source src={videobg} type="video/mp4" />
@@ -106,7 +108,7 @@ const LandingPage = () => {
             justifyContent: "center",
             alignItems: "center",
             zIndex: 20,
-            cursor:"pointer",
+            cursor: "pointer",
           }}
         >
           <img
@@ -121,87 +123,88 @@ const LandingPage = () => {
           />
         </div>
 
-        {/*Register and login box */}
-        <div
-          className="landing-navbar"
-          style={{
-            position: "absolute",
-            top: "3vh",
-            right: "3vw",
-            minWidth: "240px",
-            height: "50px",
-            display: "flex",
-            justifyContent: "space-between",
-            alignItems: "center",
-            backgroundColor: "rgba(255, 255, 255, 0.03)",
-            backdropFilter: "blur(20px)",
-            WebkitBackdropFilter: "blur(20px)",
-            borderRadius: "24px",
-            border: "1px solid rgba(255, 255, 255, 0.1)",
-            zIndex: 20,
-            padding: "4px",
-            boxShadow: "0 0 12px rgba(0, 0, 0, 0.1)",
-          }}
-        >
-
-          {/* Register Button */}
-          <button
-            className="register-btn"
-            onClick={() => navigate("/register")}
+        {/* Register and login box – hide if user is already logged in */}
+        {!user && (
+          <div
+            className="landing-navbar"
             style={{
-              width: "45%",
-              height: "100%",
+              position: "absolute",
+              top: "3vh",
+              right: "3vw",
+              minWidth: "240px",
+              height: "50px",
+              display: "flex",
+              justifyContent: "space-between",
+              alignItems: "center",
+              backgroundColor: "rgba(255, 255, 255, 0.03)",
+              backdropFilter: "blur(20px)",
+              WebkitBackdropFilter: "blur(20px)",
               borderRadius: "24px",
-              fontSize: "1rem",
-              fontWeight: "bold",
-              cursor: "pointer",
-              color: "white",
-              backgroundColor: "rgba(26, 120, 228, 0.3)",
-              border: "2px solid var(--border)",
-              backdropFilter: "blur(6px)",
-              transition: "0.3s ease",
-            }}
-            onMouseEnter={(e) => {
-              e.currentTarget.style.backgroundColor = "var(--accent1)";
-              e.currentTarget.style.color = "#fff";
-            }}
-            onMouseLeave={(e) => {
-              e.currentTarget.style.backgroundColor = "rgba(26, 120, 228, 0.3)";
-              e.currentTarget.style.color = "white";
+              border: "1px solid rgba(255, 255, 255, 0.1)",
+              zIndex: 20,
+              padding: "4px",
+              boxShadow: "0 0 12px rgba(0, 0, 0, 0.1)",
             }}
           >
-            Register
-          </button>
+            {/* Register Button */}
+            <button
+              className="register-btn"
+              onClick={() => navigate("/register")}
+              style={{
+                width: "45%",
+                height: "100%",
+                borderRadius: "24px",
+                fontSize: "1rem",
+                fontWeight: "bold",
+                cursor: "pointer",
+                color: "white",
+                backgroundColor: "rgba(26, 120, 228, 0.3)",
+                border: "2px solid var(--border)",
+                backdropFilter: "blur(6px)",
+                transition: "0.3s ease",
+              }}
+              onMouseEnter={(e) => {
+                e.currentTarget.style.backgroundColor = "var(--accent1)";
+                e.currentTarget.style.color = "#fff";
+              }}
+              onMouseLeave={(e) => {
+                e.currentTarget.style.backgroundColor = "rgba(26, 120, 228, 0.3)";
+                e.currentTarget.style.color = "white";
+              }}
+            >
+              Register
+            </button>
 
-          {/* Login Button */}
-          <button
-            className="login-btn"
-            onClick={() => navigate("/login")}
-            style={{
-              width: "45%",
-              height: "100%",
-              borderRadius: "24px",
-              fontSize: "1rem",
-              fontWeight: "bold",
-              cursor: "pointer",
-              color: "white",
-              backgroundColor: "rgba(26, 120, 228, 0.3)",
-              border: "2px solid var(--border)",
-              backdropFilter: "blur(6px)",
-              transition: "0.3s ease",
-            }}
-            onMouseEnter={(e) => {
-              e.currentTarget.style.backgroundColor = "var(--accent1)";
-              e.currentTarget.style.color = "#fff";
-            }}
-            onMouseLeave={(e) => {
-              e.currentTarget.style.backgroundColor = "rgba(26, 120, 228, 0.3)";
-              e.currentTarget.style.color = "white";
-            }}
-          >
-            Login
-          </button>
-        </div>
+            {/* Login Button */}
+            <button
+              className="login-btn"
+              onClick={() => navigate("/login")}
+              style={{
+                width: "45%",
+                height: "100%",
+                borderRadius: "24px",
+                fontSize: "1rem",
+                fontWeight: "bold",
+                cursor: "pointer",
+                color: "white",
+                backgroundColor: "rgba(26, 120, 228, 0.3)",
+                border: "2px solid var(--border)",
+                backdropFilter: "blur(6px)",
+                transition: "0.3s ease",
+              }}
+              onMouseEnter={(e) => {
+                e.currentTarget.style.backgroundColor = "var(--accent1)";
+                e.currentTarget.style.color = "#fff";
+              }}
+              onMouseLeave={(e) => {
+                e.currentTarget.style.backgroundColor = "rgba(26, 120, 228, 0.3)";
+                e.currentTarget.style.color = "white";
+              }}
+            >
+              Login
+            </button>
+          </div>
+        )}
 
         <Container className="d-flex flex-column justify-content-center align-items-center text-center py-5" style={{ minHeight: "100vh", position: 'relative', zIndex: 2 }}>
           <Row className="justify-content-center">
@@ -314,23 +317,41 @@ const LandingPage = () => {
                   style={{ backgroundColor: "var(--accent1)" }}>
                   <i className="bi bi-search fs-3 text-primary"></i>
                 </div>
-                <h4 className="mb-3"
-                  style={{ color: "var(--accent1)" }}>Smart Job Matching</h4>
+                <h4
+                  className="mb-3"
+                  style={{ color: "var(--accent1)", fontWeight: 700 }}
+                >Smart Job Matching</h4>
                 <p className="detail1"
                   style={{ color: "#111111" }}>Our job matching algorithms connect you with the perfect opportunities based on your skills and preferences.</p>
               </div>
             </Col>
             <Col md={4}>
               <div className="p-4 text-center">
-                <div className="bg-opacity-10 p-3 rounded-circle d-inline-flex mb-3"
-                  style={{ backgroundColor: "var(--accent1)" }}>
-                  <i className="bi bi-graph-up fs-3 text-primary"></i>
+                <div
+                  className="bg-opacity-10 p-3 rounded-circle d-inline-flex mb-3"
+                  style={{ backgroundColor: "var(--accent1)" }}
+                >
+                  <i className="bi bi-robot fs-3" style={{ color: "white" }}></i>
                 </div>
-                <h4 className="mb-3"
-                  style={{ color: "var(--accent1)" }}>Career Growth</h4>
+
+                <h4
+                  className="mb-3"
+                  style={{ color: "var(--accent1)", fontWeight: 700 }}
+                >
+                  AI Mock Interviews
+                </h4>
+
                 <p
                   className="detail2"
-                  style={{ color: "#111111" }}>Access resources and tools designed to help you advance in your professional journey.</p>
+                  style={{
+                    color: "#111111",
+                    fontSize: "1rem",
+                    lineHeight: "1.5",
+                  }}
+                >
+                  Practice real interview questions powered by AI tailored to the job you’re applying for.
+                  Improve your confidence and performance with immediate, personalized feedback.
+                </p>
               </div>
             </Col>
             <Col md={4}>
@@ -339,8 +360,10 @@ const LandingPage = () => {
                   style={{ backgroundColor: "var(--accent1)" }}>
                   <i className="bi bi-building fs-3 text-primary"></i>
                 </div>
-                <h4 className="mb-3"
-                  style={{ color: "var(--accent1)" }}>Top Companies</h4>
+                <h4
+                  className="mb-3"
+                  style={{ color: "var(--accent1)", fontWeight: 700 }}
+                >Top Companies</h4>
                 <p className="detail3"
                   style={{ color: "#111111" }}>Connect with industry-leading companies looking for talent like yours.</p>
               </div>
