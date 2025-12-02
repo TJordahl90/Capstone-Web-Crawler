@@ -56,6 +56,18 @@ const Navbar = ({ setCollapsed, collapsed }) => {
           zIndex: 20,
         }}
       >
+        <style>{`
+  /* force caret to match theme */
+  .dropdown-toggle::after {
+    border-top-color: var(--text) !important;
+    margin-top: 10px !important; 
+  }
+
+  .dropdown-toggle:hover::after {
+    border-top-color: var(--accent1) !important;
+  }
+`}</style>
+
         <Container
           fluid
           style={{
@@ -114,7 +126,11 @@ const Navbar = ({ setCollapsed, collapsed }) => {
               {user ? (
                 <>
                   <Dropdown align="end">
-                    <Dropdown.Toggle as="div" className="p-2 cursor-pointer">
+                    <Dropdown.Toggle
+                      as="div"
+                      className="p-2"
+                      style={{ cursor: "pointer" }}
+                    >
                       <FaUserCircle
                         className="navbar-icon"
                         size={45}
@@ -122,8 +138,8 @@ const Navbar = ({ setCollapsed, collapsed }) => {
                           color: "var(--text)",
                         }}
                       />
-
                     </Dropdown.Toggle>
+
                     <div style={{ color: "var(--text)", display: "flex", justifyContent: "center", position: "relative" }}>
                       <Dropdown.Menu
                         style={{
@@ -247,8 +263,8 @@ const Navbar = ({ setCollapsed, collapsed }) => {
 
         </Container>
       </NavBar>
-      </div>
-      );
+    </div>
+  );
 };
 
-      export default Navbar;
+export default Navbar;
