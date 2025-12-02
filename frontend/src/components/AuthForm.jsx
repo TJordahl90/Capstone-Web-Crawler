@@ -21,6 +21,19 @@ const AuthForm = ({ isLogin }) => {
         confirmEmail: '',
     });
 
+    // Live password requirement checks
+    const passwordValue = formData.password || "";
+
+    const hasMinLength = passwordValue.length >= 8;
+    const hasUppercase = /[A-Z]/.test(passwordValue);
+    const hasLowercase = /[a-z]/.test(passwordValue);
+    const hasNumber = /\d/.test(passwordValue);
+    const hasSpecial = /[\W_]/.test(passwordValue);
+
+    const isPasswordValid =
+        hasMinLength && hasUppercase && hasLowercase && hasNumber && hasSpecial;
+
+
     useEffect(() => {
         api.get('/csrf/').catch(() =>
             setAlert({ type: "error", text: "Error retrieving necessary tokens." }),
@@ -350,8 +363,8 @@ const AuthForm = ({ isLogin }) => {
                                         }
                                     />
 
+                                    {/* PASSWORD FIELD */}
                                     <InputField
-                                        // label="Password"
                                         type="password"
                                         placeholder="Create a password"
                                         value={formData.password}
@@ -359,10 +372,76 @@ const AuthForm = ({ isLogin }) => {
                                             setFormData({ ...formData, password: e.target.value })
                                         }
                                     />
-                                    {formData.password &&
-                                        !/^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[\W_]).{8,}$/.test(
-                                            formData.password
-                                        ) && <small style={{ color: "red" }}>Must meet password requirements</small>}
+
+                                    {/* Password checklist */}
+                                    <div style={{ marginTop: "6px", marginBottom: "6px" }}>
+                                        <small
+                                            style={{
+                                                fontSize: "0.8rem",
+                                                color: "#555",
+                                                display: "block",
+                                                marginBottom: "4px",
+                                            }}
+                                        >
+                                            Password must include:
+                                        </small>
+
+                                        {/* One row per requirement */}
+                                        {[
+                                            { ok: hasMinLength, label: "At least 8 characters" },
+                                            { ok: hasUppercase, label: "One uppercase letter (A–Z)" },
+                                            { ok: hasLowercase, label: "One lowercase letter (a–z)" },
+                                            { ok: hasNumber, label: "One number (0–9)" },
+                                            { ok: hasSpecial, label: "One special character (!@#$…)" },
+                                        ].map((rule, idx) => (
+                                            <div
+                                                key={idx}
+                                                style={{
+                                                    display: "flex",
+                                                    alignItems: "center",
+                                                    gap: "8px",
+                                                    marginBottom: "2px",
+                                                }}
+                                            >
+                                                {/* Themed checkbox */}
+                                                <span
+                                                    style={{
+                                                        width: "16px",
+                                                        height: "16px",
+                                                        borderRadius: "4px",
+                                                        border: `2px solid ${rule.ok ? "var(--accent1)" : "#d0d0d0"
+                                                            }`,
+                                                        backgroundColor: rule.ok ? "var(--accent1)" : "#ffffff",
+                                                        display: "inline-flex",
+                                                        alignItems: "center",
+                                                        justifyContent: "center",
+                                                        fontSize: "0.7rem",
+                                                        color: "#ffffff",
+                                                        transition: "0.2s ease",
+                                                    }}
+                                                >
+                                                    {rule.ok ? "✓" : ""}
+                                                </span>
+                                                <small
+                                                    style={{
+                                                        fontSize: "0.8rem",
+                                                        color: rule.ok ? "var(--accent1)" : "#777",
+                                                    }}
+                                                >
+                                                    {rule.label}
+                                                </small>
+                                            </div>
+                                        ))}
+
+                                        {/* Red error if typed but still invalid */}
+                                        {passwordValue && !isPasswordValid && (
+                                            <div style={{ marginTop: "4px" }}>
+                                                <small style={{ fontSize: "0.8rem", color: "red" }}>
+                                                    Your password doesn’t meet all the requirements above.
+                                                </small>
+                                            </div>
+                                        )}
+                                    </div>
 
                                     <InputField
                                         // label="Confirm Password"
@@ -466,162 +545,3 @@ const AuthForm = ({ isLogin }) => {
 };
 
 export default AuthForm;
-
-{/*  <Button
-                        onClick={() => navigate("/")}
-                        style={{
-                            backgroundColor: "transparent",
-                            color: "var(--accent1)",
-                            border: "none",
-                            fontWeight: "600",
-                            fontSize: "0.9rem",
-                            marginBottom: "5px",
-                            padding: 0,
-                        }}
-                    >
-                        ← Back to Home
-                    </Button>
-
-                    <h2
-                        className="text-center mb-1"
-                        style={{
-                            color: "var(--accent1)",
-                            fontWeight: 700,
-                            letterSpacing: "1px",
-                        }}
-                    >
-                        {isLogin ? "Welcome Back" : "Create Account"}
-                    </h2>
-
-                    <Form onSubmit={handleSubmit}>
-                        {!isLogin ? (
-                            <>
-                                <InputField
-                                    label="Username"
-                                    type="text"
-                                    placeholder="Enter a username"
-                                    value={formData.username}
-                                    onChange={(e) => setFormData({ ...formData, username: e.target.value })}
-                                />
-                                <InputField
-                                    label="Password"
-                                    type="password"
-                                    placeholder="Enter a password"
-                                    value={formData.password}
-                                    onChange={(e) => setFormData({ ...formData, password: e.target.value })}
-                                />
-                                {formData.password &&
-                                    !/^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[\W_]).{8,}$/.test(formData.password) && (
-                                        <small style={{ color: "red" }}>Must meet password requirements</small>
-                                    )}
-                                <InputField
-                                    label="Confirm Password"
-                                    type="password"
-                                    placeholder="Confirm your password"
-                                    value={formData.confirmPassword}
-                                    onChange={(e) => setFormData({ ...formData, confirmPassword: e.target.value })}
-                                />
-                                <Row className="gx-2">
-                                    <Col xs={12} sm={6}>
-                                        <InputField
-                                            label="First Name"
-                                            type="text"
-                                            placeholder="First name"
-                                            value={formData.first_name}
-                                            onChange={(e) => setFormData({ ...formData, first_name: e.target.value })}
-                                        />
-                                    </Col>
-                                    <Col xs={12} sm={6}>
-                                        <InputField
-                                            label="Last Name"
-                                            type="text"
-                                            placeholder="Last name"
-                                            value={formData.last_name}
-                                            onChange={(e) => setFormData({ ...formData, last_name: e.target.value })}
-                                        />
-                                    </Col>
-                                </Row>
-                                <InputField
-                                    label="Email"
-                                    type="email"
-                                    placeholder="Enter your email"
-                                    value={formData.email}
-                                    onChange={(e) => setFormData({ ...formData, email: e.target.value })}
-                                />
-                                <InputField
-                                    label="Confirm Email"
-                                    type="email"
-                                    placeholder="Confirm your email"
-                                    value={formData.confirmEmail}
-                                    onChange={(e) => setFormData({ ...formData, confirmEmail: e.target.value })}
-                                />
-                            </>
-                        ) : (
-                            <>
-                                <InputField
-                                    label="Username"
-                                    type="text"
-                                    placeholder="Enter your username"
-                                    value={formData.username}
-                                    onChange={(e) => setFormData({ ...formData, username: e.target.value })}
-                                />
-                                <InputField
-                                    label="Password"
-                                    type="password"
-                                    placeholder="Enter your password"
-                                    value={formData.password}
-                                    onChange={(e) => setFormData({ ...formData, password: e.target.value })}
-                                />
-                                <div className="text-end mb-3">
-                                    <Link
-                                        to="/password-reset"
-                                        style={{ color: "var(--accent1)", textDecoration: "none", fontSize: "0.9rem" }}
-                                    >
-                                        Forgot password?
-                                    </Link>
-                                </div>
-                            </>
-                        )}
-
-                        <Button
-                            type="submit"
-                            disabled={loading}
-                            style={{
-                                backgroundColor: "var(--accent1)",
-                                width: "100%",
-                                fontSize: "1rem",
-                                padding: "10px 0",
-                                color: "#fff",
-                                border: "none",
-                                borderRadius: "10px",
-                                fontWeight: "600",
-                                transition: "0.3s ease",
-                            }}
-                            onMouseEnter={(e) => (e.target.style.opacity = "0.85")}
-                            onMouseLeave={(e) => (e.target.style.opacity = "1")}
-                        >
-                            {loading ? (
-                                <Spinner as="span" animation="border" size="sm" />
-                            ) : (
-                                isLogin ? "Login" : "Register"
-                            )}
-                        </Button>
-
-                        <div className="text-center mt-2" style={{ color: "var(--text)" }}>
-                            {isLogin ? (
-                                <p style={{ fontSize: "0.95rem" }}>
-                                    Don’t have an account?{" "}
-                                    <Link to="/register" style={{ color: "var(--accent1)", fontWeight: 600 }}>
-                                        Register
-                                    </Link>
-                                </p>
-                            ) : (
-                                <p style={{ fontSize: "0.95rem" }}>
-                                    Already have an account?{" "}
-                                    <Link to="/login" style={{ color: "var(--accent1)", fontWeight: 600 }}>
-                                        Login
-                                    </Link>
-                                </p>
-                            )}
-                        </div>
-                    </Form>*/}
