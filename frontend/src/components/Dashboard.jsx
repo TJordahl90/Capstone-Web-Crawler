@@ -73,10 +73,10 @@ const Dashboard = () => {
     if (loading) {
         return (
             <div style={{ height: "100vh", backgroundColor: "var(--background)", display: "flex", justifyContent: "center", alignItems: "center", flexDirection: "column", color: "var(--text)" }}>
-                <Spinner 
-                    animation="border" 
-                    role="status" 
-                    style={{ width: "4rem", height: "4rem" }} 
+                <Spinner
+                    animation="border"
+                    role="status"
+                    style={{ width: "4rem", height: "4rem" }}
                 />
                 <p style={{ marginTop: "1rem", fontSize: "1.1rem" }}>
                     Loading your dashboard...
@@ -107,7 +107,28 @@ const Dashboard = () => {
                                 <>
                                     <h4 style={{ fontWeight: 600 }}>{bestJob.title}</h4>
                                     <p style={{ fontSize: "1.1rem" }}><strong>{bestJob.company}</strong></p>
-                                    <p style={{ color: "var(--accent2)" }}>Match Strength:<span style={chipStyle}>{bestJobScore}%</span></p>
+                                    <p style={{ color: "var(--accent2)" }}>
+                                        Match Strength:
+                                        <span
+                                            style={{
+                                                backgroundColor:
+                                                    bestJobScore > 60
+                                                        ? "var(--accent4)"
+                                                        : bestJobScore > 30
+                                                            ? "var(--accent2)" 
+                                                            : "var(--accent3)", 
+                                                color: "black",
+                                                fontSize: "0.8rem",
+                                                borderRadius: "4px",
+                                                padding: "4px 10px",
+                                                fontWeight: 600,
+                                                marginLeft: "8px",
+                                            }}
+                                        >
+                                            {bestJobScore}%
+                                        </span>
+                                    </p>
+
                                     <p style={{ marginTop: "0.5rem" }}>{bestJob.summary || "Learn more about this top opportunity that fits your skills and goals."}</p>
                                 </>
                             ) : (
@@ -150,7 +171,7 @@ const Dashboard = () => {
                             </div>
                             <hr style={{ opacity: 0.2, borderColor: "var(--accent1)" }} />
                             <p>
-                                Prepare for real interviews with AI-generated questions customized to your profile or any job you’ve saved. 
+                                Prepare for real interviews with AI-generated questions customized to your profile or any job you’ve saved.
                                 Answer using text or voice, receive instant feedback, and review your overall performance summary.
                             </p>
                             <p style={{ color: "var(--accent2)" }}>Choose <strong>Profile</strong> or <strong>Saved Job</strong> on the interview page to begin your session.</p>
