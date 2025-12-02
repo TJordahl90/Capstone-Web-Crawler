@@ -358,6 +358,7 @@ const FindJobs = ({ jobPostTypeProp }) => {
                                     border: "none",
                                     borderRadius: "0",
                                     overflow: "visible",
+                                    boxShadow: "5px 5px 5px var(--shadow1)",
                                 }}
                             >
                                 {job.logoURL ? (
@@ -726,14 +727,14 @@ const FindJobs = ({ jobPostTypeProp }) => {
                                         <div className="d-flex align-items-center gap-3">
                                             <div
                                                 style={{
-                                                    width: "90px",
-                                                    height: "90px",
+                                                    width: "78px",
+                                                    height: "78px",
                                                     backgroundColor: "var(--card)",
-                                                    borderRadius: "16px",
+                                                    //borderRadius: "16px",
                                                     display: "flex",
                                                     alignItems: "center",
                                                     justifyContent: "center",
-                                                    boxShadow: "0 3px 10px var(--shadow1)",
+                                                    boxShadow: "15px 15px 10px var(--shadow1)",
                                                     flexShrink: 0,
                                                 }}
                                             >
@@ -1153,39 +1154,26 @@ const FindJobs = ({ jobPostTypeProp }) => {
                   color: var(--text);
                 }
                /* Clean blue checkbox */
-.filters-canvas .form-check-input {
-  appearance: none;
-  -webkit-appearance: none;
-  width: 1.15em;
-  height: 1.15em;
-  border: 2px solid #1a78e4; /* blue border */
-  border-radius: 4px;
-  background-color: var(--card); /* light or dark auto */
-  cursor: pointer;
-  position: relative;
-  transition: 0.2s ease-in-out;
-}
+                .filters-canvas .form-check-input {
+                  appearance: none;
+                  -webkit-appearance: none;
+                  width: 1.15em;
+                  height: 1.15em;
+                  border-radius: 4px;
+                  background-color:
+                  cursor: pointer;
+                  position: relative;
+                  transition: 0.2s ease-in-out;
+                }
 
-/* Checked box */
-.filters-canvas .form-check-input:checked {
-  background-color: #1a78e4; /* solid blue */
-  border-color: #1a78e4;
-}
+                /* Checked box */
+                .filters-canvas .form-check-input:checked {
+                  background-color: #1a78e4; /* solid blue */
+                  border-color: #1a78e4;
+                }
 
-/* White checkmark */
-.filters-canvas .form-check-input:checked::after {
-  content: "";
-  position: absolute;
-  left: 4px;
-  top: 0px;
-  width: 5px;
-  height: 10px;
-  border: solid white;
-  border-width: 0 2px 2px 0;
-  transform: rotate(45deg);
-}
-
-                            
+                
+                   
                 /* Sticky footer buttons */
                 .filters-canvas .filters-actions {
                   position: sticky;
