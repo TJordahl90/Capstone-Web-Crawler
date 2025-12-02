@@ -33,6 +33,12 @@ const TrendAnalysis = () => {
         };     
         fetchJobStats();
     }, []);
+    
+    const maxLen = window.innerWidth < 768 ? 7 : 12;
+    const truncateLabel = (label, maxLen) => {
+        if (!label) return "";
+        return label.length > maxLen ? label.substring(0, maxLen) + "…" : label;
+    };
 
     const COLORS = [
       '#1B6CA8',
@@ -74,19 +80,29 @@ const TrendAnalysis = () => {
     }
 
   	return (
-  	  	<Container fluid style={{ minHeight: "100vh", color: "var(--text)", padding: "3rem 2.5rem", overflowY: "auto" }}>
+  	  	<Container fluid style={{ minHeight: "100vh", color: "var(--text)", padding: "3rem 3rem", overflowY: "auto" }}>
             <Row>
-                <Col md={8} className="mb-4">
+                {/* In demand skills */}
+                <Col xs={12} lg={8} className="mb-4">
                     <Card style={cardBase}>
                         <Card.Body>
-                            <Card.Title as="h5" style={{ color: 'var(--accent2)', fontSize: "1.5rem", fontWeight: 600 }}>Highest In-Demand Skills</Card.Title>
-                            <ResponsiveContainer width="100%" height={300}>
-                                <BarChart data={topSkills} margin={{ top: 20, right: 20, left: -10, bottom: 5 }}>
+                            <Card.Title as="h5" style={{ color: 'var(--accent2)', fontSize: "1.5rem", fontWeight: 600, textAlign: "center" }}>Highest In-Demand Skills</Card.Title>
+                            <ResponsiveContainer width="100%" height={320}>
+                                <BarChart data={topSkills} margin={{ top: 20, right: 20, left: -10, bottom: 10 }}>
                                     <CartesianGrid strokeDasharray="3 3" stroke="var(--border)" />
                                     <XAxis 
-                                        dataKey="name" 
-                                        tick={{ fill: 'var(--text)', fontSize: 12, fontWeight: 500 }}
-                                        axisLine={{ stroke: 'var(--border)' }} 
+                                        dataKey="name"
+                                        tick={(props) => {
+                                            const { x, y, payload } = props;
+                                            return (
+                                                <text x={x} y={y + 10} textAnchor="middle" fill="var(--text)" fontSize={12} fontWeight={500}>
+                                                    {truncateLabel(payload.value, maxLen)}
+                                                </text>
+                                            );
+                                        }}
+                                        interval={0}
+                                        height={30}
+                                        axisLine={{ stroke: 'var(--border)' }}
                                     />
                                     <YAxis 
                                         tick={{ fill: 'var(--text)', fontSize: 12, fontWeight: 500 }}
@@ -95,7 +111,8 @@ const TrendAnalysis = () => {
                                     <Tooltip 
                                         cursor={{ fill: 'var(--shadow2)' }}
                                         contentStyle={{ backgroundColor: 'var(--card)', border: '1px solid var(--accent1)', color: 'var(--text)' }}
-                                        labelStyle={{ color: 'var(--accent1)' }}
+                                        labelStyle={{ color: 'var(--text)' }}
+                                        itemStyle={{ color: 'var(--text)' }}
                                     />
                                     <Bar dataKey="count" fill="var(--accent1)" name="Job Postings" />
                                 </BarChart>
@@ -104,10 +121,12 @@ const TrendAnalysis = () => {
                     </Card>
                 </Col>
 
-                <Col md={4} className="mb-4">
+                {/* Job position distribution */}
+                <Col lg={4} xs={12} className="mb-4">
                     <Card style={cardBase}>
                         <Card.Body>
-                            <Card.Title as="h5" style={{ color: 'var(--accent2)', fontSize: "1.5rem", fontWeight: 600 }}>Open Job Position Distribution</Card.Title>
+                            <Card.Title as="h5" style={{ color: 'var(--accent2)', fontSize: "1.5rem", fontWeight: 600, textAlign: "center" }}>Job Distributions</Card.Title>
+
                             <ResponsiveContainer width="100%" height={300}>
                                 <PieChart>
                                     <Pie data={jobPositions} cx="50%" cy="50%" labelLine={false} outerRadius={80} dataKey="count" nameKey="name" label>
@@ -115,7 +134,11 @@ const TrendAnalysis = () => {
                                             <Cell key={`cell-${index}`} fill={COLORS[index % COLORS.length]} />
                                         ))}
                                     </Pie>
-                                    <Tooltip />
+                                    <Tooltip 
+                                        contentStyle={{ backgroundColor: 'var(--card)', border: '1px solid var(--accent1)', color: 'var(--text)' }}
+                                        labelStyle={{ color: 'var(--text)' }}
+                                        itemStyle={{ color: 'var(--text)' }}
+                                    />
                                     <Legend />
                                 </PieChart>
                             </ResponsiveContainer>
@@ -126,10 +149,11 @@ const TrendAnalysis = () => {
             
             <Row>
                 {/* For Work Distribution */}
-                <Col md={4} className="mb-4">
+                <Col lg={4} xs={12} className="mb-4">
                     <Card style={cardBase}>
                         <Card.Body>
-                            <Card.Title as="h5" style={{ color: 'var(--accent2)', fontSize: "1.5rem", fontWeight: 600 }}>Work Model Distribution</Card.Title>
+                            <Card.Title as="h5" style={{ color: 'var(--accent2)', fontSize: "1.5rem", fontWeight: 600, textAlign: "center" }}>Work Model Distribution</Card.Title>
+                            
                             <ResponsiveContainer width="100%" height={300}>
                                 <PieChart>
                                     <Pie data={workModels} cx="50%" cy="50%" labelLine={false} outerRadius={80} dataKey="count" nameKey="name" label>
@@ -137,7 +161,11 @@ const TrendAnalysis = () => {
                                             <Cell key={`cell-${index}`} fill={COLORS[index % COLORS.length]} />
                                         ))}
                                     </Pie>
-                                    <Tooltip />
+                                    <Tooltip 
+                                        contentStyle={{ backgroundColor: 'var(--card)', border: '1px solid var(--accent1)', color: 'var(--text)' }}
+                                        labelStyle={{ color: 'var(--text)' }}
+                                        itemStyle={{ color: 'var(--text)' }}
+                                    />
                                     <Legend />
                                 </PieChart>
                             </ResponsiveContainer>
@@ -145,11 +173,12 @@ const TrendAnalysis = () => {
                     </Card>
                 </Col>
 
-                {/* For Expereinece Levels */}
-                <Col md={4} className="mb-4">
+                {/* For Experience Levels */}
+                <Col lg={4} xs={12} className="mb-4">
                     <Card style={cardBase}>
                         <Card.Body>
-                            <Card.Title as="h5" style={{ color: 'var(--accent2)', fontSize: "1.5rem", fontWeight: 600 }}>Experience Level Distribution</Card.Title>
+                            <Card.Title as="h5" style={{ color: 'var(--accent2)', fontSize: "1.5rem", fontWeight: 600, textAlign: "center" }}>Experience Level Distribution</Card.Title>
+
                             <ResponsiveContainer width="100%" height={300}>
                                 <PieChart>
                                     <Pie data={experienceLevels} cx="50%" cy="50%" labelLine={false} outerRadius={80} dataKey="count" nameKey="name" label>
@@ -157,7 +186,11 @@ const TrendAnalysis = () => {
                                             <Cell key={`cell-${index}`} fill={COLORS[index % COLORS.length]} />
                                         ))}
                                     </Pie>
-                                    <Tooltip />
+                                    <Tooltip 
+                                        contentStyle={{ backgroundColor: 'var(--card)', border: '1px solid var(--accent1)', color: 'var(--text)' }}
+                                        labelStyle={{ color: 'var(--text)' }}
+                                        itemStyle={{ color: 'var(--text)' }}
+                                    />
                                     <Legend />
                                 </PieChart>
                             </ResponsiveContainer>
@@ -166,10 +199,11 @@ const TrendAnalysis = () => {
                 </Col>
 
                 {/* For Employment Types */}
-                <Col md={4} className="mb-4">
+                <Col lg={4} xs={12} className="mb-4">
                     <Card style={cardBase}>
                         <Card.Body>
-                            <Card.Title as="h5" style={{ color: 'var(--accent2)', fontSize: "1.5rem", fontWeight: 600 }}>Employment Type Distribution</Card.Title>
+                            <Card.Title as="h5" style={{ color: 'var(--accent2)', fontSize: "1.5rem", fontWeight: 600, textAlign: "center" }}>Employment Type Distribution</Card.Title>
+
                             <ResponsiveContainer width="100%" height={300}>
                                 <PieChart>
                                     <Pie data={employmentTypes} cx="50%" cy="50%" labelLine={false} outerRadius={80} dataKey="count" nameKey="name" label>
@@ -177,7 +211,11 @@ const TrendAnalysis = () => {
                                             <Cell key={`cell-${index}`} fill={COLORS[index % COLORS.length]} />
                                         ))}
                                     </Pie>
-                                    <Tooltip />
+                                    <Tooltip 
+                                        contentStyle={{ backgroundColor: 'var(--card)', border: '1px solid var(--accent1)', color: 'var(--text)' }}
+                                        labelStyle={{ color: 'var(--text)' }}
+                                        itemStyle={{ color: 'var(--text)' }}
+                                    />
                                     <Legend />
                                 </PieChart>
                             </ResponsiveContainer>
