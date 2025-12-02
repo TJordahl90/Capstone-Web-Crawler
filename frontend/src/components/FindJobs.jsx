@@ -1276,32 +1276,36 @@ const FindJobs = ({ jobPostTypeProp }) => {
             </Offcanvas>
 
             <style>{`
-              /* Reusable auto-hide scrollbar */
-              .auto-hide-scroll {
-                 scrollbar-gutter: stable; 
-                overscroll-behavior: contain;
-                        
-                scrollbar-width: thin;
-                scrollbar-color: transparent transparent;
-              }
-              .auto-hide-scroll:hover {  
-                scrollbar-color: rgba(255,255,255,0.28) transparent;
-              }
-              .auto-hide-scroll::-webkit-scrollbar {
-                width: 4px;
-                height: 4px;
-              }
-              .auto-hide-scroll::-webkit-scrollbar-track {
-                background: transparent; 
-              }
-              .auto-hide-scroll::-webkit-scrollbar-thumb {
-                background: rgba(255,255,255,0.22); 
-                border-radius: 4px;
-              }
-              .auto-hide-scroll:hover::-webkit-scrollbar-thumb {
-                background: rgba(255,255,255,0.34); 
-              }
-            `}</style>
+  /* Reusable auto-hide scrollbar */
+  .auto-hide-scroll {
+    scrollbar-gutter: stable;
+    overscroll-behavior: contain;
+
+    /* Firefox */
+    scrollbar-width: thin;
+    scrollbar-color: var(--border) transparent;
+  }
+
+  /* Webkit (Chrome, Edge, Safari) */
+  .auto-hide-scroll::-webkit-scrollbar {
+    width: 4px;
+    height: 4px;
+  }
+
+  .auto-hide-scroll::-webkit-scrollbar-track {
+    background: transparent;
+  }
+
+  .auto-hide-scroll::-webkit-scrollbar-thumb {
+    background: var(--border);
+    border-radius: 4px;
+  }
+
+  .auto-hide-scroll:hover::-webkit-scrollbar-thumb {
+    background: var(--accent1);
+  }
+`}</style>
+
 
         </Container>
     );
