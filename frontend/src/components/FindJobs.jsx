@@ -42,7 +42,7 @@ const FindJobs = ({ jobPostTypeProp }) => {
     const jobListContainerRef = useRef(null);
     const jobsPerPage = 15;
     const totalPages = Math.ceil(jobCount / jobsPerPage);
-    
+
 
     // helper functions below for job filtering system
     const toggleFilter = (category, value) => {
@@ -469,68 +469,68 @@ const FindJobs = ({ jobPostTypeProp }) => {
     //--------------------------------------------------------------------------
     // The entire jobs page including the job list and the job detailed sections
     return (
-            <Container
-                fluid
-                className="Job container"
-                style={{
-                    height: "100%",
-                    width: "100%",
-                    flex: 1,
-                    zIndex: 5,
-                    color: "var(--text)",
-                    padding: 0,
-                    margin: 0,
-                    maxWidth: "100%"
-                }}
-            >
+        <Container
+            fluid
+            className="Job container"
+            style={{
+                height: "100%",
+                width: "100%",
+                flex: 1,
+                zIndex: 5,
+                color: "var(--text)",
+                padding: 0,
+                margin: 0,
+                maxWidth: "100%"
+            }}
+        >
 
-                {/* Error message popup */}
-                <GlobalMessage
-                    type={alert.type}
-                    message={alert.text}
-                    onClose={() => setAlert({ type: "", text: "" })}
-                />
+            {/* Error message popup */}
+            <GlobalMessage
+                type={alert.type}
+                message={alert.text}
+                onClose={() => setAlert({ type: "", text: "" })}
+            />
 
-                <Row className="m-0" style={{ height: "100%" }}>
-                    {/* Left sidebar */}
-                    {(windowWidth > 770 || !showDetailsMobile) && (
-                        <Col
-                            md={3}
-                            className="p-0 d-flex flex-column"
-                            ref={jobListContainerRef}
-                            style={{
-                                height: "100%",
-                                color: "var(--text)",
-                                borderRight: "2px solid var(--border)"
-                            }}
-                        >
-                            {/* Search bar and buttons - only displays when jobPostType is all or search */}
-                            {(jobPostType === "all" || jobPostType === "search") && (
-                                <div
-                                    className="p-2"
-                                    style={{ borderBottom: "2px solid var(--border)" }}
+            <Row className="m-0" style={{ height: "100%" }}>
+                {/* Left sidebar */}
+                {(windowWidth > 770 || !showDetailsMobile) && (
+                    <Col
+                        md={3}
+                        className="p-0 d-flex flex-column"
+                        ref={jobListContainerRef}
+                        style={{
+                            height: "100%",
+                            color: "var(--text)",
+                            borderRight: "2px solid var(--border)"
+                        }}
+                    >
+                        {/* Search bar and buttons - only displays when jobPostType is all or search */}
+                        {(jobPostType === "all" || jobPostType === "search") && (
+                            <div
+                                className="p-2"
+                                style={{ borderBottom: "2px solid var(--border)" }}
+                            >
+
+                                <Form
+                                    onSubmit={(e) => {
+                                        e.preventDefault();
+                                        setJobPostType("search");
+                                        fetchJobPostings("search");
+                                        //clearAllFilters();
+                                    }}
                                 >
+                                    {/* Top Section: Search bar + Icons */}
+                                    <div className="d-flex flex-nowrap align-items-center" style={{ gap: "10px" }}>
+                                        {/* Search input */}
+                                        <div className="position-relative flex-grow-1">
+                                            <div
+                                                className="position-absolute"
+                                                style={{ left: "10px", top: "50%", transform: "translateY(-50%)" }}
+                                            >
+                                                <FaSearch style={{ color: "#3A4750" }} />
+                                            </div>
 
-                                    <Form
-                                        onSubmit={(e) => {
-                                            e.preventDefault();
-                                            setJobPostType("search");
-                                            fetchJobPostings("search");
-                                            //clearAllFilters();
-                                        }}
-                                    >
-                                        {/* Top Section: Search bar + Icons */}
-                                        <div className="d-flex flex-nowrap align-items-center" style={{ gap: "10px" }}>
-                                            {/* Search input */}
-                                            <div className="position-relative flex-grow-1">
-                                                <div
-                                                    className="position-absolute"
-                                                    style={{ left: "10px", top: "50%", transform: "translateY(-50%)" }}
-                                                >
-                                                    <FaSearch style={{ color: "#3A4750" }} />
-                                                </div>
-
-                                                <style>{`
+                                            <style>{`
                                                 .search-input::placeholder { color: #303841; opacity: 1; }
                                                 .search-input::-webkit-input-placeholder { color: #303841; opacity: 1; }
                                                 .search-input::-moz-placeholder { color: #303841; opacity: 1; }
@@ -553,44 +553,44 @@ const FindJobs = ({ jobPostTypeProp }) => {
                                                 }
                                             `}</style>
 
-                                                <Form.Control
-                                                    type="text"
-                                                    className="search-input"
-                                                    placeholder="Search jobs by title, company or location"
-                                                    value={searchTerm}
-                                                    onChange={(e) => setSearchTerm(e.target.value)}
-                                                    style={{
-                                                        paddingLeft: "30px",
-                                                        backgroundColor: "#F5F7FB",
-                                                        color: "#303841",
-                                                        border: "2px solid var(--border)",
-                                                        borderRadius: "8px",
-                                                        height: "42px",
-                                                    }}
-                                                />
-                                            </div>
-
-                                            <div className="d-flex align-items-center" style={{ gap: "10px" }}>
-                                                <div
-                                                    className="icon-btn"
-                                                    title="Browse all jobs"
-                                                    onClick={() => setJobPostType("all")}
-                                                >
-                                                    <FaCompass size={20} />
-                                                </div>
-
-                                                <div
-                                                    className="icon-btn"
-                                                    title="Filters"
-                                                    onClick={() => setShowCanvas(true)}
-                                                >
-                                                    <FaFilter size={20} />
-                                                </div>
-                                            </div>
+                                            <Form.Control
+                                                type="text"
+                                                className="search-input"
+                                                placeholder="Search jobs by title, company or location"
+                                                value={searchTerm}
+                                                onChange={(e) => setSearchTerm(e.target.value)}
+                                                style={{
+                                                    paddingLeft: "30px",
+                                                    backgroundColor: "#F5F7FB",
+                                                    color: "#303841",
+                                                    border: "2px solid var(--border)",
+                                                    borderRadius: "8px",
+                                                    height: "42px",
+                                                }}
+                                            />
                                         </div>
 
-                                        {/* Total Jobs */}
-                                        {/* <div className="mt-3">
+                                        <div className="d-flex align-items-center" style={{ gap: "10px" }}>
+                                            <div
+                                                className="icon-btn"
+                                                title="Browse all jobs"
+                                                onClick={() => setJobPostType("all")}
+                                            >
+                                                <FaCompass size={20} />
+                                            </div>
+
+                                            <div
+                                                className="icon-btn"
+                                                title="Filters"
+                                                onClick={() => setShowCanvas(true)}
+                                            >
+                                                <FaFilter size={20} />
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    {/* Total Jobs */}
+                                    {/* <div className="mt-3">
                                         <p
                                             style={{
                                                 fontSize: "1rem",
@@ -603,231 +603,231 @@ const FindJobs = ({ jobPostTypeProp }) => {
                                         </p>
                                     </div> */}
 
-                                    </Form>
-                                </div>
-                            )}
-
-                            {/* Job Posting listings */}
-                            <div className="overflow-auto flex-grow-1 auto-hide-scroll">
-
-                                {!loading && (
-                                    <div className="job-list">
-                                        {displayJobs.map(job => renderJobItem(job))}
-                                    </div>
-                                )}
-
-                                {/* Pagination */}
-                                {!loading && totalPages > 1 && (
-                                    <div className="d-flex justify-content-center mt-3">
-                                        <Pagination style={{ display: "flex", flexWrap: "nowrap", gap: "4px" }}>                                                            
-                                            <Pagination.Prev
-                                                disabled={currentPage === 1}
-                                                onClick={() => setCurrentPage(prev => prev - 1)}
-                                                linkStyle={{
-                                                    backgroundColor: "var(--card)",
-                                                    color: "var(--text)",
-                                                    border: "none",
-                                                    boxShadow: "none",
-                                                    padding: "2px 6px",
-                                                    fontSize: "0.8rem",
-                                                    borderRadius: "6px"
-                                                }}
-                                            />
-                                    
-                                            {Array.from({ length: totalPages }, (_, i) => i + 1)
-                                                .filter(p => p === 1 || p === totalPages || Math.abs(p - currentPage) <= 1)
-                                                .map((page, index, pages) => (
-                                                    <span key={page} style={{ display: "flex", alignItems: "center" }}>
-                                                        {index > 0 && page !== pages[index - 1] + 1 && (
-                                                            <span style={{ padding: "0 4px", opacity: 0.6, fontSize: "0.8rem", color: "var(--text)" }}>…</span>
-                                                        )}
-                                                                
-                                                        <Pagination.Item
-                                                            active={page === currentPage}
-                                                            onClick={() => setCurrentPage(page)}
-                                                            linkStyle={{
-                                                                backgroundColor: page === currentPage ? "var(--accent1)" : "var(--card)",
-                                                                color: page === currentPage ? "white" : "var(--text)",
-                                                                border: "none",
-                                                                boxShadow: "none",
-                                                                padding: "2px 8px",
-                                                                fontSize: "0.8rem",
-                                                                borderRadius: "6px"
-                                                            }}
-                                                        >
-                                                            {page}
-                                                        </Pagination.Item>
-                                                    </span>
-                                                ))
-                                            }
-                                    
-                                            <Pagination.Next
-                                                disabled={currentPage === totalPages}
-                                                onClick={() => setCurrentPage(prev => prev + 1)}
-                                                linkStyle={{
-                                                    backgroundColor: "var(--card)",
-                                                    color: "var(--text)",
-                                                    border: "none",
-                                                    boxShadow: "none",
-                                                    padding: "2px 6px",
-                                                    fontSize: "0.8rem",
-                                                    borderRadius: "6px"
-                                                }}
-                                            />
-                                        </Pagination>
-                                    </div>
-                                )}
+                                </Form>
                             </div>
-                        </Col>
-                    )}
+                        )}
 
-                    {/* Job Posting Details */}
-                    {(windowWidth > 770 || showDetailsMobile) && (
-                        <Col md={9} className="p-0" style={{ height: "100%" }}>
-                            {windowWidth <= 770 && (
-                                <div className="d-flex align-items-center justify-content-between m-2">
-                                    <Button
-                                        className="px-2 py-2"
-                                        style={{
-                                            backgroundColor: "var(--background)",
-                                            color: "var(--text)",
-                                            border: "2px solid var(--border)",
-                                            borderRadius: "8px",
-                                        }}
-                                        onClick={() => setShowDetailsMobile(false)}
-                                    >
-                                        ← Back
-                                    </Button>
+                        {/* Job Posting listings */}
+                        <div className="overflow-auto flex-grow-1 auto-hide-scroll">
+
+                            {!loading && (
+                                <div className="job-list">
+                                    {displayJobs.map(job => renderJobItem(job))}
                                 </div>
                             )}
 
-                            {loading ? (
-                                <div className="h-100 d-flex align-items-center justify-content-center">
-                                    <Spinner animation="border" role="status">
-                                        <span className="visually-hidden">Loading...</span>
-                                    </Spinner>
-                                </div>
-                            ) : selectedJob ? (
-                                <div
-                                    className="h-100 overflow-auto auto-hide-scroll"
-                                    style={{
-                                        color: "var(--text)",
-                                        backgroundColor: "var(--background)",
-                                        paddingBottom: "3rem",
-                                        paddingLeft: "3rem",
-                                        paddingRight: "3rem",
-                                    }}
-                                >
-                                    {/* Top Section */}
-                                    <div className={windowWidth <= 770 ? "p-3" : "pt-5 pb-4"}>
-                                        <div className="d-flex justify-content-between align-items-start flex-nowrap gap-3">
+                            {/* Pagination */}
+                            {!loading && totalPages > 1 && (
+                                <div className="d-flex justify-content-center mt-3">
+                                    <Pagination style={{ display: "flex", flexWrap: "nowrap", gap: "4px" }}>
+                                        <Pagination.Prev
+                                            disabled={currentPage === 1}
+                                            onClick={() => setCurrentPage(prev => prev - 1)}
+                                            linkStyle={{
+                                                backgroundColor: "var(--card)",
+                                                color: "var(--text)",
+                                                border: "none",
+                                                boxShadow: "none",
+                                                padding: "2px 6px",
+                                                fontSize: "0.8rem",
+                                                borderRadius: "6px"
+                                            }}
+                                        />
 
-                                            {/* Logo + Title + Company */}
-                                            <div className="d-flex align-items-center gap-3">
-                                                <div
-                                                    style={{
-                                                        width: "90px",
-                                                        height: "90px",
-                                                        backgroundColor: "var(--card)",
-                                                        borderRadius: "16px",
-                                                        display: "flex",
-                                                        alignItems: "center",
-                                                        justifyContent: "center",
-                                                        boxShadow: "0 3px 10px var(--shadow1)",
-                                                        flexShrink: 0,
-                                                    }}
-                                                >
-                                                    {selectedJob.logoURL ? (
-                                                        <img
-                                                            src={selectedJob.logoURL}
-                                                            alt={`${selectedJob.company} logo`}
-                                                            style={{
-                                                                width: "75px",
-                                                                height: "75px",
-                                                                objectFit: "contain",
-                                                            }}
-                                                        />
-                                                    ) : (
-                                                        <FaBuilding size={40} color="var(--text)" />
+                                        {Array.from({ length: totalPages }, (_, i) => i + 1)
+                                            .filter(p => p === 1 || p === totalPages || Math.abs(p - currentPage) <= 1)
+                                            .map((page, index, pages) => (
+                                                <span key={page} style={{ display: "flex", alignItems: "center" }}>
+                                                    {index > 0 && page !== pages[index - 1] + 1 && (
+                                                        <span style={{ padding: "0 4px", opacity: 0.6, fontSize: "0.8rem", color: "var(--text)" }}>…</span>
                                                     )}
-                                                </div>
 
-                                                <div>
-                                                    <h2
-                                                        className="mb-1"
-                                                        style={{
-                                                            color: "var(--accent1)",
-                                                            fontSize: "2rem",
-                                                            fontWeight: 700,
+                                                    <Pagination.Item
+                                                        active={page === currentPage}
+                                                        onClick={() => setCurrentPage(page)}
+                                                        linkStyle={{
+                                                            backgroundColor: page === currentPage ? "var(--accent1)" : "var(--card)",
+                                                            color: page === currentPage ? "white" : "var(--text)",
+                                                            border: "none",
+                                                            boxShadow: "none",
+                                                            padding: "2px 8px",
+                                                            fontSize: "0.8rem",
+                                                            borderRadius: "6px"
                                                         }}
                                                     >
-                                                        {selectedJob.title}
-                                                    </h2>
-                                                    <h4
-                                                        className="mb-0"
+                                                        {page}
+                                                    </Pagination.Item>
+                                                </span>
+                                            ))
+                                        }
+
+                                        <Pagination.Next
+                                            disabled={currentPage === totalPages}
+                                            onClick={() => setCurrentPage(prev => prev + 1)}
+                                            linkStyle={{
+                                                backgroundColor: "var(--card)",
+                                                color: "var(--text)",
+                                                border: "none",
+                                                boxShadow: "none",
+                                                padding: "2px 6px",
+                                                fontSize: "0.8rem",
+                                                borderRadius: "6px"
+                                            }}
+                                        />
+                                    </Pagination>
+                                </div>
+                            )}
+                        </div>
+                    </Col>
+                )}
+
+                {/* Job Posting Details */}
+                {(windowWidth > 770 || showDetailsMobile) && (
+                    <Col md={9} className="p-0" style={{ height: "100%" }}>
+                        {windowWidth <= 770 && (
+                            <div className="d-flex align-items-center justify-content-between m-2">
+                                <Button
+                                    className="px-2 py-2"
+                                    style={{
+                                        backgroundColor: "var(--background)",
+                                        color: "var(--text)",
+                                        border: "2px solid var(--border)",
+                                        borderRadius: "8px",
+                                    }}
+                                    onClick={() => setShowDetailsMobile(false)}
+                                >
+                                    ← Back
+                                </Button>
+                            </div>
+                        )}
+
+                        {loading ? (
+                            <div className="h-100 d-flex align-items-center justify-content-center">
+                                <Spinner animation="border" role="status">
+                                    <span className="visually-hidden">Loading...</span>
+                                </Spinner>
+                            </div>
+                        ) : selectedJob ? (
+                            <div
+                                className="h-100 overflow-auto auto-hide-scroll"
+                                style={{
+                                    color: "var(--text)",
+                                    backgroundColor: "var(--background)",
+                                    paddingBottom: "3rem",
+                                    paddingLeft: "3rem",
+                                    paddingRight: "3rem",
+                                }}
+                            >
+                                {/* Top Section */}
+                                <div className={windowWidth <= 770 ? "p-3" : "pt-5 pb-4"}>
+                                    <div className="d-flex justify-content-between align-items-start flex-nowrap gap-3">
+
+                                        {/* Logo + Title + Company */}
+                                        <div className="d-flex align-items-center gap-3">
+                                            <div
+                                                style={{
+                                                    width: "90px",
+                                                    height: "90px",
+                                                    backgroundColor: "var(--card)",
+                                                    borderRadius: "16px",
+                                                    display: "flex",
+                                                    alignItems: "center",
+                                                    justifyContent: "center",
+                                                    boxShadow: "0 3px 10px var(--shadow1)",
+                                                    flexShrink: 0,
+                                                }}
+                                            >
+                                                {selectedJob.logoURL ? (
+                                                    <img
+                                                        src={selectedJob.logoURL}
+                                                        alt={`${selectedJob.company} logo`}
                                                         style={{
-                                                            color: "var(--accent2)",
-                                                            fontWeight: 600,
-                                                            fontSize: "1.3rem",
+                                                            width: "75px",
+                                                            height: "75px",
+                                                            objectFit: "contain",
                                                         }}
-                                                    >
-                                                        {selectedJob.company}
-                                                    </h4>
-                                                </div>
+                                                    />
+                                                ) : (
+                                                    <FaBuilding size={40} color="var(--text)" />
+                                                )}
                                             </div>
 
-                                            {/* Buttons */}
-                                            <div className="d-flex align-items-center gap-2 pt-4">
-                                                <Button
+                                            <div>
+                                                <h2
+                                                    className="mb-1"
                                                     style={{
-                                                        backgroundColor: "var(--accent1)",
-                                                        color: "#FFFFFF",
-                                                        border: "none",
-                                                        borderRadius: "8px",
-                                                        fontWeight: 600,
-                                                    }}
-                                                    onClick={() =>
-                                                        toggleSaveJob(selectedJob.id, selectedJob.is_saved)
-                                                    }
-                                                    onMouseEnter={(e) => {
-                                                        e.currentTarget.style.color = "var(--accent1)";
-                                                        e.currentTarget.style.backgroundColor = "#FFFFFF";
-                                                        e.currentTarget.style.border = "1px solid var(--accent1)";
-                                                    }}
-
-                                                    onMouseLeave={(e) => {
-                                                        e.currentTarget.style.color = "#FFFFFF";
-                                                        e.currentTarget.style.backgroundColor = "var(--accent1)";
+                                                        color: "var(--accent1)",
+                                                        fontSize: "2rem",
+                                                        fontWeight: 700,
                                                     }}
                                                 >
-                                                    {selectedJob.is_saved ? "Unsave" : "Save"}
-                                                </Button>
-
-                                                <Button
+                                                    {selectedJob.title}
+                                                </h2>
+                                                <h4
+                                                    className="mb-0"
                                                     style={{
-                                                        backgroundColor: "var(--accent1)",
-                                                        color: "#FFFFFF",
-                                                        border: "none",
-                                                        borderRadius: "8px",
+                                                        color: "var(--accent2)",
                                                         fontWeight: 600,
-                                                    }}
-                                                    onClick={handleApplyClick}
-                                                    disabled={selectedJob.applied_status}
-                                                    onMouseEnter={(e) => {
-                                                        e.currentTarget.style.color = "var(--accent1)";
-                                                        e.currentTarget.style.backgroundColor = "#FFFFFF";
-                                                        e.currentTarget.style.border = "1px solid var(--accent1)";
-                                                    }}
-
-                                                    onMouseLeave={(e) => {
-                                                        e.currentTarget.style.color = "#FFFFFF";
-                                                        e.currentTarget.style.backgroundColor = "var(--accent1)";
+                                                        fontSize: "1.3rem",
                                                     }}
                                                 >
-                                                    {selectedJob.applied_status ? "Applied" : "Apply"}
-                                                </Button>
+                                                    {selectedJob.company}
+                                                </h4>
+                                            </div>
+                                        </div>
 
-                                                {/* <Button
+                                        {/* Buttons */}
+                                        <div className="d-flex align-items-center gap-2 pt-4">
+                                            <Button
+                                                style={{
+                                                    backgroundColor: "var(--accent1)",
+                                                    color: "#FFFFFF",
+                                                    border: "none",
+                                                    borderRadius: "8px",
+                                                    fontWeight: 600,
+                                                }}
+                                                onClick={() =>
+                                                    toggleSaveJob(selectedJob.id, selectedJob.is_saved)
+                                                }
+                                                onMouseEnter={(e) => {
+                                                    e.currentTarget.style.color = "var(--accent1)";
+                                                    e.currentTarget.style.backgroundColor = "#FFFFFF";
+                                                    e.currentTarget.style.border = "1px solid var(--accent1)";
+                                                }}
+
+                                                onMouseLeave={(e) => {
+                                                    e.currentTarget.style.color = "#FFFFFF";
+                                                    e.currentTarget.style.backgroundColor = "var(--accent1)";
+                                                }}
+                                            >
+                                                {selectedJob.is_saved ? "Unsave" : "Save"}
+                                            </Button>
+
+                                            <Button
+                                                style={{
+                                                    backgroundColor: "var(--accent1)",
+                                                    color: "#FFFFFF",
+                                                    border: "none",
+                                                    borderRadius: "8px",
+                                                    fontWeight: 600,
+                                                }}
+                                                onClick={handleApplyClick}
+                                                disabled={selectedJob.applied_status}
+                                                onMouseEnter={(e) => {
+                                                    e.currentTarget.style.color = "var(--accent1)";
+                                                    e.currentTarget.style.backgroundColor = "#FFFFFF";
+                                                    e.currentTarget.style.border = "1px solid var(--accent1)";
+                                                }}
+
+                                                onMouseLeave={(e) => {
+                                                    e.currentTarget.style.color = "#FFFFFF";
+                                                    e.currentTarget.style.backgroundColor = "var(--accent1)";
+                                                }}
+                                            >
+                                                {selectedJob.applied_status ? "Applied" : "Apply"}
+                                            </Button>
+
+                                            {/* <Button
                                                     style={{
                                                         backgroundColor: "var(--accent1)",
                                                         color: "#FFFFFF",
@@ -851,226 +851,128 @@ const FindJobs = ({ jobPostTypeProp }) => {
                                                 >
                                                     Interview
                                                 </Button> */}
+                                        </div>
+                                    </div>
+                                </div>
+
+                                {/* Did you apply prompt */}
+                                {showApplyConfirm && !selectedJob.applied_status && (
+                                    <div
+                                        style={{
+                                            marginBottom: "24px",
+                                            color: "var(--text)",
+                                            fontSize: "1.05rem",
+                                            fontWeight: 600,
+                                        }}
+                                    >
+                                        <span>Did you apply to this job? </span>
+                                        <span
+                                            onClick={handleConfirmApply}
+                                            style={{
+                                                cursor: "pointer",
+                                                textDecoration: "underline",
+                                                marginLeft: "6px",
+                                            }}
+                                        >
+                                            Yes
+                                        </span>
+                                        <span style={{ margin: "0 4px" }}>/</span>
+                                        <span
+                                            onClick={() => setShowApplyConfirm(false)}
+                                            style={{
+                                                cursor: "pointer",
+                                                textDecoration: "underline",
+                                            }}
+                                        >
+                                            No
+                                        </span>
+                                    </div>
+                                )}
+
+                                {/* About this job */}
+                                <div className="pt-4 pb-5">
+                                    <h4 className="fw-bold mb-4" style={{ color: "var(--accent1)" }}>
+                                        About This Job
+                                    </h4>
+
+                                    <div className="row mb-5" style={{ fontSize: "1.1rem", color: "var(--text)" }}>
+                                        <div className="col-md-6 mb-3">
+                                            <div className="d-flex align-items-center mb-1">
+                                                <FaClock className="me-2" size={22} color="var(--text)" />
+                                                <strong>Date Posted:</strong>
+                                                <span style={{ marginLeft: "8px" }}>
+                                                    {selectedJob.datePosted || "N/A"}
+                                                </span>
+                                            </div>
+                                        </div>
+
+                                        <div className="col-md-6 mb-3">
+                                            <div className="d-flex align-items-center mb-1">
+                                                <FaMoneyBill className="me-2" size={22} color="var(--text)" />
+                                                <strong>Salary:</strong>
+                                                <span style={{ marginLeft: "8px" }}>
+                                                    {selectedJob.salary || "Not Posted"}
+                                                </span>
+                                            </div>
+                                        </div>
+
+                                        <div className="col-md-6 mb-3">
+                                            <div className="d-flex align-items-center mb-1">
+                                                <FaMapMarkerAlt className="me-2" size={22} color="var(--text)" />
+                                                <strong>Location:</strong>
+                                                <span style={{ marginLeft: "8px" }}>
+                                                    {selectedJob.location || "Not Specified"}
+                                                </span>
+                                            </div>
+                                        </div>
+
+                                        <div className="col-md-6 mb-3">
+                                            <div className="d-flex align-items-center mb-1">
+                                                <FaBriefcase className="me-2" size={22} color="var(--text)" />
+                                                <strong>Employment Type:</strong>
+                                                <span style={{ marginLeft: "8px" }}>
+                                                    {selectedJob.employmentTypes?.[0]?.name || "N/A"}
+                                                </span>
+                                            </div>
+                                        </div>
+
+                                        <div className="col-md-6 mb-3">
+                                            <div className="d-flex align-items-center mb-1">
+                                                <FaUserTie className="me-2" size={22} color="var(--text)" />
+                                                <strong>Experience Level:</strong>
+                                                <span style={{ marginLeft: "8px" }}>
+                                                    {selectedJob.experienceLevels?.[0]?.name || "N/A"}
+                                                </span>
+                                            </div>
+                                        </div>
+
+                                        <div className="col-md-6 mb-3">
+                                            <div className="d-flex align-items-center mb-1">
+                                                <FaLaptopHouse className="me-2" size={22} color="var(--text)" />
+                                                <strong>Work Model:</strong>
+                                                <span style={{ marginLeft: "8px" }}>
+                                                    {selectedJob.workModels?.[0]?.name || "N/A"}
+                                                </span>
                                             </div>
                                         </div>
                                     </div>
 
-                                    {/* Did you apply prompt */}
-                                    {showApplyConfirm && !selectedJob.applied_status && (
-                                        <div
-                                            style={{
-                                                marginBottom: "24px",
-                                                color: "var(--text)",
-                                                fontSize: "1.05rem",
-                                                fontWeight: 600,
-                                            }}
-                                        >
-                                            <span>Did you apply to this job? </span>
-                                            <span
-                                                onClick={handleConfirmApply}
-                                                style={{
-                                                    cursor: "pointer",
-                                                    textDecoration: "underline",
-                                                    marginLeft: "6px",
-                                                }}
-                                            >
-                                                Yes
-                                            </span>
-                                            <span style={{ margin: "0 4px" }}>/</span>
-                                            <span
-                                                onClick={() => setShowApplyConfirm(false)}
-                                                style={{
-                                                    cursor: "pointer",
-                                                    textDecoration: "underline",
-                                                }}
-                                            >
-                                                No
-                                            </span>
-                                        </div>
-                                    )}
+                                    <hr
+                                        style={{
+                                            borderColor: "var(--border)",
+                                            opacity: 0.8,
+                                            margin: "2rem 0",
+                                        }}
+                                    />
 
-                                    {/* About this job */}
-                                    <div className="pt-4 pb-5">
-                                        <h4 className="fw-bold mb-4" style={{ color: "var(--accent1)" }}>
-                                            About This Job
-                                        </h4>
-
-                                        <div className="row mb-5" style={{ fontSize: "1.1rem", color: "var(--text)" }}>
-                                            <div className="col-md-6 mb-3">
-                                                <div className="d-flex align-items-center mb-1">
-                                                    <FaClock className="me-2" size={22} color="var(--text)" />
-                                                    <strong>Date Posted:</strong>
-                                                    <span style={{ marginLeft: "8px" }}>
-                                                        {selectedJob.datePosted || "N/A"}
-                                                    </span>
-                                                </div>
-                                            </div>
-
-                                            <div className="col-md-6 mb-3">
-                                                <div className="d-flex align-items-center mb-1">
-                                                    <FaMoneyBill className="me-2" size={22} color="var(--text)" />
-                                                    <strong>Salary:</strong>
-                                                    <span style={{ marginLeft: "8px" }}>
-                                                        {selectedJob.salary || "Not Posted"}
-                                                    </span>
-                                                </div>
-                                            </div>
-
-                                            <div className="col-md-6 mb-3">
-                                                <div className="d-flex align-items-center mb-1">
-                                                    <FaMapMarkerAlt className="me-2" size={22} color="var(--text)" />
-                                                    <strong>Location:</strong>
-                                                    <span style={{ marginLeft: "8px" }}>
-                                                        {selectedJob.location || "Not Specified"}
-                                                    </span>
-                                                </div>
-                                            </div>
-
-                                            <div className="col-md-6 mb-3">
-                                                <div className="d-flex align-items-center mb-1">
-                                                    <FaBriefcase className="me-2" size={22} color="var(--text)" />
-                                                    <strong>Employment Type:</strong>
-                                                    <span style={{ marginLeft: "8px" }}>
-                                                        {selectedJob.employmentTypes?.[0]?.name || "N/A"}
-                                                    </span>
-                                                </div>
-                                            </div>
-
-                                            <div className="col-md-6 mb-3">
-                                                <div className="d-flex align-items-center mb-1">
-                                                    <FaUserTie className="me-2" size={22} color="var(--text)" />
-                                                    <strong>Experience Level:</strong>
-                                                    <span style={{ marginLeft: "8px" }}>
-                                                        {selectedJob.experienceLevels?.[0]?.name || "N/A"}
-                                                    </span>
-                                                </div>
-                                            </div>
-
-                                            <div className="col-md-6 mb-3">
-                                                <div className="d-flex align-items-center mb-1">
-                                                    <FaLaptopHouse className="me-2" size={22} color="var(--text)" />
-                                                    <strong>Work Model:</strong>
-                                                    <span style={{ marginLeft: "8px" }}>
-                                                        {selectedJob.workModels?.[0]?.name || "N/A"}
-                                                    </span>
-                                                </div>
-                                            </div>
-                                        </div>
-
-                                        <hr
-                                            style={{
-                                                borderColor: "var(--border)",
-                                                opacity: 0.8,
-                                                margin: "2rem 0",
-                                            }}
-                                        />
-
-                                        {/* AI Summary */}
-                                        {selectedJob.summary && (
-                                            <div className="mb-5">
-                                                <h4
-                                                    className="fw-bold mb-4"
-                                                    style={{ color: "var(--accent1)" }}
-                                                >
-                                                    AI Summary
-                                                </h4>
-                                                <p
-                                                    style={{
-                                                        color: "var(--text)",
-                                                        fontSize: "1.05rem",
-                                                        lineHeight: "1.8",
-                                                        marginBottom: 0,
-                                                    }}
-                                                >
-                                                    {selectedJob.summary}
-                                                </p>
-                                            </div>
-                                        )}
-
-                                        <hr
-                                            style={{
-                                                borderColor: "var(--border)",
-                                                opacity: 0.8,
-                                                margin: "2rem 0",
-                                            }}
-                                        />
-
-                                        {/*  What They're Looking For */}
+                                    {/* AI Summary */}
+                                    {selectedJob.summary && (
                                         <div className="mb-5">
-                                            <h4
-                                                className="fw-bold mb-4"
-                                                style={{ color: "var(--accent1)", }}
-                                            >
-                                                What They’re Looking For
-                                            </h4>
-
-                                            <div className="d-flex flex-wrap gap-2 mb-3">
-                                                {[...(selectedJob.skills || []), ...(selectedJob.careers || [])]
-                                                    .slice(0, showAllSkills ? undefined : 10)
-                                                    .map((item, index) => (
-                                                        <span
-                                                            key={index}
-                                                            style={{
-                                                                backgroundColor: "var(--accent3)",
-                                                                border: "1px solid var(--border)",
-                                                                borderRadius: "8px",
-                                                                padding: "6px 12px",
-                                                                fontSize: "0.95rem",
-                                                                color: "var(--text)",
-                                                                fontWeight: 600,
-                                                                transition: "all 0.25s ease",
-                                                                cursor: "default",
-                                                                boxShadow: "0 0 0 transparent",
-                                                            }}
-                                                            onMouseEnter={(e) => {
-                                                                e.currentTarget.style.boxShadow =
-                                                                    "0 0 10px var(--accent3)";
-                                                                e.currentTarget.style.transform = "scale(1.06)";
-                                                            }}
-                                                            onMouseLeave={(e) => {
-                                                                e.currentTarget.style.boxShadow =
-                                                                    "0 0 0 transparent";
-                                                                e.currentTarget.style.transform = "scale(1)";
-                                                            }}
-                                                        >
-                                                            {item.name || item}
-                                                        </span>
-                                                    ))}
-                                            </div>
-
-                                            {((selectedJob.skills?.length || 0) +
-                                                (selectedJob.careers?.length || 0)) > 15 && (
-                                                    <Button
-                                                        variant="link"
-                                                        onClick={() => setShowAllSkills((prev) => !prev)}
-                                                        style={{
-                                                            padding: 0,
-                                                            marginTop: "4px",
-                                                            color: "var(--accent1)",
-                                                            textDecoration: "none",
-                                                            fontWeight: "bold",
-                                                        }}
-                                                    >
-                                                        {showAllSkills ? "See Less ▲" : "See More ▼"}
-                                                    </Button>
-                                                )}
-                                        </div>
-
-                                        <hr
-                                            style={{
-                                                borderColor: "var(--border)",
-                                                opacity: 0.8,
-                                                margin: "2rem 0",
-                                            }}
-                                        />
-
-                                        {/* Complete Description  */}
-                                        <div>
                                             <h4
                                                 className="fw-bold mb-4"
                                                 style={{ color: "var(--accent1)" }}
                                             >
-                                                Complete Description
+                                                AI Summary
                                             </h4>
                                             <p
                                                 style={{
@@ -1080,54 +982,152 @@ const FindJobs = ({ jobPostTypeProp }) => {
                                                     marginBottom: 0,
                                                 }}
                                             >
-                                                {showFullDescription
-                                                    ? selectedJob.description
-                                                    : selectedJob.description?.slice(0, 600) + "..."}
+                                                {selectedJob.summary}
                                             </p>
-                                            {selectedJob.description &&
-                                                selectedJob.description.length > 600 && (
-                                                    <Button
-                                                        variant="link"
-                                                        onClick={() =>
-                                                            setShowFullDescription((prev) => !prev)
-                                                        }
+                                        </div>
+                                    )}
+
+                                    <hr
+                                        style={{
+                                            borderColor: "var(--border)",
+                                            opacity: 0.8,
+                                            margin: "2rem 0",
+                                        }}
+                                    />
+
+                                    {/*  What They're Looking For */}
+                                    <div className="mb-5">
+                                        <h4
+                                            className="fw-bold mb-4"
+                                            style={{ color: "var(--accent1)", }}
+                                        >
+                                            What They’re Looking For
+                                        </h4>
+
+                                        <div className="d-flex flex-wrap gap-2 mb-3">
+                                            {[...(selectedJob.skills || []), ...(selectedJob.careers || [])]
+                                                .slice(0, showAllSkills ? undefined : 10)
+                                                .map((item, index) => (
+                                                    <span
+                                                        key={index}
                                                         style={{
-                                                            padding: 0,
-                                                            marginTop: "8px",
-                                                            color: "var(--accent1)",
-                                                            textDecoration: "none",
-                                                            fontWeight: "bold",
+                                                            backgroundColor: "var(--accent3)",
+                                                            border: "1px solid var(--border)",
+                                                            borderRadius: "8px",
+                                                            padding: "6px 12px",
+                                                            fontSize: "0.95rem",
+                                                            color: "var(--text)",
+                                                            fontWeight: 600,
+                                                            transition: "all 0.25s ease",
+                                                            cursor: "default",
+                                                            boxShadow: "0 0 0 transparent",
+                                                        }}
+                                                        onMouseEnter={(e) => {
+                                                            e.currentTarget.style.boxShadow =
+                                                                "0 0 10px var(--accent3)";
+                                                            e.currentTarget.style.transform = "scale(1.06)";
+                                                        }}
+                                                        onMouseLeave={(e) => {
+                                                            e.currentTarget.style.boxShadow =
+                                                                "0 0 0 transparent";
+                                                            e.currentTarget.style.transform = "scale(1)";
                                                         }}
                                                     >
-                                                        {showFullDescription ? "See Less ▲" : "See More ▼"}
-                                                    </Button>
-                                                )}
+                                                        {item.name || item}
+                                                    </span>
+                                                ))}
                                         </div>
-                                    </div>
-                                </div>
-                            ) : (
-                                <div className="h-100 d-flex align-items-center justify-content-center text-white">
-                                    <div className="text-center">
-                                        <FaBriefcase size={48} className="mb-3 text-secondary" />
-                                        <p>No jobs were found.</p>
-                                    </div>
-                                </div>
-                            )}
-                        </Col>
-                    )}
-                </Row>
 
-                {/* Displays job filtering options */}
-                {/* Themed Filters Offcanvas */}
-                <Offcanvas
-                    show={showCanvas}
-                    onHide={() => setShowCanvas(false)}
-                    placement="end"
-                    className="filters-canvas"
-                    style={{ backgroundColor: "var(--background)", color: "var(--text)" }}
-                >
-                    {/* Inline styles to keep it self-contained */}
-                    <style>{`
+                                        {((selectedJob.skills?.length || 0) +
+                                            (selectedJob.careers?.length || 0)) > 15 && (
+                                                <Button
+                                                    variant="link"
+                                                    onClick={() => setShowAllSkills((prev) => !prev)}
+                                                    style={{
+                                                        padding: 0,
+                                                        marginTop: "4px",
+                                                        color: "var(--accent1)",
+                                                        textDecoration: "none",
+                                                        fontWeight: "bold",
+                                                    }}
+                                                >
+                                                    {showAllSkills ? "See Less ▲" : "See More ▼"}
+                                                </Button>
+                                            )}
+                                    </div>
+
+                                    <hr
+                                        style={{
+                                            borderColor: "var(--border)",
+                                            opacity: 0.8,
+                                            margin: "2rem 0",
+                                        }}
+                                    />
+
+                                    {/* Complete Description  */}
+                                    <div>
+                                        <h4
+                                            className="fw-bold mb-4"
+                                            style={{ color: "var(--accent1)" }}
+                                        >
+                                            Complete Description
+                                        </h4>
+                                        <p
+                                            style={{
+                                                color: "var(--text)",
+                                                fontSize: "1.05rem",
+                                                lineHeight: "1.8",
+                                                marginBottom: 0,
+                                            }}
+                                        >
+                                            {showFullDescription
+                                                ? selectedJob.description
+                                                : selectedJob.description?.slice(0, 600) + "..."}
+                                        </p>
+                                        {selectedJob.description &&
+                                            selectedJob.description.length > 600 && (
+                                                <Button
+                                                    variant="link"
+                                                    onClick={() =>
+                                                        setShowFullDescription((prev) => !prev)
+                                                    }
+                                                    style={{
+                                                        padding: 0,
+                                                        marginTop: "8px",
+                                                        color: "var(--accent1)",
+                                                        textDecoration: "none",
+                                                        fontWeight: "bold",
+                                                    }}
+                                                >
+                                                    {showFullDescription ? "See Less ▲" : "See More ▼"}
+                                                </Button>
+                                            )}
+                                    </div>
+                                </div>
+                            </div>
+                        ) : (
+                            <div className="h-100 d-flex align-items-center justify-content-center text-white">
+                                <div className="text-center">
+                                    <FaBriefcase size={48} className="mb-3 text-secondary" />
+                                    <p>No jobs were found.</p>
+                                </div>
+                            </div>
+                        )}
+                    </Col>
+                )}
+            </Row>
+
+            {/* Displays job filtering options */}
+
+            <Offcanvas
+                show={showCanvas}
+                onHide={() => setShowCanvas(false)}
+                placement="end"
+                className="filters-canvas"
+                style={{ backgroundColor: "var(--background)", color: "var(--text)" }}
+            >
+                {/* Inline styles to keep it self-contained */}
+                <style>{`
                   /* Panel background */
                 .filters-canvas .offcanvas {
                   background-color: var(--background);
@@ -1152,27 +1152,39 @@ const FindJobs = ({ jobPostTypeProp }) => {
                 .filters-canvas .form-check-label {
                   color: var(--text);
                 }
-                            
-                /* Checkboxes */
-                .filters-canvas .form-check-input {
-                  background-color: transparent;
-                  border: 2px solid var(--border);
-                  border-radius: 4px;
-                  width: 1.2em;
-                  height: 1.2em;
-                  cursor: pointer;
-                  transition: all 0.2s ease;
-                }
-                .filters-canvas .form-check-input:checked {
-                  background-color: var(--background);
-                  border-color: var(--border);
-                  box-shadow: 0 0 6px var(--shadow1);
-                }
-                            
-                .filters-canvas hr {
-                  border-top: 1px solid var(--border);
-                  opacity: 1;
-                }
+               /* Clean blue checkbox */
+.filters-canvas .form-check-input {
+  appearance: none;
+  -webkit-appearance: none;
+  width: 1.15em;
+  height: 1.15em;
+  border: 2px solid #1a78e4; /* blue border */
+  border-radius: 4px;
+  background-color: var(--card); /* light or dark auto */
+  cursor: pointer;
+  position: relative;
+  transition: 0.2s ease-in-out;
+}
+
+/* Checked box */
+.filters-canvas .form-check-input:checked {
+  background-color: #1a78e4; /* solid blue */
+  border-color: #1a78e4;
+}
+
+/* White checkmark */
+.filters-canvas .form-check-input:checked::after {
+  content: "";
+  position: absolute;
+  left: 4px;
+  top: 0px;
+  width: 5px;
+  height: 10px;
+  border: solid white;
+  border-width: 0 2px 2px 0;
+  transform: rotate(45deg);
+}
+
                             
                 /* Sticky footer buttons */
                 .filters-canvas .filters-actions {
@@ -1211,51 +1223,51 @@ const FindJobs = ({ jobPostTypeProp }) => {
                 }
                 `}</style>
 
-                    <Offcanvas.Header closeButton>
-                        <Offcanvas.Title>Filters</Offcanvas.Title>
-                    </Offcanvas.Header>
+                <Offcanvas.Header closeButton>
+                    <Offcanvas.Title>Filters</Offcanvas.Title>
+                </Offcanvas.Header>
 
-                    <Offcanvas.Body>
-                        <h6 className="mb-2">Employment Type</h6>
-                        {["Full-Time", "Part-Time", "Internship", "Temporary", "Contract"].map((type) => (
-                            <Form.Check
-                                key={type}
-                                type="checkbox"
-                                label={type}
-                                value={type}
-                                checked={filters.employmentType.includes(type)}
-                                onChange={() => toggleFilter("employmentType", type)}
-                            />
-                        ))}
-                        <hr />
+                <Offcanvas.Body>
+                    <h6 className="mb-2">Employment Type</h6>
+                    {["Full-Time", "Part-Time", "Internship", "Temporary", "Contract"].map((type) => (
+                        <Form.Check
+                            key={type}
+                            type="checkbox"
+                            label={type}
+                            value={type}
+                            checked={filters.employmentType.includes(type)}
+                            onChange={() => toggleFilter("employmentType", type)}
+                        />
+                    ))}
+                    <hr />
 
-                        <h6 className="mb-2">Experience Level</h6>
-                        {["Intern", "Entry", "Mid", "Senior", "Lead", "Management"].map((level) => (
-                            <Form.Check
-                                key={level}
-                                type="checkbox"
-                                label={level}
-                                value={level}
-                                checked={filters.experienceLevel.includes(level)}
-                                onChange={() => toggleFilter("experienceLevel", level)}
-                            />
-                        ))}
-                        <hr />
+                    <h6 className="mb-2">Experience Level</h6>
+                    {["Intern", "Entry", "Mid", "Senior", "Lead", "Management"].map((level) => (
+                        <Form.Check
+                            key={level}
+                            type="checkbox"
+                            label={level}
+                            value={level}
+                            checked={filters.experienceLevel.includes(level)}
+                            onChange={() => toggleFilter("experienceLevel", level)}
+                        />
+                    ))}
+                    <hr />
 
-                        <h6 className="mb-2">Location</h6>
-                        {["Remote", "On-site", "Hybrid"].map((location) => (
-                            <Form.Check
-                                key={location}
-                                type="checkbox"
-                                label={location}
-                                value={location}
-                                checked={filters.location.includes(location)}
-                                onChange={() => toggleFilter("location", location)}
-                            />
-                        ))}
-                        <hr />
+                    <h6 className="mb-2">Location</h6>
+                    {["Remote", "On-site", "Hybrid"].map((location) => (
+                        <Form.Check
+                            key={location}
+                            type="checkbox"
+                            label={location}
+                            value={location}
+                            checked={filters.location.includes(location)}
+                            onChange={() => toggleFilter("location", location)}
+                        />
+                    ))}
+                    <hr />
 
-                        {/* <h6 className="mb-2">Posted Date</h6>
+                    {/* <h6 className="mb-2">Posted Date</h6>
                     <Form.Check type="checkbox" label="Last 24 hours" value="24-hours"
                         checked={filters.datePosted.includes("24-hours")}
                         onChange={() => toggleFilter("datePosted", "24-hours")}
@@ -1268,16 +1280,16 @@ const FindJobs = ({ jobPostTypeProp }) => {
                         checked={filters.datePosted.includes("30-days")}
                         onChange={() => toggleFilter("datePosted", "30-days")}
                     /> */}
-                    </Offcanvas.Body>
+                </Offcanvas.Body>
 
-                    <div className="filters-actions"
-                        style={{ background: "var(--shadow2)" }}>
-                        <Button className="btn-outline-theme" onClick={clearAllFilters}>Clear</Button>
-                        <Button className="btn-theme" onClick={handleFilterChange}>Apply</Button>
-                    </div>
-                </Offcanvas>
+                <div className="filters-actions"
+                    style={{ background: "var(--shadow2)" }}>
+                    <Button className="btn-outline-theme" onClick={clearAllFilters}>Clear</Button>
+                    <Button className="btn-theme" onClick={handleFilterChange}>Apply</Button>
+                </div>
+            </Offcanvas>
 
-                <style>{`
+            <style>{`
               /* Reusable auto-hide scrollbar */
               .auto-hide-scroll {
                  scrollbar-gutter: stable; 
@@ -1305,7 +1317,7 @@ const FindJobs = ({ jobPostTypeProp }) => {
               }
             `}</style>
 
-            </Container>
+        </Container>
     );
 };
 
