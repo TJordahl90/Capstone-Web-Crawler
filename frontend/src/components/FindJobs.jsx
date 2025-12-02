@@ -734,7 +734,7 @@ const FindJobs = ({ jobPostTypeProp }) => {
                                                     display: "flex",
                                                     alignItems: "center",
                                                     justifyContent: "center",
-                                                    boxShadow: "15px 15px 10px var(--shadow1)",
+                                                    boxShadow: "10px 10px 10px var(--shadow1)",
                                                     flexShrink: 0,
                                                 }}
                                             >
@@ -1171,8 +1171,6 @@ const FindJobs = ({ jobPostTypeProp }) => {
                   background-color: #1a78e4; /* solid blue */
                   border-color: #1a78e4;
                 }
-
-                
                    
                 /* Sticky footer buttons */
                 .filters-canvas .filters-actions {
