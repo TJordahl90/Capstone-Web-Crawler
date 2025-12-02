@@ -355,8 +355,8 @@ const LandingPage = () => {
           className="py-5 text-white text-center"
           style={{
             backgroundColor: "#046992ff",
-            borderTopRightRadius: "32px",
-            borderTopLeftRadius: "32px",
+            //borderTopRightRadius: "32px",
+            //borderTopLeftRadius: "32px",
             // scroll reveal
             opacity: ctaVisible ? 1 : 0,
             transform: ctaVisible ? "translateY(0)" : "translateY(40px)",

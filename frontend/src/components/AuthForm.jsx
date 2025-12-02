@@ -20,16 +20,14 @@ const AuthForm = ({ isLogin }) => {
         email: '',
         confirmEmail: '',
     });
-
+    const DEV_SKIP_REGISTER = true;
     // Live password requirement checks
     const passwordValue = formData.password || "";
-
     const hasMinLength = passwordValue.length >= 8;
     const hasUppercase = /[A-Z]/.test(passwordValue);
     const hasLowercase = /[a-z]/.test(passwordValue);
     const hasNumber = /\d/.test(passwordValue);
     const hasSpecial = /[\W_]/.test(passwordValue);
-
     const isPasswordValid =
         hasMinLength && hasUppercase && hasLowercase && hasNumber && hasSpecial;
 
@@ -54,19 +52,20 @@ const AuthForm = ({ isLogin }) => {
                 if (password !== confirmPassword) throw new Error("Passwords do not match.");
                 if (email !== confirmEmail) throw new Error("Emails do not match.");
 
+                // DEV SHORTCUT: skip real register + go straight to verification page
+                if (DEV_SKIP_REGISTER) {
+                    const fakeEmail = email || "test@example.com";
+                    setLoading(false);   
+                    navigate("/verification", { state: { email: fakeEmail } });
+                    return;             
+                }
                 await api.post('/register/', formData);
                 await api.post('/verification/', { email });
 
                 setAlert({ type: "success", text: "Account created successfully! Check your email for verification." });
                 setTimeout(() => navigate("/verification", { state: { email } }), 1000);
             }
-            else {
-                const response = await api.post('/login/', formData);
-                localStorage.setItem("user", JSON.stringify(response.data.user));
 
-                setAlert({ type: "success", text: "Login successful!" });
-                setTimeout(() => navigate(response.data.first_time_login ? "/account-setup" : "/dashboard"), 1000);
-            }
         }
         catch (err) {
             const data = err.response?.data;
@@ -374,7 +373,7 @@ const AuthForm = ({ isLogin }) => {
                                     />
 
                                     {/* Password checklist */}
-                                    <div style={{ marginTop: "6px", marginBottom: "6px" }}>
+                                    <div style={{ marginLeft: "10px", marginBottom: "11px" }}>
                                         <small
                                             style={{
                                                 fontSize: "0.8rem",
@@ -444,7 +443,6 @@ const AuthForm = ({ isLogin }) => {
                                     </div>
 
                                     <InputField
-                                        // label="Confirm Password"
                                         type="password"
                                         placeholder="Confirm your password"
                                         value={formData.confirmPassword}
@@ -455,6 +453,14 @@ const AuthForm = ({ isLogin }) => {
                                             })
                                         }
                                     />
+
+                                    {formData.confirmPassword &&
+                                        formData.confirmPassword !== formData.password && (
+                                            <small style={{ color: "red" }}>
+                                                Passwords do not match
+                                            </small>
+                                        )}
+
                                 </>
                             ) : (
                                 <>

@@ -7,7 +7,7 @@ const InputField = ({ label, type, value, onChange, placeholder, required = true
   const isPassword = type === "password";
 
   return (
-    <Form.Group className="mb-2" style={{ position: "relative" }}>
+    <Form.Group className="mb-3" style={{ position: "relative" }}>
       {/* LABEL */}
       {label && (
         <Form.Label style={{ color: "#111111", fontWeight: 500 }}>
