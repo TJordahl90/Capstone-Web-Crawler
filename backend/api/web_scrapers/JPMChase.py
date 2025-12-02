@@ -432,7 +432,7 @@ def jpmc_scraper():
                         job_details['experienceLevels'] = []
                         job_details['workModels'] = ['On-site']  # Default to On-Site
                     
-                    job_details['summary'] = "no summary for now" #extract_job_posting_summary(complete_jobpost)
+                    job_details['summary'] = extract_job_posting_summary(complete_jobpost)
                     
                 except TimeoutException:
                     logging.error(f"Timeout loading job page: {job['link']}")
