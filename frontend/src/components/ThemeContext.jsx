@@ -20,8 +20,8 @@ const themes = {
         shadow3: "rgba(255, 255, 255, 0.2)",
     },
     dark: {
-        background: "#303841",
-        card: "#3A4750",
+        background: "#111111",
+        card: "#1e1d1dff",
         text: "#F3F3F3",
 
         accent1: "#2185D5",
